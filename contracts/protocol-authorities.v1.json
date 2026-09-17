@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "local-protocol-authorities.v1",
+  "entries": [
+    {
+      "slug": "auth",
+      "historicalRepository": "libre-ai/governance",
+      "sourceRevision": "496cd814930d938198d9d487a01e4e9cb80f549d",
+      "sourcePath": "docs/specifications/IDENTITY-AUTHORIZATION.md",
+      "targetRepository": "libre-ai/project-governance",
+      "localPath": "../project-governance/docs/specifications/IDENTITY-AUTHORIZATION.md",
+      "sha256": "0c430b49969d06ab2f05d68e8e0da80f62434540f57fda394dce0e06b8762adf"
+    },
+    {
+      "slug": "missions",
+      "historicalRepository": "libre-ai/missions",
+      "sourceRevision": "ada6847f601a1087042778518e0b14b3d7855395",
+      "sourcePath": "docs/apps/missions.md",
+      "targetRepository": "libre-ai/schemas-and-contracts",
+      "localPath": "docs/protocols/missions/missions.md",
+      "sha256": "03b7bcf80d77cb9832e2eb6023a01f1ecd138ef2da3c8f7c31f66ea28ee35800"
+    },
+    {
+      "slug": "model-policy",
+      "historicalRepository": "libre-ai/policy",
+      "sourceRevision": "b7b1c653fdb9d55908d6c2ac990bfba7fae87387",
+      "sourcePath": "docs/apps/model-policy.md",
+      "targetRepository": "libre-ai/schemas-and-contracts",
+      "localPath": "docs/protocols/policy/model-policy.md",
+      "sha256": "cb5cd6a67c2e8fc3ec88301080b798568b2be00aaf8d9cbe84466a827db12847"
+    },
+    {
+      "slug": "practices",
+      "historicalRepository": "libre-ai/ai-practices",
+      "sourceRevision": "00711639c4fefebaba88b7eee8099200f73d8d00",
+      "sourcePath": "docs/apps/practices.md",
+      "targetRepository": "libre-ai/schemas-and-contracts",
+      "localPath": "docs/protocols/ai-practices/practices.md",
+      "sha256": "ce822e75b085ec15b1cf30b997d308ce6eaff01fcca1ba95cdf92274202fe26a"
+    },
+    {
+      "slug": "radar",
+      "historicalRepository": "libre-ai/feed-radar",
+      "sourceRevision": "086857227aa14563900b42b4c7efc7166c48fe64",
+      "sourcePath": "docs/apps/radar.md",
+      "targetRepository": "libre-ai/schemas-and-contracts",
+      "localPath": "docs/protocols/feed-radar/radar.md",
+      "sha256": "536d4fcc29d3b9a75550731029e55037b481962ea4a62a8f04afb5b9545fe14e"
+    },
+    {
+      "slug": "sessions",
+      "historicalRepository": "libre-ai/sessions",
+      "sourceRevision": "55df098cabc5d17951fc6cb4b0664d6986615721",
+      "sourcePath": "docs/apps/sessions.md",
+      "targetRepository": "libre-ai/schemas-and-contracts",
+      "localPath": "docs/protocols/sessions/sessions.md",
+      "sha256": "16946b8fdc3dd194b39a6398576c328128e5964412b218f6a0f069821dd4f1e6"
+    },
+    {
+      "slug": "specifications",
+      "historicalRepository": "libre-ai/spec-studio",
+      "sourceRevision": "9cca9d40eafac993d9156dc986247487da5b2ad4",
+      "sourcePath": "docs/apps/specifications.md",
+      "targetRepository": "libre-ai/schemas-and-contracts",
+      "localPath": "docs/protocols/spec-studio/specifications.md",
+      "sha256": "0cca8c515495663b631b2687f2c66960a1de7dd6d1af5c218a9b1654345bcd1b"
+    },
+    {
+      "slug": "website",
+      "historicalRepository": "libre-ai/website",
+      "sourceRevision": "a0e7a00c68c6f08f6d531bb8f3ad40cd25872400",
+      "sourcePath": "docs/apps/website.md",
+      "targetRepository": "libre-ai/schemas-and-contracts",
+      "localPath": "docs/protocols/website/website.md",
+      "sha256": "5f66bb1f6501c935bfcf28a9ddb4c64b5f9d3a7279010c990ad177e458eab0c3"
+    }
+  ]
+}

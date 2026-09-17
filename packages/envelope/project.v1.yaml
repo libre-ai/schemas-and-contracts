@@ -1,0 +1,68 @@
+# Fiche d'état du projet — autorité de l'état depuis ADR-0020 (design §6.2).
+# La section statut du README est générée depuis cette fiche (sentinelles).
+schema_version: libre-ai.project.v1
+project: envelope
+repository: libre-ai/envelope
+kind: satellite
+layer: couche-3
+statement:
+  for: "les surfaces qui font lire à un modèle du contenu venu du dehors — page web, courriel, rappel mémoire, sortie d'outil, description d'outil MCP"
+  who_faces: "un contenu externe qui arrive au modèle sans marque d'origine ni preuve d'intégrité : une consigne cachée dans la page se lit alors comme une instruction, et rien ne dit si le texte a été altéré entre sa capture et son rendu"
+  enables: "présenter ce contenu comme une donnée délimitée et marquée trusted:false, dont toute altération est détectable hors ligne avant le rendu"
+  producing:
+    - "wrapUntrusted — une enveloppe libre-ai.envelope.v1 marquée trusted:false, portant sa classe de source et un MAC HMAC-SHA256 calculé sur une sérialisation canonique préfixée en longueur"
+    - "verifyEnvelope — une vérification à temps constant qui échoue fermé sur toute altération du contenu, du drapeau, de la source, du label ou de l'horodatage, sans divulguer le champ fautif"
+    - "renderGuarded — le bloc gardé destiné au modèle : vérification d'abord, puis échappement des délimiteurs dans le contenu et dans le label"
+  without_depending_on:
+    - "aucun service tiers ni appel réseau : la vérification est hors ligne, sous la seule clé fournie par l'appelant"
+    - "aucune cérémonie de clé : le MAC est symétrique, la clé reste un paramètre de l'appelant"
+summary: "Noyau de sécurité K3 : enveloppe d'intégrité pour contenu non fiable — le contenu externe est une donnée, jamais une instruction."
+current_situation: >-
+  Née verte en γ 3.4 (ex packages/envelope du hub).
+scope:
+  - "API publique garantie (src/index.ts) : les fonctions wrapUntrusted, verifyEnvelope et renderGuarded ; la constante ENVELOPE_SCHEMA_VERSION (« libre-ai.envelope.v1 ») ; les erreurs UntrustedSourceError et EnvelopeIntegrityError ; les types UntrustedInput, UntrustedEnvelope, VerifiedEnvelope, EnvelopeKey, EnvelopeIntegrity et UntrustedSource."
+  - "Stabilité déclarée : aucune. Le paquet est en 0.1.0 et consommé en git-dep épinglée par SHA ; une rupture voyage donc par montée de pin chez le consommateur, jamais par résolution de version. Le critère compat-policy de la phase « service » est ce qui rendra cette stabilité opposable."
+  - "Intégrité : HMAC-SHA256 sur une sérialisation canonique préfixée en longueur par champ — deux enveloppes différentes ne peuvent pas partager un MAC par déplacement de frontière de champ ; comparaison à temps constant ; l'absence de label reste distincte d'un label vide dans les octets signés."
+  - "Six classes de sources fermées : web, email, memory, tool-output, tool-description, mcp-description. Une source hors énumération est refusée à l'emballage et re-refusée à la vérification, y compris sur une enveloppe dont le MAC a été calculé à la main."
+  - "Rendu gardé : échappement des points de code délimiteurs dans le contenu et dans le label, pour qu'une charge utile ne puisse pas forger le marqueur de fermeture et s'évader du bloc."
+  - "Hors périmètre : aucune signature asymétrique (l'Ed25519 reste différé, WP-G2-Z01) ; aucune gestion, dérivation, rotation ni stockage de clé ; aucune validation de schéma du document reçu (elle appartient à envelope.v1.schema.json, côté contracts) ; aucun transport, aucune surface HTTP."
+non_goals:
+  - "Servir d'enveloppe de réponse d'API : cette brique ne produit ni { data, meta } ni erreurs HTTP normalisées, et le mot « meta » n'apparaît nulle part dans son code — la fiche l'a annoncé à tort jusqu'à cette révision."
+  - "Authentifier l'origine : le MAC est symétrique, quiconque détient la clé peut produire autant que vérifier ; integrity.keyId est informatif et n'est pas re-vérifié."
+  - "Valider la forme du document reçu : verifyEnvelope suppose un mac déjà validé par schéma en amont, et se contente d'échouer fermé quand il ne l'est pas."
+  - "Décider quoi faire du contenu vérifié : la brique le rend gardé, elle n'applique aucune politique et n'accorde aucune confiance."
+  - "Transporter, stocker ou faire tourner des clés."
+dependencies:
+  - on: libre-ai/governance
+    why: "gabarit de gates consommé en workflows réutilisables et git-dep d'outillage — jamais dupliqué"
+    pinned: "github:libre-ai/governance#8c238c09efd443a4866459160dac1cfee31d88be"
+maturity: usable
+confidence: medium
+exposure: usable-verifiable
+freshness:
+  last_verified_on: "2026-07-30"
+scope_stability: stable
+benchmark:
+  none: "n/a (shared brick, no external parity target)"
+phases:
+  - id: service
+    title: En service dans la constellation
+    exit_criteria:
+      - id: consumed-pinned
+        text: "La brique est consommée épinglée par les surfaces HTTP de la constellation qui la déclarent."
+        weight: 1
+        status: accepted
+        evidence:
+          date: "2026-07-29"
+          reference: "gate-acceptance-log 2026-07-29 (ligne 3.4), PRs hub #279-#283"
+      - id: compat-policy
+        text: >-
+          La rupture d'API est mécanique, pas déclarative. Artefact : un instantané versionné de la
+          surface publique de src/index.ts (les trois fonctions, la constante de version de schéma,
+          les deux classes d'erreur et les six types exportés). Commande : bun run check. Seuil :
+          la commande échoue si un symbole exporté disparaît, est ajouté ou change de signature, ou
+          si ENVELOPE_SCHEMA_VERSION change, sans montée conjointe de la version du paquet et
+          entrée au journal des ruptures. Fermé le jour où une rupture introduite volontairement
+          fait échouer la commande, et où l'instantané mis à jour la fait repasser au vert.
+        weight: 1
+        status: pending

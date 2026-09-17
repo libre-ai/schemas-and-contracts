@@ -1,0 +1,181 @@
+use libre_ai_contract_types::{ContractRegistry, ContractRegistryError};
+use serde_json::{Map, Value};
+
+const AUTHORIZED_EXECUTION_SCHEMA_NAMES: [&str; 10] = [
+    "effect-attestation.v1.schema.json",
+    "execution-authorization.v2.schema.json",
+    "execution-graph.v1.schema.json",
+    "execution-plan-body.v2.schema.json",
+    "execution-transfer.v1.schema.json",
+    "human-decision-request.v1.schema.json",
+    "human-decision-response.v1.schema.json",
+    "orchestrator-event.v3.schema.json",
+    "retention-policy.v2.schema.json",
+    "step-invocation.v1.schema.json",
+];
+
+fn mutate(input: &Value, mutation: &Value) -> Value {
+    let mut output = input.clone();
+    let path = mutation["path"].as_str().expect("mutation path");
+    let segments = path
+        .split('/')
+        .skip(1)
+        .map(|segment| segment.replace("~1", "/").replace("~0", "~"))
+        .collect::<Vec<_>>();
+    let (last, parents) = segments.split_last().expect("non-empty mutation path");
+    let mut target = &mut output;
+    for segment in parents {
+        target = match target {
+            Value::Object(object) => object.get_mut(segment).expect("known object mutation path"),
+            Value::Array(array) => &mut array[segment.parse::<usize>().expect("array index")],
+            _ => panic!("mutation path traverses a scalar"),
+        };
+    }
+    if mutation.get("remove").and_then(Value::as_bool) == Some(true) {
+        match target {
+            Value::Object(object) => {
+                object.remove(last).expect("known object removal path");
+            }
+            Value::Array(array) => {
+                array.remove(last.parse::<usize>().expect("array index"));
+            }
+            _ => panic!("mutation path targets a scalar"),
+        }
+    } else {
+        let replacement = mutation.get("value").cloned().unwrap_or(Value::Null);
+        match target {
+            Value::Object(object) => {
+                object.insert(last.clone(), replacement);
+            }
+            Value::Array(array) => {
+                array[last.parse::<usize>().expect("array index")] = replacement;
+            }
+            _ => panic!("mutation path targets a scalar"),
+        }
+    }
+    output
+}
+
+#[test]
+fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
+    let registry = ContractRegistry::embedded().expect("canonical schemas must compile");
+    let schema_count = registry.schema_names().count();
+
+    let fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/schema-fixtures.v1.json"
+    ))
+    .expect("fixture document");
+    let api_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/build-brief-api-v2/schema-fixtures.json"
+    ))
+    .expect("API fixture document");
+    let cases = fixtures["cases"]
+        .as_array()
+        .expect("fixture cases")
+        .iter()
+        .chain(api_fixtures["cases"].as_array().expect("API fixture cases"))
+        .collect::<Vec<_>>();
+    assert_eq!(schema_count, cases.len() + 1);
+    assert_eq!(
+        libre_ai_contract_types::generated::GENERATED_TYPE_SCHEMA_NAMES.len(),
+        cases.len()
+    );
+
+    for case in cases {
+        let schema_name = case["schema"].as_str().expect("schema name");
+        let valid = &case["valid"];
+        assert!(
+            registry.is_valid(schema_name, valid).expect("known schema"),
+            "canonical fixture rejected for {schema_name}"
+        );
+        assert!(
+            !registry
+                .is_valid(schema_name, &Value::Null)
+                .expect("known schema")
+        );
+
+        let mut unknown = valid.clone();
+        unknown
+            .as_object_mut()
+            .expect("root object")
+            .insert("__unexpected".to_owned(), Value::Bool(true));
+        assert!(
+            !registry
+                .is_valid(schema_name, &unknown)
+                .expect("known schema")
+        );
+
+        if valid.get("schemaVersion").and_then(Value::as_str).is_some() {
+            let mut unknown_version = valid.clone();
+            unknown_version
+                .as_object_mut()
+                .expect("root object")
+                .insert(
+                    "schemaVersion".to_owned(),
+                    Value::String("libre-ai.unknown.v999".to_owned()),
+                );
+            assert!(
+                !registry
+                    .is_valid(schema_name, &unknown_version)
+                    .expect("known schema"),
+                "unknown contract version accepted for {schema_name}"
+            );
+        }
+
+        for mutation in case["invalidMutations"]
+            .as_array()
+            .expect("invalid mutations")
+        {
+            let invalid = mutate(valid, mutation);
+            assert!(
+                !registry
+                    .is_valid(schema_name, &invalid)
+                    .expect("known schema"),
+                "negative fixture accepted for {schema_name}: {}",
+                mutation["name"].as_str().unwrap_or("unnamed")
+            );
+        }
+    }
+}
+
+#[test]
+fn authorized_execution_lock_and_retention_data_are_projected() {
+    let registry = ContractRegistry::embedded().expect("canonical schemas must compile");
+    let schema_names = registry.schema_names().collect::<Vec<_>>();
+    for schema_name in AUTHORIZED_EXECUTION_SCHEMA_NAMES {
+        assert!(schema_names.contains(&schema_name), "missing {schema_name}");
+    }
+
+    let retention: Value =
+        serde_json::from_str(include_str!("../../../contracts/data/retention.v2.json"))
+            .expect("retention v2 authority data must parse");
+    assert!(
+        registry
+            .is_valid("retention-policy.v2.schema.json", &retention)
+            .expect("retention v2 schema must be known")
+    );
+}
+
+#[test]
+fn validation_issues_do_not_echo_private_values() {
+    let registry = ContractRegistry::embedded().expect("canonical schemas must compile");
+    let private_value = "private-value-must-not-leak";
+    let invalid = Value::Object(Map::from_iter([(
+        "sessionDigest".to_owned(),
+        Value::String(private_value.to_owned()),
+    )]));
+    let issues = registry
+        .validate("browser-session.v1.schema.json", &invalid)
+        .expect("known schema");
+    assert!(!issues.is_empty());
+    assert!(!format!("{issues:?}").contains(private_value));
+}
+
+#[test]
+fn unknown_schema_fails_closed() {
+    let registry = ContractRegistry::embedded().expect("canonical schemas must compile");
+    assert!(matches!(
+        registry.is_valid("missing.schema.json", &Value::Null),
+        Err(ContractRegistryError::UnknownSchema(_))
+    ));
+}

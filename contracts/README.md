@@ -1,0 +1,42 @@
+# Canonical contracts
+
+JSON Schema, OpenAPI, WIT and Biscuit policies are the only cross-module protocol authority. Generated Rust/TypeScript types are disposable projections and cannot override these files.
+
+## Layout
+
+- `catalog.v1.json` — machine-readable ownership and compatibility registry ;
+- `schemas/` — strict JSON Schema 2020-12 payloads ;
+- `data/` — approved executable retention policy ;
+- `openapi/` — OpenAPI 3.1 HTTP surfaces and complete domain command/query inventory ;
+- `wit/` — capability-free Rust/WASM component worlds and their cataloged normative profiles ;
+- `authz/` — deny-by-default Biscuit authorizer policies ;
+- `fixtures/` — portable positive and explicit negative schema vectors.
+
+OpenAPI `x-libre-ai-domain` lists the complete protocol from each application specification. Only commands/queries crossing HTTP appear under `paths`; local and offline commands remain visible without becoming endpoints.
+
+A `candidate` catalog entry is machine-checkable but not approved: it carries a dossier listing at least role-separated architecture and security review, plus cryptography, methodology or privacy where required. In solo work, the same agent/session may perform serial authoring and dedicated review-only passes under Governance [`AGENT-REVIEW-PROTOCOL.md`](https://github.com/libre-ai/governance/blob/main/docs/reviews/AGENT-REVIEW-PROTOCOL.md). Promotion requires every attributable role verdict, a separate promotion pass and the human control milestone. Cataloged WIT `profiles` and `vectors` are normative adjuncts to that world.
+
+The coordinated authorized-execution family is currently candidate-only: graph v1, plan v2,
+transfer v1, authorization v2, human decision request/response v1, step invocation v1, effect
+attestation v1, orchestrator event v3 and retention policy/schema v2. Its shared review dossier is
+`docs/reviews/authorized-execution-contracts-review.md`. These contracts do not authorize runtime
+adoption, and no LangGraph library or behavior is normative.
+
+## Verification
+
+`bun run check:contracts` fails on:
+
+- uncataloged/missing/duplicate authority ;
+- non-strict or invalid JSON Schema and unresolved references ;
+- rejected positive fixture or accepted negative/unknown-field fixture ;
+- divergence between application protocols and OpenAPI inventory ;
+- unversioned routes, missing idempotency/revision/CSRF or refusal responses ;
+- WIT host imports and malformed package/world conventions ;
+- retention rules diverging from their schema or backup ceiling ;
+- authorized-execution semantic vectors with incomplete closed outcomes, unsafe content or a
+  non-reproducible result ;
+- RFC 8785 preimages containing their own digest/signature, diverging from positive fixtures or
+  producing a different SHA-256 ;
+- Biscuit authority expansion, token-supplied revocation IDs, allow rules without user/role/matching tenant, or missing final deny.
+
+Cargo tests parse/resolve all WIT worlds with `wit-parser` and parse the Biscuit authority plus policy sources with `biscuit-parser`. Security behavior remains subject to end-to-end authorizer vectors when the G2 authz capability is implemented.

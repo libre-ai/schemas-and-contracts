@@ -1,0 +1,28 @@
+[package]
+name = "libre-ai-contract-types"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.97"
+license = "Apache-2.0"
+repository = "https://github.com/libre-ai/schemas-and-contracts"
+publish = false
+build = "build.rs"
+
+[dependencies]
+chrono = { version = "=0.4.45", default-features = false, features = ["serde", "std"] }
+jsonschema = { version = "=0.53.0", default-features = false }
+regress = { version = "=0.12.0", default-features = false, features = ["backend-pikevm", "prohibit-unsafe", "std"] }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
+
+[dev-dependencies]
+schemars = "=0.8.22"
+typify = { version = "=0.7.0", default-features = false }
+sha2 = { version = "=0.11.0", default-features = false }
+
+[build-dependencies]
+schemars = "=0.8.22"
+serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
+typify = { version = "=0.7.0", default-features = false }
+
+[workspace]

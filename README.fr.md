@@ -16,6 +16,6 @@ Les services qui échangent des données ont besoin d’une définition commune 
 
 ## Disponibilité
 
-Ce dépôt contient actuellement uniquement de la documentation ; aucun outil installable n’est disponible.
+Ce dépôt contient les schémas canoniques, les bibliothèques de validation TypeScript et Rust et une enveloppe d’intégrité pour les contenus non fiables. Les paquets se consomment séparément depuis un checkout local ; aucune publication npm ou Cargo n’est annoncée. Consultez le [guide d’installation et de vérification](docs/INSTALLATION.md).
 
 Découvrez le [catalogue des projets Libre AI](https://github.com/libre-ai/.github/blob/main/profile/README.fr.md).

@@ -1,0 +1,15 @@
+# REUSE 3.3 manifest of the sdk-ts repository (born from the hub, ADR-0020).
+# The whole package is Apache-2.0, as it was under the hub's manifest
+# (annotation « packages/contracts/** », precedence closest): SPDX headers on
+# authored sources take precedence; this covers generated types, vendored
+# schemas and configuration files without headers.
+version = 1
+SPDX-PackageName = "sdk-ts"
+SPDX-PackageSupplier = "Libre AI <https://github.com/libre-ai>"
+SPDX-PackageDownloadLocation = "https://github.com/libre-ai/sdk-ts"
+
+[[annotations]]
+path = ["**"]
+precedence = "closest"
+SPDX-FileCopyrightText = "2026 Libre AI contributors"
+SPDX-License-Identifier = "Apache-2.0"

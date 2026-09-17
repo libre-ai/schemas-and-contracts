@@ -16,6 +16,6 @@ Services exchanging data need a shared understanding of valid messages and compa
 
 ## Availability
 
-This repository currently contains documentation only; no installable tool is available.
+The repository includes canonical schemas, TypeScript and Rust validation libraries, and an untrusted-content integrity envelope. Packages can be used separately from a local checkout; no npm or Cargo publication is claimed. See the [installation and verification guide](docs/INSTALLATION.md).
 
 Explore the [Libre AI project catalogue](https://github.com/libre-ai/.github/blob/main/profile/README.md).
