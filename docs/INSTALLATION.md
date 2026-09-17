@@ -15,10 +15,9 @@ For a TypeScript consumer, use a local dependency on the selected package direct
 
 ## Working on this repository
 
-Use Bun `1.4.0-canary.1+57f349f63` and Rust 1.97 with Cargo. Clone the migration's `project-governance` tooling checkout as a sibling; package manifests explicitly declare this local development dependency. Its revision must be supplied by the reviewed composition, not silently fetched from an old repository.
+Follow the [shared local composition guide](https://github.com/libre-ai/project-governance/blob/main/docs/LOCAL-COMPOSITION.md) with target `schemas-and-contracts` and the full commit ID to verify. It supplies the pinned governance sibling and exact tools, then installs and checks the workspace. From the prepared repository root, selected checks are:
 
 ```sh
-bun install --ignore-scripts
 bun run test
 bun run check:auth-retention
 bun run check:build-brief
