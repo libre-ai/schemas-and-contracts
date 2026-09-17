@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: libre-ai/project-governance
-          ref: b9ff8f3b59bd5dda0f4d6b1480702bb99df3d5eb
+          ref: 160153d3cc79581e0437c17d91f5751725d60618
           path: tooling
           persist-credentials: false
       - name: Install pinned REUSE toolchain
