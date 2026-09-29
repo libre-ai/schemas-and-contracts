@@ -1,0 +1,835 @@
+openapi: 3.1.0
+info:
+  title: Libre AI Missions API v3 candidate
+  version: 3.0.0
+servers:
+  - url: /
+x-libre-ai-domain:
+  commands:
+    - ProposeMission
+    - AssessMissionRisk
+    - SubmitExecutionPlan
+    - SubmitAgentReview
+    - StartMission
+    - PauseMission
+    - ResumeMission
+    - CancelMission
+    - RecordOrchestratorEvent
+    - AnswerDecisionRequest
+    - SubmitMissionResult
+    - AbandonMission
+    - ExportMissionRecord
+  queries:
+    - GetMission
+    - ListMissions
+    - GetMissionEvents
+    - GetOpenDecisionRequests
+    - GetResultEvidence
+    - GetReviewQuorum
+    - GetMissionExport
+paths:
+  /v3/missions:
+    get:
+      operationId: listMissionsV3
+      x-libre-ai-operations:
+        - ListMissions
+      security:
+        - sessionCookie:
+            []
+      responses:
+        "200":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/missionPageResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+    post:
+      operationId: proposeMissionV3
+      x-libre-ai-operations:
+        - ProposeMission
+      security:
+        - sessionCookie:
+            []
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/CsrfToken"
+        - $ref: "#/components/parameters/Revision"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/missions-api.v3.schema.json#/$defs/proposeRequest"
+      responses:
+        "201":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/missionResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "409":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem409"
+        "412":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem412"
+        "413":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem413"
+        "415":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem415"
+        "422":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem422"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+  "/v3/missions/{missionId}":
+    get:
+      operationId: getMissionV3
+      x-libre-ai-operations:
+        - GetMission
+      security:
+        - sessionCookie:
+            []
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+      responses:
+        "200":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/missionResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+  "/v3/missions/{missionId}/plan":
+    post:
+      operationId: submitExecutionPlanV3
+      x-libre-ai-operations:
+        - SubmitExecutionPlan
+      security:
+        - internalBiscuit:
+            []
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Revision"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/execution-plan-body.v3.schema.json
+      responses:
+        "202":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/missionResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "409":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem409"
+        "412":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem412"
+        "413":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem413"
+        "415":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem415"
+        "422":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem422"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+  "/v3/missions/{missionId}/reviews":
+    post:
+      operationId: submitAgentReviewV3
+      x-libre-ai-operations:
+        - SubmitAgentReview
+      security:
+        - internalBiscuit:
+            []
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Revision"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/agent-review.v1.schema.json
+      responses:
+        "202":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/missionResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "409":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem409"
+        "412":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem412"
+        "413":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem413"
+        "415":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem415"
+        "422":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem422"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+  "/v3/missions/{missionId}/events":
+    get:
+      operationId: getMissionEventsV3
+      x-libre-ai-operations:
+        - GetMissionEvents
+      security:
+        - sessionCookie:
+            []
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/eventPageResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+    post:
+      operationId: recordOrchestratorEventV3
+      x-libre-ai-operations:
+        - RecordOrchestratorEvent
+        - SubmitMissionResult
+      security:
+        - internalBiscuit:
+            []
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/Revision"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/orchestrator-event.v2.schema.json
+      responses:
+        "202":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/missionResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "409":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem409"
+        "412":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem412"
+        "413":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem413"
+        "415":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem415"
+        "422":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem422"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+  "/v3/missions/{missionId}/commands":
+    post:
+      operationId: executeMissionCommandV3
+      x-libre-ai-operations:
+        - AssessMissionRisk
+        - StartMission
+        - PauseMission
+        - ResumeMission
+        - CancelMission
+        - AnswerDecisionRequest
+        - AbandonMission
+        - ExportMissionRecord
+      security:
+        - sessionCookie:
+            []
+        - internalBiscuit:
+            []
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+        - $ref: "#/components/parameters/IdempotencyKey"
+        - $ref: "#/components/parameters/CsrfToken"
+        - $ref: "#/components/parameters/Revision"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../schemas/missions-api.v3.schema.json#/$defs/commandRequest"
+      responses:
+        "202":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/missionResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "409":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem409"
+        "412":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem412"
+        "413":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem413"
+        "415":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem415"
+        "422":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem422"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+  "/v3/missions/{missionId}/review-quorum":
+    get:
+      operationId: getReviewQuorumV3
+      x-libre-ai-operations:
+        - GetReviewQuorum
+      security:
+        - sessionCookie:
+            []
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+      responses:
+        "200":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/quorumResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+  "/v3/missions/{missionId}/views/{view}":
+    get:
+      operationId: getMissionViewV3
+      x-libre-ai-operations:
+        - GetOpenDecisionRequests
+        - GetResultEvidence
+        - GetMissionExport
+      security:
+        - sessionCookie:
+            []
+      parameters:
+        - $ref: "#/components/parameters/MissionId"
+        - name: view
+          in: path
+          required: true
+          schema:
+            enum:
+              - open-decisions
+              - result-evidence
+              - export
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: Verified projection; no implicit execution or approval authority
+          content:
+            application/json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/viewResponse"
+        "400":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem400"
+        "401":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem401"
+        "403":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem403"
+        "404":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem404"
+        "405":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem405"
+        "503":
+          description: Content-free refusal with no command effect
+          content:
+            application/problem+json:
+              schema:
+                $ref: "../schemas/missions-api.v3.schema.json#/$defs/problem503"
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: __Host-libre_ai_session
+    internalBiscuit:
+      type: http
+      scheme: bearer
+      bearerFormat: Biscuit
+  parameters:
+    MissionId:
+      name: missionId
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: "^urn:libre-ai:mission:[A-Za-z0-9._~-]+$"
+        maxLength: 256
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: "^idem_[a-z0-9]{16,64}$"
+        maxLength: 69
+    CsrfToken:
+      name: X-CSRF-Token
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 32
+        maxLength: 256
+    Revision:
+      name: If-Match
+      in: header
+      required: true
+      schema:
+        type: string
+        pattern: "^\"(0|[1-9][0-9]{0,15})\"$"
+        maxLength: 18
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+        pattern: "^[A-Za-z0-9_-]{16,512}$"
+        maxLength: 512
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 100
+x-libre-ai-status: candidate

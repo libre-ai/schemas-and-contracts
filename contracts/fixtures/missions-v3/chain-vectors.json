@@ -1,0 +1,215 @@
+{
+  "classification": "synthetic-identity-only-no-quorum-or-execution-authority",
+  "mission": {
+    "schemaVersion": "libre-ai.mission-record.v3",
+    "id": "urn:libre-ai:mission:mission-1",
+    "tenantId": "ten_1234567890abcdef",
+    "revision": 8,
+    "state": "plan-review",
+    "risk": {
+      "level": "medium",
+      "policyVersion": "1.0.0"
+    },
+    "budgets": {
+      "maxDurationSeconds": 3600,
+      "maxToolCalls": 100,
+      "maxInputTokens": 100000,
+      "maxOutputTokens": 50000,
+      "network": "private-gateway-only"
+    },
+    "acceptanceCriteria": ["criterion_one"],
+    "plan": {
+      "id": "urn:libre-ai:plan:synthetic-plan-2",
+      "digest": "229510109e3ed883a7d5848dc230389fd615118a819746b9a501e43d460f39fb",
+      "mediaType": "application/json"
+    },
+    "planQuorum": {
+      "id": "urn:libre-ai:quorum:plan-quorum-1",
+      "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "mediaType": "application/json"
+    },
+    "reviews": [
+      {
+        "id": "urn:libre-ai:review:review-1",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "mediaType": "application/json"
+      },
+      {
+        "id": "urn:libre-ai:review:review-2",
+        "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "mediaType": "application/json"
+      },
+      {
+        "id": "urn:libre-ai:review:review-3",
+        "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "mediaType": "application/json"
+      },
+      {
+        "id": "urn:libre-ai:review:review-4",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "mediaType": "application/json"
+      }
+    ],
+    "eventCursor": 8,
+    "createdAt": "2026-09-12T10:05:00Z",
+    "handoffBinding": {
+      "schemaVersion": "libre-ai.mission-handoff-binding.v1",
+      "tenantId": "ten_1234567890abcdef",
+      "handoff": {
+        "schemaVersion": "libre-ai.agent-handoff.v2",
+        "id": "urn:libre-ai:handoff:fixture-1",
+        "documentDigest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+        "archiveReference": {
+          "id": "urn:libre-ai:handoff-archive:fixture-1",
+          "digest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+          "mediaType": "application/json"
+        }
+      },
+      "specPackage": {
+        "schemaVersion": "libre-ai.spec-package.v2",
+        "id": "urn:libre-ai:spec-package:fixture-1",
+        "version": 1,
+        "bodyDigest": "8ce800b3d67a50c97f9ac97ec14706983a7bcb42c948d53254ab8cc6cd9b9dc1"
+      },
+      "acceptanceDigest": "e04768609d8794084019e671e5b2b9478447e9ada5cee935ad8dc8c4645aa1a6",
+      "acceptanceCriteria": ["criterion_one"]
+    },
+    "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+    "handoffReferenceId": "urn:libre-ai:handoff-reference:fixture-1"
+  },
+  "plan": {
+    "schemaVersion": "libre-ai.execution-plan-body.v3",
+    "id": "urn:libre-ai:plan:synthetic-plan-2",
+    "organizationId": "ten_1234567890abcdef",
+    "missionId": "urn:libre-ai:mission:mission-1",
+    "executionGraph": {
+      "id": "urn:libre-ai:graph:synthetic-graph-1",
+      "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "mediaType": "application/schema+json"
+    },
+    "lineageMode": "initial",
+    "successorLineage": null,
+    "requestedGeneration": 1,
+    "decisionSchemaRefs": [
+      {
+        "id": "urn:libre-ai:schema:human-decision-request-v1",
+        "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "mediaType": "application/schema+json"
+      },
+      {
+        "id": "urn:libre-ai:schema:human-decision-response-v1",
+        "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "mediaType": "application/schema+json"
+      }
+    ],
+    "executorProfileRefs": [
+      {
+        "id": "urn:libre-ai:profile:synthetic-executor-1",
+        "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "mediaType": "application/schema+json"
+      }
+    ],
+    "acceptanceCriteria": ["criterion_one"],
+    "tools": [
+      {
+        "name": "read_file",
+        "access": "read",
+        "argumentPolicyDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "maxCalls": 20
+      }
+    ],
+    "filesystem": {
+      "readPaths": ["src/**"],
+      "writePaths": ["src/**"],
+      "denyPaths": [".env", "**/.git/**"],
+      "copyIgnoredFiles": false
+    },
+    "budgets": {
+      "maxDurationSeconds": 3600,
+      "maxToolCalls": 100,
+      "maxInputTokens": 100000,
+      "maxOutputTokens": 50000,
+      "maxProcesses": 16,
+      "maxFilesChanged": 100,
+      "maxChangedBytes": 1048576,
+      "maxConcurrentAgents": 3
+    },
+    "network": {
+      "workerMode": "private-gateway-only",
+      "gatewayOrigins": [
+        {
+          "scheme": "https",
+          "host": "models.eu.example",
+          "port": 443
+        }
+      ]
+    },
+    "modelEgress": {
+      "purposeCode": "code_review",
+      "authorizationBasis": "contract",
+      "maximumClassification": "tenant-private",
+      "sourcePaths": ["src/**"],
+      "maxBytesPerRequest": 1048576,
+      "region": "eu",
+      "subprocessors": ["provider_eu"],
+      "zeroDataRetention": true,
+      "trainingAllowed": false,
+      "reuseAllowed": false,
+      "policyDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "harnessProfile": {
+      "id": "urn:libre-ai:profile:synthetic-harness-1",
+      "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "mediaType": "application/json"
+    },
+    "workerManifests": [
+      {
+        "id": "urn:libre-ai:manifest:synthetic-worker-1",
+        "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "mediaType": "application/json"
+      }
+    ],
+    "evidenceDestinations": [
+      {
+        "id": "urn:libre-ai:artifact:synthetic-proof-destination-1",
+        "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "mediaType": "application/json"
+      }
+    ],
+    "createdAt": "2026-09-12T10:10:00Z",
+    "expiresAt": "2026-09-12T11:30:00Z",
+    "bodyDigest": "229510109e3ed883a7d5848dc230389fd615118a819746b9a501e43d460f39fb",
+    "handoffBindingSchemaVersion": "libre-ai.mission-handoff-binding.v1",
+    "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb"
+  },
+  "authorization": {
+    "schemaVersion": "libre-ai.execution-authorization.v3",
+    "id": "urn:libre-ai:authorization:synthetic-authorization-2",
+    "organizationId": "ten_1234567890abcdef",
+    "missionId": "urn:libre-ai:mission:mission-1",
+    "missionRevision": 8,
+    "missionRecordDigest": "d0e1faff528655aa1bca8fb759e90f245185d287a2feb272c97d90932e488015",
+    "planId": "urn:libre-ai:plan:synthetic-plan-2",
+    "planDigest": "229510109e3ed883a7d5848dc230389fd615118a819746b9a501e43d460f39fb",
+    "graphDigest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "planQuorum": {
+      "id": "urn:libre-ai:quorum:plan-quorum-1",
+      "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "mediaType": "application/json"
+    },
+    "generation": 1,
+    "lineageMode": "initial",
+    "successorBinding": null,
+    "revocationId": "urn:libre-ai:revocation:synthetic-revocation-1",
+    "issuedAt": "2026-09-12T10:20:00Z",
+    "expiresAt": "2026-09-12T11:00:00Z",
+    "authorizationDigest": "3543fcc17785028eb5f77c8dab6e2f99b07968a1e3d680750ea12e8050a21be3",
+    "missionRecordSchemaVersion": "libre-ai.mission-record.v3",
+    "planSchemaVersion": "libre-ai.execution-plan-body.v3",
+    "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb"
+  },
+  "missionCanonical": "{\"acceptanceCriteria\":[\"criterion_one\"],\"budgets\":{\"maxDurationSeconds\":3600,\"maxInputTokens\":100000,\"maxOutputTokens\":50000,\"maxToolCalls\":100,\"network\":\"private-gateway-only\"},\"createdAt\":\"2026-09-12T10:05:00Z\",\"eventCursor\":8,\"handoffBinding\":{\"acceptanceCriteria\":[\"criterion_one\"],\"acceptanceDigest\":\"e04768609d8794084019e671e5b2b9478447e9ada5cee935ad8dc8c4645aa1a6\",\"handoff\":{\"archiveReference\":{\"digest\":\"8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37\",\"id\":\"urn:libre-ai:handoff-archive:fixture-1\",\"mediaType\":\"application/json\"},\"documentDigest\":\"8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37\",\"id\":\"urn:libre-ai:handoff:fixture-1\",\"schemaVersion\":\"libre-ai.agent-handoff.v2\"},\"schemaVersion\":\"libre-ai.mission-handoff-binding.v1\",\"specPackage\":{\"bodyDigest\":\"8ce800b3d67a50c97f9ac97ec14706983a7bcb42c948d53254ab8cc6cd9b9dc1\",\"id\":\"urn:libre-ai:spec-package:fixture-1\",\"schemaVersion\":\"libre-ai.spec-package.v2\",\"version\":1},\"tenantId\":\"ten_1234567890abcdef\"},\"handoffBindingDigest\":\"490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb\",\"handoffReferenceId\":\"urn:libre-ai:handoff-reference:fixture-1\",\"id\":\"urn:libre-ai:mission:mission-1\",\"plan\":{\"digest\":\"229510109e3ed883a7d5848dc230389fd615118a819746b9a501e43d460f39fb\",\"id\":\"urn:libre-ai:plan:synthetic-plan-2\",\"mediaType\":\"application/json\"},\"planQuorum\":{\"digest\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"id\":\"urn:libre-ai:quorum:plan-quorum-1\",\"mediaType\":\"application/json\"},\"reviews\":[{\"digest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"id\":\"urn:libre-ai:review:review-1\",\"mediaType\":\"application/json\"},{\"digest\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"id\":\"urn:libre-ai:review:review-2\",\"mediaType\":\"application/json\"},{\"digest\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"id\":\"urn:libre-ai:review:review-3\",\"mediaType\":\"application/json\"},{\"digest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"id\":\"urn:libre-ai:review:review-4\",\"mediaType\":\"application/json\"}],\"revision\":8,\"risk\":{\"level\":\"medium\",\"policyVersion\":\"1.0.0\"},\"schemaVersion\":\"libre-ai.mission-record.v3\",\"state\":\"plan-review\",\"tenantId\":\"ten_1234567890abcdef\"}",
+  "planCanonical": "{\"acceptanceCriteria\":[\"criterion_one\"],\"bodyDigest\":\"229510109e3ed883a7d5848dc230389fd615118a819746b9a501e43d460f39fb\",\"budgets\":{\"maxChangedBytes\":1048576,\"maxConcurrentAgents\":3,\"maxDurationSeconds\":3600,\"maxFilesChanged\":100,\"maxInputTokens\":100000,\"maxOutputTokens\":50000,\"maxProcesses\":16,\"maxToolCalls\":100},\"createdAt\":\"2026-09-12T10:10:00Z\",\"decisionSchemaRefs\":[{\"digest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"id\":\"urn:libre-ai:schema:human-decision-request-v1\",\"mediaType\":\"application/schema+json\"},{\"digest\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"id\":\"urn:libre-ai:schema:human-decision-response-v1\",\"mediaType\":\"application/schema+json\"}],\"evidenceDestinations\":[{\"digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\",\"id\":\"urn:libre-ai:artifact:synthetic-proof-destination-1\",\"mediaType\":\"application/json\"}],\"executionGraph\":{\"digest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\",\"id\":\"urn:libre-ai:graph:synthetic-graph-1\",\"mediaType\":\"application/schema+json\"},\"executorProfileRefs\":[{\"digest\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"id\":\"urn:libre-ai:profile:synthetic-executor-1\",\"mediaType\":\"application/schema+json\"}],\"expiresAt\":\"2026-09-12T11:30:00Z\",\"filesystem\":{\"copyIgnoredFiles\":false,\"denyPaths\":[\".env\",\"**/.git/**\"],\"readPaths\":[\"src/**\"],\"writePaths\":[\"src/**\"]},\"handoffBindingDigest\":\"490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb\",\"handoffBindingSchemaVersion\":\"libre-ai.mission-handoff-binding.v1\",\"harnessProfile\":{\"digest\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"id\":\"urn:libre-ai:profile:synthetic-harness-1\",\"mediaType\":\"application/json\"},\"id\":\"urn:libre-ai:plan:synthetic-plan-2\",\"lineageMode\":\"initial\",\"missionId\":\"urn:libre-ai:mission:mission-1\",\"modelEgress\":{\"authorizationBasis\":\"contract\",\"maxBytesPerRequest\":1048576,\"maximumClassification\":\"tenant-private\",\"policyDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"purposeCode\":\"code_review\",\"region\":\"eu\",\"reuseAllowed\":false,\"sourcePaths\":[\"src/**\"],\"subprocessors\":[\"provider_eu\"],\"trainingAllowed\":false,\"zeroDataRetention\":true},\"network\":{\"gatewayOrigins\":[{\"host\":\"models.eu.example\",\"port\":443,\"scheme\":\"https\"}],\"workerMode\":\"private-gateway-only\"},\"organizationId\":\"ten_1234567890abcdef\",\"requestedGeneration\":1,\"schemaVersion\":\"libre-ai.execution-plan-body.v3\",\"successorLineage\":null,\"tools\":[{\"access\":\"read\",\"argumentPolicyDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"maxCalls\":20,\"name\":\"read_file\"}],\"workerManifests\":[{\"digest\":\"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\"id\":\"urn:libre-ai:manifest:synthetic-worker-1\",\"mediaType\":\"application/json\"}]}",
+  "authorizationCanonical": "{\"authorizationDigest\":\"3543fcc17785028eb5f77c8dab6e2f99b07968a1e3d680750ea12e8050a21be3\",\"expiresAt\":\"2026-09-12T11:00:00Z\",\"generation\":1,\"graphDigest\":\"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\",\"handoffBindingDigest\":\"490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb\",\"id\":\"urn:libre-ai:authorization:synthetic-authorization-2\",\"issuedAt\":\"2026-09-12T10:20:00Z\",\"lineageMode\":\"initial\",\"missionId\":\"urn:libre-ai:mission:mission-1\",\"missionRecordDigest\":\"d0e1faff528655aa1bca8fb759e90f245185d287a2feb272c97d90932e488015\",\"missionRecordSchemaVersion\":\"libre-ai.mission-record.v3\",\"missionRevision\":8,\"organizationId\":\"ten_1234567890abcdef\",\"planDigest\":\"229510109e3ed883a7d5848dc230389fd615118a819746b9a501e43d460f39fb\",\"planId\":\"urn:libre-ai:plan:synthetic-plan-2\",\"planQuorum\":{\"digest\":\"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\"id\":\"urn:libre-ai:quorum:plan-quorum-1\",\"mediaType\":\"application/json\"},\"planSchemaVersion\":\"libre-ai.execution-plan-body.v3\",\"revocationId\":\"urn:libre-ai:revocation:synthetic-revocation-1\",\"schemaVersion\":\"libre-ai.execution-authorization.v3\",\"successorBinding\":null}",
+  "now": "2026-09-12T10:30:00Z"
+}

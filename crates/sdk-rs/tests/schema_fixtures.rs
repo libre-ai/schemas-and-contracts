@@ -69,11 +69,29 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/build-brief-api-v2/schema-fixtures.json"
     ))
     .expect("API fixture document");
+    let storage_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/build-brief-storage-v1/schema-fixtures.json"
+    ))
+    .expect("storage fixture document");
+    let missions_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/missions-v3/schema-fixtures.json"
+    ))
+    .expect("Missions fixture document");
     let cases = fixtures["cases"]
         .as_array()
         .expect("fixture cases")
         .iter()
         .chain(api_fixtures["cases"].as_array().expect("API fixture cases"))
+        .chain(
+            storage_fixtures["cases"]
+                .as_array()
+                .expect("storage fixture cases"),
+        )
+        .chain(
+            missions_fixtures["cases"]
+                .as_array()
+                .expect("Missions fixture cases"),
+        )
         .collect::<Vec<_>>();
     assert_eq!(schema_count, cases.len() + 1);
     assert_eq!(

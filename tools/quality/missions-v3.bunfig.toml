@@ -1,0 +1,9 @@
+[test]
+coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "./coverage/missions-v3"
+coverageThreshold = 0.9
+coverageSkipTestFiles = true
+# Inherited verifiers retain their dedicated full suites; this gate covers only
+# the new pure binding/digest/reference authority oracle, not runtime adapters.
+coveragePathIgnorePatterns = ["**/authorized-execution.ts", "**/policy-core-raw-inputs.ts", "**/build-brief-v2.ts"]

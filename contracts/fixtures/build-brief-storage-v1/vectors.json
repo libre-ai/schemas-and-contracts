@@ -1,0 +1,1191 @@
+{
+  "schemaVersion": "libre-ai.build-brief-storage-vectors.v1",
+  "scope": "Synthetic trusted observations only; no runtime auth, calendar or storage qualification",
+  "policyMutations": [
+    {
+      "id": "owner-transfer",
+      "path": ["rules", 17, "owner"],
+      "value": "missions"
+    },
+    {
+      "id": "post-release-extension",
+      "path": ["rules", 17, "postReferenceRetention"],
+      "value": "P6Y"
+    },
+    {
+      "id": "backup-extension",
+      "path": ["backupExpiry"],
+      "value": "P36D"
+    },
+    {
+      "id": "inherited-rule-change",
+      "path": ["rules", 0, "defaultRetention"],
+      "value": "P2D"
+    },
+    {
+      "id": "blanket-history",
+      "path": ["acceptedPackageProofs", "components"],
+      "value": ["membership-history"]
+    },
+    {
+      "id": "archive-execution-grant",
+      "path": ["handoffArchive", "executionAuthority"],
+      "value": "execute"
+    },
+    {
+      "id": "restore-skip-deletion",
+      "path": ["proofRestore", "ownerDeletionBeforeExposure"],
+      "value": false
+    },
+    {
+      "id": "implicit-v3-auth-adoption",
+      "path": ["authRestore"],
+      "value": {}
+    },
+    {
+      "id": "promoted-by-payload",
+      "path": ["status"],
+      "value": "locked"
+    },
+    {
+      "id": "cannot-erase-confirmation-history",
+      "path": ["handoffArchive", "confirmationHistory"],
+      "value": "discard-on-unknown"
+    },
+    {
+      "id": "cannot-redirect-decision-record",
+      "path": ["decisionRecord"],
+      "value": "docs/other.md"
+    }
+  ],
+  "cases": [
+    {
+      "id": "append-new-proof",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "append"
+    },
+    {
+      "id": "same-receipt-no-retention-extension",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "identical",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "idempotent"
+    },
+    {
+      "id": "append-denies-bodyMatches",
+      "input": {
+        "kind": "append",
+        "bodyMatches": false,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-allReceiptsVerified",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": false,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-historicalProofComplete",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": false,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-sourceEvidenceAuthenticated",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": false,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-contributorsVerified",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": false,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-currentPermission",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": false,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-currentKeyActive",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": false,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-receiptState-conflicting",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "conflicting",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-receiptState-unknown",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "unknown",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-expectedRevision-3",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 3,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-expectedRevision--1",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": -1,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-currentRevision-1.5",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 1.5,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-releaseAfter-100",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": null,
+        "releaseAfter": 100
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-denies-releaseBefore-100",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": 100,
+        "releaseAfter": null
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "append-keeps-released-anchor",
+      "input": {
+        "kind": "append",
+        "bodyMatches": true,
+        "allReceiptsVerified": true,
+        "historicalProofComplete": true,
+        "sourceEvidenceAuthenticated": true,
+        "contributorsVerified": true,
+        "currentPermission": true,
+        "currentKeyActive": true,
+        "expectedRevision": 4,
+        "currentRevision": 4,
+        "receiptState": "new",
+        "releaseBefore": 100,
+        "releaseAfter": 100
+      },
+      "expected": "append"
+    },
+    {
+      "id": "confirm-mission-commit",
+      "input": {
+        "kind": "reference",
+        "action": "confirm",
+        "state": "reserved",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "committed",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "confirm"
+    },
+    {
+      "id": "reconcile-after-unknown-observation-committed",
+      "input": {
+        "kind": "reference",
+        "action": "reconcile",
+        "state": "reserved",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "committed",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "confirm"
+    },
+    {
+      "id": "release-proven-removed",
+      "input": {
+        "kind": "reference",
+        "action": "release",
+        "state": "confirmed",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "removed-final",
+        "everConfirmed": true,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "release"
+    },
+    {
+      "id": "aborted-reservation-reconciled",
+      "input": {
+        "kind": "reference",
+        "action": "reconcile",
+        "state": "reserved",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "not-committed-final",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "release"
+    },
+    {
+      "id": "identical-release-is-idempotent",
+      "input": {
+        "kind": "reference",
+        "action": "release",
+        "state": "released",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "removed-final",
+        "everConfirmed": true,
+        "releasedBy": "removed-final",
+        "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "idempotent"
+    },
+    {
+      "id": "reference-protects-unknown",
+      "input": {
+        "kind": "reference",
+        "action": "confirm",
+        "state": "reserved",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "unknown",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": null
+      },
+      "expected": "retain"
+    },
+    {
+      "id": "reference-denies-wrong-identity",
+      "input": {
+        "kind": "reference",
+        "action": "confirm",
+        "state": "reserved",
+        "identityMatches": false,
+        "currentPermission": true,
+        "sourceOutcome": "committed",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "reference-denies-no-permission",
+      "input": {
+        "kind": "reference",
+        "action": "confirm",
+        "state": "reserved",
+        "identityMatches": true,
+        "currentPermission": false,
+        "sourceOutcome": "committed",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "reference-protects-blind-release",
+      "input": {
+        "kind": "reference",
+        "action": "release",
+        "state": "reserved",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "unknown",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": null
+      },
+      "expected": "retain"
+    },
+    {
+      "id": "reference-denies-reopen-released",
+      "input": {
+        "kind": "reference",
+        "action": "confirm",
+        "state": "released",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "committed",
+        "everConfirmed": true,
+        "releasedBy": "removed-final",
+        "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "reference-denies-wrong-action",
+      "input": {
+        "kind": "reference",
+        "action": "invent",
+        "state": "reserved",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "committed",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "reference-denies-wrong-state",
+      "input": {
+        "kind": "reference",
+        "action": "confirm",
+        "state": "invent",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "committed",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "reference-denies-release-live-mission",
+      "input": {
+        "kind": "reference",
+        "action": "release",
+        "state": "reserved",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "committed",
+        "everConfirmed": false,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "before-policy-deadline",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 1999
+      },
+      "expected": "retain"
+    },
+    {
+      "id": "at-policy-deadline",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 2000
+      },
+      "expected": "purge"
+    },
+    {
+      "id": "active-reference-blocks-purge",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 1,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 2001
+      },
+      "expected": "retain"
+    },
+    {
+      "id": "unknown-reference-blocks-purge",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 1,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 2001
+      },
+      "expected": "retain"
+    },
+    {
+      "id": "retention-denies-unverified-deadline",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": false,
+        "now": 1999
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "retention-denies-wrong-anchor",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 999,
+        "deadlineVerified": true,
+        "now": 1999
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "retention-denies-time-before-release",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 999
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "retention-denies-inverted-window",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 1000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 1999
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "retention-denies-stale-references",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 0,
+        "referencesCurrent": false,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 1999
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "retention-denies-negative-count",
+      "input": {
+        "kind": "retention",
+        "activeReferences": -1,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 1999
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "retention-denies-noninteger-clock",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 1999.5
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "retention-denies-unbounded-clock",
+      "input": {
+        "kind": "retention",
+        "activeReferences": 0,
+        "uncertainReferences": 0,
+        "referencesCurrent": true,
+        "releasedAt": 1000,
+        "policyDeadline": 2000,
+        "deadlineAnchor": 1000,
+        "deadlineVerified": true,
+        "now": 9007199254740992
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "restore-after-deletion-and-reference-replay",
+      "input": {
+        "kind": "restore",
+        "ownerDeletionReplayed": true,
+        "canonicalDigestsVerified": true,
+        "historicalProofComplete": true,
+        "referencesReconciled": true,
+        "currentAuthoritiesAvailable": true,
+        "inheritedExecutionRestoreOrderPreserved": true
+      },
+      "expected": "restore"
+    },
+    {
+      "id": "restore-denies-ownerDeletionReplayed",
+      "input": {
+        "kind": "restore",
+        "ownerDeletionReplayed": false,
+        "canonicalDigestsVerified": true,
+        "historicalProofComplete": true,
+        "referencesReconciled": true,
+        "currentAuthoritiesAvailable": true,
+        "inheritedExecutionRestoreOrderPreserved": true
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "restore-denies-canonicalDigestsVerified",
+      "input": {
+        "kind": "restore",
+        "ownerDeletionReplayed": true,
+        "canonicalDigestsVerified": false,
+        "historicalProofComplete": true,
+        "referencesReconciled": true,
+        "currentAuthoritiesAvailable": true,
+        "inheritedExecutionRestoreOrderPreserved": true
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "restore-denies-historicalProofComplete",
+      "input": {
+        "kind": "restore",
+        "ownerDeletionReplayed": true,
+        "canonicalDigestsVerified": true,
+        "historicalProofComplete": false,
+        "referencesReconciled": true,
+        "currentAuthoritiesAvailable": true,
+        "inheritedExecutionRestoreOrderPreserved": true
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "restore-denies-referencesReconciled",
+      "input": {
+        "kind": "restore",
+        "ownerDeletionReplayed": true,
+        "canonicalDigestsVerified": true,
+        "historicalProofComplete": true,
+        "referencesReconciled": false,
+        "currentAuthoritiesAvailable": true,
+        "inheritedExecutionRestoreOrderPreserved": true
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "restore-denies-currentAuthoritiesAvailable",
+      "input": {
+        "kind": "restore",
+        "ownerDeletionReplayed": true,
+        "canonicalDigestsVerified": true,
+        "historicalProofComplete": true,
+        "referencesReconciled": true,
+        "currentAuthoritiesAvailable": false,
+        "inheritedExecutionRestoreOrderPreserved": true
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "restore-denies-inheritedExecutionRestoreOrderPreserved",
+      "input": {
+        "kind": "restore",
+        "ownerDeletionReplayed": true,
+        "canonicalDigestsVerified": true,
+        "historicalProofComplete": true,
+        "referencesReconciled": true,
+        "currentAuthoritiesAvailable": true,
+        "inheritedExecutionRestoreOrderPreserved": false
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "expired-archive-remains-reconstructible",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "audit",
+        "currentPermission": true,
+        "historicalProofVerified": true,
+        "producerBindingVerified": true,
+        "bytesVerified": true,
+        "now": 2000,
+        "expiresAt": 1000
+      },
+      "expected": "read-archive"
+    },
+    {
+      "id": "expired-archive-never-grants-planning",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "plan",
+        "currentPermission": true,
+        "historicalProofVerified": true,
+        "producerBindingVerified": true,
+        "bytesVerified": true,
+        "now": 2000,
+        "expiresAt": 1000
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "unexpired-plan-still-requires-authority",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "plan",
+        "currentPermission": true,
+        "historicalProofVerified": true,
+        "producerBindingVerified": true,
+        "bytesVerified": true,
+        "now": 2000,
+        "expiresAt": 2001
+      },
+      "expected": "plan"
+    },
+    {
+      "id": "expiry-is-exclusive",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "plan",
+        "currentPermission": true,
+        "historicalProofVerified": true,
+        "producerBindingVerified": true,
+        "bytesVerified": true,
+        "now": 2000,
+        "expiresAt": 2000
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "archive-is-not-execution",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "execute",
+        "currentPermission": true,
+        "historicalProofVerified": true,
+        "producerBindingVerified": true,
+        "bytesVerified": true,
+        "now": 2000,
+        "expiresAt": 3000
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "archive-denies-currentPermission",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "audit",
+        "currentPermission": false,
+        "historicalProofVerified": true,
+        "producerBindingVerified": true,
+        "bytesVerified": true,
+        "now": 2000,
+        "expiresAt": 1000
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "archive-denies-historicalProofVerified",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "audit",
+        "currentPermission": true,
+        "historicalProofVerified": false,
+        "producerBindingVerified": true,
+        "bytesVerified": true,
+        "now": 2000,
+        "expiresAt": 1000
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "archive-denies-producerBindingVerified",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "audit",
+        "currentPermission": true,
+        "historicalProofVerified": true,
+        "producerBindingVerified": false,
+        "bytesVerified": true,
+        "now": 2000,
+        "expiresAt": 1000
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "archive-denies-bytesVerified",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "audit",
+        "currentPermission": true,
+        "historicalProofVerified": true,
+        "producerBindingVerified": true,
+        "bytesVerified": false,
+        "now": 2000,
+        "expiresAt": 1000
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "archive-denies-now",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "audit",
+        "currentPermission": true,
+        "historicalProofVerified": true,
+        "producerBindingVerified": true,
+        "bytesVerified": true,
+        "now": -1,
+        "expiresAt": 1000
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "archive-denies-expiresAt",
+      "input": {
+        "kind": "archive-use",
+        "purpose": "audit",
+        "currentPermission": true,
+        "historicalProofVerified": true,
+        "producerBindingVerified": true,
+        "bytesVerified": true,
+        "now": 2000,
+        "expiresAt": 1.5
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "backup-at-35-day-ceiling",
+      "input": {
+        "kind": "backup",
+        "deletedAt": 1000,
+        "backupExpiresAt": 3024001000
+      },
+      "expected": "bounded-backup"
+    },
+    {
+      "id": "backup-above-ceiling",
+      "input": {
+        "kind": "backup",
+        "deletedAt": 1000,
+        "backupExpiresAt": 3024001001
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "backup-before-delete",
+      "input": {
+        "kind": "backup",
+        "deletedAt": 1000,
+        "backupExpiresAt": 999
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "backup-invalid-clock",
+      "input": {
+        "kind": "backup",
+        "deletedAt": -1,
+        "backupExpiresAt": 3024001000
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "joint-release-same-anchor",
+      "input": {
+        "kind": "joint-reference",
+        "archiveReferences": 0,
+        "packageReferences": 0,
+        "archiveReleasedAt": 1000,
+        "packageReleasedAt": 1000,
+        "identityMatches": true,
+        "atomicOwnerCommit": true
+      },
+      "expected": "release"
+    },
+    {
+      "id": "another-package-reference-protects-proof",
+      "input": {
+        "kind": "joint-reference",
+        "archiveReferences": 0,
+        "packageReferences": 1,
+        "archiveReleasedAt": 1000,
+        "packageReleasedAt": null,
+        "identityMatches": true,
+        "atomicOwnerCommit": true
+      },
+      "expected": "retain"
+    },
+    {
+      "id": "active-archive-protects-package",
+      "input": {
+        "kind": "joint-reference",
+        "archiveReferences": 1,
+        "packageReferences": 1,
+        "archiveReleasedAt": null,
+        "packageReleasedAt": null,
+        "identityMatches": true,
+        "atomicOwnerCommit": true
+      },
+      "expected": "retain"
+    },
+    {
+      "id": "archive-outlives-proof-refused",
+      "input": {
+        "kind": "joint-reference",
+        "archiveReferences": 0,
+        "packageReferences": 0,
+        "archiveReleasedAt": 1000,
+        "packageReleasedAt": 999,
+        "identityMatches": true,
+        "atomicOwnerCommit": true
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "active-archive-without-package-reference",
+      "input": {
+        "kind": "joint-reference",
+        "archiveReferences": 1,
+        "packageReferences": 0,
+        "archiveReleasedAt": null,
+        "packageReleasedAt": 1000,
+        "identityMatches": true,
+        "atomicOwnerCommit": true
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "non-atomic-owner-write",
+      "input": {
+        "kind": "joint-reference",
+        "archiveReferences": 0,
+        "packageReferences": 0,
+        "archiveReleasedAt": 1000,
+        "packageReleasedAt": 1000,
+        "identityMatches": true,
+        "atomicOwnerCommit": false
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "wrong-joint-identity",
+      "input": {
+        "kind": "joint-reference",
+        "archiveReferences": 0,
+        "packageReferences": 0,
+        "archiveReleasedAt": 1000,
+        "packageReleasedAt": 1000,
+        "identityMatches": false,
+        "atomicOwnerCommit": true
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "unknown-reference-count",
+      "input": {
+        "kind": "joint-reference",
+        "archiveReferences": -1,
+        "packageReferences": 0,
+        "archiveReleasedAt": 1000,
+        "packageReleasedAt": 1000,
+        "identityMatches": true,
+        "atomicOwnerCommit": true
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "confirmed-reference-cannot-be-uncommitted-release",
+      "input": {
+        "kind": "reference",
+        "action": "release",
+        "state": "confirmed",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "not-committed-final",
+        "everConfirmed": true,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "deny"
+    },
+    {
+      "id": "confirmed-reference-cannot-be-uncommitted-reconcile",
+      "input": {
+        "kind": "reference",
+        "action": "reconcile",
+        "state": "confirmed",
+        "identityMatches": true,
+        "currentPermission": true,
+        "sourceOutcome": "not-committed-final",
+        "everConfirmed": true,
+        "releasedBy": null,
+        "releaseEvidenceDigest": null,
+        "sourceEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "expected": "deny"
+    }
+  ]
+}
