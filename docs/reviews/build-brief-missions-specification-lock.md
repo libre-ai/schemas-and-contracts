@@ -107,3 +107,22 @@ Before any implementation, rollback withdraws the adoption and dependent pins
 through another reviewed change. It deletes no product data: this package creates
 none. Later product work needs its own qualified migration, API/E2E/coverage,
 authority, retention and restoration evidence before activation.
+
+## Immutable promotion review trail
+
+The separate role passes on corrected commit
+`50a1f2e754982ba9e8e1c87a532e30d862fb5c40` approve architecture, security,
+privacy and cryptography. The adjacent
+`evidence/build-brief-missions-lock/promotion-index.json` binds each original
+verdict by content hash. Their reviewed commit identities are preserved; this
+follow-up adds review evidence only and requires its own final integration pass.
+
+The first local target `41e6a5e` was rejected for SEC-LOCK-01: a caller-controlled
+document map could replace the baseline after hashing and admit a sixteenth
+transition. The successor reads each entry once, copies its bytes before hashing
+and parses only the retained private snapshot. Independent probes reproduce the
+old bypass and verify rejection after correction, including later mutation of the
+original buffer. The original security and cryptography rejections, and the
+separate architecture approval, remain immutable historical records.
+
+Neither the role records nor their index opens any consumer or runtime gate.
