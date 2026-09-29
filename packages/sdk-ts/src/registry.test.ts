@@ -77,11 +77,19 @@ const remainingCandidateIds = [
   "build-brief-api-v2",
   "build-brief-body-v2",
   "build-brief-policy-v2",
+  "execution-authorization-v3",
+  "execution-plan-body-v3",
   "harness-profile-v2",
   "local-comparison-v3",
+  "mission-handoff-binding-v1",
+  "mission-record-v3",
+  "missions-api-schema-v3",
+  "missions-api-v3",
   "public-vote-dataset-v3",
   "retention-policy-schema-v3",
+  "retention-policy-schema-v4",
   "retention-policy-v3",
+  "retention-policy-v4",
   "spec-package-v2",
   "specifications-api-v2",
 ] as const;
@@ -94,6 +102,14 @@ const apiFixtureDocument = (await Bun.file(
   "../../contracts/fixtures/build-brief-api-v2/schema-fixtures.json",
 ).json()) as { cases: Fixture[] };
 fixtureDocument.cases.push(...apiFixtureDocument.cases);
+const storageFixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/build-brief-storage-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...storageFixtureDocument.cases);
+const missionsFixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/missions-v3/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...missionsFixtureDocument.cases);
 const authorityCatalog = (await Bun.file("../../contracts/catalog.v1.json").json()) as {
   contracts: CatalogEntry[];
 };

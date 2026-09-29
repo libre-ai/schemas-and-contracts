@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "candidate-protocol-authorities.v1",
+  "entries": [
+    {
+      "slug": "missions",
+      "major": 3,
+      "status": "candidate",
+      "sourceRepository": "libre-ai/ai-work-supervision",
+      "sourceRevision": "276ac5db8d2bc904ab2bfa4d26620267c37a7092",
+      "sourcePath": "docs/apps/missions-v3-candidate.md",
+      "localPath": "docs/protocols/candidates/missions.v3.md",
+      "sha256": "8bc739670fbf7a8a1b52097e1c5321e091498bdb03fc4851cfbafd5e4af35ce3"
+    }
+  ]
+}

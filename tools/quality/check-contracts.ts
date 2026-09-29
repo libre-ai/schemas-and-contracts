@@ -10,6 +10,12 @@ import {
   evaluateAuthorizedExecutionVector,
   retentionPolicyV2Failures,
 } from "./authorized-execution";
+import { retentionV4Failures } from "./build-brief-storage-v1";
+import {
+  candidateProtocolAuthorities,
+  candidateProtocolForVersion,
+  candidateProtocolOperations,
+} from "./candidate-protocol-authority";
 import { parseStrictJson } from "./policy-core-raw-inputs";
 import { localProtocolAuthorities } from "./protocol-authority";
 import {
@@ -526,6 +532,29 @@ if (
 ) {
   failures.push("build-brief-api-v2: invalid separate schema fixture inventory");
 } else fixtureCases.push(...(briefApiFixtures.cases as FixtureCase[]));
+const briefStorageFixtures = await Bun.file(
+  "contracts/fixtures/build-brief-storage-v1/schema-fixtures.json",
+).json();
+if (
+  !isRecord(briefStorageFixtures) ||
+  briefStorageFixtures.schemaVersion !== "libre-ai.schema-fixtures.v1" ||
+  !Array.isArray(briefStorageFixtures.cases) ||
+  briefStorageFixtures.cases.length !== 1
+) {
+  failures.push("build-brief-storage-v1: invalid separate schema fixture inventory");
+} else fixtureCases.push(...(briefStorageFixtures.cases as FixtureCase[]));
+const missionsFixtures = await Bun.file(
+  "contracts/fixtures/missions-v3/schema-fixtures.json",
+).json();
+if (
+  !isRecord(missionsFixtures) ||
+  missionsFixtures.schemaVersion !== "libre-ai.schema-fixtures.v1" ||
+  !Array.isArray(missionsFixtures.cases) ||
+  missionsFixtures.cases.length !== 5
+) {
+  failures.push("missions-v3: invalid separate schema fixture inventory");
+} else fixtureCases.push(...(missionsFixtures.cases as FixtureCase[]));
+
 if (fixtureCases.length === 0)
   failures.push("contracts/fixtures/schema-fixtures.v1.json: no fixtures");
 const fixtureNames = new Set<string>();
@@ -744,6 +773,10 @@ const retentionV1Authority = await Bun.file("contracts/data/retention.v1.json").
 for (const path of managedPaths.filter((item) => item.startsWith("contracts/data/"))) {
   try {
     const policy = await Bun.file(path).json();
+    if (path === "contracts/data/retention.v4.json") {
+      for (const failure of retentionV4Failures(policy)) failures.push(`${path}: ${failure}`);
+      continue;
+    }
     const retentionValidator =
       isRecord(policy) && policy.schemaVersion === "libre-ai.retention-policy.v3"
         ? retentionV3Validator
@@ -811,6 +844,18 @@ const protocolAuthorities = localProtocolAuthorities(
   await Bun.file("contracts/protocol-authorities.v1.json").json(),
   requiredAuthoritySlugs,
 );
+// This explicit version inventory cannot silently replace a historical pin.
+const candidateAuthorities = candidateProtocolAuthorities(
+  await Bun.file("contracts/candidate-protocol-authorities.v1.json").json(),
+  [
+    {
+      slug: "missions",
+      major: 3,
+      status: entryByPath.get("contracts/openapi/missions.v3.yaml")?.status ?? "missing",
+      sourceRepository: "libre-ai/ai-work-supervision",
+    },
+  ],
+);
 
 for (const path of await scan("docs/apps/*.md")) {
   const text = await Bun.file(path).text();
@@ -857,7 +902,11 @@ for (const path of managedPaths.filter((item) => item.startsWith("contracts/open
   if (JSON.stringify([...localOperations].sort()) !== JSON.stringify(allowedLocal)) {
     failures.push(`${path}: local operation boundary diverges from the accepted application model`);
   }
-  const authority = protocolAuthorities.get(appName);
+  const candidateAuthority =
+    appName === "missions"
+      ? candidateProtocolForVersion(candidateAuthorities, appName, Number(apiMajor), [1, 2])
+      : undefined;
+  const authority = candidateAuthority ?? protocolAuthorities.get(appName);
   if (!authority) throw new Error(`Missing authority for ${appName}`);
   const appPath = authority.localPath;
   protocolAuthoritiesExpected += 1;
@@ -869,6 +918,9 @@ for (const path of managedPaths.filter((item) => item.startsWith("contracts/open
   ) {
     protocolAuthoritiesResolved += 1;
     protocolAuthoritiesLocal += 1;
+    const candidateOperations = candidateAuthority
+      ? candidateProtocolOperations(spec, Number(apiMajor))
+      : null;
     for (const [label, actual] of [
       ["Commands", commands],
       ["Queries", queries],
@@ -878,7 +930,11 @@ for (const path of managedPaths.filter((item) => item.startsWith("contracts/open
       )?.[1];
       const line =
         versioned ?? spec.match(new RegExp(`\\*\\*${label}:\\*\\* ([^\\n]+)`))?.[1] ?? "";
-      const expected = [...line.matchAll(/`([A-Z][A-Za-z0-9]+)`/g)].map((match) => match[1]).sort();
+      const expected = candidateOperations
+        ? [
+            ...(label === "Commands" ? candidateOperations.commands : candidateOperations.queries),
+          ].sort()
+        : [...line.matchAll(/`([A-Z][A-Za-z0-9]+)`/g)].map((match) => match[1]).sort();
       if (JSON.stringify([...actual].sort()) !== JSON.stringify(expected))
         failures.push(`${path}: ${label.toLowerCase()} diverge from ${appPath}`);
     }
@@ -963,7 +1019,10 @@ for (const path of managedPaths.filter((item) => item.startsWith("contracts/open
         if (browserMutation && !parameterRefs.includes("#/components/parameters/CsrfToken"))
           failures.push(`${path}:${method}:${route}: missing CSRF token`);
         const closedBriefRefusals =
-          path === "contracts/openapi/specifications.v2.yaml" &&
+          [
+            "contracts/openapi/specifications.v2.yaml",
+            "contracts/openapi/missions.v3.yaml",
+          ].includes(path) &&
           isRecord(rawOperation.responses) &&
           ["400", "401", "403", "404", "405", "409", "412", "413", "415", "422", "503"].every(
             (status) => status in (rawOperation.responses as JsonRecord),

@@ -1,0 +1,1384 @@
+{
+  "classification": "synthetic-candidate-no-authority",
+  "endpoints": [
+    {
+      "path": "/v3/missions",
+      "method": "get",
+      "operationId": "listMissionsV3",
+      "successStatus": "200",
+      "response": {
+        "data": [
+          {
+            "schemaVersion": "libre-ai.mission-record.v3",
+            "id": "urn:libre-ai:mission:mission-1",
+            "tenantId": "ten_1234567890abcdef",
+            "revision": 9,
+            "state": "validated",
+            "risk": {
+              "level": "medium",
+              "policyVersion": "1.0.0"
+            },
+            "budgets": {
+              "maxDurationSeconds": 3600,
+              "maxToolCalls": 100,
+              "maxInputTokens": 100000,
+              "maxOutputTokens": 50000,
+              "network": "private-gateway-only"
+            },
+            "acceptanceCriteria": ["criterion_one"],
+            "plan": {
+              "id": "urn:libre-ai:plan:plan-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            "planQuorum": {
+              "id": "urn:libre-ai:quorum:plan-quorum-1",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            "executionAuthorization": {
+              "id": "urn:libre-ai:authorization:auth-1",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            "runId": "urn:libre-ai:run:run-1",
+            "runHarnessAttestation": {
+              "id": "urn:libre-ai:attestation:harness-run-1",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            "reviews": [
+              {
+                "id": "urn:libre-ai:review:review-1",
+                "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "mediaType": "application/json"
+              },
+              {
+                "id": "urn:libre-ai:review:review-2",
+                "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "mediaType": "application/json"
+              },
+              {
+                "id": "urn:libre-ai:review:review-3",
+                "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "mediaType": "application/json"
+              },
+              {
+                "id": "urn:libre-ai:review:review-4",
+                "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "mediaType": "application/json"
+              }
+            ],
+            "eventCursor": 8,
+            "result": {
+              "artifact": {
+                "id": "urn:libre-ai:artifact:result-1",
+                "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "mediaType": "application/json"
+              },
+              "evidence": {
+                "id": "urn:libre-ai:evidence:result-proof-1",
+                "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "mediaType": "application/json"
+              },
+              "contributorLineage": {
+                "id": "urn:libre-ai:lineage:result-lineage-1",
+                "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "mediaType": "application/json"
+              },
+              "submittedAt": "2026-07-16T11:00:00Z"
+            },
+            "resultQuorum": {
+              "id": "urn:libre-ai:quorum:result-quorum-1",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            "validation": {
+              "status": "validated",
+              "reasonCode": "mission.agent_quorum_valid",
+              "decidedAt": "2026-07-16T11:10:00Z"
+            },
+            "createdAt": "2026-07-16T09:00:00Z",
+            "handoffBinding": {
+              "schemaVersion": "libre-ai.mission-handoff-binding.v1",
+              "tenantId": "ten_1234567890abcdef",
+              "handoff": {
+                "schemaVersion": "libre-ai.agent-handoff.v2",
+                "id": "urn:libre-ai:handoff:fixture-1",
+                "documentDigest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+                "archiveReference": {
+                  "id": "urn:libre-ai:handoff-archive:fixture-1",
+                  "digest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+                  "mediaType": "application/json"
+                }
+              },
+              "specPackage": {
+                "schemaVersion": "libre-ai.spec-package.v2",
+                "id": "urn:libre-ai:spec-package:fixture-1",
+                "version": 1,
+                "bodyDigest": "8ce800b3d67a50c97f9ac97ec14706983a7bcb42c948d53254ab8cc6cd9b9dc1"
+              },
+              "acceptanceDigest": "e04768609d8794084019e671e5b2b9478447e9ada5cee935ad8dc8c4645aa1a6",
+              "acceptanceCriteria": ["criterion_one"]
+            },
+            "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+            "handoffReferenceId": "urn:libre-ai:handoff-reference:fixture-1"
+          }
+        ],
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9,
+          "nextCursor": null
+        }
+      },
+      "invalidRequests": [],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "path": "/v3/missions",
+      "method": "post",
+      "operationId": "proposeMissionV3",
+      "successStatus": "201",
+      "request": {
+        "handoff": {
+          "id": "urn:libre-ai:handoff:fixture-1",
+          "documentDigest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37"
+        },
+        "budgets": {
+          "maxDurationSeconds": 3600,
+          "maxToolCalls": 100,
+          "maxInputTokens": 100000,
+          "maxOutputTokens": 50000,
+          "network": "private-gateway-only"
+        }
+      },
+      "response": {
+        "data": {
+          "schemaVersion": "libre-ai.mission-record.v3",
+          "id": "urn:libre-ai:mission:mission-1",
+          "tenantId": "ten_1234567890abcdef",
+          "revision": 9,
+          "state": "validated",
+          "risk": {
+            "level": "medium",
+            "policyVersion": "1.0.0"
+          },
+          "budgets": {
+            "maxDurationSeconds": 3600,
+            "maxToolCalls": 100,
+            "maxInputTokens": 100000,
+            "maxOutputTokens": 50000,
+            "network": "private-gateway-only"
+          },
+          "acceptanceCriteria": ["criterion_one"],
+          "plan": {
+            "id": "urn:libre-ai:plan:plan-1",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mediaType": "application/json"
+          },
+          "planQuorum": {
+            "id": "urn:libre-ai:quorum:plan-quorum-1",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mediaType": "application/json"
+          },
+          "executionAuthorization": {
+            "id": "urn:libre-ai:authorization:auth-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "runId": "urn:libre-ai:run:run-1",
+          "runHarnessAttestation": {
+            "id": "urn:libre-ai:attestation:harness-run-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "reviews": [
+            {
+              "id": "urn:libre-ai:review:review-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-2",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-3",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-4",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            }
+          ],
+          "eventCursor": 8,
+          "result": {
+            "artifact": {
+              "id": "urn:libre-ai:artifact:result-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            "evidence": {
+              "id": "urn:libre-ai:evidence:result-proof-1",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            "contributorLineage": {
+              "id": "urn:libre-ai:lineage:result-lineage-1",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            "submittedAt": "2026-07-16T11:00:00Z"
+          },
+          "resultQuorum": {
+            "id": "urn:libre-ai:quorum:result-quorum-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "validation": {
+            "status": "validated",
+            "reasonCode": "mission.agent_quorum_valid",
+            "decidedAt": "2026-07-16T11:10:00Z"
+          },
+          "createdAt": "2026-07-16T09:00:00Z",
+          "handoffBinding": {
+            "schemaVersion": "libre-ai.mission-handoff-binding.v1",
+            "tenantId": "ten_1234567890abcdef",
+            "handoff": {
+              "schemaVersion": "libre-ai.agent-handoff.v2",
+              "id": "urn:libre-ai:handoff:fixture-1",
+              "documentDigest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+              "archiveReference": {
+                "id": "urn:libre-ai:handoff-archive:fixture-1",
+                "digest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+                "mediaType": "application/json"
+              }
+            },
+            "specPackage": {
+              "schemaVersion": "libre-ai.spec-package.v2",
+              "id": "urn:libre-ai:spec-package:fixture-1",
+              "version": 1,
+              "bodyDigest": "8ce800b3d67a50c97f9ac97ec14706983a7bcb42c948d53254ab8cc6cd9b9dc1"
+            },
+            "acceptanceDigest": "e04768609d8794084019e671e5b2b9478447e9ada5cee935ad8dc8c4645aa1a6",
+            "acceptanceCriteria": ["criterion_one"]
+          },
+          "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+          "handoffReferenceId": "urn:libre-ai:handoff-reference:fixture-1"
+        },
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9
+        }
+      },
+      "invalidRequests": [
+        {
+          "name": "unknown request field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "path": "/v3/missions/{missionId}",
+      "method": "get",
+      "operationId": "getMissionV3",
+      "successStatus": "200",
+      "response": {
+        "data": {
+          "schemaVersion": "libre-ai.mission-record.v3",
+          "id": "urn:libre-ai:mission:mission-1",
+          "tenantId": "ten_1234567890abcdef",
+          "revision": 9,
+          "state": "validated",
+          "risk": {
+            "level": "medium",
+            "policyVersion": "1.0.0"
+          },
+          "budgets": {
+            "maxDurationSeconds": 3600,
+            "maxToolCalls": 100,
+            "maxInputTokens": 100000,
+            "maxOutputTokens": 50000,
+            "network": "private-gateway-only"
+          },
+          "acceptanceCriteria": ["criterion_one"],
+          "plan": {
+            "id": "urn:libre-ai:plan:plan-1",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mediaType": "application/json"
+          },
+          "planQuorum": {
+            "id": "urn:libre-ai:quorum:plan-quorum-1",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mediaType": "application/json"
+          },
+          "executionAuthorization": {
+            "id": "urn:libre-ai:authorization:auth-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "runId": "urn:libre-ai:run:run-1",
+          "runHarnessAttestation": {
+            "id": "urn:libre-ai:attestation:harness-run-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "reviews": [
+            {
+              "id": "urn:libre-ai:review:review-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-2",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-3",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-4",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            }
+          ],
+          "eventCursor": 8,
+          "result": {
+            "artifact": {
+              "id": "urn:libre-ai:artifact:result-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            "evidence": {
+              "id": "urn:libre-ai:evidence:result-proof-1",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            "contributorLineage": {
+              "id": "urn:libre-ai:lineage:result-lineage-1",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            "submittedAt": "2026-07-16T11:00:00Z"
+          },
+          "resultQuorum": {
+            "id": "urn:libre-ai:quorum:result-quorum-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "validation": {
+            "status": "validated",
+            "reasonCode": "mission.agent_quorum_valid",
+            "decidedAt": "2026-07-16T11:10:00Z"
+          },
+          "createdAt": "2026-07-16T09:00:00Z",
+          "handoffBinding": {
+            "schemaVersion": "libre-ai.mission-handoff-binding.v1",
+            "tenantId": "ten_1234567890abcdef",
+            "handoff": {
+              "schemaVersion": "libre-ai.agent-handoff.v2",
+              "id": "urn:libre-ai:handoff:fixture-1",
+              "documentDigest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+              "archiveReference": {
+                "id": "urn:libre-ai:handoff-archive:fixture-1",
+                "digest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+                "mediaType": "application/json"
+              }
+            },
+            "specPackage": {
+              "schemaVersion": "libre-ai.spec-package.v2",
+              "id": "urn:libre-ai:spec-package:fixture-1",
+              "version": 1,
+              "bodyDigest": "8ce800b3d67a50c97f9ac97ec14706983a7bcb42c948d53254ab8cc6cd9b9dc1"
+            },
+            "acceptanceDigest": "e04768609d8794084019e671e5b2b9478447e9ada5cee935ad8dc8c4645aa1a6",
+            "acceptanceCriteria": ["criterion_one"]
+          },
+          "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+          "handoffReferenceId": "urn:libre-ai:handoff-reference:fixture-1"
+        },
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9
+        }
+      },
+      "invalidRequests": [],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "path": "/v3/missions/{missionId}/plan",
+      "method": "post",
+      "operationId": "submitExecutionPlanV3",
+      "successStatus": "202",
+      "request": {
+        "schemaVersion": "libre-ai.execution-plan-body.v3",
+        "id": "urn:libre-ai:plan:synthetic-plan-2",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "executionGraph": {
+          "id": "urn:libre-ai:graph:synthetic-graph-1",
+          "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "mediaType": "application/schema+json"
+        },
+        "lineageMode": "initial",
+        "successorLineage": null,
+        "requestedGeneration": 1,
+        "decisionSchemaRefs": [
+          {
+            "id": "urn:libre-ai:schema:human-decision-request-v1",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mediaType": "application/schema+json"
+          },
+          {
+            "id": "urn:libre-ai:schema:human-decision-response-v1",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mediaType": "application/schema+json"
+          }
+        ],
+        "executorProfileRefs": [
+          {
+            "id": "urn:libre-ai:profile:synthetic-executor-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/schema+json"
+          }
+        ],
+        "acceptanceCriteria": ["criterion_1"],
+        "tools": [
+          {
+            "name": "read_file",
+            "access": "read",
+            "argumentPolicyDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "maxCalls": 20
+          }
+        ],
+        "filesystem": {
+          "readPaths": ["src/**"],
+          "writePaths": ["src/**"],
+          "denyPaths": [".env", "**/.git/**"],
+          "copyIgnoredFiles": false
+        },
+        "budgets": {
+          "maxDurationSeconds": 3600,
+          "maxToolCalls": 100,
+          "maxInputTokens": 100000,
+          "maxOutputTokens": 50000,
+          "maxProcesses": 16,
+          "maxFilesChanged": 100,
+          "maxChangedBytes": 1048576,
+          "maxConcurrentAgents": 3
+        },
+        "network": {
+          "workerMode": "private-gateway-only",
+          "gatewayOrigins": [
+            {
+              "scheme": "https",
+              "host": "models.eu.example",
+              "port": 443
+            }
+          ]
+        },
+        "modelEgress": {
+          "purposeCode": "code_review",
+          "authorizationBasis": "contract",
+          "maximumClassification": "tenant-private",
+          "sourcePaths": ["src/**"],
+          "maxBytesPerRequest": 1048576,
+          "region": "eu",
+          "subprocessors": ["provider_eu"],
+          "zeroDataRetention": true,
+          "trainingAllowed": false,
+          "reuseAllowed": false,
+          "policyDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "harnessProfile": {
+          "id": "urn:libre-ai:profile:synthetic-harness-1",
+          "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mediaType": "application/json"
+        },
+        "workerManifests": [
+          {
+            "id": "urn:libre-ai:manifest:synthetic-worker-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          }
+        ],
+        "evidenceDestinations": [
+          {
+            "id": "urn:libre-ai:artifact:synthetic-proof-destination-1",
+            "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "mediaType": "application/json"
+          }
+        ],
+        "createdAt": "2026-09-10T10:00:00Z",
+        "expiresAt": "2026-09-10T12:00:00Z",
+        "bodyDigest": "d04c6860af3e240d5eaf0a95ea2ebace5085353b2e639df0fb905e5919850d9c",
+        "handoffBindingSchemaVersion": "libre-ai.mission-handoff-binding.v1",
+        "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb"
+      },
+      "response": {
+        "data": {
+          "schemaVersion": "libre-ai.mission-record.v3",
+          "id": "urn:libre-ai:mission:mission-1",
+          "tenantId": "ten_1234567890abcdef",
+          "revision": 9,
+          "state": "validated",
+          "risk": {
+            "level": "medium",
+            "policyVersion": "1.0.0"
+          },
+          "budgets": {
+            "maxDurationSeconds": 3600,
+            "maxToolCalls": 100,
+            "maxInputTokens": 100000,
+            "maxOutputTokens": 50000,
+            "network": "private-gateway-only"
+          },
+          "acceptanceCriteria": ["criterion_one"],
+          "plan": {
+            "id": "urn:libre-ai:plan:plan-1",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mediaType": "application/json"
+          },
+          "planQuorum": {
+            "id": "urn:libre-ai:quorum:plan-quorum-1",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mediaType": "application/json"
+          },
+          "executionAuthorization": {
+            "id": "urn:libre-ai:authorization:auth-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "runId": "urn:libre-ai:run:run-1",
+          "runHarnessAttestation": {
+            "id": "urn:libre-ai:attestation:harness-run-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "reviews": [
+            {
+              "id": "urn:libre-ai:review:review-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-2",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-3",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-4",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            }
+          ],
+          "eventCursor": 8,
+          "result": {
+            "artifact": {
+              "id": "urn:libre-ai:artifact:result-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            "evidence": {
+              "id": "urn:libre-ai:evidence:result-proof-1",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            "contributorLineage": {
+              "id": "urn:libre-ai:lineage:result-lineage-1",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            "submittedAt": "2026-07-16T11:00:00Z"
+          },
+          "resultQuorum": {
+            "id": "urn:libre-ai:quorum:result-quorum-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "validation": {
+            "status": "validated",
+            "reasonCode": "mission.agent_quorum_valid",
+            "decidedAt": "2026-07-16T11:10:00Z"
+          },
+          "createdAt": "2026-07-16T09:00:00Z",
+          "handoffBinding": {
+            "schemaVersion": "libre-ai.mission-handoff-binding.v1",
+            "tenantId": "ten_1234567890abcdef",
+            "handoff": {
+              "schemaVersion": "libre-ai.agent-handoff.v2",
+              "id": "urn:libre-ai:handoff:fixture-1",
+              "documentDigest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+              "archiveReference": {
+                "id": "urn:libre-ai:handoff-archive:fixture-1",
+                "digest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+                "mediaType": "application/json"
+              }
+            },
+            "specPackage": {
+              "schemaVersion": "libre-ai.spec-package.v2",
+              "id": "urn:libre-ai:spec-package:fixture-1",
+              "version": 1,
+              "bodyDigest": "8ce800b3d67a50c97f9ac97ec14706983a7bcb42c948d53254ab8cc6cd9b9dc1"
+            },
+            "acceptanceDigest": "e04768609d8794084019e671e5b2b9478447e9ada5cee935ad8dc8c4645aa1a6",
+            "acceptanceCriteria": ["criterion_one"]
+          },
+          "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+          "handoffReferenceId": "urn:libre-ai:handoff-reference:fixture-1"
+        },
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9
+        }
+      },
+      "invalidRequests": [
+        {
+          "name": "unknown request field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "path": "/v3/missions/{missionId}/reviews",
+      "method": "post",
+      "operationId": "submitAgentReviewV3",
+      "successStatus": "202",
+      "request": {
+        "schemaVersion": "libre-ai.agent-review.v1",
+        "id": "urn:libre-ai:review:review-1",
+        "tenantId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:mission-1",
+        "subjectType": "execution-plan",
+        "subjectDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "evidence": [
+          {
+            "id": "urn:libre-ai:evidence:plan-proof-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          }
+        ],
+        "contributorLineage": {
+          "id": "urn:libre-ai:lineage:lineage-1",
+          "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mediaType": "application/json"
+        },
+        "contributorAgentIds": ["author_agent"],
+        "reviewerAgentId": "reviewer_alpha",
+        "reviewerRunId": "urn:libre-ai:run:review-1",
+        "reviewerManifestDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "reviewerPoolId": "pool_alpha",
+        "runtimeFamily": "runtime_alpha",
+        "modelFamily": "model_alpha",
+        "providerId": "provider_alpha",
+        "isolationProfileDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "reviewSessionAttestation": {
+          "id": "urn:libre-ai:attestation:review-session-alpha",
+          "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "mediaType": "application/json"
+        },
+        "blindReview": true,
+        "verdict": "approve",
+        "summary": [],
+        "nonce": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "issuedAt": "2026-07-16T10:05:00Z",
+        "expiresAt": "2026-07-16T11:05:00Z",
+        "signingKeyId": "review_key_1",
+        "preimageDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      },
+      "response": {
+        "data": {
+          "schemaVersion": "libre-ai.mission-record.v3",
+          "id": "urn:libre-ai:mission:mission-1",
+          "tenantId": "ten_1234567890abcdef",
+          "revision": 9,
+          "state": "validated",
+          "risk": {
+            "level": "medium",
+            "policyVersion": "1.0.0"
+          },
+          "budgets": {
+            "maxDurationSeconds": 3600,
+            "maxToolCalls": 100,
+            "maxInputTokens": 100000,
+            "maxOutputTokens": 50000,
+            "network": "private-gateway-only"
+          },
+          "acceptanceCriteria": ["criterion_one"],
+          "plan": {
+            "id": "urn:libre-ai:plan:plan-1",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mediaType": "application/json"
+          },
+          "planQuorum": {
+            "id": "urn:libre-ai:quorum:plan-quorum-1",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mediaType": "application/json"
+          },
+          "executionAuthorization": {
+            "id": "urn:libre-ai:authorization:auth-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "runId": "urn:libre-ai:run:run-1",
+          "runHarnessAttestation": {
+            "id": "urn:libre-ai:attestation:harness-run-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "reviews": [
+            {
+              "id": "urn:libre-ai:review:review-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-2",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-3",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-4",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            }
+          ],
+          "eventCursor": 8,
+          "result": {
+            "artifact": {
+              "id": "urn:libre-ai:artifact:result-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            "evidence": {
+              "id": "urn:libre-ai:evidence:result-proof-1",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            "contributorLineage": {
+              "id": "urn:libre-ai:lineage:result-lineage-1",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            "submittedAt": "2026-07-16T11:00:00Z"
+          },
+          "resultQuorum": {
+            "id": "urn:libre-ai:quorum:result-quorum-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "validation": {
+            "status": "validated",
+            "reasonCode": "mission.agent_quorum_valid",
+            "decidedAt": "2026-07-16T11:10:00Z"
+          },
+          "createdAt": "2026-07-16T09:00:00Z",
+          "handoffBinding": {
+            "schemaVersion": "libre-ai.mission-handoff-binding.v1",
+            "tenantId": "ten_1234567890abcdef",
+            "handoff": {
+              "schemaVersion": "libre-ai.agent-handoff.v2",
+              "id": "urn:libre-ai:handoff:fixture-1",
+              "documentDigest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+              "archiveReference": {
+                "id": "urn:libre-ai:handoff-archive:fixture-1",
+                "digest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+                "mediaType": "application/json"
+              }
+            },
+            "specPackage": {
+              "schemaVersion": "libre-ai.spec-package.v2",
+              "id": "urn:libre-ai:spec-package:fixture-1",
+              "version": 1,
+              "bodyDigest": "8ce800b3d67a50c97f9ac97ec14706983a7bcb42c948d53254ab8cc6cd9b9dc1"
+            },
+            "acceptanceDigest": "e04768609d8794084019e671e5b2b9478447e9ada5cee935ad8dc8c4645aa1a6",
+            "acceptanceCriteria": ["criterion_one"]
+          },
+          "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+          "handoffReferenceId": "urn:libre-ai:handoff-reference:fixture-1"
+        },
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9
+        }
+      },
+      "invalidRequests": [
+        {
+          "name": "unknown request field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "path": "/v3/missions/{missionId}/events",
+      "method": "get",
+      "operationId": "getMissionEventsV3",
+      "successStatus": "200",
+      "response": {
+        "data": [
+          {
+            "schemaVersion": "libre-ai.orchestrator-event.v2",
+            "id": "urn:libre-ai:event:event-1",
+            "tenantId": "ten_1234567890abcdef",
+            "missionId": "urn:libre-ai:mission:mission-1",
+            "runId": "urn:libre-ai:run:run-1",
+            "orchestratorId": "orchestrator_1",
+            "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "authorizationDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "sequence": 1,
+            "previousEventDigest": null,
+            "causationId": "urn:libre-ai:control:control-1",
+            "commandId": "urn:libre-ai:control:control-1",
+            "attempt": 1,
+            "type": "started",
+            "budgetDelta": {
+              "durationSeconds": 0,
+              "toolCalls": 0,
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "processesStarted": 0,
+              "filesChanged": 0,
+              "changedBytes": 0
+            },
+            "budgetTotal": {
+              "durationSeconds": 0,
+              "toolCalls": 0,
+              "inputTokens": 0,
+              "outputTokens": 0,
+              "processesStarted": 0,
+              "filesChanged": 0,
+              "changedBytes": 0
+            },
+            "occurredAt": "2026-07-16T10:11:01Z",
+            "data": {
+              "harnessAttestation": {
+                "id": "urn:libre-ai:attestation:harness-run-1",
+                "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "mediaType": "application/json"
+              }
+            },
+            "eventDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          }
+        ],
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9,
+          "nextCursor": null
+        }
+      },
+      "invalidRequests": [],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "path": "/v3/missions/{missionId}/events",
+      "method": "post",
+      "operationId": "recordOrchestratorEventV3",
+      "successStatus": "202",
+      "request": {
+        "schemaVersion": "libre-ai.orchestrator-event.v2",
+        "id": "urn:libre-ai:event:event-1",
+        "tenantId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:mission-1",
+        "runId": "urn:libre-ai:run:run-1",
+        "orchestratorId": "orchestrator_1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "authorizationDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "sequence": 1,
+        "previousEventDigest": null,
+        "causationId": "urn:libre-ai:control:control-1",
+        "commandId": "urn:libre-ai:control:control-1",
+        "attempt": 1,
+        "type": "started",
+        "budgetDelta": {
+          "durationSeconds": 0,
+          "toolCalls": 0,
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "processesStarted": 0,
+          "filesChanged": 0,
+          "changedBytes": 0
+        },
+        "budgetTotal": {
+          "durationSeconds": 0,
+          "toolCalls": 0,
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "processesStarted": 0,
+          "filesChanged": 0,
+          "changedBytes": 0
+        },
+        "occurredAt": "2026-07-16T10:11:01Z",
+        "data": {
+          "harnessAttestation": {
+            "id": "urn:libre-ai:attestation:harness-run-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          }
+        },
+        "eventDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "response": {
+        "data": {
+          "schemaVersion": "libre-ai.mission-record.v3",
+          "id": "urn:libre-ai:mission:mission-1",
+          "tenantId": "ten_1234567890abcdef",
+          "revision": 9,
+          "state": "validated",
+          "risk": {
+            "level": "medium",
+            "policyVersion": "1.0.0"
+          },
+          "budgets": {
+            "maxDurationSeconds": 3600,
+            "maxToolCalls": 100,
+            "maxInputTokens": 100000,
+            "maxOutputTokens": 50000,
+            "network": "private-gateway-only"
+          },
+          "acceptanceCriteria": ["criterion_one"],
+          "plan": {
+            "id": "urn:libre-ai:plan:plan-1",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mediaType": "application/json"
+          },
+          "planQuorum": {
+            "id": "urn:libre-ai:quorum:plan-quorum-1",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mediaType": "application/json"
+          },
+          "executionAuthorization": {
+            "id": "urn:libre-ai:authorization:auth-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "runId": "urn:libre-ai:run:run-1",
+          "runHarnessAttestation": {
+            "id": "urn:libre-ai:attestation:harness-run-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "reviews": [
+            {
+              "id": "urn:libre-ai:review:review-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-2",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-3",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-4",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            }
+          ],
+          "eventCursor": 8,
+          "result": {
+            "artifact": {
+              "id": "urn:libre-ai:artifact:result-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            "evidence": {
+              "id": "urn:libre-ai:evidence:result-proof-1",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            "contributorLineage": {
+              "id": "urn:libre-ai:lineage:result-lineage-1",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            "submittedAt": "2026-07-16T11:00:00Z"
+          },
+          "resultQuorum": {
+            "id": "urn:libre-ai:quorum:result-quorum-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "validation": {
+            "status": "validated",
+            "reasonCode": "mission.agent_quorum_valid",
+            "decidedAt": "2026-07-16T11:10:00Z"
+          },
+          "createdAt": "2026-07-16T09:00:00Z",
+          "handoffBinding": {
+            "schemaVersion": "libre-ai.mission-handoff-binding.v1",
+            "tenantId": "ten_1234567890abcdef",
+            "handoff": {
+              "schemaVersion": "libre-ai.agent-handoff.v2",
+              "id": "urn:libre-ai:handoff:fixture-1",
+              "documentDigest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+              "archiveReference": {
+                "id": "urn:libre-ai:handoff-archive:fixture-1",
+                "digest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+                "mediaType": "application/json"
+              }
+            },
+            "specPackage": {
+              "schemaVersion": "libre-ai.spec-package.v2",
+              "id": "urn:libre-ai:spec-package:fixture-1",
+              "version": 1,
+              "bodyDigest": "8ce800b3d67a50c97f9ac97ec14706983a7bcb42c948d53254ab8cc6cd9b9dc1"
+            },
+            "acceptanceDigest": "e04768609d8794084019e671e5b2b9478447e9ada5cee935ad8dc8c4645aa1a6",
+            "acceptanceCriteria": ["criterion_one"]
+          },
+          "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+          "handoffReferenceId": "urn:libre-ai:handoff-reference:fixture-1"
+        },
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9
+        }
+      },
+      "invalidRequests": [
+        {
+          "name": "unknown request field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "path": "/v3/missions/{missionId}/commands",
+      "method": "post",
+      "operationId": "executeMissionCommandV3",
+      "successStatus": "202",
+      "request": {
+        "command": "assess-risk",
+        "reasonCode": "mission.risk_assessed",
+        "riskLevel": "medium"
+      },
+      "response": {
+        "data": {
+          "schemaVersion": "libre-ai.mission-record.v3",
+          "id": "urn:libre-ai:mission:mission-1",
+          "tenantId": "ten_1234567890abcdef",
+          "revision": 9,
+          "state": "validated",
+          "risk": {
+            "level": "medium",
+            "policyVersion": "1.0.0"
+          },
+          "budgets": {
+            "maxDurationSeconds": 3600,
+            "maxToolCalls": 100,
+            "maxInputTokens": 100000,
+            "maxOutputTokens": 50000,
+            "network": "private-gateway-only"
+          },
+          "acceptanceCriteria": ["criterion_one"],
+          "plan": {
+            "id": "urn:libre-ai:plan:plan-1",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mediaType": "application/json"
+          },
+          "planQuorum": {
+            "id": "urn:libre-ai:quorum:plan-quorum-1",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mediaType": "application/json"
+          },
+          "executionAuthorization": {
+            "id": "urn:libre-ai:authorization:auth-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "runId": "urn:libre-ai:run:run-1",
+          "runHarnessAttestation": {
+            "id": "urn:libre-ai:attestation:harness-run-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "reviews": [
+            {
+              "id": "urn:libre-ai:review:review-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-2",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-3",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            {
+              "id": "urn:libre-ai:review:review-4",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            }
+          ],
+          "eventCursor": 8,
+          "result": {
+            "artifact": {
+              "id": "urn:libre-ai:artifact:result-1",
+              "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "mediaType": "application/json"
+            },
+            "evidence": {
+              "id": "urn:libre-ai:evidence:result-proof-1",
+              "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "mediaType": "application/json"
+            },
+            "contributorLineage": {
+              "id": "urn:libre-ai:lineage:result-lineage-1",
+              "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "mediaType": "application/json"
+            },
+            "submittedAt": "2026-07-16T11:00:00Z"
+          },
+          "resultQuorum": {
+            "id": "urn:libre-ai:quorum:result-quorum-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          },
+          "validation": {
+            "status": "validated",
+            "reasonCode": "mission.agent_quorum_valid",
+            "decidedAt": "2026-07-16T11:10:00Z"
+          },
+          "createdAt": "2026-07-16T09:00:00Z",
+          "handoffBinding": {
+            "schemaVersion": "libre-ai.mission-handoff-binding.v1",
+            "tenantId": "ten_1234567890abcdef",
+            "handoff": {
+              "schemaVersion": "libre-ai.agent-handoff.v2",
+              "id": "urn:libre-ai:handoff:fixture-1",
+              "documentDigest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+              "archiveReference": {
+                "id": "urn:libre-ai:handoff-archive:fixture-1",
+                "digest": "8667013bf6b61e475ee88ab2510aef33ba716b8857219511e5b1d9cea3be0d37",
+                "mediaType": "application/json"
+              }
+            },
+            "specPackage": {
+              "schemaVersion": "libre-ai.spec-package.v2",
+              "id": "urn:libre-ai:spec-package:fixture-1",
+              "version": 1,
+              "bodyDigest": "8ce800b3d67a50c97f9ac97ec14706983a7bcb42c948d53254ab8cc6cd9b9dc1"
+            },
+            "acceptanceDigest": "e04768609d8794084019e671e5b2b9478447e9ada5cee935ad8dc8c4645aa1a6",
+            "acceptanceCriteria": ["criterion_one"]
+          },
+          "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+          "handoffReferenceId": "urn:libre-ai:handoff-reference:fixture-1"
+        },
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9
+        }
+      },
+      "invalidRequests": [
+        {
+          "name": "unknown request field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "path": "/v3/missions/{missionId}/review-quorum",
+      "method": "get",
+      "operationId": "getReviewQuorumV3",
+      "successStatus": "200",
+      "response": {
+        "data": {
+          "schemaVersion": "libre-ai.agent-review-quorum-view.v1",
+          "tenantId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:mission-1",
+          "subjectType": "mission-result",
+          "subjectDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "quorumDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "identityMode": "redacted",
+          "reviewers": [
+            {
+              "reviewDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "verdict": "approve",
+              "summary": []
+            },
+            {
+              "reviewDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "verdict": "approve",
+              "summary": []
+            }
+          ],
+          "contributorCount": 1,
+          "retentionPolicyId": "mission-record",
+          "retentionExpiresAt": "2027-07-16T10:00:00Z"
+        },
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9
+        }
+      },
+      "invalidRequests": [],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    },
+    {
+      "path": "/v3/missions/{missionId}/views/{view}",
+      "method": "get",
+      "operationId": "getMissionViewV3",
+      "successStatus": "200",
+      "response": {
+        "data": {
+          "view": "result-evidence",
+          "items": []
+        },
+        "meta": {
+          "requestId": "request_fixture",
+          "revision": 9,
+          "nextCursor": null
+        }
+      },
+      "invalidRequests": [],
+      "invalidResponses": [
+        {
+          "name": "missing meta",
+          "path": "/meta",
+          "remove": true
+        },
+        {
+          "name": "unknown response field",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    }
+  ]
+}

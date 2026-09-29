@@ -1,0 +1,1205 @@
+{
+  "classification": "synthetic-candidate-no-authority",
+  "cases": [
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "reserve"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "missing",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "protect"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "confirm"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "confirm"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "release"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "release"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "release"
+    },
+    {
+      "state": "reserved",
+      "everConfirmed": false,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "release"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "protect"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reserve",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "confirm"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "confirm",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "confirm"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "reconcile",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "release"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "protect"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "confirmed",
+      "everConfirmed": true,
+      "releasedBy": null,
+      "releaseEvidenceDigest": null,
+      "action": "release",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "release"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "already-released"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "already-released"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "not-committed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "already-released"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": false,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "already-released"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reserve",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "confirm",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "reconcile",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "already-released"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "absent",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "unknown",
+      "evidenceDigest": null,
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "committed",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "not-committed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "refuse"
+    },
+    {
+      "state": "released",
+      "everConfirmed": true,
+      "releasedBy": "removed-final",
+      "releaseEvidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "action": "release",
+      "outcome": "removed-final",
+      "evidenceDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "expected": "already-released"
+    }
+  ]
+}
