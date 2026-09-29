@@ -5,6 +5,7 @@ import addFormats from "ajv-formats";
 import vector from "../../contracts/fixtures/build-brief-v2/vectors.json";
 import bindingVector from "../../contracts/fixtures/missions-v3/binding-vectors.json";
 import chain from "../../contracts/fixtures/missions-v3/chain-vectors.json";
+import adoption from "../../docs/reviews/build-brief-missions-specification-lock.json";
 import { canonicalJson } from "./authorized-execution";
 import { buildBriefDigest, type CandidateContext } from "./build-brief-v2";
 import {
@@ -19,6 +20,7 @@ import {
   type ReferenceState,
   verifyMissionBindingDigests,
 } from "./missions-v3";
+import { runSpecificationLockGate } from "./specification-lock-test-helper";
 
 const names = [
   "mission-handoff-binding.v1",
@@ -121,7 +123,8 @@ test("All inherited contract bytes and existing catalog records remain unchanged
         .digest("hex"),
       name,
     ).toBe(digest);
-  const catalog = await Bun.file("contracts/catalog.v1.json").json();
+  expect(await runSpecificationLockGate()).toBe(0);
+  const catalog = await Bun.file(adoption.baselineCatalog.path).json();
   for (const entry of inherited.catalog)
     expect(catalog.contracts.find((item: Record<string, unknown>) => item.id === entry.id)).toEqual(
       entry,

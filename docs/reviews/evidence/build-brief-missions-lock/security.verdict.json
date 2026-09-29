@@ -1,0 +1,283 @@
+{
+  "reviewPassId": "forge-contracts-f3247ca-public-security",
+  "role": "security",
+  "mode": "specialized-role",
+  "commitSha": "f3247ca1e809840180f04c477d581198032fb620",
+  "contractHashes": [
+    {
+      "path": "contracts/COMPATIBILITY.md",
+      "sha256": "0e69adb94bff044650895b47ca2fc50a649682c4334cc9095a2d9125618ebe17"
+    },
+    {
+      "path": "contracts/authz/build-brief-v2.datalog",
+      "sha256": "6a9a912e861e0210bb8701f702c7def45d8d46c10c5cf6c90cfe84980b524605"
+    },
+    {
+      "path": "contracts/build-brief-api-v2/SEMANTICS.md",
+      "sha256": "6cfbdb01786e786a76aa4d57e63b925ab1286692be7dc7cb190943100fc1520a"
+    },
+    {
+      "path": "contracts/build-brief-storage-v1/SEMANTICS.md",
+      "sha256": "ddf42cb14a61d068a50e3f5895d96baf84ff751ce42c73b4b78cc01d40596bf6"
+    },
+    {
+      "path": "contracts/build-brief-v2/SEMANTICS.md",
+      "sha256": "d7b4e2e7db044c26b13111c383db21ae96feb4054cb3747da7ae60ced8e0c892"
+    },
+    {
+      "path": "contracts/candidate-protocol-authorities.v1.json",
+      "sha256": "ce1d356f8930ca623a9c631b3fbbbbf38edf4f2eff1edc5af2a0193a39406412"
+    },
+    {
+      "path": "contracts/catalog.v1.json",
+      "sha256": "f69363c481d6319f946dccbc178ea167c0d29d1be2fe358e2adeff13c27df48d"
+    },
+    {
+      "path": "contracts/data/retention.v4.json",
+      "sha256": "8757b363655cfe75eb6e46cbee7558ca293b296e06ed7a5e2ffe8c0580863867"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-api-v2/endpoints.json",
+      "sha256": "38ad1464cf4f8fd34f88f2b5a5637d99517ded905bd46eb7d7974d4638e30990"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-api-v2/inherited.json",
+      "sha256": "8077def9208160384e151351616a52dc09eb40e08206aa86c4b88c14e49350cd"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-api-v2/schema-fixtures.json",
+      "sha256": "7fae71fb3f19721ed2e929c51c5fe60d33fe6ac3bf38461cc4d88799a9391832"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-api-v2/view-responses.json",
+      "sha256": "4b59cc4231877ddfe243fc6b3e9051305280e1fdafc086c493b0aae02c701b23"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-storage-v1/schema-fixtures.json",
+      "sha256": "05b2e447670633cbaa4cc10c45cbb7e30a16fc143ddd8949d3a5ea00013bc6fd"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-storage-v1/vectors.json",
+      "sha256": "2b2cb5afaff24a980f3a1b7dc4e2eba0098db110ff4e9665c3657c70b10e1338"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-v2/negative-vectors.json",
+      "sha256": "ec6119911e4d344a699a3a779e8aadf1960877bed6f13b8a58037b96ce624d0f"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-v2/policy-vectors.json",
+      "sha256": "574f7abc1406b800df344c34d992b75ec35f5d36949a01ff889c45521fbcc8e9"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-v2/strict-ed25519-vectors.json",
+      "sha256": "fd9fce2406614a2c7a890403d1228c8a22500c405aaa3b22c695516fab51d955"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-v2/vectors.json",
+      "sha256": "95a8b059a2440f41fe9e6875c1d751a6f7b760f1cf019c0df0d2568b72d0ea32"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/binding-vectors.json",
+      "sha256": "f63478f4e1684f5236cc6f4b88d3ad10dc2237a4596693526d5256e26133f858"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/chain-vectors.json",
+      "sha256": "9f622f16fe1693c6a7573c2cd760590c522603cebd76def25b12cde260df9110"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/endpoints.json",
+      "sha256": "cac63ef504f17efb89ea47c1e44284e08261da74a8e38a1cc9282a6da5c5e763"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/inherited.json",
+      "sha256": "c621bc6a7121106fd992425af332def42aa31b10ca5c3ecd590dbbb3365e79ba"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/reference-reconciliation.json",
+      "sha256": "12073ba52b168f3bdb53b12abcae4cde4cea4a68af1048d782de6725a41471f5"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/schema-fixtures.json",
+      "sha256": "b4359a5c864434d437de815db877f1b615688d42d6959959e055feadd47189fc"
+    },
+    {
+      "path": "contracts/missions-v3/SEMANTICS.md",
+      "sha256": "40cc98b22666213f0a7e79a69d6b8cb1e734c70661ba7a358aee03ace3810844"
+    },
+    {
+      "path": "contracts/openapi/missions.v3.yaml",
+      "sha256": "be94ca38c866c5ea095d8a76b006228cddbe51b89dc3362d59f490e18debce5c"
+    },
+    {
+      "path": "contracts/openapi/specifications.v2.yaml",
+      "sha256": "05a13e381a30031923878fdceffceebb1ab840a1bb391ba6e679e13129d1d0f0"
+    },
+    {
+      "path": "contracts/schemas/agent-handoff.v2.schema.json",
+      "sha256": "9dd740bcd36e75b16ed5b94fd4675424ad0ec5e35c51fb8ab7a4fc66d907d6a1"
+    },
+    {
+      "path": "contracts/schemas/build-brief-acceptance.v2.schema.json",
+      "sha256": "3a66c9696a1bb2291a352f72d583fd562218811fe85055a8991b63bac246b0a2"
+    },
+    {
+      "path": "contracts/schemas/build-brief-api.v2.schema.json",
+      "sha256": "5c925006e54215dd829bf435925871fa33598f90f9fd9a912ea9ddb9ac8508d6"
+    },
+    {
+      "path": "contracts/schemas/build-brief-body.v2.schema.json",
+      "sha256": "02543c1e8bbf49e1002b8b70e351f3218d85cf151c8274fd588c8c31e3df04e1"
+    },
+    {
+      "path": "contracts/schemas/execution-authorization.v3.schema.json",
+      "sha256": "eb3f91a4411198a024de7ac11bba53324b7753089f87744e7183e5e437780ac9"
+    },
+    {
+      "path": "contracts/schemas/execution-plan-body.v3.schema.json",
+      "sha256": "651e9adc15bfdd90da36670e277a47b54878b09f1fb10bc598aacde0416c8681"
+    },
+    {
+      "path": "contracts/schemas/mission-handoff-binding.v1.schema.json",
+      "sha256": "ba098a67a3a700cea90202a2fd9d93125eded44f650386705d0499acabb845a2"
+    },
+    {
+      "path": "contracts/schemas/mission-record.v3.schema.json",
+      "sha256": "b8c8f04034bf7305ef10133d96038aedadffd549c4c4643062fd142625e79b46"
+    },
+    {
+      "path": "contracts/schemas/missions-api.v3.schema.json",
+      "sha256": "114084e5378408091ef84c227cf35380166c42e1a4766fe0def26d6202c067f4"
+    },
+    {
+      "path": "contracts/schemas/retention-policy.v4.schema.json",
+      "sha256": "b9934b42ce5b52ecdd8294d828f19eb20f289e2617240b6f9e109f435ab6d3d1"
+    },
+    {
+      "path": "contracts/schemas/spec-package.v2.schema.json",
+      "sha256": "ae9a67e7c4952738f953b1620205292a81b97744b4b7fe59b6c6ea79281127ec"
+    },
+    {
+      "path": "docs/adr/2026-09-29-specifications-handoff-archive.md",
+      "sha256": "93632af69f66ec79db22298e2400564d06749ca5b55b65e6f0eab2015413bd88"
+    },
+    {
+      "path": "docs/protocols/candidates/missions.v3.md",
+      "sha256": "8bc739670fbf7a8a1b52097e1c5321e091498bdb03fc4851cfbafd5e4af35ce3"
+    },
+    {
+      "path": "tools/quality/build-brief-api-v2.test.ts",
+      "sha256": "5d188479960833a6d3f9ed59e089f744ed291c3e46a00acfb6c7e8f05bde0ae4"
+    },
+    {
+      "path": "tools/quality/build-brief-crypto-oracle/Cargo.lock",
+      "sha256": "b1dbff2a795b1cda17bbfa22bdedb643d9c9876b6dabf188f135700cbfce4e53"
+    },
+    {
+      "path": "tools/quality/build-brief-crypto-oracle/Cargo.toml",
+      "sha256": "6883473d2c2753ce37c807ef2b7225b602599083df895f2697bfa4cb3ab57987"
+    },
+    {
+      "path": "tools/quality/build-brief-crypto-oracle/src/main.rs",
+      "sha256": "db334a61f8ccbe601cf4cbc5e7410b40cbddd3f534a3d260216047b1eb6309f2"
+    },
+    {
+      "path": "tools/quality/build-brief-storage-v1.bunfig.toml",
+      "sha256": "3140e53d4065c8648f07d4caae2f689ef8d3606e668c9191119d02c4c8a0bbab"
+    },
+    {
+      "path": "tools/quality/build-brief-storage-v1.test.ts",
+      "sha256": "5da01b9aaac0dbdf396843cbfaced22330155eaa972692b4a6884fc1a5663fc6"
+    },
+    {
+      "path": "tools/quality/build-brief-storage-v1.ts",
+      "sha256": "ef9a3ff652cc16da3f1cc263257072f5a8cd0b106af5d8556138bfdd6f9a3908"
+    },
+    {
+      "path": "tools/quality/build-brief-v2.bunfig.toml",
+      "sha256": "d5438e37ea0f26478421d4f90ad92c65c8ac90c57f5a404b4fa2d30c4aec235d"
+    },
+    {
+      "path": "tools/quality/build-brief-v2.test.ts",
+      "sha256": "b117583b5965f2d8622546b79e2152702ebc7dae8a1592967319eaead3596ac2"
+    },
+    {
+      "path": "tools/quality/build-brief-v2.ts",
+      "sha256": "4c7f2dc6bac4d7aa5ee7075194f157204ad9ec4681f3a2eb5b99f7219febf7a2"
+    },
+    {
+      "path": "tools/quality/check-build-brief-biscuit.ts",
+      "sha256": "c9e9f450805c0c06ed089956bfc06ab005d1b9c4390a498639ffc92b4317b521"
+    },
+    {
+      "path": "tools/quality/inherited-authorities.test.ts",
+      "sha256": "de54522af969a117a878bd49793cb8df54e412a8469886d9313e2c3054079efe"
+    },
+    {
+      "path": "tools/quality/missions-v3.bunfig.toml",
+      "sha256": "3b39c64deb7c94d4bcae68b495c5260b469cdd756d7f4b8e1e7282a1f4bc55a9"
+    },
+    {
+      "path": "tools/quality/missions-v3.test.ts",
+      "sha256": "8b9dc1a93b4e5f07a2fb74330b3fde1ffa8f486c736818b21da507a761c7114f"
+    },
+    {
+      "path": "tools/quality/missions-v3.ts",
+      "sha256": "2e66e144ef59b88e964712440f6abe8584db00c2baefc9c8d73abf456a9fce7e"
+    },
+    {
+      "path": "tools/quality/reference-reconciliation.test.ts",
+      "sha256": "d2347f99ee9e0112394138b2d993e8860ecd40c8b05ed67585185edba63fe4a4"
+    }
+  ],
+  "commands": [
+    "Publication attestation in a fresh detached clean checkout; exact final tree compared with the previously reviewed tree.",
+    "Recomputed every content hash in the prior role verdict, including its external evidence or pinned companion inputs; all match.",
+    "Revalidated all fifteen role-scoped catalog authorities and candidate states against their content hashes.",
+    "Prior role qualification is explicitly reused on identical bytes and recipes; its heavy tests and independent probes were not rerun in this attestation.",
+    "Validated this new envelope against the original verdict schema and exact assigned identity."
+  ],
+  "findings": {
+    "blocking": [],
+    "major": [],
+    "minor": [],
+    "nonBlocking": []
+  },
+  "residualRisks": [
+    "Public security attestation of an unchanged qualified tree. Prior immutable role verdict SHA256: 8896f7e293c46bd4f883c43123a3b3946f9ac1bdfb3c27164a50693429dbad2b. Its source target remains 6ec09592d89a6e4aad9d54cb3945bb8b8ddb4e46; this attestation target is the actual DCO publication commit.",
+    "No catalog promotion, consumer implementation, real authority adapter, data processing, provider selection or runtime activation is approved by this role verdict.",
+    "Historical rejected candidates remain preserved separately; this record does not edit or conceal their findings."
+  ],
+  "verdict": "approve",
+  "runner": {
+    "agentId": "root",
+    "providerIdentity": "not exposed",
+    "modelIdentity": "not exposed",
+    "reviewOnly": true,
+    "worktreeDetached": true,
+    "worktreeCleanBefore": true,
+    "worktreeCleanAfter": true,
+    "sourceModified": false,
+    "coveredAuthorityIds": [
+      "build-brief-body-v2",
+      "build-brief-acceptance-v2",
+      "spec-package-v2",
+      "agent-handoff-v2",
+      "build-brief-policy-v2",
+      "specifications-api-v2",
+      "build-brief-api-v2",
+      "retention-policy-v4",
+      "retention-policy-schema-v4",
+      "mission-handoff-binding-v1",
+      "mission-record-v3",
+      "execution-plan-body-v3",
+      "execution-authorization-v3",
+      "missions-api-schema-v3",
+      "missions-api-v3"
+    ],
+    "priorRoleVerdictSha256": "8896f7e293c46bd4f883c43123a3b3946f9ac1bdfb3c27164a50693429dbad2b",
+    "previousReviewedCommit": "6ec09592d89a6e4aad9d54cb3945bb8b8ddb4e46",
+    "equalGitTree": "724d6802dd75b1c226ec3163aafa5fccc17fbcf8",
+    "hashesRecomputed": 62,
+    "heavyTests": "explicitly reused, not rerun"
+  }
+}

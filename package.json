@@ -28,7 +28,7 @@
     "check:bun:runtime": "bun node_modules/@libre-ai/governance/tools/quality/check-bun-minimum.ts",
     "check:bun": "bun run check:bun:runtime && bun node_modules/@libre-ai/governance/tools/quality/check-bun-manifests.ts",
     "check:toolchain": "bun run check:bun && bun node_modules/@libre-ai/governance/tools/quality/check-toolchain.ts",
-    "check:contracts": "bun run check:bun:runtime && bun tools/quality/check-contracts.ts && bun run check:build-brief && bun run check:build-brief-storage && bun run check:missions-v3 && bun run check:candidate-protocol",
+    "check:contracts": "bun run check:bun:runtime && bun tools/quality/check-contracts.ts && bun run check:build-brief && bun run check:build-brief-storage && bun run check:missions-v3 && bun run check:candidate-protocol && bun run check:specification-lock",
     "check:secret-scan": "bun run check:bun:runtime && bun node_modules/@libre-ai/governance/tools/quality/check-secret-scan.ts",
     "check:personal-data": "bun run check:bun:runtime && bun node_modules/@libre-ai/governance/tools/quality/check-personal-data-boundary.ts",
     "lint": "bun run check:bun:runtime && biome ci .",
@@ -41,7 +41,8 @@
     "check:packages": "bun run check:bun:runtime && bun run --cwd packages/sdk-ts check && bun run --cwd packages/envelope check && bun run --cwd crates/sdk-rs check && cargo test --locked --manifest-path crates/sdk-rs/Cargo.toml",
     "check:build-brief-storage": "bun run check:bun:runtime && bun test --config=tools/quality/build-brief-storage-v1.bunfig.toml tools/quality/build-brief-storage-v1.test.ts",
     "check:missions-v3": "bun run check:bun:runtime && bun test --config=tools/quality/missions-v3.bunfig.toml tools/quality/missions-v3.test.ts tools/quality/reference-reconciliation.test.ts tools/quality/inherited-authorities.test.ts tools/quality/build-brief-storage-v1.test.ts",
-    "check:candidate-protocol": "bun run check:bun:runtime && bun test --config=tools/quality/candidate-protocol-authority.bunfig.toml tools/quality/candidate-protocol-authority.test.ts"
+    "check:candidate-protocol": "bun run check:bun:runtime && bun test --config=tools/quality/candidate-protocol-authority.bunfig.toml tools/quality/candidate-protocol-authority.test.ts",
+    "check:specification-lock": "bun run check:bun:runtime && bun tools/quality/check-specification-lock.ts && bun test --config=tools/quality/specification-lock.bunfig.toml tools/quality/specification-lock.test.ts tools/quality/specification-lock-cli.test.ts tools/quality/adopted-protocol-authority.test.ts tools/quality/candidate-protocol-authority.test.ts"
   },
   "workspaces": [
     "packages/*",

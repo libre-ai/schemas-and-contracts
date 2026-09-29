@@ -43,3 +43,12 @@ inventory now binds all 213 base contract files except the augmented catalog;
 all 112 original catalog entries are separately compared. An empty/incomplete
 inventory or altered source byte fails the gate. These repairs still require
 fresh role-separated reviews on the successor commit.
+
+
+## Subsequent specification-lock package
+
+The original authoring and review states above remain historical records.
+The later exact-tree role attestations, proposed fifteen-authority transition
+and explicit non-runtime consumer boundary are recorded in
+[the specification-lock dossier](build-brief-missions-specification-lock.md).
+That dossier does not replace a final promotion review or protected integration.

@@ -2,6 +2,7 @@ import { lstat, realpath } from "node:fs/promises";
 import { basename, dirname, join, normalize, sep } from "node:path";
 import Ajv2020, { type ErrorObject, type ValidateFunction } from "ajv/dist/2020";
 import addFormats from "ajv-formats";
+import { adoptedMissionProtocolAuthority } from "./adopted-protocol-authority";
 import { retentionV3Failures } from "./auth-retention-v3";
 import {
   authorizedExecutionVectorDocumentFailures,
@@ -12,7 +13,6 @@ import {
 } from "./authorized-execution";
 import { retentionV4Failures } from "./build-brief-storage-v1";
 import {
-  candidateProtocolAuthorities,
   candidateProtocolForVersion,
   candidateProtocolOperations,
 } from "./candidate-protocol-authority";
@@ -22,6 +22,7 @@ import {
   containsSensitivePublicMarker,
   publicSourceScannerSelfTestFailures,
 } from "./public-source-scanner";
+import { readSpecificationLockInputs } from "./specification-lock-inputs";
 
 type JsonRecord = Record<string, unknown>;
 type ContractKind =
@@ -845,17 +846,21 @@ const protocolAuthorities = localProtocolAuthorities(
   requiredAuthoritySlugs,
 );
 // This explicit version inventory cannot silently replace a historical pin.
-const candidateAuthorities = candidateProtocolAuthorities(
-  await Bun.file("contracts/candidate-protocol-authorities.v1.json").json(),
+const candidateAuthorities = new Map([
   [
-    {
-      slug: "missions",
-      major: 3,
-      status: entryByPath.get("contracts/openapi/missions.v3.yaml")?.status ?? "missing",
-      sourceRepository: "libre-ai/ai-work-supervision",
-    },
+    "missions:3",
+    adoptedMissionProtocolAuthority(
+      await Bun.file("contracts/candidate-protocol-authorities.v1.json").json(),
+      {
+        slug: "missions",
+        major: 3,
+        status: entryByPath.get("contracts/openapi/missions.v3.yaml")?.status ?? "missing",
+        sourceRepository: "libre-ai/ai-work-supervision",
+      },
+      await readSpecificationLockInputs("."),
+    ),
   ],
-);
+]);
 
 for (const path of await scan("docs/apps/*.md")) {
   const text = await Bun.file(path).text();

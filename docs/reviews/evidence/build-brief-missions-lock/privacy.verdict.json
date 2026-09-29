@@ -1,0 +1,241 @@
+{
+  "reviewPassId": "forge-contracts-f3247ca-public-privacy",
+  "role": "privacy",
+  "mode": "specialized-role",
+  "commitSha": "f3247ca1e809840180f04c477d581198032fb620",
+  "contractHashes": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "e3991d18eb3b310cfbf6efbeb10c9623e4d52356b316cfafd947221e332fff22"
+    },
+    {
+      "path": "bun.lock",
+      "sha256": "d8d2f2dcb429df6b5098afd2c56de9b6495b9cdd4bdf537d8ff9d3012e60ac5b"
+    },
+    {
+      "path": "contracts/CATALOG.md",
+      "sha256": "9b90ed74e5b14b29e391c24396ad5f7524bec6f5f8c9056f838b4b5347c8561a"
+    },
+    {
+      "path": "contracts/COMPATIBILITY.md",
+      "sha256": "0e69adb94bff044650895b47ca2fc50a649682c4334cc9095a2d9125618ebe17"
+    },
+    {
+      "path": "contracts/build-brief-storage-v1/SEMANTICS.md",
+      "sha256": "ddf42cb14a61d068a50e3f5895d96baf84ff751ce42c73b4b78cc01d40596bf6"
+    },
+    {
+      "path": "contracts/candidate-protocol-authorities.v1.json",
+      "sha256": "ce1d356f8930ca623a9c631b3fbbbbf38edf4f2eff1edc5af2a0193a39406412"
+    },
+    {
+      "path": "contracts/catalog.v1.json",
+      "sha256": "f69363c481d6319f946dccbc178ea167c0d29d1be2fe358e2adeff13c27df48d"
+    },
+    {
+      "path": "contracts/data/retention.v2.json",
+      "sha256": "1622c32bf106160a524590db42bd0e8a0e7bbbadc2ee1bedd5dbb9bddef9db84"
+    },
+    {
+      "path": "contracts/data/retention.v4.json",
+      "sha256": "8757b363655cfe75eb6e46cbee7558ca293b296e06ed7a5e2ffe8c0580863867"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-storage-v1/schema-fixtures.json",
+      "sha256": "05b2e447670633cbaa4cc10c45cbb7e30a16fc143ddd8949d3a5ea00013bc6fd"
+    },
+    {
+      "path": "contracts/fixtures/build-brief-storage-v1/vectors.json",
+      "sha256": "2b2cb5afaff24a980f3a1b7dc4e2eba0098db110ff4e9665c3657c70b10e1338"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/binding-vectors.json",
+      "sha256": "f63478f4e1684f5236cc6f4b88d3ad10dc2237a4596693526d5256e26133f858"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/chain-vectors.json",
+      "sha256": "9f622f16fe1693c6a7573c2cd760590c522603cebd76def25b12cde260df9110"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/endpoints.json",
+      "sha256": "cac63ef504f17efb89ea47c1e44284e08261da74a8e38a1cc9282a6da5c5e763"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/inherited.json",
+      "sha256": "c621bc6a7121106fd992425af332def42aa31b10ca5c3ecd590dbbb3365e79ba"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/reference-reconciliation.json",
+      "sha256": "12073ba52b168f3bdb53b12abcae4cde4cea4a68af1048d782de6725a41471f5"
+    },
+    {
+      "path": "contracts/fixtures/missions-v3/schema-fixtures.json",
+      "sha256": "b4359a5c864434d437de815db877f1b615688d42d6959959e055feadd47189fc"
+    },
+    {
+      "path": "contracts/missions-v3/SEMANTICS.md",
+      "sha256": "40cc98b22666213f0a7e79a69d6b8cb1e734c70661ba7a358aee03ace3810844"
+    },
+    {
+      "path": "contracts/openapi/missions.v3.yaml",
+      "sha256": "be94ca38c866c5ea095d8a76b006228cddbe51b89dc3362d59f490e18debce5c"
+    },
+    {
+      "path": "contracts/schemas/execution-authorization.v3.schema.json",
+      "sha256": "eb3f91a4411198a024de7ac11bba53324b7753089f87744e7183e5e437780ac9"
+    },
+    {
+      "path": "contracts/schemas/execution-plan-body.v3.schema.json",
+      "sha256": "651e9adc15bfdd90da36670e277a47b54878b09f1fb10bc598aacde0416c8681"
+    },
+    {
+      "path": "contracts/schemas/mission-handoff-binding.v1.schema.json",
+      "sha256": "ba098a67a3a700cea90202a2fd9d93125eded44f650386705d0499acabb845a2"
+    },
+    {
+      "path": "contracts/schemas/mission-record.v3.schema.json",
+      "sha256": "b8c8f04034bf7305ef10133d96038aedadffd549c4c4643062fd142625e79b46"
+    },
+    {
+      "path": "contracts/schemas/missions-api.v3.schema.json",
+      "sha256": "114084e5378408091ef84c227cf35380166c42e1a4766fe0def26d6202c067f4"
+    },
+    {
+      "path": "contracts/schemas/retention-policy.v4.schema.json",
+      "sha256": "b9934b42ce5b52ecdd8294d828f19eb20f289e2617240b6f9e109f435ab6d3d1"
+    },
+    {
+      "path": "docs/adr/2026-09-29-specifications-handoff-archive.md",
+      "sha256": "93632af69f66ec79db22298e2400564d06749ca5b55b65e6f0eab2015413bd88"
+    },
+    {
+      "path": "docs/protocols/candidates/missions.v3.md",
+      "sha256": "8bc739670fbf7a8a1b52097e1c5321e091498bdb03fc4851cfbafd5e4af35ce3"
+    },
+    {
+      "path": "docs/reviews/build-brief-storage-v1-review.md",
+      "sha256": "01976b13721906ae89e3d69e67f85ab83488ab001bda09c9bbc80cc625494ff1"
+    },
+    {
+      "path": "docs/reviews/missions-v3-review.md",
+      "sha256": "df79759b95d5d13de1f27b7e7c3777820cf2613acd692de41ddc04bbfc00a5e7"
+    },
+    {
+      "path": "package.json",
+      "sha256": "e42318ad7bcd1b3f93b96578efc5a2b2ecfec60afe38ba3898538d29682a0152"
+    },
+    {
+      "path": "tools/quality/build-brief-storage-v1.bunfig.toml",
+      "sha256": "3140e53d4065c8648f07d4caae2f689ef8d3606e668c9191119d02c4c8a0bbab"
+    },
+    {
+      "path": "tools/quality/build-brief-storage-v1.test.ts",
+      "sha256": "5da01b9aaac0dbdf396843cbfaced22330155eaa972692b4a6884fc1a5663fc6"
+    },
+    {
+      "path": "tools/quality/build-brief-storage-v1.ts",
+      "sha256": "ef9a3ff652cc16da3f1cc263257072f5a8cd0b106af5d8556138bfdd6f9a3908"
+    },
+    {
+      "path": "tools/quality/inherited-authorities.test.ts",
+      "sha256": "de54522af969a117a878bd49793cb8df54e412a8469886d9313e2c3054079efe"
+    },
+    {
+      "path": "tools/quality/missions-v3.bunfig.toml",
+      "sha256": "3b39c64deb7c94d4bcae68b495c5260b469cdd756d7f4b8e1e7282a1f4bc55a9"
+    },
+    {
+      "path": "tools/quality/missions-v3.test.ts",
+      "sha256": "8b9dc1a93b4e5f07a2fb74330b3fde1ffa8f486c736818b21da507a761c7114f"
+    },
+    {
+      "path": "tools/quality/missions-v3.ts",
+      "sha256": "2e66e144ef59b88e964712440f6abe8584db00c2baefc9c8d73abf456a9fce7e"
+    },
+    {
+      "path": "tools/quality/reference-reconciliation.test.ts",
+      "sha256": "d2347f99ee9e0112394138b2d993e8860ecd40c8b05ed67585185edba63fe4a4"
+    }
+  ],
+  "commands": [
+    "PRIV-PUB-01 — Create a new detached review-only checkout; verify immutable target, clean state and exact tree equality with the prior privacy-reviewed commit.",
+    "PRIV-PUB-02 — Recompute SHA-256 for all eight privacy-required authorities, mapping, ADR, semantic boundaries, fixtures, recipes and source provenance; compare the prior envelope and all thirty hash-bound source/evidence artifacts.",
+    "PRIV-PUB-03 — Independently compare all seventeen inherited retention rules, Specifications archive ownership, while-referenced/P5Y lifecycle, P35D backup ceiling, candidate metadata and exact policy-to-ADR decision identifier.",
+    "PRIV-PUB-04 — Reuse the unchanged prior storage and Missions targeted suites and twenty-six independent privacy probes; verify recorded successful outcomes and original artifact hashes. No heavy suite or probe execution is claimed for this pass.",
+    "PRIV-PUB-05 — Read the unchanged mapping, ADR and Missions privacy boundaries; check minimization, terminal-reference history, current authorization separation, deletion and restore limitations without introducing a new interpretation.",
+    "PRIV-PUB-06 — Validate this envelope against the original review-verdict.v0.1 validator and assigned job; check repository-relative public paths, absence of machine/personal paths and raw shell commands, and clean detached source after review."
+  ],
+  "findings": {
+    "blocking": [],
+    "major": [],
+    "minor": [],
+    "nonBlocking": []
+  },
+  "residualRisks": [
+    "This approval covers privacy engineering of the unchanged candidate authorities only. It is not a legal determination, catalog promotion, implementation admission, runtime permission or authority to process personal or tenant data.",
+    "Prior privacy approval forge-contracts-6ec0959-privacy is reused explicitly by its immutable SHA-256 and identical source tree. Its storage suite, Missions/reconciliation suite and twenty-six independent probes were not rerun here. This pass independently recomputed hashes and retention/provenance assertions; it makes no fresh heavy-suite success claim.",
+    "The prior PRIV-01 and PRIV-02 resolutions remain unchanged: a versioned ADR records the owner-selected design, and durable confirmation/release history remains separate from uncertain observations. No additional class, retention extension, owner, provider, audit role or interpretation is admitted by this attestation.",
+    "Unknown outcomes protect the archive and package pending authenticated terminal reconciliation. Real consumers must prove discoverable reservations, finality fencing and reconciliation liveness; absent that evidence, unresolved retention cannot be treated as physically implemented or complete.",
+    "The Specifications archive remains while-referenced then P5Y after terminal release, with P35D backups and no historical-pointer tail cascade. Seventeen inherited rules are unchanged. Calendar boundaries, physical purge, PostgreSQL RLS/races, migration and deletion-before-restore require actual consumer qualification.",
+    "Historical acceptance evidence and preserved archive bytes do not restore current permission or allow planning after expiry. Current authority, revocation, explicit audit access and execution controls remain independent; fixtures and this review grant none of them.",
+    "Clean tree equality establishes source equivalence between the reviewed commits, not remote PR admission or post-merge CI. The publication commit and any later Specification Lock retain their separate integration requirements."
+  ],
+  "verdict": "approve",
+  "runner": {
+    "modelIdentity": "Not exposed; not inferred",
+    "reviewOnly": true,
+    "sourceModified": false,
+    "worktreeDetached": true,
+    "worktreeCleanBefore": true,
+    "worktreeCleanAfter": true,
+    "coveredAuthorityIds": [
+      "retention-policy-v4",
+      "retention-policy-schema-v4",
+      "mission-handoff-binding-v1",
+      "mission-record-v3",
+      "execution-plan-body-v3",
+      "execution-authorization-v3",
+      "missions-api-schema-v3",
+      "missions-api-v3"
+    ],
+    "boundary": "Dedicated privacy-only public attestation; no promotion or runtime admission",
+    "sourceTreeSha": "724d6802dd75b1c226ec3163aafa5fccc17fbcf8",
+    "reusedEvidence": {
+      "reviewPassId": "forge-contracts-6ec0959-privacy",
+      "commitSha": "6ec09592d89a6e4aad9d54cb3945bb8b8ddb4e46",
+      "verdictSha256": "e6be3e318ba3a33b5c39095532e24ae3fccb33d8d92d1eb05829ac5cbd88c66c",
+      "sourceTreeSha": "724d6802dd75b1c226ec3163aafa5fccc17fbcf8",
+      "originalVerdictPreserved": true,
+      "originalHashBoundArtifactsRecomputed": 30,
+      "priorIndependentProbeAssertions": 26,
+      "heavySuitesReexecuted": false,
+      "artifacts": [
+        {
+          "recipeId": "PRIOR-PRIVACY-CHECKS-JSON",
+          "sha256": "6268063e66516e5bbe9664dfde561308565db1398631c53667b5d6d6ff0c8c85"
+        },
+        {
+          "recipeId": "PRIOR-PRIVACY-INSTALL-LOG",
+          "sha256": "613e37f806706ba3be0a6d980ea3199cea21f53a66ce15d2899bd655d08a8487"
+        },
+        {
+          "recipeId": "PRIOR-PRIVACY-MISSIONS-LOG",
+          "sha256": "b2d259c7ba473fd4c52cffdea86c58009b81c0891978b09533ad099adbe06f44"
+        },
+        {
+          "recipeId": "PRIOR-PRIVACY-PROBES-JSON",
+          "sha256": "cfd248d46b4a005ece33b5c0158ccc9101883e3099070d94ab80153c177238a8"
+        },
+        {
+          "recipeId": "PRIOR-PRIVACY-PROBES-TS",
+          "sha256": "686cb3d30daf14b78f4393e0b09bb10613b031def954e89da8e2812fa29dd67f"
+        },
+        {
+          "recipeId": "PRIOR-PRIVACY-STORAGE-LOG",
+          "sha256": "98e62ba382f92f09612ecc459a2cc952733cb3198f740b5781bdd5e8df7c463f"
+        }
+      ]
+    },
+    "protocolSha256": "a7df46b45db98d154db74c7b979b48416f45e8415d8384a259761e1e3bae9f52"
+  }
+}
