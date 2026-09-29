@@ -51,13 +51,19 @@ export function specificationLockFailures(input: SpecificationLockInput): string
     ...Object.entries(evidence.preservedFiles),
     ...evidence.roleVerdicts.map((entry): [string, string] => [entry.path, entry.sha256]),
   ]);
+  const verifiedDocuments = new Map<string, Uint8Array>();
   for (const [path, expectedHash] of expectedHashes) {
     const bytes = input.documents.get(path);
-    if (!bytes || digest(bytes) !== expectedHash) return ["Missing or altered protected input"];
+    if (!bytes) return ["Missing or altered protected input"];
+    // Read each caller entry once and retain our own bytes before hashing.
+    // Subsequent getters may replace entries or mutate their original buffers.
+    const snapshot = new Uint8Array(bytes);
+    if (digest(snapshot) !== expectedHash) return ["Missing or altered protected input"];
+    verifiedDocuments.set(path, snapshot);
   }
   // The pinned baseline is immutable data. Preserve every field and array
   // position; only the fifteen approved statuses and review objects may change.
-  const baselineBytes = input.documents.get(evidence.baselineCatalog.path);
+  const baselineBytes = verifiedDocuments.get(evidence.baselineCatalog.path);
   if (!baselineBytes) return ["Missing baseline"];
   const baseline: {
     schemaVersion: string;

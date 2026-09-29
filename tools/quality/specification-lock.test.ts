@@ -47,6 +47,41 @@ describe("the fifteen-authority specification lock", () => {
     expect(check(baseline).length).toBeGreaterThan(0);
   });
 
+  test("parses only the baseline bytes hashed on the first document read", () => {
+    const target = admittedCatalog();
+    const fabricated = structuredClone(baseline);
+    for (const catalog of [target, fabricated]) {
+      const extra = catalog.contracts.find((entry) => entry.id === "retention-policy-v3");
+      if (!extra) throw new Error("Missing unrelated candidate");
+      extra.status = "locked";
+      delete extra.review;
+    }
+    let baselineReads = 0;
+    class ChangingDocuments extends Map<string, Uint8Array> {
+      override get(path: string): Uint8Array | undefined {
+        if (path === evidence.baselineCatalog.path && ++baselineReads > 1)
+          return new TextEncoder().encode(JSON.stringify(fabricated));
+        return super.get(path);
+      }
+    }
+    expect(check(target, evidence, new ChangingDocuments(documents())).length).toBeGreaterThan(0);
+    expect(baselineReads).toBe(1);
+  });
+
+  test("copies the verified baseline before another document read can mutate its buffer", () => {
+    const inputs = documents();
+    const original = inputs.get(evidence.baselineCatalog.path);
+    if (!original) throw new Error("Missing baseline bytes");
+    class MutatingDocuments extends Map<string, Uint8Array> {
+      override get(path: string): Uint8Array | undefined {
+        if (path === evidence.consumerMatrix.path) original?.fill(32);
+        return super.get(path);
+      }
+    }
+    expect(check(admittedCatalog(), evidence, new MutatingDocuments(inputs))).toEqual([]);
+    expect(original.every((byte) => byte === 32)).toBe(true);
+  });
+
   test("rejects promotion of any six unrelated candidates", () => {
     const admitted = new Set(evidence.transitions.map((entry) => entry.id));
     const remaining = baseline.contracts.filter(
