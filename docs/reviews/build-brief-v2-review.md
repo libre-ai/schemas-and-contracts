@@ -42,3 +42,12 @@ paragraph records remediation scope, NOT review acceptance. Cryptography must
 review the immutable corrective commit; affected prior scope is not automatically
 accepted. Architecture also requires the accepted-spec-package/historical-proof
 retention mapping before consumer implementation, as now explicit in SEMANTICS.
+
+
+## Subsequent specification-lock package
+
+The original authoring and review states above remain historical records.
+The later exact-tree role attestations, proposed fifteen-authority transition
+and explicit non-runtime consumer boundary are recorded in
+[the specification-lock dossier](build-brief-missions-specification-lock.md).
+That dossier does not replace a final promotion review or protected integration.

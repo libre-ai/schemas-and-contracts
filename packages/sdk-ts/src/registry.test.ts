@@ -70,28 +70,30 @@ const authorizedExecutionIds = [
   "retention-policy-v2",
   "step-invocation-v1",
 ] as const;
-const remainingCandidateIds = [
-  "agent-handoff-v2",
-  "boussole-method-v3",
-  "build-brief-acceptance-v2",
-  "build-brief-api-v2",
+const briefAndMissionsIds = [
   "build-brief-body-v2",
+  "build-brief-acceptance-v2",
+  "spec-package-v2",
+  "agent-handoff-v2",
   "build-brief-policy-v2",
-  "execution-authorization-v3",
-  "execution-plan-body-v3",
-  "harness-profile-v2",
-  "local-comparison-v3",
+  "specifications-api-v2",
+  "build-brief-api-v2",
+  "retention-policy-v4",
+  "retention-policy-schema-v4",
   "mission-handoff-binding-v1",
   "mission-record-v3",
+  "execution-plan-body-v3",
+  "execution-authorization-v3",
   "missions-api-schema-v3",
   "missions-api-v3",
+] as const;
+const remainingCandidateIds = [
+  "boussole-method-v3",
+  "harness-profile-v2",
+  "local-comparison-v3",
   "public-vote-dataset-v3",
   "retention-policy-schema-v3",
-  "retention-policy-schema-v4",
   "retention-policy-v3",
-  "retention-policy-v4",
-  "spec-package-v2",
-  "specifications-api-v2",
 ] as const;
 const fixtureDocument = (await Bun.file(
   "../../contracts/fixtures/schema-fixtures.v1.json",
@@ -121,7 +123,7 @@ describe("canonical contract registry", () => {
 
   test("consumes the exact authorized execution Specification Lock", () => {
     const entriesById = new Map(authorityCatalog.contracts.map((entry) => [entry.id, entry]));
-    for (const id of authorizedExecutionIds) {
+    for (const id of [...authorizedExecutionIds, ...briefAndMissionsIds]) {
       const entry = entriesById.get(id);
       expect(entry, `${id} must exist in the pinned catalog`).toBeDefined();
       expect(entry?.status, `${id} must be locked by the pinned authority`).toBe("locked");

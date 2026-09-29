@@ -1091,7 +1091,14 @@
       "consumers": ["missions", "artifacts", "authz-biscuit"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography"],
+        "dossier": "docs/reviews/build-brief-v2-review.md"
+      }
     },
     {
       "id": "build-brief-acceptance-v2",
@@ -1101,7 +1108,14 @@
       "consumers": ["missions", "artifacts", "authz-biscuit"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography"],
+        "dossier": "docs/reviews/build-brief-v2-review.md"
+      }
     },
     {
       "id": "spec-package-v2",
@@ -1111,7 +1125,14 @@
       "consumers": ["missions", "artifacts", "authz-biscuit"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography"],
+        "dossier": "docs/reviews/build-brief-v2-review.md"
+      }
     },
     {
       "id": "agent-handoff-v2",
@@ -1121,7 +1142,14 @@
       "consumers": ["missions", "artifacts", "authz-biscuit"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography"],
+        "dossier": "docs/reviews/build-brief-v2-review.md"
+      }
     },
     {
       "id": "build-brief-policy-v2",
@@ -1131,7 +1159,14 @@
       "consumers": ["missions", "artifacts", "authz-biscuit"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography"],
+        "dossier": "docs/reviews/build-brief-v2-review.md"
+      }
     },
     {
       "id": "retention-policy-schema-v3",
@@ -1175,7 +1210,14 @@
       "consumers": ["missions", "sdk-ts", "sdk-rs"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography"],
+        "dossier": "docs/reviews/build-brief-api-v2-review.md"
+      }
     },
     {
       "id": "build-brief-api-v2",
@@ -1185,7 +1227,14 @@
       "consumers": ["missions", "sdk-ts", "sdk-rs"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography"],
+        "dossier": "docs/reviews/build-brief-api-v2-review.md"
+      }
     },
     {
       "id": "retention-policy-v4",
@@ -1195,7 +1244,14 @@
       "consumers": ["specifications", "missions", "data"],
       "compatibility": "major-versioned",
       "classification": "internal",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "privacy", "cryptography"],
+        "dossier": "docs/reviews/build-brief-storage-v1-review.md"
+      }
     },
     {
       "id": "retention-policy-schema-v4",
@@ -1205,7 +1261,14 @@
       "consumers": ["specifications", "missions", "data"],
       "compatibility": "major-versioned",
       "classification": "internal",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "privacy", "cryptography"],
+        "dossier": "docs/reviews/build-brief-storage-v1-review.md"
+      }
     },
     {
       "id": "mission-handoff-binding-v1",
@@ -1215,7 +1278,14 @@
       "consumers": ["missions", "agent-orchestrator", "sdk-ts", "sdk-rs"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography", "privacy"],
+        "dossier": "docs/reviews/missions-v3-review.md"
+      }
     },
     {
       "id": "mission-record-v3",
@@ -1225,7 +1295,14 @@
       "consumers": ["missions", "agent-orchestrator", "sdk-ts", "sdk-rs"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography", "privacy"],
+        "dossier": "docs/reviews/missions-v3-review.md"
+      }
     },
     {
       "id": "execution-plan-body-v3",
@@ -1235,7 +1312,14 @@
       "consumers": ["missions", "agent-orchestrator", "sdk-ts", "sdk-rs"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography", "privacy"],
+        "dossier": "docs/reviews/missions-v3-review.md"
+      }
     },
     {
       "id": "execution-authorization-v3",
@@ -1245,7 +1329,14 @@
       "consumers": ["agent-orchestrator", "authz-biscuit", "sdk-ts", "sdk-rs"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography", "privacy"],
+        "dossier": "docs/reviews/missions-v3-review.md"
+      }
     },
     {
       "id": "missions-api-schema-v3",
@@ -1255,7 +1346,14 @@
       "consumers": ["missions", "browser", "agent-orchestrator", "sdk-ts", "sdk-rs"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography", "privacy"],
+        "dossier": "docs/reviews/missions-v3-review.md"
+      }
     },
     {
       "id": "missions-api-v3",
@@ -1265,7 +1363,14 @@
       "consumers": ["browser", "agent-orchestrator", "agent-harness"],
       "compatibility": "major-versioned",
       "classification": "tenant-private",
-      "status": "locked"
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography", "privacy"],
+        "dossier": "docs/reviews/missions-v3-review.md"
+      }
     }
   ]
 }

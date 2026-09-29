@@ -44,3 +44,12 @@ both independent oracles against one exhaustive matrix. The ADR records owner
 choice, alternatives and migration/deletion/restore responsibilities; it does not
 claim any role has approved this successor. Every affected role must review its
 new immutable commit before promotion.
+
+
+## Subsequent specification-lock package
+
+The original authoring and review states above remain historical records.
+The later exact-tree role attestations, proposed fifteen-authority transition
+and explicit non-runtime consumer boundary are recorded in
+[the specification-lock dossier](build-brief-missions-specification-lock.md).
+That dossier does not replace a final promotion review or protected integration.

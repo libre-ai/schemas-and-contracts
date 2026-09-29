@@ -1,0 +1,739 @@
+{
+  "schemaVersion": "consumer-readiness-matrix.v1",
+  "inspectionDate": "2026-09-29",
+  "scope": "Specification Lock of fifteen authorities; no consumer implementation, runtime activation or promotion verdict",
+  "authorityInspectedAtRevision": "20ab0c7479537eca7afaeb7f8a433600f8a7fb40",
+  "authorityTree": "724d6802dd75b1c226ec3163aafa5fccc17fbcf8",
+  "authorityTreeEqualsHistoricalF324": true,
+  "historicalEvidenceReuse": "Exact source tree equality only; historical verdicts retain original subjects and roles. New target lock checks remain separate.",
+  "basisDocuments": [
+    {
+      "path": "CONTRACT-SPECIFICATION-LOCK-PLAN.md",
+      "sha256": "3730e8459837596b8ba4a42b4e45fdc75fdec71e0700b804f44eab0109d40c03"
+    },
+    {
+      "path": "AUTHORITY-ADAPTER-READINESS.md",
+      "sha256": "e91f076aa129bb4134e69ebdbbba3acd04307fb7da8989d85fbb5816dabfff37"
+    }
+  ],
+  "authorityObjects": [
+    {
+      "id": "build-brief-body-v2",
+      "path": "contracts/schemas/build-brief-body.v2.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "02543c1e8bbf49e1002b8b70e351f3218d85cf151c8274fd588c8c31e3df04e1"
+    },
+    {
+      "id": "build-brief-acceptance-v2",
+      "path": "contracts/schemas/build-brief-acceptance.v2.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "3a66c9696a1bb2291a352f72d583fd562218811fe85055a8991b63bac246b0a2"
+    },
+    {
+      "id": "spec-package-v2",
+      "path": "contracts/schemas/spec-package.v2.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "ae9a67e7c4952738f953b1620205292a81b97744b4b7fe59b6c6ea79281127ec"
+    },
+    {
+      "id": "agent-handoff-v2",
+      "path": "contracts/schemas/agent-handoff.v2.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "9dd740bcd36e75b16ed5b94fd4675424ad0ec5e35c51fb8ab7a4fc66d907d6a1"
+    },
+    {
+      "id": "build-brief-policy-v2",
+      "path": "contracts/authz/build-brief-v2.datalog",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "6a9a912e861e0210bb8701f702c7def45d8d46c10c5cf6c90cfe84980b524605"
+    },
+    {
+      "id": "specifications-api-v2",
+      "path": "contracts/openapi/specifications.v2.yaml",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "05a13e381a30031923878fdceffceebb1ab840a1bb391ba6e679e13129d1d0f0"
+    },
+    {
+      "id": "build-brief-api-v2",
+      "path": "contracts/schemas/build-brief-api.v2.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "5c925006e54215dd829bf435925871fa33598f90f9fd9a912ea9ddb9ac8508d6"
+    },
+    {
+      "id": "retention-policy-v4",
+      "path": "contracts/data/retention.v4.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "8757b363655cfe75eb6e46cbee7558ca293b296e06ed7a5e2ffe8c0580863867"
+    },
+    {
+      "id": "retention-policy-schema-v4",
+      "path": "contracts/schemas/retention-policy.v4.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "b9934b42ce5b52ecdd8294d828f19eb20f289e2617240b6f9e109f435ab6d3d1"
+    },
+    {
+      "id": "mission-handoff-binding-v1",
+      "path": "contracts/schemas/mission-handoff-binding.v1.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "ba098a67a3a700cea90202a2fd9d93125eded44f650386705d0499acabb845a2"
+    },
+    {
+      "id": "mission-record-v3",
+      "path": "contracts/schemas/mission-record.v3.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "b8c8f04034bf7305ef10133d96038aedadffd549c4c4643062fd142625e79b46"
+    },
+    {
+      "id": "execution-plan-body-v3",
+      "path": "contracts/schemas/execution-plan-body.v3.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "651e9adc15bfdd90da36670e277a47b54878b09f1fb10bc598aacde0416c8681"
+    },
+    {
+      "id": "execution-authorization-v3",
+      "path": "contracts/schemas/execution-authorization.v3.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "eb3f91a4411198a024de7ac11bba53324b7753089f87744e7183e5e437780ac9"
+    },
+    {
+      "id": "missions-api-schema-v3",
+      "path": "contracts/schemas/missions-api.v3.schema.json",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "114084e5378408091ef84c227cf35380166c42e1a4766fe0def26d6202c067f4"
+    },
+    {
+      "id": "missions-api-v3",
+      "path": "contracts/openapi/missions.v3.yaml",
+      "statusAtInspectedRevision": "candidate",
+      "sha256": "be94ca38c866c5ea095d8a76b006228cddbe51b89dc3362d59f490e18debce5c"
+    }
+  ],
+  "missionsProtocolProvenance": {
+    "slug": "missions",
+    "major": 3,
+    "status": "candidate",
+    "sourceRepository": "libre-ai/ai-work-supervision",
+    "sourceRevision": "276ac5db8d2bc904ab2bfa4d26620267c37a7092",
+    "sourcePath": "docs/apps/missions-v3-candidate.md",
+    "localPath": "docs/protocols/candidates/missions.v3.md",
+    "sha256": "8bc739670fbf7a8a1b52097e1c5321e091498bdb03fc4851cfbafd5e4af35ce3"
+  },
+  "inspectionMethods": [
+    "Fresh local revision/status read",
+    "Committed source and package identity inspection",
+    "Targeted source literal search across owned runtime modules",
+    "Historical evidence reading with hash linkage; no test execution"
+  ],
+  "absenceSearch": {
+    "terms": [
+      "execution-plan-body.v3",
+      "execution-authorization.v3",
+      "mission-record.v3",
+      "build-brief-body.v2",
+      "build-brief-acceptance.v2",
+      "spec-package.v2",
+      "agent-handoff.v2",
+      "postReferenceRetention"
+    ],
+    "scope": "ai-work-supervision/apps; organization-data-lifecycle/packages; artifact-verification/src and packages; capability-authorization/src; execution-continuity-evaluator/src; execution-sandbox/src",
+    "observedMatches": [
+      {
+        "repository": "libre-ai/ai-work-supervision",
+        "path": "apps/specifications/src/domain/spec-package.test.ts",
+        "line": 60,
+        "meaning": "v2 rejection fixture only"
+      }
+    ],
+    "limitation": "A bounded literal search corroborates direct code reading; it is not an exhaustive consumer/session inventory or proof of absence outside these revisions."
+  },
+  "consumers": [
+    {
+      "consumerId": "sdk-ts",
+      "repository": "libre-ai/schemas-and-contracts",
+      "paths": ["packages/sdk-ts"],
+      "inspectedAtRevision": "20ab0c7479537eca7afaeb7f8a433600f8a7fb40",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "untracked-lock-authoring-excluded",
+      "targetAuthorityIds": [
+        "specifications-api-v2",
+        "build-brief-api-v2",
+        "mission-handoff-binding-v1",
+        "mission-record-v3",
+        "execution-plan-body-v3",
+        "execution-authorization-v3",
+        "missions-api-schema-v3"
+      ],
+      "existingImplementation": "Generated types, vendored schemas and validators include the candidate families; absence of v2/v3 code is not claimed for this SDK.",
+      "targetServiceImplementation": "schema-projections-and-validators-present-service-conformance-not-established",
+      "missingForTarget": "Target lock catalog/projection proof must bind the new lock revision; real clients must verify original bytes, cryptography and authenticated authority inputs.",
+      "futureProductConformanceGate": "Generated drift checks, positive/negative schema tests and package gates at target revision, then independent service conformance.",
+      "sourceEvidence": [
+        {
+          "path": "packages/sdk-ts/src/registry.ts",
+          "line": 82,
+          "sha256": "539707e1aacd74701ccf4826da3b400eb15254c13d64fb3cc2ddd316a4ff0ca1",
+          "observation": "AJV registry exposes schema validation."
+        },
+        {
+          "path": "packages/sdk-ts/src/generated/build-brief-body.v2.d.ts",
+          "line": 1,
+          "sha256": "821017e14f89d34a00f434e38cecfd6bbd350aed1d075e0d70d6f02161beb060",
+          "observation": "Generated Build Brief v2 projection exists."
+        },
+        {
+          "path": "packages/sdk-ts/src/generated/mission-record.v3.d.ts",
+          "line": 1,
+          "sha256": "a53a4703d0da7c7f0beefab7a4abc6cf8da3e63cfbd0542044d45986becfda94",
+          "observation": "Generated Missions v3 projection exists."
+        },
+        {
+          "path": "packages/sdk-ts/src/registry.test.ts",
+          "line": 73,
+          "sha256": "aea58e6aa2031d4157e93ad120e2442842a4f8aaf9f24683c79479a1c7bf8442",
+          "observation": "Catalog/projection state assertions exist at inspected revision."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "evidenceId": "contracts-cryptography-6ec0959",
+          "observedResult": "Historical root/projection checks reported 235 SDK TS tests, 22 Rust tests and 174 byte-exact schema projections. Not re-executed here; full tree equality links inspected 20ab to f324 and reviewed 6ec. This is schema/oracle evidence, not service conformance."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    },
+    {
+      "consumerId": "sdk-rs",
+      "repository": "libre-ai/schemas-and-contracts",
+      "paths": ["crates/sdk-rs"],
+      "inspectedAtRevision": "20ab0c7479537eca7afaeb7f8a433600f8a7fb40",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "untracked-lock-authoring-excluded",
+      "targetAuthorityIds": [
+        "specifications-api-v2",
+        "build-brief-api-v2",
+        "mission-handoff-binding-v1",
+        "mission-record-v3",
+        "execution-plan-body-v3",
+        "execution-authorization-v3",
+        "missions-api-schema-v3"
+      ],
+      "existingImplementation": "Rust projected schemas/types and feature-gated validation exist; they do not implement service authority ports.",
+      "targetServiceImplementation": "schema-projections-and-validators-present-service-conformance-not-established",
+      "missingForTarget": "Target lock projection and validators-feature evidence must bind new revision; actual ingress cryptography and rejection boundaries remain consumer work.",
+      "futureProductConformanceGate": "Byte-exact projections, strict Cargo gates with validators feature and vectors; real boundary conformance separately.",
+      "sourceEvidence": [
+        {
+          "path": "crates/sdk-rs/src/lib.rs",
+          "line": 16,
+          "sha256": "40f8190f3944cf1c371ad947cd2ccd19fde88059933f79fe1517652ebbf920a4",
+          "observation": "Generated Rust projection and optional validators are separate."
+        },
+        {
+          "path": "crates/sdk-rs/schemas/mission-record.v3.schema.json",
+          "line": 1,
+          "sha256": "b8c8f04034bf7305ef10133d96038aedadffd549c4c4643062fd142625e79b46",
+          "observation": "Missions v3 schema copy exists."
+        },
+        {
+          "path": "crates/sdk-rs/schemas/build-brief-acceptance.v2.schema.json",
+          "line": 1,
+          "sha256": "3a66c9696a1bb2291a352f72d583fd562218811fe85055a8991b63bac246b0a2",
+          "observation": "Acceptance v2 schema copy exists."
+        },
+        {
+          "path": "crates/sdk-rs/scripts/authorized-execution-lock.test.ts",
+          "line": 23,
+          "sha256": "b25a4072b358e6aaddf192069602d5a45fa16b0dca0ed9a2be5793094593165b",
+          "observation": "Independent catalog/hash state guard exists."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "evidenceId": "contracts-cryptography-6ec0959",
+          "observedResult": "Historical root/projection checks reported 235 SDK TS tests, 22 Rust tests and 174 byte-exact schema projections. Not re-executed here; full tree equality links inspected 20ab to f324 and reviewed 6ec. This is schema/oracle evidence, not service conformance."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    },
+    {
+      "consumerId": "missions",
+      "repository": "libre-ai/ai-work-supervision",
+      "paths": ["apps/missions"],
+      "inspectedAtRevision": "85658d5f4090c4d18a8f24662b2378af77f3a740",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "clean-at-inspection",
+      "targetAuthorityIds": [
+        "build-brief-body-v2",
+        "build-brief-acceptance-v2",
+        "spec-package-v2",
+        "agent-handoff-v2",
+        "build-brief-policy-v2",
+        "specifications-api-v2",
+        "build-brief-api-v2",
+        "retention-policy-v4",
+        "retention-policy-schema-v4",
+        "mission-handoff-binding-v1",
+        "mission-record-v3",
+        "execution-plan-body-v3",
+        "missions-api-schema-v3"
+      ],
+      "existingImplementation": "Missions v1 domain, RLS persistence and revision/cursor CAS; no v2 reviewer runtime or Missions v3 binding implementation found.",
+      "targetServiceImplementation": "not-implemented-or-qualified-in-inspected-runtime-scope",
+      "missingForTarget": "Ten v3 endpoints, durable handoff binding/reference lifecycle, trusted ports, dual quorums and actual executor integration absent in inspected app.",
+      "futureProductConformanceGate": "v3 endpoint contracts, CAS/RLS/multi-connection races, crash/reconcile/release, authenticated currentness/refusals, browser journeys and bounded real mission.",
+      "sourceEvidence": [
+        {
+          "path": "apps/missions/README.md",
+          "line": 9,
+          "sha256": "1f99aee559ae1c8ce9be4adb03c11445467efc7874bb9bb585029c709b4ec25a",
+          "observation": "v1 domain implemented; v2 two-agent protocol explicitly unimplemented."
+        },
+        {
+          "path": "apps/missions/src/domain/mission.ts",
+          "line": 1,
+          "sha256": "43e9f7e545265dc4cf1d759adb7543be0b8d9410865d391e1539379fb7c20652",
+          "observation": "Human-approver v1 state machine."
+        },
+        {
+          "path": "apps/missions/src/persistence/mission-store.ts",
+          "line": 1,
+          "sha256": "e9a19467feb0e22a20fb31a8bb769133e43e82734a18a7ccda242e4c7e2ffb76",
+          "observation": "Revision/cursor persistence exists."
+        },
+        {
+          "path": "apps/missions/src/authz/mission-authorization.ts",
+          "line": 1,
+          "sha256": "99e74bdae0f4de125b6f17ca1009d4c310af6f17b40106907299b736e58500d3",
+          "observation": "App-side authorization matrix; runtime token bridge not supplied."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "evidenceId": "missions-85658d5",
+          "observedResult": "Historical integration review reran root check and inspected PGlite SQL/RLS; nine auth browser journeys were explicitly reused. Neither deployed PostgreSQL races nor a persisted mission browser journey was proven."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    },
+    {
+      "consumerId": "specifications",
+      "repository": "libre-ai/ai-work-supervision",
+      "paths": ["apps/specifications"],
+      "inspectedAtRevision": "85658d5f4090c4d18a8f24662b2378af77f3a740",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "clean-at-inspection",
+      "targetAuthorityIds": ["retention-policy-v4", "retention-policy-schema-v4"],
+      "existingImplementation": "v1 workspace/package acceptance and tenant persistence exist; no Build Brief v2 API/admission or v4 archive implementation found.",
+      "targetServiceImplementation": "not-implemented-or-qualified-in-inspected-runtime-scope",
+      "missingForTarget": "HistoricalAcceptanceAuthority, AcceptanceKeyAuthority, CurrentSessionAuthority and BriefResourceAuthorizer lack qualified adapters; owner-local v4 archive/reference mapping is specification only.",
+      "futureProductConformanceGate": "Ten v2 endpoints, original canonical bytes and signatures, historical/current authority ports, PostgreSQL archive, reference/deletion/restore and complete browser flow.",
+      "sourceEvidence": [
+        {
+          "path": "apps/specifications/src/domain/spec-package.ts",
+          "line": 52,
+          "sha256": "471b282f64e6d01dc741532e36c51f479b4cbac47f009cbf5ba652594629ca08",
+          "observation": "Accepted package schema is v1."
+        },
+        {
+          "path": "apps/specifications/src/domain/spec-package.ts",
+          "line": 232,
+          "sha256": "471b282f64e6d01dc741532e36c51f479b4cbac47f009cbf5ba652594629ca08",
+          "observation": "Validator rejects non-v1 schemaVersion."
+        },
+        {
+          "path": "apps/specifications/src/domain/spec-package.test.ts",
+          "line": 60,
+          "sha256": "74c9913ae0eef39b84f0655b3a6dc13d9af0ac7c19249c018119828c964d6e27",
+          "observation": "v2 package is an explicit malformed-input fixture."
+        },
+        {
+          "path": "apps/specifications/src/app/persist-acceptance.ts",
+          "line": 23,
+          "sha256": "1ffc2067fdecae1c6bebddfb19be68bba049952a021d402b582298edfa080cb6",
+          "observation": "v1 acceptance persistence documents digest limitation."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "evidenceId": "authority-adapter-readiness",
+          "observedResult": "Read-only source audit records existing v1 persistence and absent qualified authority adapters; it is not an executed v2 service conformance test."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    },
+    {
+      "consumerId": "data",
+      "repository": "libre-ai/organization-data-lifecycle",
+      "paths": ["packages/data", "packages/rgpd-kit"],
+      "inspectedAtRevision": "cf5c85999b72930a2388a80951305b9b4934d3f2",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "clean-at-inspection",
+      "targetAuthorityIds": ["retention-policy-v4", "retention-policy-schema-v4"],
+      "existingImplementation": "Owner-local transaction, tenant retention and rights primitives exist; active sweep explicitly selects v1.",
+      "targetServiceImplementation": "not-implemented-or-qualified-in-inspected-runtime-scope",
+      "missingForTarget": "No postReferenceRetention implementation found; future retention v4 hash is inventoried without runtime selection. Libraries do not own Specifications data.",
+      "futureProductConformanceGate": "P5Y calendar semantics, while-referenced protection, purge/reference races, P35D backup/restore and owner-local deletion; active policy remains unchanged.",
+      "sourceEvidence": [
+        {
+          "path": "packages/data/src/retention-sweep.ts",
+          "line": 109,
+          "sha256": "f9d4c711bd0556b7c8109afed3f384d459748b596753bb09c0c84f1e9891a992",
+          "observation": "Explicit contract policy resolution."
+        },
+        {
+          "path": "packages/data/src/retention-sweep.ts",
+          "line": 115,
+          "sha256": "f9d4c711bd0556b7c8109afed3f384d459748b596753bb09c0c84f1e9891a992",
+          "observation": "Runtime loads retention.v1.json, not greatest numeric version."
+        },
+        {
+          "path": "packages/rgpd-kit/src/data-category.ts",
+          "line": 5,
+          "sha256": "546b81a5d4f50ce0a69393518522c9371715211b447f44d087083c056b61cae9",
+          "observation": "Data-category rule references current v1 policy."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "evidenceId": "authority-adapter-readiness",
+          "observedResult": "Historical source audit establishes mechanism scope, not new retention execution. No data root/service suite rerun or v4 activation in this inspection."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    },
+    {
+      "consumerId": "artifacts",
+      "repository": "libre-ai/artifact-verification",
+      "paths": ["src", "packages/provenance"],
+      "inspectedAtRevision": "388d032367060c0905c791997bd0efc61b2a85a9",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "clean-at-inspection",
+      "targetAuthorityIds": [
+        "build-brief-body-v2",
+        "build-brief-acceptance-v2",
+        "spec-package-v2",
+        "agent-handoff-v2",
+        "build-brief-policy-v2"
+      ],
+      "existingImplementation": "Rust artifact/digest verification and TS signed lineage v1 exist; this repository is not a package archive/storage service.",
+      "targetServiceImplementation": "not-implemented-or-qualified-in-inspected-runtime-scope",
+      "missingForTarget": "No Build Brief v2 detached receipt raw-byte/strict Ed25519 ingress or complete contributor-history adapter found.",
+      "futureProductConformanceGate": "Real-component strict Ed25519/JCS and raw cross-runtime preimages using contracts/fixtures/build-brief-v2/strict-ed25519-vectors.json; authenticated key/contributor authority separately.",
+      "sourceEvidence": [
+        {
+          "path": "src/digest.rs",
+          "line": 33,
+          "sha256": "73894f2f3672be32bea44b312aa77d8330df31f27a8f1bd79afaa89ba47e72b3",
+          "observation": "Canonical JSON digest primitive."
+        },
+        {
+          "path": "packages/provenance/src/index.ts",
+          "line": 241,
+          "sha256": "eaa6d4d7ab89be2b9161bf16db6bb7bf2deafac763e09e1c1da992ecf1cff849",
+          "observation": "Signed AgentContributorLineage v1 construction."
+        },
+        {
+          "path": "packages/provenance/src/index.ts",
+          "line": 316,
+          "sha256": "eaa6d4d7ab89be2b9161bf16db6bb7bf2deafac763e09e1c1da992ecf1cff849",
+          "observation": "Lineage integrity/signature verification; supplied key authority remains external."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "evidenceId": "contracts-cryptography-6ec0959",
+          "observedResult": "Historical independent oracle used this revision and serde_jcs 0.2.0 for 13 preimages; it did not implement acceptance v2 inside the artifact component."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    },
+    {
+      "consumerId": "authz-biscuit",
+      "repository": "libre-ai/capability-authorization",
+      "paths": ["src"],
+      "inspectedAtRevision": "7ce06366663ff8b4329d0bc25f589c8ef830aef0",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "clean-at-inspection",
+      "targetAuthorityIds": [
+        "build-brief-body-v2",
+        "build-brief-acceptance-v2",
+        "spec-package-v2",
+        "agent-handoff-v2",
+        "build-brief-policy-v2",
+        "execution-authorization-v3"
+      ],
+      "existingImplementation": "Real Biscuit signature/scope/revocation checks and key rotation exist for older policy families.",
+      "targetServiceImplementation": "not-implemented-or-qualified-in-inspected-runtime-scope",
+      "missingForTarget": "Build Brief v2 policy is not loaded by this Rust adapter; trusted issuer/current membership/history/key and ownership bridge absent.",
+      "futureProductConformanceGate": "Exact policy pin, issuer/key membership authority, attenuation/revocation and operation-specific currentness; synthetic CLI policy cases do not establish context authenticity.",
+      "sourceEvidence": [
+        {
+          "path": "src/authorize.rs",
+          "line": 14,
+          "sha256": "f984b0314d900e14eeb43d15109434de5fa0fd14ca735520caba0efc73d41203",
+          "observation": "Only Sessions/Missions policies are embedded."
+        },
+        {
+          "path": "src/authorize.rs",
+          "line": 19,
+          "sha256": "f984b0314d900e14eeb43d15109434de5fa0fd14ca735520caba0efc73d41203",
+          "observation": "Closed CanonicalPolicy enum lacks Build Brief."
+        },
+        {
+          "path": "src/authorize.rs",
+          "line": 34,
+          "sha256": "f984b0314d900e14eeb43d15109434de5fa0fd14ca735520caba0efc73d41203",
+          "observation": "AuthorizationContext lacks required v2 membership/body/contributor facts."
+        },
+        {
+          "path": "src/keys.rs",
+          "line": 15,
+          "sha256": "d335f5edd931035ff32afffc749327bc5c86bd8b88cbc9366cfdccbad85c9aba",
+          "observation": "Biscuit verification key ring exists."
+        },
+        {
+          "path": "src/token.rs",
+          "line": 352,
+          "sha256": "9699f54c3353a92a3a095bed2cc0a088257cc764ed364fcae7246c82dbf1e13b",
+          "observation": "Issuance receives caller-provided request facts."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "evidenceId": "contracts-security-6ec0959",
+          "observedResult": "Historical security review explicitly reused 179 real Biscuit synthetic cases plus 14 probes from 028; no new CLI run claimed here."
+        },
+        {
+          "repositoryPath": "evidence/reviews/bd7baeb/SCOPE-NOTICE.md",
+          "observedResult": "Old capability review expressly excludes production, key ceremony and durable adapters."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    },
+    {
+      "consumerId": "browser",
+      "repository": "libre-ai/ai-work-supervision",
+      "paths": ["apps/missions/src/ui", "apps/specifications/src/ui", "packages/auth-web"],
+      "inspectedAtRevision": "85658d5f4090c4d18a8f24662b2378af77f3a740",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "clean-at-inspection",
+      "targetAuthorityIds": ["missions-api-schema-v3", "missions-api-v3"],
+      "existingImplementation": "Catalog role maps to Missions/Specifications UI surfaces, not a standalone browser repository. Auth web infrastructure exists.",
+      "targetServiceImplementation": "not-implemented-or-qualified-in-inspected-runtime-scope",
+      "missingForTarget": "No activable Missions v3 or Build Brief v2 author-review-approve-export flow found; memory auth fixtures do not provide durable current or historical authority.",
+      "futureProductConformanceGate": "Complete author/reviewer/independent approver/export/Missions flow, CSRF/refusals/accessibility and current authority validation at every effect.",
+      "sourceEvidence": [
+        {
+          "path": "apps/missions/src/ui/missions-cockpit.tsx",
+          "line": 1,
+          "sha256": "13909cc951242d388d7a9f1a30b9fa26b411d57ffd8edf94cf42cd78e7447510",
+          "observation": "Read-only cockpit; command journeys deferred."
+        },
+        {
+          "path": "apps/specifications/src/ui/specifications-cockpit.tsx",
+          "line": 1,
+          "sha256": "e6474bf70c049b83e48595bc3e6ab5c115700eddb265d60743faf8f5de1821d8",
+          "observation": "Read-only cockpit; authoring/acceptance journeys deferred."
+        },
+        {
+          "path": "packages/auth-web/src/session/lifecycle.ts",
+          "line": 55,
+          "sha256": "357c654e3af3dda34640173fbfb86f8c9605dcbddf93ac550b114106f39561a1",
+          "observation": "Session service options have no current membership resolver."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "evidenceId": "missions-85658d5",
+          "observedResult": "Nine historical authentication browser journeys are reused evidence, not a v3 Missions or v2 Specifications E2E journey."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    },
+    {
+      "consumerId": "agent-orchestrator",
+      "repository": "libre-ai/execution-continuity-evaluator",
+      "paths": ["src", "verification/agent-orchestrator"],
+      "inspectedAtRevision": "85a10dcf6a49d603d46cd066e6a3f2936f75060a",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "clean-at-inspection",
+      "targetAuthorityIds": [
+        "mission-handoff-binding-v1",
+        "mission-record-v3",
+        "execution-plan-body-v3",
+        "execution-authorization-v3",
+        "missions-api-schema-v3",
+        "missions-api-v3"
+      ],
+      "existingImplementation": "Pure simulation decision engine with identity bindings, replay, budgets and control. No effects/provider/storage ownership.",
+      "targetServiceImplementation": "not-implemented-or-qualified-in-inspected-runtime-scope",
+      "missingForTarget": "No execution-plan-body.v3/execution-authorization.v3 implementation or v3 source-discriminant cascade found. Existing orchestrator-event.v3 is a distinct contract.",
+      "futureProductConformanceGate": "Quorums, exact plan/auth source cascade, fencing/idempotence, budget/stop and real-effect integration following simulation conformance and bounded mission review.",
+      "sourceEvidence": [
+        {
+          "path": "Cargo.toml",
+          "line": 2,
+          "sha256": "c5e669fb08136cd9f29c43448556cb503342024095ff8c0cb1cdd6b239674f4b",
+          "observation": "Crate identity is libre-ai-agent-orchestrator."
+        },
+        {
+          "path": "verification/agent-orchestrator/README.md",
+          "line": 3,
+          "sha256": "979d51091fde446f08ab6d8a04451f143f4b2241e689ab4b59203dc1f5d8db1b",
+          "observation": "Explicit simulation-only decision core."
+        },
+        {
+          "path": "src/control.rs",
+          "line": 8,
+          "sha256": "a9bdf5d9bd097041e4041c773acddd5047f224f083293aa44af6700131097243",
+          "observation": "Control v1 schema retained."
+        },
+        {
+          "path": "src/authorized_execution/document.rs",
+          "line": 10,
+          "sha256": "93baeeaade202608404a360b9ba9e008c14e6a9e0d5c6aae95ccf785f4beaef0",
+          "observation": "Graph v1 and event v3 schemas exist; event v3 is not plan/auth v3 support."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "repositoryPath": "verification/agent-orchestrator/README.md",
+          "observedResult": "Existing capability guard and tests document simulation boundary; source inspection only here, no claim of freshly executed runtime proof."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    },
+    {
+      "consumerId": "agent-harness",
+      "repository": "libre-ai/execution-sandbox",
+      "paths": ["src", "verification/agent-harness"],
+      "inspectedAtRevision": "75eca3706f8ae76e307feaf9b70cf1495dbb4531",
+      "inspectionBasis": "immutable-committed-git-objects",
+      "remoteHeadCurrentness": "not-queried-not-claimed",
+      "workingTreeObservation": "clean-at-inspection",
+      "targetAuthorityIds": ["missions-api-v3"],
+      "existingImplementation": "Existing profile/control validation and lower-level subprocess mechanics; attested execution fails closed for network enforcement.",
+      "targetServiceImplementation": "not-implemented-or-qualified-in-inspected-runtime-scope",
+      "missingForTarget": "No v3 Mission/plan/auth consumer integration or positive attested isolation admission. Harness profile v2 presence is not new-family conformance.",
+      "futureProductConformanceGate": "Verified real filesystem/network permissions, replay/effect evidence and exact protocol integration; generic Linux or subprocess successes do not establish sandbox qualification.",
+      "sourceEvidence": [
+        {
+          "path": "Cargo.toml",
+          "line": 2,
+          "sha256": "2117e17304b93b1da673844987d93e523b65d9f5e16b35d3999ac7aac7099e69",
+          "observation": "Crate identity is libre-ai-harness."
+        },
+        {
+          "path": "src/profile.rs",
+          "line": 8,
+          "sha256": "bc7cef3fb7ef0e6264009360b1d0bc33669319c0b330fab13edbee75ff420c99",
+          "observation": "Existing harness-profile.v2 is separate from Missions v3 implementation."
+        },
+        {
+          "path": "src/controls.rs",
+          "line": 83,
+          "sha256": "ccb25ecdd136adcb2d778677e05254734aa0ab9ee0e673644a7a0a31c2be7e88",
+          "observation": "Network mode cannot currently be enforced."
+        },
+        {
+          "path": "verification/agent-harness/README.md",
+          "line": 41,
+          "sha256": "4d88b1c17216631eb342b1ad39eedf9ecf79604b00f1d2cbcb7eb3745ba451cd",
+          "observation": "Attested run refuses before worker I/O/spawn; refusal tests cannot qualify positive attestation."
+        }
+      ],
+      "existingExecutionEvidence": [
+        {
+          "evidenceId": "sandbox-75eca37",
+          "observedResult": "Historical review reports 69 Rust and 53 Bun tests plus reused 11 Linux refusal tests. Positive attestation explicitly not qualified; nothing rerun here."
+        }
+      ],
+      "executedInThisInspection": false,
+      "runtimeAdmissionGranted": false
+    }
+  ],
+  "historicalEvidence": [
+    {
+      "id": "contracts-cryptography-6ec0959",
+      "evidencePath": "contract-reviews/composed-6ec0959-cryptography.verdict.json",
+      "sha256": "f08aa8ddfc5d3a1c3db9a369a63dbf0ff641addbb49849d9b7d3fabb0a309833",
+      "executionInThisPass": false,
+      "publicEnvelopeCopied": false,
+      "originalReviewTarget": "6ec09592d89a6e4aad9d54cb3945bb8b8ddb4e46",
+      "originalVerdict": "approve",
+      "originalRole": "cryptography"
+    },
+    {
+      "id": "contracts-security-6ec0959",
+      "evidencePath": "contract-reviews/composed-6ec0959-security.verdict.json",
+      "sha256": "8896f7e293c46bd4f883c43123a3b3946f9ac1bdfb3c27164a50693429dbad2b",
+      "executionInThisPass": false,
+      "publicEnvelopeCopied": false,
+      "originalReviewTarget": "6ec09592d89a6e4aad9d54cb3945bb8b8ddb4e46",
+      "originalVerdict": "approve",
+      "originalRole": "security"
+    },
+    {
+      "id": "contracts-integration-f3247ca",
+      "evidencePath": "final-reviews/contracts-composed-f3247ca.verdict.json",
+      "sha256": "48e6ff093ddd587b3b5277e53d960d58f254d46d56635751ed3c02a5bbd71f49",
+      "executionInThisPass": false,
+      "publicEnvelopeCopied": false,
+      "originalReviewTarget": "f3247ca1e809840180f04c477d581198032fb620",
+      "originalVerdict": "approve",
+      "originalRole": "candidate-integration"
+    },
+    {
+      "id": "missions-85658d5",
+      "evidencePath": "final-reviews/ai-work-supervision.verdict.json",
+      "sha256": "0c5ca8eb6f787f65a8bb18956bda758f2ec801401db32e96518b16506c377f9a",
+      "executionInThisPass": false,
+      "publicEnvelopeCopied": false,
+      "originalReviewTarget": "85658d5f4090c4d18a8f24662b2378af77f3a740",
+      "originalVerdict": "approve",
+      "originalRole": "candidate-integration"
+    },
+    {
+      "id": "sandbox-75eca37",
+      "evidencePath": "final-reviews/execution-sandbox.verdict.json",
+      "sha256": "6ae75f14851545fd69cf815e2e46ab45b127fe7159976fc2369c69a40bbedac4",
+      "executionInThisPass": false,
+      "publicEnvelopeCopied": false,
+      "originalReviewTarget": "75eca3706f8ae76e307feaf9b70cf1495dbb4531",
+      "originalVerdict": "approve",
+      "originalRole": "candidate-integration"
+    },
+    {
+      "id": "authority-adapter-readiness",
+      "evidencePath": "AUTHORITY-ADAPTER-READINESS.md",
+      "sha256": "e91f076aa129bb4134e69ebdbbba3acd04307fb7da8989d85fbb5816dabfff37",
+      "executionInThisPass": false,
+      "publicEnvelopeCopied": false
+    }
+  ],
+  "globalLimitations": [
+    "Local retained revisions are not asserted to be current remote HEADs.",
+    "SDK schema/type projections are implemented; service v2/v3 conformance is absent/unqualified in the inspected scope.",
+    "No root check, provider, runtime, database, browser or source edit executed.",
+    "Untracked Contracts lock authoring was excluded; immutable committed objects alone were used.",
+    "References to private historical envelopes expose only relative evidence IDs and hashes; those envelopes are not copied or silently redacted."
+  ]
+}

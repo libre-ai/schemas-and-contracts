@@ -1,4 +1,6 @@
 import { expect, test } from "bun:test";
+import adoption from "../../docs/reviews/build-brief-missions-specification-lock.json";
+import { runSpecificationLockGate } from "./specification-lock-test-helper";
 
 const candidatePaths = [
   "contracts/schemas/build-brief-body.v2.schema.json",
@@ -8,13 +10,18 @@ const candidatePaths = [
   "contracts/authz/build-brief-v2.datalog",
 ];
 
-test("Build Brief successor authorities exist only as reviewed-role candidates", async () => {
+test("Build Brief authorities belong to the exact reviewed specification lock", async () => {
+  expect(await runSpecificationLockGate()).toBe(0);
   const catalog = await Bun.file("contracts/catalog.v1.json").json();
+  const baseline = await Bun.file(adoption.baselineCatalog.path).json();
   for (const path of candidatePaths) {
     const entry = catalog.contracts.find((item: { path: string }) => item.path === path);
     expect(entry, path).toBeDefined();
-    expect(entry.status).toBe("candidate");
-    expect(entry.review.required).toEqual(["architecture", "security", "cryptography"]);
+    expect(entry.status).toBe("locked");
+    expect(Object.hasOwn(entry, "review")).toBe(false);
+    expect(
+      baseline.contracts.find((item: { path: string }) => item.path === path).review.required,
+    ).toEqual(["architecture", "security", "cryptography"]);
     expect(await Bun.file(path).exists()).toBe(true);
   }
 });

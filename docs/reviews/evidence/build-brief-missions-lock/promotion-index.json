@@ -1,0 +1,56 @@
+{
+  "scope": "specification-only",
+  "runtimeAdmission": "not-granted",
+  "reviewedCommit": "50a1f2e754982ba9e8e1c87a532e30d862fb5c40",
+  "reviewedTree": "323e229c54c4433276e8789dc390e5dd4f4d493a",
+  "roles": [
+    {
+      "role": "architecture",
+      "path": "docs/reviews/evidence/build-brief-missions-lock/promotion/architecture-50a1f2e.verdict",
+      "sha256": "516361a9e13c3a622901f661acd38ad701e135f97801a190c6a218b05b353eb8"
+    },
+    {
+      "role": "security",
+      "path": "docs/reviews/evidence/build-brief-missions-lock/promotion/security-50a1f2e.verdict",
+      "sha256": "5fcd858abe48613fd5a9b92fe79fcbf8df1590dd0fea782cd66cef00d59a8ca5"
+    },
+    {
+      "role": "privacy",
+      "path": "docs/reviews/evidence/build-brief-missions-lock/promotion/privacy-50a1f2e.verdict",
+      "sha256": "14f2713b38466f8cbdf8c4262ffb94799de4f92a14dc6d68f0db468151ae0064"
+    },
+    {
+      "role": "cryptography",
+      "path": "docs/reviews/evidence/build-brief-missions-lock/promotion/cryptography-50a1f2e.verdict",
+      "sha256": "e1b00d4308ac067db50355ffe972385f62c75140db5bfa6a4a3193b9801ad5b5"
+    }
+  ],
+  "historicalRecords": [
+    {
+      "role": "architecture",
+      "verdict": "approve",
+      "path": "docs/reviews/evidence/build-brief-missions-lock/promotion/architecture-41e6a5e.verdict",
+      "sha256": "99cd3c467abab9226e8a9f11d84f80f0de35bfb160852d541c52b8d684a1f2aa"
+    },
+    {
+      "role": "security",
+      "verdict": "reject",
+      "path": "docs/reviews/evidence/build-brief-missions-lock/promotion/security-41e6a5e.verdict",
+      "sha256": "41817a88609bcf1cfd90835472d7144b0e6aaf80fa5776cf3dd9c1296e4d9605"
+    },
+    {
+      "role": "cryptography",
+      "verdict": "reject",
+      "path": "docs/reviews/evidence/build-brief-missions-lock/promotion/cryptography-41e6a5e.verdict",
+      "sha256": "f93f245e6351de3a2dd52e425d50a1be617ccf24ff7983ba6d5d7fbcfebf22b5"
+    }
+  ],
+  "closedFinding": {
+    "id": "SEC-LOCK-01",
+    "rejectedCommit": "41e6a5ebb5c6b633c0173b92bda6d3923048ca0f",
+    "fixedCommit": "50a1f2e754982ba9e8e1c87a532e30d862fb5c40",
+    "behavior": "Retain private copies of the bytes actually hashed; never reread the caller baseline."
+  },
+  "publicationBoundary": "This follow-up adds review evidence only. The separate final promotion/integration pass must verify this metadata-only delta and exact target quality gates. This index grants no authority by itself.",
+  "verbatimEnvelopeFormat": "The .verdict files contain original JSON envelopes verbatim; no formatter rewrites immutable review records."
+}

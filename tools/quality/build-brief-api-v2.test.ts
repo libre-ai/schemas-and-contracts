@@ -4,12 +4,14 @@ import { readFileSync } from "node:fs";
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import signingVector from "../../contracts/fixtures/build-brief-v2/vectors.json";
+import adoption from "../../docs/reviews/build-brief-missions-specification-lock.json";
 import { canonicalJson } from "./authorized-execution";
 import {
   buildBriefDigest,
   type CandidateContext,
   verifyBuildBriefCandidate,
 } from "./build-brief-v2";
+import { runSpecificationLockGate } from "./specification-lock-test-helper";
 
 const apiPath = "contracts/openapi/specifications.v2.yaml";
 const fixturePath = "contracts/fixtures/build-brief-api-v2/endpoints.json";
@@ -286,7 +288,8 @@ if (await Bun.file(apiPath).exists()) {
     for (const [path, expected] of Object.entries(inventory.hashes)) {
       expect(createHash("sha256").update(readFileSync(path)).digest("hex")).toBe(expected);
     }
-    const catalog = (await Bun.file("contracts/catalog.v1.json").json()).contracts as {
+    expect(await runSpecificationLockGate()).toBe(0);
+    const catalog = (await Bun.file(adoption.baselineCatalog.path).json()).contracts as {
       id: string;
     }[];
     for (const entry of inventory.catalogEntries as { id: string }[]) {

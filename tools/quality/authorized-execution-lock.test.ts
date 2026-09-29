@@ -26,28 +26,30 @@ const authorizedExecutionIds = [
   "step-invocation-v1",
 ] as const;
 
-const remainingCandidateIds = [
-  "agent-handoff-v2",
-  "boussole-method-v3",
-  "build-brief-acceptance-v2",
-  "build-brief-api-v2",
+const briefAndMissionsIds = [
   "build-brief-body-v2",
+  "build-brief-acceptance-v2",
+  "spec-package-v2",
+  "agent-handoff-v2",
   "build-brief-policy-v2",
-  "execution-authorization-v3",
-  "execution-plan-body-v3",
-  "harness-profile-v2",
-  "local-comparison-v3",
+  "specifications-api-v2",
+  "build-brief-api-v2",
+  "retention-policy-v4",
+  "retention-policy-schema-v4",
   "mission-handoff-binding-v1",
   "mission-record-v3",
+  "execution-plan-body-v3",
+  "execution-authorization-v3",
   "missions-api-schema-v3",
   "missions-api-v3",
+] as const;
+const remainingCandidateIds = [
+  "boussole-method-v3",
+  "harness-profile-v2",
+  "local-comparison-v3",
   "public-vote-dataset-v3",
   "retention-policy-schema-v3",
-  "retention-policy-schema-v4",
   "retention-policy-v3",
-  "retention-policy-v4",
-  "spec-package-v2",
-  "specifications-api-v2",
 ] as const;
 
 const reviewedAuthorityHashes = {
@@ -95,7 +97,7 @@ describe("authorized execution Specification Lock", () => {
     const entriesById = new Map(catalog.contracts.map((entry) => [entry.id, entry]));
 
     expect(catalog.schemaVersion).toBe("libre-ai.contract-catalog.v1");
-    for (const id of authorizedExecutionIds) {
+    for (const id of [...authorizedExecutionIds, ...briefAndMissionsIds]) {
       const entry = entriesById.get(id);
       expect(entry, `${id} must exist in the catalog`).toBeDefined();
       expect(entry?.status, `${id} must be locked`).toBe("locked");
@@ -106,7 +108,7 @@ describe("authorized execution Specification Lock", () => {
     }
   });
 
-  test("keeps unrelated candidates and Build Brief successors outside the execution lock", async () => {
+  test("keeps unrelated candidates outside both admitted specification locks", async () => {
     const catalog = await readCatalog();
     const locked = catalog.contracts.filter((entry) => entry.status === "locked");
     const candidates = catalog.contracts
@@ -114,7 +116,7 @@ describe("authorized execution Specification Lock", () => {
       .map((entry) => entry.id)
       .sort();
 
-    expect(locked).toHaveLength(99);
+    expect(locked).toHaveLength(114);
     expect(candidates).toEqual([...remainingCandidateIds].sort());
   });
 
