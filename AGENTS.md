@@ -6,9 +6,9 @@ This repository is the **contract authority** of the Libre AI constellation
 (ADR-0020, general activation 2026-07-28): the canonical contract
 authorities, their vectors and fixtures, the catalog
 (`contracts/catalog.v1.json`) and the compatibility policy
-(`contracts/COMPATIBILITY.md`). The `governance` repository is the other
-transverse authority
-(https://raw.githubusercontent.com/libre-ai/governance/main/AGENTS.md) —
+(`contracts/COMPATIBILITY.md`). The `project-governance` repository is the
+other transverse authority
+(https://raw.githubusercontent.com/libre-ai/project-governance/HEAD/AGENTS.md) —
 doctrine, invariants and fleet gates live there, never here.
 
 ## Boundaries
