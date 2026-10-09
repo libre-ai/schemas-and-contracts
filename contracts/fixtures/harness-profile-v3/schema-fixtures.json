@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "harness-profile.v3.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.harness-profile.v3",
+        "id": "urn:libre-ai:profile:harness-1",
+        "version": "1.0.0",
+        "enforcement": "required",
+        "supportedPlatforms": ["linux-x86_64"],
+        "filesystem": {
+          "workspaceRoot": "/workspace",
+          "canonicalizePaths": true,
+          "resolveSymlinks": true,
+          "symlinkPolicy": "deny-outside-workspace",
+          "readOnly": ["src/**"],
+          "writable": ["src/**"],
+          "denied": [".env", "**/.git/**"],
+          "copyIgnoredFiles": false
+        },
+        "process": {
+          "dedicatedIdentity": true,
+          "denyPrivilegeEscalation": true,
+          "dropAmbientCapabilities": true,
+          "killProcessGroup": true,
+          "maxProcesses": 16,
+          "maxDurationSeconds": 3600
+        },
+        "sandboxEngine": {
+          "manifest": {
+            "id": "urn:libre-ai:manifest:sandbox-engine-1",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mediaType": "application/json"
+          },
+          "requiredCapabilities": ["filesystem_mounts", "process_isolation", "resource_limits"],
+          "denyOnMissing": true
+        },
+        "workerTransport": {
+          "kind": "private-unix-socket",
+          "runBoundToken": true,
+          "hostLoopbackAllowed": false
+        },
+        "providerGateway": {
+          "upstreamSecretInWorker": false,
+          "bindExactOrigins": true,
+          "pinResolvedAddress": true,
+          "revalidateRedirects": true,
+          "denySpecialUseAddresses": true,
+          "allowLoopbackUpstream": false
+        },
+        "privilegedToolBroker": {
+          "secretsInWorker": false,
+          "oneShotCapabilities": true,
+          "revalidatePlan": true,
+          "revalidateBudget": true,
+          "revalidateExpiry": true,
+          "structuredArguments": true,
+          "resolveExecutable": true,
+          "rejectShellSyntax": true,
+          "allowGenericShell": false,
+          "failClosedOutputScan": true
+        },
+        "outputs": {
+          "maxBytesPerTool": 1048576,
+          "maxTotalBytes": 10485760,
+          "privateByDefault": true
+        },
+        "operationalLogs": {
+          "closedCategoriesAndCountersOnly": true,
+          "contentFieldsAllowed": false,
+          "stableBusinessIdentifiersAllowed": false,
+          "externalOtelEnabled": false,
+          "maxRetentionHours": 24,
+          "timestampPrecisionSeconds": 60
+        },
+        "attestation": {
+          "bindRequestedProfile": true,
+          "bindEffectiveControls": true,
+          "bindWorkerManifests": true,
+          "bindKernelCapabilities": true,
+          "signed": true
+        },
+        "noProgressGuard": {
+          "repeatThreshold": 3,
+          "windowSize": 32,
+          "reaction": "signal-at-k-minus-one-then-typed-stop"
+        },
+        "profileDigest": "876e5ff909f3bea27af2deb40800c7b3c68294f9ddd8fde2ff276312f5489f09"
+      },
+      "invalidMutations": [
+        {
+          "name": "missing no-progress guard",
+          "path": "/noProgressGuard",
+          "remove": true
+        },
+        {
+          "name": "repeat threshold of one",
+          "path": "/noProgressGuard/repeatThreshold",
+          "value": 1
+        },
+        {
+          "name": "repeat threshold above 1024",
+          "path": "/noProgressGuard/repeatThreshold",
+          "value": 1025
+        },
+        {
+          "name": "window size of one",
+          "path": "/noProgressGuard/windowSize",
+          "value": 1
+        },
+        {
+          "name": "window size above 1024",
+          "path": "/noProgressGuard/windowSize",
+          "value": 1025
+        },
+        {
+          "name": "non-integer repeat threshold",
+          "path": "/noProgressGuard/repeatThreshold",
+          "value": 2.5
+        },
+        {
+          "name": "missing repeat threshold",
+          "path": "/noProgressGuard/repeatThreshold",
+          "remove": true
+        },
+        {
+          "name": "missing window size",
+          "path": "/noProgressGuard/windowSize",
+          "remove": true
+        },
+        {
+          "name": "tool withdrawal reaction",
+          "path": "/noProgressGuard/reaction",
+          "value": "withdraw-tool"
+        },
+        {
+          "name": "guard with an extra overlap field",
+          "path": "/noProgressGuard/overlap",
+          "value": 2
+        },
+        {
+          "name": "previous major",
+          "path": "/schemaVersion",
+          "value": "libre-ai.harness-profile.v2"
+        },
+        {
+          "name": "fail open profile",
+          "path": "/enforcement",
+          "value": "optional"
+        },
+        {
+          "name": "content enabled in operational logs",
+          "path": "/operationalLogs/contentFieldsAllowed",
+          "value": true
+        }
+      ]
+    }
+  ]
+}

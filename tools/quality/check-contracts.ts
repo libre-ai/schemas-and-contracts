@@ -586,6 +586,17 @@ if (
 ) {
   failures.push("tool-invocation-observation-v1: invalid separate schema fixture inventory");
 } else fixtureCases.push(...(toolObservationFixtures.cases as FixtureCase[]));
+const harnessProfileV3Fixtures = await Bun.file(
+  "contracts/fixtures/harness-profile-v3/schema-fixtures.json",
+).json();
+if (
+  !isRecord(harnessProfileV3Fixtures) ||
+  harnessProfileV3Fixtures.schemaVersion !== "libre-ai.schema-fixtures.v1" ||
+  !Array.isArray(harnessProfileV3Fixtures.cases) ||
+  harnessProfileV3Fixtures.cases.length !== 1
+) {
+  failures.push("harness-profile-v3: invalid separate schema fixture inventory");
+} else fixtureCases.push(...(harnessProfileV3Fixtures.cases as FixtureCase[]));
 const executionPlanV4Fixtures = await Bun.file(
   "contracts/fixtures/execution-plan-body-v4/schema-fixtures.json",
 ).json();

@@ -1305,6 +1305,23 @@
       }
     },
     {
+      "id": "harness-profile-v3",
+      "kind": "json-schema",
+      "path": "contracts/schemas/harness-profile.v3.schema.json",
+      "owners": ["agent-harness", "security"],
+      "consumers": ["agent-orchestrator", "proof"],
+      "compatibility": "major-versioned",
+      "classification": "internal",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security"],
+        "dossier": "docs/reviews/harness-profile-v3-review.md"
+      }
+    },
+    {
       "id": "execution-plan-body-v4",
       "kind": "json-schema",
       "path": "contracts/schemas/execution-plan-body.v4.schema.json",

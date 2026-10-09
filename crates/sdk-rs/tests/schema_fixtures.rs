@@ -89,6 +89,10 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/tool-invocation-observation-v1/schema-fixtures.json"
     ))
     .expect("tool invocation observation fixture document");
+    let harness_profile_v3_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/harness-profile-v3/schema-fixtures.json"
+    ))
+    .expect("harness profile v3 fixture document");
     let execution_plan_v4_fixtures: Value = serde_json::from_str(include_str!(
         "../../../contracts/fixtures/execution-plan-body-v4/schema-fixtures.json"
     ))
@@ -122,6 +126,11 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
             tool_observation_fixtures["cases"]
                 .as_array()
                 .expect("tool invocation observation fixture cases"),
+        )
+        .chain(
+            harness_profile_v3_fixtures["cases"]
+                .as_array()
+                .expect("harness profile v3 fixture cases"),
         )
         .chain(
             execution_plan_v4_fixtures["cases"]
