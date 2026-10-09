@@ -116,7 +116,26 @@ describe("authorized execution Specification Lock", () => {
       .map((entry) => entry.id)
       .sort();
 
-    expect(locked).toHaveLength(114);
+    // Derived, never restated: the reviewed baseline after its transitions,
+    // plus exactly the locked entries of the pinned post-lock registry.
+    const baseline: ContractCatalog = await Bun.file(
+      "docs/reviews/evidence/build-brief-missions-lock/baseline-catalog.json",
+    ).json();
+    const lock: { transitions: { id: string }[] } = await Bun.file(
+      "docs/reviews/build-brief-missions-specification-lock.json",
+    ).json();
+    const transitioned = new Set(lock.transitions.map((entry) => entry.id));
+    const baselineLocked = baseline.contracts.filter(
+      (entry) => entry.status === "locked" || transitioned.has(entry.id),
+    ).length;
+    const registry: { additions: { entry: CatalogEntry }[] } = await Bun.file(
+      "contracts/catalog-post-lock-additions.v1.json",
+    ).json();
+    const registeredLocked = registry.additions.filter(
+      (addition) => addition.entry.status === "locked",
+    ).length;
+    expect(baselineLocked).toBe(114);
+    expect(locked).toHaveLength(baselineLocked + registeredLocked);
     expect(candidates).toEqual([...remainingCandidateIds].sort());
   });
 

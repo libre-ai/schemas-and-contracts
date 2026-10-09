@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "libre-ai.catalog-post-lock-additions.v1",
+  "lock": "docs/reviews/build-brief-missions-specification-lock.json",
+  "additions": [
+    {
+      "decision": "docs/adr/2026-10-09-catalog-post-lock-additions.md",
+      "ownerArbitration": "2026-10-09",
+      "entry": {
+        "id": "signalement-local-export-v1",
+        "kind": "json-schema",
+        "path": "contracts/schemas/signalement-local-export.v1.schema.json",
+        "owners": ["signalement"],
+        "consumers": ["signalement"],
+        "compatibility": "major-versioned",
+        "classification": "local",
+        "status": "locked"
+      }
+    }
+  ]
+}

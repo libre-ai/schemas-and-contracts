@@ -2,7 +2,7 @@ import { constants } from "node:fs";
 import { open, realpath } from "node:fs/promises";
 import { resolve } from "node:path";
 import type { SpecificationLockInput } from "./specification-lock";
-import { specificationLockDocumentPaths } from "./specification-lock";
+import { POST_LOCK_ADDITIONS_PATH, specificationLockDocumentPaths } from "./specification-lock";
 
 const MAX_FILE_BYTES = 8 * 1024 * 1024;
 
@@ -37,5 +37,6 @@ export async function readSpecificationLockInputs(
   const targetCatalog: unknown = JSON.parse(
     decoder.decode(await checkedBytes(root, "contracts/catalog.v1.json")),
   );
-  return { targetCatalog, evidence, documents };
+  const postLockAdditions = await checkedBytes(root, POST_LOCK_ADDITIONS_PATH);
+  return { targetCatalog, evidence, documents, postLockAdditions };
 }

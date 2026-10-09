@@ -1,0 +1,9 @@
+[test]
+coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "coverage/signalement-local-export-v1"
+coverageThreshold = 0.9
+coverageSkipTestFiles = true
+# The canonicalizer and strict JSON parser retain their dedicated full suites;
+# this gate covers only the local export logical-map verifier.
+coveragePathIgnorePatterns = ["**/authorized-execution.ts", "**/policy-core-raw-inputs.ts"]
