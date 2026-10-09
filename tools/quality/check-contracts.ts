@@ -555,6 +555,17 @@ if (
 ) {
   failures.push("missions-v3: invalid separate schema fixture inventory");
 } else fixtureCases.push(...(missionsFixtures.cases as FixtureCase[]));
+const signalementExportFixtures = await Bun.file(
+  "contracts/fixtures/signalement-local-export-v1/schema-fixtures.json",
+).json();
+if (
+  !isRecord(signalementExportFixtures) ||
+  signalementExportFixtures.schemaVersion !== "libre-ai.schema-fixtures.v1" ||
+  !Array.isArray(signalementExportFixtures.cases) ||
+  signalementExportFixtures.cases.length !== 1
+) {
+  failures.push("signalement-local-export-v1: invalid separate schema fixture inventory");
+} else fixtureCases.push(...(signalementExportFixtures.cases as FixtureCase[]));
 
 if (fixtureCases.length === 0)
   failures.push("contracts/fixtures/schema-fixtures.v1.json: no fixtures");

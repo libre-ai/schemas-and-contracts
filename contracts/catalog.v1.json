@@ -1266,6 +1266,16 @@
       "compatibility": "major-versioned",
       "classification": "tenant-private",
       "status": "locked"
+    },
+    {
+      "id": "signalement-local-export-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/signalement-local-export.v1.schema.json",
+      "owners": ["signalement"],
+      "consumers": ["signalement"],
+      "compatibility": "major-versioned",
+      "classification": "local",
+      "status": "locked"
     }
   ]
 }
