@@ -23,13 +23,17 @@ consumers qualify first) or a new major.
 - Every string is untrusted data. A URL, a validator or a content type never
   becomes an instruction to an agent, a rule or a preference (P02 guarantee G7).
 - The schema bounds shape only. The worker still applies its destination
-  policy (public unicast only, ports 80/443, one DNS resolution per hop,
-  re-validated redirects) to `operation.url`; a URL the schema accepts is not
-  a URL the worker may reach.
-- `url` and `finalUrl` refuse userinfo (no `@` before the first `/`), any
-  scheme but `http`/`https`, whitespace and control characters, and more than
-  2048 characters. Header values are printable ASCII, at most 1024 characters,
-  so a validator cannot inject a header line.
+  policy (public unicast only, one DNS resolution per hop, re-validated
+  redirects) to `operation.url`, on the host as parsed and normalised by a
+  WHATWG URL parser, never on the raw string: `http://0x7f000001/` passes the
+  schema and is refused by the policy. A URL the schema accepts is not a URL
+  the worker may reach.
+- `url` and `finalUrl` accept only `http`/`https`, an authority without
+  userinfo, `\`, `[`/`]` outside an IPv6 literal, and with no port other than
+  an explicit 80 or 443; no whitespace or control character; at most 2048
+  characters. `finalUrl` carries no fragment.
+- Header values are printable ASCII, 1 to 1024 characters, with no leading or
+  trailing space, so a validator cannot inject a header line.
 - No body, title, content or credential is carried. A result records the size
   and BLAKE3 digest of the decoded body only.
 
@@ -45,13 +49,28 @@ consumers qualify first) or a new major.
 
 ## Results
 
-- `succeeded`: the HTTP exchange completed. `outcome` records the final hop,
-  whatever its status: 304 sets `notModified`, a 429 or 404 is recorded as such
-  (source health), and `body` (decoded size and BLAKE3 digest, both required)
-  appears only when a body was read. `reasonCode` is absent.
-- `refused`: the worker's policy refused the job (destination, scheme, port,
-  credentials, redirect, size, encoding). `failed`: the attempt did not
-  complete (DNS, connect, TLS, timeouts, protocol) or the job itself failed
-  (`job.*`). Both carry a `reasonCode` and no `outcome`.
-- `reasonCode` uses the worker's stable codes, `fetch.*` or `job.*`. It never
-  carries a URL, a host or an address.
+- `succeeded`: the HTTP exchange completed. `outcome` records the final hop:
+  - `notModified` is true exactly when `httpStatus` is 304, and a 304 has no
+    `body`;
+  - a followed redirect status (301, 302, 303, 307, 308) is never a final hop
+    (the worker refuses with `fetch.redirect_limit` or `fetch.redirect_invalid`
+    instead); 300 and 305 are final statuses; 1xx never are;
+  - a final 4xx or 5xx (404, 410, 429…) is a recorded outcome for source
+    health, with no `body`; `body` (decoded size and BLAKE3 digest) appears
+    only on a 2xx whose body was read.
+  `reasonCode` is absent.
+- `refused`: the policy refused the job; `reasonCode` is one of
+  `fetch.url_invalid`, `fetch.scheme_forbidden`, `fetch.credentials_forbidden`,
+  `fetch.port_forbidden`, `fetch.destination_forbidden`,
+  `fetch.redirect_invalid`, `fetch.redirect_limit`, `fetch.redirect_downgrade`,
+  `fetch.body_too_large`, `fetch.encoding_unsupported`,
+  `fetch.validator_invalid`, `job.command_invalid`. A refused job is not retried.
+- `failed`: the attempt did not complete, and retries are exhausted;
+  `reasonCode` is one of `fetch.dns_no_address`, `fetch.dns_failed`,
+  `fetch.connect_failed`, `fetch.connect_timeout`, `fetch.tls_failed`,
+  `fetch.total_timeout`, `fetch.http_protocol`, `fetch.decoding_failed`,
+  `fetch.unavailable`, `job.lease_expired`, `job.attempts_exhausted`,
+  `job.store_unavailable`.
+- Both refused and failed results carry a `reasonCode` and no `outcome`. The
+  codes are closed enumerations, so a result cannot smuggle a host or an
+  address through its reason.

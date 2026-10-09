@@ -313,7 +313,7 @@
 		},
 		{
 			"schema": "p02-job.v1.schema.json",
-			"schemaSha256": "fe8f6778476413eb6b11eb218ec2b15ee057c70e41db45f711992819f9468e37",
+			"schemaSha256": "3a0233ef54f0bc2079badd9e5b043caec3195fea6bcf14994ceb1dbcdee8e822",
 			"declaration": "p02-job.v1.d.ts"
 		},
 		{
