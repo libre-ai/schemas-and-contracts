@@ -1,0 +1,519 @@
+{
+  "schemaVersion": "libre-ai.authorized-execution-decision-binding-vectors.v1",
+  "cases": [
+    {
+      "id": "binding-exact",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "g",
+          "stepId": "decide",
+          "choices": [
+            {
+              "choiceId": "approve",
+              "consequenceCode": "approved"
+            },
+            {
+              "choiceId": "reject",
+              "consequenceCode": "rejected"
+            }
+          ],
+          "noResponseOutcomeCode": "expired",
+          "requiredRole": "approver"
+        }
+      },
+      "expected": "decision-request-bound"
+    },
+    {
+      "id": "binding-choice-order-is-irrelevant",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "g",
+          "stepId": "decide",
+          "choices": [
+            {
+              "choiceId": "reject",
+              "consequenceCode": "rejected"
+            },
+            {
+              "choiceId": "approve",
+              "consequenceCode": "approved"
+            }
+          ],
+          "noResponseOutcomeCode": "expired",
+          "requiredRole": "approver"
+        }
+      },
+      "expected": "decision-request-bound"
+    },
+    {
+      "id": "binding-other-graph",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "h",
+          "stepId": "decide",
+          "choices": [
+            {
+              "choiceId": "approve",
+              "consequenceCode": "approved"
+            },
+            {
+              "choiceId": "reject",
+              "consequenceCode": "rejected"
+            }
+          ],
+          "noResponseOutcomeCode": "expired",
+          "requiredRole": "approver"
+        }
+      },
+      "expected": "graph-binding-mismatch"
+    },
+    {
+      "id": "binding-unknown-step",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "g",
+          "stepId": "missing",
+          "choices": [
+            {
+              "choiceId": "approve",
+              "consequenceCode": "approved"
+            },
+            {
+              "choiceId": "reject",
+              "consequenceCode": "rejected"
+            }
+          ],
+          "noResponseOutcomeCode": "expired",
+          "requiredRole": "approver"
+        }
+      },
+      "expected": "step-not-decision"
+    },
+    {
+      "id": "binding-calculation-step",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "g",
+          "stepId": "calculate",
+          "choices": [
+            {
+              "choiceId": "approve",
+              "consequenceCode": "approved"
+            },
+            {
+              "choiceId": "reject",
+              "consequenceCode": "rejected"
+            }
+          ],
+          "noResponseOutcomeCode": "expired",
+          "requiredRole": "approver"
+        }
+      },
+      "expected": "step-not-decision"
+    },
+    {
+      "id": "binding-swapped-outcomes",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "g",
+          "stepId": "decide",
+          "choices": [
+            {
+              "choiceId": "approve",
+              "consequenceCode": "rejected"
+            },
+            {
+              "choiceId": "reject",
+              "consequenceCode": "approved"
+            }
+          ],
+          "noResponseOutcomeCode": "expired",
+          "requiredRole": "approver"
+        }
+      },
+      "expected": "decision-policy-mismatch"
+    },
+    {
+      "id": "binding-extra-choice",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "g",
+          "stepId": "decide",
+          "choices": [
+            {
+              "choiceId": "approve",
+              "consequenceCode": "approved"
+            },
+            {
+              "choiceId": "reject",
+              "consequenceCode": "rejected"
+            },
+            {
+              "choiceId": "defer",
+              "consequenceCode": "approved"
+            }
+          ],
+          "noResponseOutcomeCode": "expired",
+          "requiredRole": "approver"
+        }
+      },
+      "expected": "decision-policy-mismatch"
+    },
+    {
+      "id": "binding-missing-choice",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "g",
+          "stepId": "decide",
+          "choices": [
+            {
+              "choiceId": "approve",
+              "consequenceCode": "approved"
+            },
+            {
+              "choiceId": "approve-later",
+              "consequenceCode": "approved"
+            }
+          ],
+          "noResponseOutcomeCode": "expired",
+          "requiredRole": "approver"
+        }
+      },
+      "expected": "decision-policy-mismatch"
+    },
+    {
+      "id": "binding-other-no-response-outcome",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "g",
+          "stepId": "decide",
+          "choices": [
+            {
+              "choiceId": "approve",
+              "consequenceCode": "approved"
+            },
+            {
+              "choiceId": "reject",
+              "consequenceCode": "rejected"
+            }
+          ],
+          "noResponseOutcomeCode": "approved",
+          "requiredRole": "approver"
+        }
+      },
+      "expected": "decision-policy-mismatch"
+    },
+    {
+      "id": "binding-lowered-required-role",
+      "domain": "decision-binding",
+      "input": {
+        "domain": "decision-binding",
+        "graph": {
+          "graphDigest": "g",
+          "steps": [
+            {
+              "stepId": "calculate",
+              "kind": "calculation"
+            },
+            {
+              "stepId": "decide",
+              "kind": "human-decision",
+              "decisionPolicy": {
+                "choices": [
+                  {
+                    "choiceId": "approve",
+                    "outcomeCode": "approved"
+                  },
+                  {
+                    "choiceId": "reject",
+                    "outcomeCode": "rejected"
+                  }
+                ],
+                "noResponseOutcomeCode": "expired",
+                "requiredRole": "approver"
+              }
+            }
+          ]
+        },
+        "request": {
+          "graphDigest": "g",
+          "stepId": "decide",
+          "choices": [
+            {
+              "choiceId": "approve",
+              "consequenceCode": "approved"
+            },
+            {
+              "choiceId": "reject",
+              "consequenceCode": "rejected"
+            }
+          ],
+          "noResponseOutcomeCode": "expired",
+          "requiredRole": "viewer"
+        }
+      },
+      "expected": "decision-policy-mismatch"
+    }
+  ]
+}
