@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 7 |
-| total | 123 |
+| candidate | 8 |
+| total | 124 |
 
 ## Counts by family
 
@@ -27,7 +27,7 @@ they disagree with this page, this page states the current catalog.
 | biscuit-authority | 2 | 2 | 0 |
 | biscuit-policy | 5 | 5 | 0 |
 | data-policy | 4 | 3 | 1 |
-| json-schema | 90 | 84 | 6 |
+| json-schema | 91 | 84 | 7 |
 | openapi | 13 | 13 | 0 |
 | wit | 9 | 9 | 0 |
 
@@ -59,7 +59,7 @@ they disagree with this page, this page states the current catalog.
 | `retention-policy-v3` | candidate | pending-independent-agent-review | `contracts/data/retention.v3.json` |
 | `retention-policy-v4` | locked | none | `contracts/data/retention.v4.json` |
 
-### json-schema (90)
+### json-schema (91)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -106,6 +106,7 @@ they disagree with this page, this page states the current catalog.
 | `harness-attestation-v1` | locked | none | `contracts/schemas/harness-attestation.v1.schema.json` |
 | `harness-profile-v1` | locked | none | `contracts/schemas/harness-profile.v1.schema.json` |
 | `harness-profile-v2` | candidate | pending-independent-agent-review | `contracts/schemas/harness-profile.v2.schema.json` |
+| `harness-profile-v3` | candidate | pending-independent-agent-review | `contracts/schemas/harness-profile.v3.schema.json` |
 | `human-decision-request-v1` | locked | none | `contracts/schemas/human-decision-request.v1.schema.json` |
 | `human-decision-response-v1` | locked | none | `contracts/schemas/human-decision-response.v1.schema.json` |
 | `local-comparison-v1` | locked | none | `contracts/schemas/local-comparison.v1.schema.json` |
