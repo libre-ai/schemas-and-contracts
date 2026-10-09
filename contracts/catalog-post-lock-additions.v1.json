@@ -50,6 +50,27 @@
           "dossier": "docs/reviews/tool-invocation-observation-v1-review.md"
         }
       }
+    },
+    {
+      "decision": "docs/adr/2026-10-09-harness-profile-v3.md",
+      "ownerArbitration": "2026-10-09",
+      "entry": {
+        "id": "harness-profile-v3",
+        "kind": "json-schema",
+        "path": "contracts/schemas/harness-profile.v3.schema.json",
+        "owners": ["agent-harness", "security"],
+        "consumers": ["agent-orchestrator", "proof"],
+        "compatibility": "major-versioned",
+        "classification": "internal",
+        "status": "candidate",
+        "review": {
+          "state": "pending-independent-agent-review",
+          "reviewerKind": "agent",
+          "separation": "role-scoped-review-pass",
+          "required": ["architecture", "security"],
+          "dossier": "docs/reviews/harness-profile-v3-review.md"
+        }
+      }
     }
   ]
 }

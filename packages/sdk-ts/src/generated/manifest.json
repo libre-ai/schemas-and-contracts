@@ -217,6 +217,11 @@
 			"declaration": "harness-profile.v2.d.ts"
 		},
 		{
+			"schema": "harness-profile.v3.schema.json",
+			"schemaSha256": "3d69ecacd2a1cead282f3ee4aa7d510a903da13cc1d4db0c0e1b7449902342d6",
+			"declaration": "harness-profile.v3.d.ts"
+		},
+		{
 			"schema": "human-decision-request.v1.schema.json",
 			"schemaSha256": "6afb4b776dc08d3af967eeb03e88ae3540ad056288012c3882d7fb1dd89f8c4e",
 			"declaration": "human-decision-request.v1.d.ts"
