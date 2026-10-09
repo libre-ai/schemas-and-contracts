@@ -113,5 +113,6 @@ canonicalizer and hasher must agree with both.
 mutations at a blocking 90% coverage threshold. `bun run check:contracts` also
 validates positive/negative schema fixtures. The checked-in synthetic example
 contains only invented text; no production dossier, screen or personal data.
-Authoring evidence is not a role verdict. Review follows Governance
-`docs/reviews/AGENT-REVIEW-PROTOCOL.md` on an immutable candidate commit.
+Authoring evidence is not a role verdict. Review follows the project-governance
+[`AGENT-REVIEW-PROTOCOL.md`](https://github.com/libre-ai/project-governance/blob/HEAD/docs/reviews/AGENT-REVIEW-PROTOCOL.md)
+on an immutable candidate commit.
