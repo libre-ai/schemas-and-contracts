@@ -29,6 +29,7 @@ export type LibreAiToolinvocationobservationV1 = {
 	window: {
 		sequence: number;
 		windowSize: number;
+		repeatThreshold: number;
 		firstCallSequence: number;
 		lastCallSequence: number;
 		final: boolean;
@@ -63,6 +64,7 @@ export type Digestkey = {
 export type Window = {
 	sequence: number;
 	windowSize: number;
+	repeatThreshold: number;
 	firstCallSequence: number;
 	lastCallSequence: number;
 	final: boolean;

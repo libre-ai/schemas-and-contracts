@@ -23,9 +23,46 @@ interface DigestVector {
 
 interface SemanticVector {
   name: string;
-  parameters: { repeatThreshold: number; planToolNames: string[] };
-  observations: Record<string, unknown>[];
+  // k and w are not parameters: the harness profile declares them and every
+  // document carries them (ADR-0046 decision 3).
+  parameters: { planToolNames: string[] };
+  observations: ObservationDocument[];
   expected: string;
+}
+
+interface ObservationWindow {
+  sequence: number;
+  windowSize: number;
+  repeatThreshold: number;
+  firstCallSequence: number;
+  lastCallSequence: number;
+  final: boolean;
+}
+
+interface ObservationDocument extends Record<string, unknown> {
+  id: string;
+  window: ObservationWindow;
+  entries: { count: number }[];
+}
+
+// The k - 1 overlap rule of ADR-0046 decision 1, checked structurally: window
+// n + 1 starts at lastCallSequence(n) - (k - 2), k and w are constant over the
+// stream, and k never exceeds w.
+function overlapViolations(stream: ObservationDocument[]): string[] {
+  const violations: string[] = [];
+  const [head] = stream;
+  if (!head) return ["empty stream"];
+  for (const [index, document] of stream.entries()) {
+    const { window } = document;
+    if (window.repeatThreshold !== head.window.repeatThreshold) violations.push("k changes");
+    if (window.windowSize !== head.window.windowSize) violations.push("w changes");
+    if (window.repeatThreshold > window.windowSize) violations.push("k above w");
+    const previous = stream[index - 1];
+    if (previous === undefined) continue;
+    const expectedFirst = previous.window.lastCallSequence - (window.repeatThreshold - 2);
+    if (window.firstCallSequence !== expectedFirst) violations.push(`window ${index + 1} start`);
+  }
+  return violations;
 }
 
 // Closed verdict set of the future pure evaluator (ADR-0046, SEMANTICS.md).
@@ -67,7 +104,7 @@ describe("tool-invocation-observation.v1 vectors", () => {
     expect(vectors.valid.length).toBeGreaterThanOrEqual(4);
     expect(vectors.invalid.length).toBeGreaterThanOrEqual(30);
     expect(vectors.digests.length).toBeGreaterThanOrEqual(5);
-    expect(vectors.semantic.length).toBe(semanticCodes.size + 2);
+    expect(vectors.semantic.length).toBe(semanticCodes.size + 7);
   });
 
   test.each(
@@ -114,6 +151,40 @@ describe("tool-invocation-observation.v1 vectors", () => {
   test("every closed verdict is exercised by at least one semantic vector", () => {
     const exercised = new Set((vectors.semantic as SemanticVector[]).map((v) => v.expected));
     expect([...exercised].sort()).toEqual([...semanticCodes].sort());
+  });
+
+  test("streams expected to reach a progress verdict obey the k - 1 overlap rule", () => {
+    const verdictStreams = (vectors.semantic as SemanticVector[]).filter(
+      (vector) => vector.expected === "progress" || vector.expected === "no-progress",
+    );
+    expect(verdictStreams.length).toBeGreaterThanOrEqual(4);
+    for (const vector of verdictStreams) {
+      expect(overlapViolations(vector.observations), vector.name).toEqual([]);
+      const last = vector.observations.at(-1);
+      expect(last?.window.final, vector.name).toBe(true);
+      for (const document of vector.observations) {
+        const span = document.window.lastCallSequence - document.window.firstCallSequence + 1;
+        const counted = document.entries.reduce((sum, entry) => sum + entry.count, 0);
+        expect(counted, `${vector.name}: ${document.id}`).toBe(span);
+        if (!document.window.final) expect(span, document.id).toBe(document.window.windowSize);
+      }
+    }
+  });
+
+  test("the overlap lets the evaluator see k consecutive calls straddling a disjoint boundary", () => {
+    const byName = new Map((vectors.semantic as SemanticVector[]).map((v) => [v.name, v]));
+    const overlapped = byName.get(
+      "k identical consecutive calls across a disjoint window boundary are seen in the k - 1 overlap",
+    );
+    const disjoint = byName.get("disjoint windows without the k - 1 overlap are incomplete");
+    if (!overlapped || !disjoint) throw new Error("missing straddle vectors");
+    const k = overlapped.observations[0]?.window.repeatThreshold ?? 0;
+    const maxCount = (stream: ObservationDocument[]) =>
+      Math.max(...stream.flatMap((document) => document.entries.map((entry) => entry.count)));
+    // Same calls, two window layouts: only the overlapping one reaches k inside one window.
+    expect(maxCount(overlapped.observations)).toBeGreaterThanOrEqual(k);
+    expect(maxCount(disjoint.observations)).toBeLessThan(k);
+    expect(overlapViolations(disjoint.observations)).not.toEqual([]);
   });
 
   test("vector names are unique", () => {

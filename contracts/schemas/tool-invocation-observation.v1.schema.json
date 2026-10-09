@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://contracts.libre-ai.fr/schemas/tool-invocation-observation.v1.schema.json",
   "title": "Libre AI ToolInvocationObservation v1",
-  "description": "Candidate. One harness-attested window of consecutive tool calls made inside one worker invocation, aggregated by distinct (tool, keyed argument digest, keyed result digest, outcome). Carries no argument, no result and no business identifier. Decision: libre-ai/project-governance ADR-0046 (proposed). Semantics: contracts/tool-invocation-observation-v1/SEMANTICS.md.",
+  "description": "Candidate. One harness-attested window of consecutive tool calls made inside one worker invocation, aggregated by distinct (tool, keyed argument digest, keyed result digest, outcome). Carries no argument, no result and no business identifier. Decision: libre-ai/project-governance ADR-0046 (accepted 2026-10-09; this contract stays a candidate). Semantics: contracts/tool-invocation-observation-v1/SEMANTICS.md.",
   "$defs": {
     "callSequence": { "type": "integer", "minimum": 1, "maximum": 100000 },
     "minuteTimestamp": {
@@ -24,10 +24,28 @@
     "window": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["sequence", "windowSize", "firstCallSequence", "lastCallSequence", "final"],
+      "required": [
+        "sequence",
+        "windowSize",
+        "repeatThreshold",
+        "firstCallSequence",
+        "lastCallSequence",
+        "final"
+      ],
       "properties": {
         "sequence": { "type": "integer", "minimum": 1, "maximum": 100000 },
-        "windowSize": { "type": "integer", "minimum": 2, "maximum": 1024 },
+        "windowSize": {
+          "description": "w, declared by the harness profile (ADR-0046 decision 3), constant over an invocation.",
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 1024
+        },
+        "repeatThreshold": {
+          "description": "k, declared by the harness profile (ADR-0046 decision 3), constant over an invocation, at most windowSize. Consecutive windows overlap by k - 1 calls: window n + 1 starts at lastCallSequence(n) - (k - 2).",
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 1024
+        },
         "firstCallSequence": { "$ref": "#/$defs/callSequence" },
         "lastCallSequence": { "$ref": "#/$defs/callSequence" },
         "final": { "type": "boolean" }
@@ -129,7 +147,13 @@
       },
       "then": {
         "type": "object",
-        "properties": { "previousObservationDigest": { "type": "null" } }
+        "properties": {
+          "previousObservationDigest": { "type": "null" },
+          "window": {
+            "type": "object",
+            "properties": { "firstCallSequence": { "const": 1 } }
+          }
+        }
       },
       "else": {
         "type": "object",

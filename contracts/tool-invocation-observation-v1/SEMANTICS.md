@@ -1,9 +1,9 @@
 # ToolInvocationObservation v1 — semantics (candidate)
 
-Status: **candidate**, machine-checkable only. It is not approved, and nothing may
-implement it as an obligation before the owner signs
-`libre-ai/project-governance` ADR-0046 (proposed) and the review roles named in
-`contracts/catalog.v1.json` have run. Schema:
+Status: **candidate**, machine-checkable only. `libre-ai/project-governance`
+ADR-0046 is accepted (owner decisions of 2026-10-09). The contract itself stays a
+candidate: nothing may implement it as an obligation before the review roles
+named in `contracts/catalog.v1.json` have run and the owner promotes it. Schema:
 `contracts/schemas/tool-invocation-observation.v1.schema.json`. Vectors:
 `contracts/fixtures/tool-invocation-observation-v1/vectors.json`.
 
@@ -37,18 +37,39 @@ One document covers one **window** of consecutive calls of one worker invocation
 - `window.sequence` starts at 1 and increases by 1 per document of the same
   invocation. Sequence 1 has `previousObservationDigest: null`; every later
   document carries the `preimageDigest` of the previous one.
-- `window.windowSize` is the configured window length `w`, from 2 to 1024. A
-  window closes after `w` calls, or earlier when the invocation ends; the last
-  document of an invocation has `window.final: true`.
+- `window.windowSize` is the window length `w`, from 2 to 1024, and
+  `window.repeatThreshold` is the repetition threshold `k`, from 2 to 1024 and
+  at most `w`. Both are declared by the **harness profile**, not by the plan
+  (ADR-0046 decision 3). They reach the run through the effective profile digest
+  of the harness attestation, which `harnessAttestationDigest` binds to every
+  document. Each document repeats them, and they are constant over an
+  invocation.
 - Calls are numbered `1..100000` within the invocation (the bound of
   `maxToolCalls`). `window.firstCallSequence..window.lastCallSequence` is the
-  covered span.
+  covered span. The first window starts at call 1 (schema-enforced).
+- A non-final window spans exactly `w` calls; the last window of an invocation
+  may be shorter and has `window.final: true`.
+- **Consecutive windows overlap by `k − 1` calls** (ADR-0046 decision 1):
+
+  ```text
+  firstCallSequence(n + 1) = lastCallSequence(n) − (k − 2)
+  ```
+
+  Any `k` consecutive calls therefore lie inside one window, so a repetition of
+  `k` identical consecutive calls is visible to the evaluator even where two
+  disjoint windows would split it. An overlapped call is counted in both windows
+  that cover it.
 - `entries` lists each distinct `(toolName, argsDigest, resultDigest, outcome)`
   of the window once, with its `count` and the first and last call sequence at
   which it occurred.
 
-Volume: at most `ceil(100000 / w)` documents per invocation; an invocation that
-loops on one couple produces one entry per window.
+Volume: at most `ceil((100000 − (k − 1)) / (w − (k − 1)))` documents per
+invocation. The volume grows as `k` approaches `w`, a cost carried by the harness
+profile that declares them. An invocation that loops on one couple produces one
+entry per window.
+
+Why `k` is carried and not an overlap field: the overlap is `k − 1` by
+definition, and a second field would only open a way for the two to disagree.
 
 ## Keyed digests
 
@@ -97,31 +118,37 @@ closed (`additionalProperties: false`), so a raw field is a schema failure.
 
 ## Evaluation (future pure evaluator)
 
-Inputs: the ordered documents of one invocation, the plan's `tools[].name`, and a
-repetition threshold `k` (2 ≤ `k` ≤ `w`; where `k` is declared is open in
-ADR-0046). The verdict is the first that applies, in this order:
+Inputs: the ordered documents of one invocation and the plan's `tools[].name`.
+`k` and `w` are read from the documents, not from the plan (ADR-0046 decision
+3). A consumer that holds the effective harness profile may also check them
+against it. The verdict is the first that applies, in this order:
 
 | Verdict | Condition |
 | --- | --- |
 | `attestation-invalid` | `preimageDigest` differs from the recomputed preimage digest, or the signature does not verify |
 | `observation-replayed` | a document is bound to another invocation, run, attempt, plan or organization than the stream, or repeats a `window.sequence` |
 | `observation-chain-broken` | a `window.sequence` is skipped, or `previousObservationDigest` is not the previous document's `preimageDigest`, or a document follows a `final` one |
-| `observation-incomplete` | the span exceeds `windowSize`, the counts do not sum to the span, an entry lies outside the span, two windows overlap or leave a gap, or the stream ends without a `final` document |
+| `observation-incomplete` | the span exceeds `windowSize`, a non-final window spans fewer than `windowSize` calls, the counts do not sum to the span, an entry lies outside the span, `repeatThreshold` exceeds `windowSize`, `windowSize` or `repeatThreshold` changes within the stream, two consecutive windows do not overlap by exactly `repeatThreshold − 1` calls, or the stream ends without a `final` document |
 | `tool-undeclared` | an entry's `toolName` is not in the plan's `tools[].name` |
 | `no-progress` | an entry's `count` is at least `k` |
 | `progress` | none of the above |
 
 A polling tool whose result changes yields distinct `resultDigest` values and is
-`progress`. Repetition is judged inside a window; a repetition straddling two
-windows is not detected by this verdict (limit recorded in ADR-0046).
+`progress`. Repetition is judged inside a window. Thanks to the `k − 1`
+overlap, `k` identical consecutive calls always fall in one window. The limit
+that remains (ADR-0046 decision 1): `k` occurrences spread over more than `k`
+calls can still be split between two windows. The harness, which slides call by
+call, sees them; this verdict does not.
 
-Cross-check: summed over an invocation's documents, the counts equal the
-`toolCalls` the orchestrator receives for that invocation. A difference is an
-`observation-incomplete` in the stream, never a correction of the counter.
+Cross-check: the union of the windows' spans is exactly `1..n`, and `n` equals
+the `toolCalls` the orchestrator receives for that invocation. Summed counts
+exceed `n` by the overlapped calls, `(k − 1)` per window boundary. A difference
+is an `observation-incomplete` in the stream, never a correction of the counter.
 
 ## What this contract does not do
 
 It does not detect a worker that varies its arguments to evade the guard, nor a
 tool whose results are nondeterministic: `maxToolCalls` and the other budgets
-stay the hard bound. It does not decide the reaction (signal, tool withdrawal,
-typed stop); ADR-0046 proposes it.
+stay the hard bound. It does not carry the reaction. ADR-0046 decision 2 fixes it:
+a typed stop only, with a signal at `k − 1` occurrences and the `no-progress`
+stop at `k`, and no tool withdrawn mid-step.

@@ -443,7 +443,7 @@
 		},
 		{
 			"schema": "tool-invocation-observation.v1.schema.json",
-			"schemaSha256": "953c608dcf9950f913bd3b776814063ee5a54c47268f099aa2a5590fe76b0564",
+			"schemaSha256": "466f71fd98a2df2f042eab589af421099d04bd4b47ea83d2831da2e62ae030b6",
 			"declaration": "tool-invocation-observation.v1.d.ts"
 		},
 		{

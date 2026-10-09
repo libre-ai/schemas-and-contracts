@@ -24,9 +24,10 @@
         },
         "window": {
           "sequence": 1,
-          "windowSize": 64,
+          "windowSize": 4,
+          "repeatThreshold": 3,
           "firstCallSequence": 1,
-          "lastCallSequence": 3,
+          "lastCallSequence": 4,
           "final": false
         },
         "previousObservationDigest": null,
@@ -34,7 +35,7 @@
           {
             "toolName": "search",
             "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
-            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "resultDigest": "686f2dfde17f625db5868e5f13a308ccbf8a2ccf6547a2a032100fd377ea2b70",
             "outcome": "ok",
             "count": 2,
             "firstCallSequence": 1,
@@ -42,17 +43,26 @@
           },
           {
             "toolName": "fetch_document",
-            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "argsDigest": "10af28e1ed79e305417eb345edbdff65eb57b6ef0a2404cedfe5ffb5aa31f343",
             "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
             "outcome": "empty",
             "count": 1,
             "firstCallSequence": 3,
             "lastCallSequence": 3
+          },
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "d2a816ca44e91e410cfd69b7d0736a95d2427494ee20f8dceeb0c87dd5379d8c",
+            "outcome": "ok",
+            "count": 1,
+            "firstCallSequence": 4,
+            "lastCallSequence": 4
           }
         ],
         "closedAt": "2026-10-09T10:00:00Z",
         "signingKeyId": "harness_key_1",
-        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "preimageDigest": "df485bbf0997d70da94a07839f06a6f27327c88fc029ad43c2830f44d2cd92c1",
         "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
       },
       "invalidMutations": [
@@ -109,6 +119,11 @@
           "name": "empty entries",
           "path": "/entries",
           "value": []
+        },
+        {
+          "name": "missing repeat threshold",
+          "path": "/window/repeatThreshold",
+          "remove": true
         }
       ]
     }
