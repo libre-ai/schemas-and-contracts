@@ -67,6 +67,15 @@ describe("authorized execution Specification Lock pin", () => {
       .filter((entry) => entry.status === "candidate")
       .map((entry) => entry.id)
       .sort();
-    expect(candidateIds).toEqual([...remainingCandidateIds]);
+    // Candidates appended after the lock through the pinned registry are derived, never restated.
+    const registry = (await Bun.file(
+      "../../contracts/catalog-post-lock-additions.v1.json",
+    ).json()) as {
+      additions: { entry: CatalogEntry }[];
+    };
+    const registeredCandidateIds = registry.additions
+      .filter((addition) => addition.entry.status === "candidate")
+      .map((addition) => addition.entry.id);
+    expect(candidateIds).toEqual([...remainingCandidateIds, ...registeredCandidateIds].sort());
   });
 });

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "tool-invocation-observation.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 4,
+          "repeatThreshold": 3,
+          "firstCallSequence": 1,
+          "lastCallSequence": 4,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "686f2dfde17f625db5868e5f13a308ccbf8a2ccf6547a2a032100fd377ea2b70",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "10af28e1ed79e305417eb345edbdff65eb57b6ef0a2404cedfe5ffb5aa31f343",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          },
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "d2a816ca44e91e410cfd69b7d0736a95d2427494ee20f8dceeb0c87dd5379d8c",
+            "outcome": "ok",
+            "count": 1,
+            "firstCallSequence": 4,
+            "lastCallSequence": 4
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "df485bbf0997d70da94a07839f06a6f27327c88fc029ad43c2830f44d2cd92c1",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      },
+      "invalidMutations": [
+        {
+          "name": "raw arguments in an entry",
+          "path": "/entries/0/arguments",
+          "value": {
+            "query": "synthetic-query"
+          }
+        },
+        {
+          "name": "raw result in an entry",
+          "path": "/entries/0/result",
+          "value": {
+            "items": []
+          }
+        },
+        {
+          "name": "digest key material disclosed",
+          "path": "/digestKey/key",
+          "value": "00"
+        },
+        {
+          "name": "organization-scoped digest key",
+          "path": "/digestKey/scope",
+          "value": "organization"
+        },
+        {
+          "name": "unkeyed digest",
+          "path": "/digestKey/algorithm",
+          "value": "sha-256"
+        },
+        {
+          "name": "outcome outside the closed set",
+          "path": "/entries/0/outcome",
+          "value": "timeout"
+        },
+        {
+          "name": "first window chained",
+          "path": "/previousObservationDigest",
+          "value": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        {
+          "name": "second-precision closing time",
+          "path": "/closedAt",
+          "value": "2026-10-09T10:00:07Z"
+        },
+        {
+          "name": "missing signature",
+          "path": "/signature",
+          "remove": true
+        },
+        {
+          "name": "empty entries",
+          "path": "/entries",
+          "value": []
+        },
+        {
+          "name": "missing repeat threshold",
+          "path": "/window/repeatThreshold",
+          "remove": true
+        }
+      ]
+    }
+  ]
+}

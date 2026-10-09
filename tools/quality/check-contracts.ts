@@ -575,6 +575,17 @@ if (
 ) {
   failures.push("p02-job-v1: invalid separate schema fixture inventory");
 } else fixtureCases.push(...(p02JobFixtures.cases as FixtureCase[]));
+const toolObservationFixtures = await Bun.file(
+  "contracts/fixtures/tool-invocation-observation-v1/schema-fixtures.json",
+).json();
+if (
+  !isRecord(toolObservationFixtures) ||
+  toolObservationFixtures.schemaVersion !== "libre-ai.schema-fixtures.v1" ||
+  !Array.isArray(toolObservationFixtures.cases) ||
+  toolObservationFixtures.cases.length !== 1
+) {
+  failures.push("tool-invocation-observation-v1: invalid separate schema fixture inventory");
+} else fixtureCases.push(...(toolObservationFixtures.cases as FixtureCase[]));
 
 if (fixtureCases.length === 0)
   failures.push("contracts/fixtures/schema-fixtures.v1.json: no fixtures");

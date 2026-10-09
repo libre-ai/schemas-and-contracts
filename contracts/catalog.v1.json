@@ -1286,6 +1286,23 @@
       "compatibility": "major-versioned",
       "classification": "tenant-private",
       "status": "locked"
+    },
+    {
+      "id": "tool-invocation-observation-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/tool-invocation-observation.v1.schema.json",
+      "owners": ["agent-harness"],
+      "consumers": ["agent-orchestrator", "proof", "sdk-ts", "sdk-rs"],
+      "compatibility": "major-versioned",
+      "classification": "tenant-private",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "privacy", "cryptography"],
+        "dossier": "docs/reviews/tool-invocation-observation-v1-review.md"
+      }
     }
   ]
 }

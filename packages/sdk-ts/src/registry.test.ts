@@ -120,6 +120,10 @@ const p02JobFixtureDocument = (await Bun.file(
   "../../contracts/fixtures/p02-job-v1/schema-fixtures.json",
 ).json()) as { cases: Fixture[] };
 fixtureDocument.cases.push(...p02JobFixtureDocument.cases);
+const toolObservationFixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/tool-invocation-observation-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...toolObservationFixtureDocument.cases);
 const authorityCatalog = (await Bun.file("../../contracts/catalog.v1.json").json()) as {
   contracts: CatalogEntry[];
 };
@@ -129,7 +133,7 @@ describe("canonical contract registry", () => {
     expect(registry.schemaNames()).toEqual(expect.arrayContaining(authorizedExecutionSchemaNames));
   });
 
-  test("consumes the exact authorized execution Specification Lock", () => {
+  test("consumes the exact authorized execution Specification Lock", async () => {
     const entriesById = new Map(authorityCatalog.contracts.map((entry) => [entry.id, entry]));
     for (const id of [...authorizedExecutionIds, ...briefAndMissionsIds]) {
       const entry = entriesById.get(id);
@@ -145,7 +149,14 @@ describe("canonical contract registry", () => {
       .filter((entry) => entry.status === "candidate")
       .map((entry) => entry.id)
       .sort();
-    expect(candidates).toEqual([...remainingCandidateIds]);
+    // Candidates appended after the lock through the pinned registry are derived, never restated.
+    const postLockRegistry = (await Bun.file(
+      "../../contracts/catalog-post-lock-additions.v1.json",
+    ).json()) as { additions: { entry: CatalogEntry }[] };
+    const registeredCandidateIds = postLockRegistry.additions
+      .filter((addition) => addition.entry.status === "candidate")
+      .map((addition) => addition.entry.id);
+    expect(candidates).toEqual([...remainingCandidateIds, ...registeredCandidateIds].sort());
   });
 
   test("validates the authorized execution retention v2 authority data", async () => {

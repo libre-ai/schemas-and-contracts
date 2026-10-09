@@ -256,7 +256,10 @@ describe("the post-lock additions registry", () => {
     const extended = editedRegistry((value) => {
       const first = value.additions[0];
       if (!first) throw new Error("Missing registered addition");
-      value.additions.push({ ...first, entry: { ...first.entry, id: "unregistered-addition-v1" } });
+      // A clone keeps the registry's element type, which is now a union of entry shapes.
+      const copy = structuredClone(first);
+      copy.entry.id = "unregistered-addition-v1";
+      value.additions.push(copy);
     });
     const target = admittedCatalog();
     const unregistered = structuredClone(target.contracts.at(-1));
