@@ -1,0 +1,2877 @@
+{
+  "schemaVersion": "libre-ai.tool-invocation-observation-vectors.v1",
+  "digestKeyTestOnlyHex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "digests": [
+    {
+      "name": "argument digest of a key-ordered object",
+      "kind": "args",
+      "toolName": "search",
+      "value": {
+        "query": "synthetic-query",
+        "limit": 10
+      },
+      "expected": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093"
+    },
+    {
+      "name": "argument digest is invariant under key permutation (RFC 8785)",
+      "kind": "args",
+      "toolName": "search",
+      "value": {
+        "limit": 10,
+        "query": "synthetic-query"
+      },
+      "expected": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093"
+    },
+    {
+      "name": "same arguments under another tool name give another digest",
+      "kind": "args",
+      "toolName": "fetch_document",
+      "value": {
+        "query": "synthetic-query",
+        "limit": 10
+      },
+      "expected": "84f1bdb794b8c13053373066fb37c9a14a8d6c6c3380bcdd0570e814a67a8d4a"
+    },
+    {
+      "name": "result digest binds the outcome",
+      "kind": "result",
+      "toolName": "fetch_document",
+      "outcome": "error",
+      "value": {
+        "code": "tool-timeout"
+      },
+      "expected": "8f77017b39c781697a569658378a0e7ccda1af6d7177b91e516be8dc00f05c06"
+    },
+    {
+      "name": "empty result digest",
+      "kind": "result",
+      "toolName": "fetch_document",
+      "outcome": "empty",
+      "value": {},
+      "expected": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b"
+    }
+  ],
+  "valid": [
+    {
+      "name": "first window of a stream",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "second window chained to the first",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-2",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 2,
+          "windowSize": 64,
+          "firstCallSequence": 4,
+          "lastCallSequence": 5,
+          "final": true
+        },
+        "previousObservationDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "3a7a5d589f76a3400763d8b6faac653dfc0fd97ffa24d3f8fa6ada45a993d79d",
+            "outcome": "ok",
+            "count": 1,
+            "firstCallSequence": 4,
+            "lastCallSequence": 4
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "8f77017b39c781697a569658378a0e7ccda1af6d7177b91e516be8dc00f05c06",
+            "outcome": "error",
+            "count": 1,
+            "firstCallSequence": 5,
+            "lastCallSequence": 5
+          }
+        ],
+        "closedAt": "2026-10-09T10:01:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "83c66b808fb0335db8559b554d3d168a4642e426b8e76844795d76ace2c69755",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "single-call final window at the smallest window size",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-single",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 2,
+          "firstCallSequence": 1,
+          "lastCallSequence": 1,
+          "final": true
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 1,
+            "firstCallSequence": 1,
+            "lastCallSequence": 1
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "4f192cc08a6cd79921bf4966611b8f13a97458fbfd3890ef7660824d44b3da58",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "upper bounds of sequence, window size and count",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-bounds",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1000000000,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 100000,
+          "windowSize": 1024,
+          "firstCallSequence": 98977,
+          "lastCallSequence": 100000,
+          "final": true
+        },
+        "previousObservationDigest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 1024,
+            "firstCallSequence": 98977,
+            "lastCallSequence": 100000
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "559129379dd68b7beec76b6eac8847170a8abe879a93ac137785da997a9ae692",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "raw arguments at the root",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "arguments": {
+          "query": "synthetic-query",
+          "limit": 10
+        }
+      }
+    },
+    {
+      "name": "raw result at the root",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        "result": {
+          "items": ["synthetic-item-1"]
+        }
+      }
+    },
+    {
+      "name": "raw arguments in an entry",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2,
+            "arguments": {
+              "query": "synthetic-query",
+              "limit": 10
+            }
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "raw result in an entry",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2,
+            "result": {
+              "items": ["synthetic-item-1"]
+            }
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "error message in an entry",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2,
+            "errorMessage": "synthetic"
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "per-call timestamp in an entry",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2,
+            "calledAt": "2026-10-09T10:00:00Z"
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "digest key material disclosed",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs",
+          "key": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "organization-scoped digest key",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "organization",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "unkeyed SHA-256 argument digest",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "non-canonical argument serialization",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "json-stringify"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "missing digest key identifier",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "outcome outside the closed set",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "timeout",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "zero count",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 0,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "count above the window bound",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 1025,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "call sequence zero",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 0,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "call sequence above the tool-call budget bound",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 100001
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "window size of one",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 1,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "window size above 1024",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 1025,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "window sequence zero",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 0,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "missing final marker",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "empty entries",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "uppercase tool name",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "Search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "uppercase argument digest",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "truncated result digest",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "first window chained to a previous digest",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "later window without a previous digest",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-2",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 2,
+          "windowSize": 64,
+          "firstCallSequence": 4,
+          "lastCallSequence": 5,
+          "final": true
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "3a7a5d589f76a3400763d8b6faac653dfc0fd97ffa24d3f8fa6ada45a993d79d",
+            "outcome": "ok",
+            "count": 1,
+            "firstCallSequence": 4,
+            "lastCallSequence": 4
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "8f77017b39c781697a569658378a0e7ccda1af6d7177b91e516be8dc00f05c06",
+            "outcome": "error",
+            "count": 1,
+            "firstCallSequence": 5,
+            "lastCallSequence": 5
+          }
+        ],
+        "closedAt": "2026-10-09T10:01:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "83c66b808fb0335db8559b554d3d168a4642e426b8e76844795d76ace2c69755",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "closing time with second precision",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:07Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "closing time with fractional seconds",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00.000Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "closing time with an offset",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T12:00:00+02:00",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "missing harness attestation digest",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "missing signature",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a"
+      }
+    },
+    {
+      "name": "short signature",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "malformed organization",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "org-1",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "worker invocation not a URN",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    },
+    {
+      "name": "wrong schema version",
+      "document": {
+        "schemaVersion": "libre-ai.tool-invocation-observation.v2",
+        "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "runId": "urn:libre-ai:run:synthetic-run-1",
+        "generation": 1,
+        "stepId": "urn:libre-ai:step:synthetic-step-1",
+        "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+        "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+        "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "digestKey": {
+          "keyId": "run_digest_key_1",
+          "scope": "run",
+          "algorithm": "hmac-sha-256",
+          "canonicalization": "rfc8785-jcs"
+        },
+        "window": {
+          "sequence": 1,
+          "windowSize": 64,
+          "firstCallSequence": 1,
+          "lastCallSequence": 3,
+          "final": false
+        },
+        "previousObservationDigest": null,
+        "entries": [
+          {
+            "toolName": "search",
+            "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+            "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+            "outcome": "ok",
+            "count": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 2
+          },
+          {
+            "toolName": "fetch_document",
+            "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+            "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+            "outcome": "empty",
+            "count": 1,
+            "firstCallSequence": 3,
+            "lastCallSequence": 3
+          }
+        ],
+        "closedAt": "2026-10-09T10:00:00Z",
+        "signingKeyId": "harness_key_1",
+        "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+        "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      }
+    }
+  ],
+  "semantic": [
+    {
+      "name": "a chained stream with no repeated couple makes progress",
+      "parameters": {
+        "repeatThreshold": 3,
+        "planToolNames": ["search", "fetch_document"]
+      },
+      "observations": [
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 64,
+            "firstCallSequence": 1,
+            "lastCallSequence": 3,
+            "final": false
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+              "outcome": "ok",
+              "count": 2,
+              "firstCallSequence": 1,
+              "lastCallSequence": 2
+            },
+            {
+              "toolName": "fetch_document",
+              "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+              "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+              "outcome": "empty",
+              "count": 1,
+              "firstCallSequence": 3,
+              "lastCallSequence": 3
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-2",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 2,
+            "windowSize": 64,
+            "firstCallSequence": 4,
+            "lastCallSequence": 5,
+            "final": true
+          },
+          "previousObservationDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "3a7a5d589f76a3400763d8b6faac653dfc0fd97ffa24d3f8fa6ada45a993d79d",
+              "outcome": "ok",
+              "count": 1,
+              "firstCallSequence": 4,
+              "lastCallSequence": 4
+            },
+            {
+              "toolName": "fetch_document",
+              "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+              "resultDigest": "8f77017b39c781697a569658378a0e7ccda1af6d7177b91e516be8dc00f05c06",
+              "outcome": "error",
+              "count": 1,
+              "firstCallSequence": 5,
+              "lastCallSequence": 5
+            }
+          ],
+          "closedAt": "2026-10-09T10:01:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "83c66b808fb0335db8559b554d3d168a4642e426b8e76844795d76ace2c69755",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      ],
+      "expected": "progress"
+    },
+    {
+      "name": "the same couple k times in one window is no progress",
+      "parameters": {
+        "repeatThreshold": 3,
+        "planToolNames": ["search", "fetch_document"]
+      },
+      "observations": [
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-loop",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 8,
+            "firstCallSequence": 1,
+            "lastCallSequence": 4,
+            "final": true
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+              "outcome": "ok",
+              "count": 4,
+              "firstCallSequence": 1,
+              "lastCallSequence": 4
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "cae80eac0fb78f0510dbc7f2779c966a0114639d084b3260e13f182515cf20de",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      ],
+      "expected": "no-progress"
+    },
+    {
+      "name": "polling whose result changes is progress",
+      "parameters": {
+        "repeatThreshold": 3,
+        "planToolNames": ["search", "fetch_document"]
+      },
+      "observations": [
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-polling",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 8,
+            "firstCallSequence": 1,
+            "lastCallSequence": 4,
+            "final": true
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "05a1442c357ae20e865a62ac1ba8c24c8bc898aeca7e32ab4720f9fdd4055c72",
+              "outcome": "ok",
+              "count": 1,
+              "firstCallSequence": 1,
+              "lastCallSequence": 1
+            },
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+              "outcome": "ok",
+              "count": 1,
+              "firstCallSequence": 2,
+              "lastCallSequence": 2
+            },
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "3a7a5d589f76a3400763d8b6faac653dfc0fd97ffa24d3f8fa6ada45a993d79d",
+              "outcome": "ok",
+              "count": 1,
+              "firstCallSequence": 3,
+              "lastCallSequence": 3
+            },
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "b3a7f3a2848ced9bc8714ebd2cb458b6c19397b29ec0cc85884e835a573c75e5",
+              "outcome": "ok",
+              "count": 1,
+              "firstCallSequence": 4,
+              "lastCallSequence": 4
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "e22641223d4543fabc0a839c88bb52c59c07175b8e8c961ec41c236a22531413",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      ],
+      "expected": "progress"
+    },
+    {
+      "name": "counts that do not cover the declared span are incomplete",
+      "parameters": {
+        "repeatThreshold": 3,
+        "planToolNames": ["search", "fetch_document"]
+      },
+      "observations": [
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-incomplete",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 8,
+            "firstCallSequence": 1,
+            "lastCallSequence": 4,
+            "final": true
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+              "outcome": "ok",
+              "count": 3,
+              "firstCallSequence": 1,
+              "lastCallSequence": 4
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "6ce8af57282bde22b9a6281918d2024ffd2e8bd719f5103517c1b2af61ed4f58",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      ],
+      "expected": "observation-incomplete"
+    },
+    {
+      "name": "a span wider than the window size is incomplete",
+      "parameters": {
+        "repeatThreshold": 3,
+        "planToolNames": ["search", "fetch_document"]
+      },
+      "observations": [
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-oversized",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 2,
+            "firstCallSequence": 1,
+            "lastCallSequence": 3,
+            "final": true
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+              "outcome": "ok",
+              "count": 3,
+              "firstCallSequence": 1,
+              "lastCallSequence": 3
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "01de467d09c5ef168ab7782f993907873399c837f3321f7606f9174b5f8064cd",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      ],
+      "expected": "observation-incomplete"
+    },
+    {
+      "name": "a previous digest that is not the prior window preimage breaks the chain",
+      "parameters": {
+        "repeatThreshold": 3,
+        "planToolNames": ["search", "fetch_document"]
+      },
+      "observations": [
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 64,
+            "firstCallSequence": 1,
+            "lastCallSequence": 3,
+            "final": false
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+              "outcome": "ok",
+              "count": 2,
+              "firstCallSequence": 1,
+              "lastCallSequence": 2
+            },
+            {
+              "toolName": "fetch_document",
+              "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+              "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+              "outcome": "empty",
+              "count": 1,
+              "firstCallSequence": 3,
+              "lastCallSequence": 3
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-2-broken",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 2,
+            "windowSize": 64,
+            "firstCallSequence": 4,
+            "lastCallSequence": 5,
+            "final": true
+          },
+          "previousObservationDigest": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "3a7a5d589f76a3400763d8b6faac653dfc0fd97ffa24d3f8fa6ada45a993d79d",
+              "outcome": "ok",
+              "count": 1,
+              "firstCallSequence": 4,
+              "lastCallSequence": 4
+            },
+            {
+              "toolName": "fetch_document",
+              "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+              "resultDigest": "8f77017b39c781697a569658378a0e7ccda1af6d7177b91e516be8dc00f05c06",
+              "outcome": "error",
+              "count": 1,
+              "firstCallSequence": 5,
+              "lastCallSequence": 5
+            }
+          ],
+          "closedAt": "2026-10-09T10:01:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "787caafbd95e3b83d824ae7fd24c2b383f0a6c8aa28609496c36d76859fc0142",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      ],
+      "expected": "observation-chain-broken"
+    },
+    {
+      "name": "a window bound to another worker invocation is a replay",
+      "parameters": {
+        "repeatThreshold": 3,
+        "planToolNames": ["search", "fetch_document"]
+      },
+      "observations": [
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 64,
+            "firstCallSequence": 1,
+            "lastCallSequence": 3,
+            "final": false
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+              "outcome": "ok",
+              "count": 2,
+              "firstCallSequence": 1,
+              "lastCallSequence": 2
+            },
+            {
+              "toolName": "fetch_document",
+              "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+              "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+              "outcome": "empty",
+              "count": 1,
+              "firstCallSequence": 3,
+              "lastCallSequence": 3
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        },
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1-replayed",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-2",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 64,
+            "firstCallSequence": 1,
+            "lastCallSequence": 3,
+            "final": false
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+              "outcome": "ok",
+              "count": 2,
+              "firstCallSequence": 1,
+              "lastCallSequence": 2
+            },
+            {
+              "toolName": "fetch_document",
+              "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+              "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+              "outcome": "empty",
+              "count": 1,
+              "firstCallSequence": 3,
+              "lastCallSequence": 3
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "a1a0e10e6490a69cc4132b4f864aaebe3592318b36d9d6ce788b654224b5c03b",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      ],
+      "expected": "observation-replayed"
+    },
+    {
+      "name": "a tool absent from the plan tools is undeclared",
+      "parameters": {
+        "repeatThreshold": 3,
+        "planToolNames": ["search", "fetch_document"]
+      },
+      "observations": [
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-undeclared",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 64,
+            "firstCallSequence": 1,
+            "lastCallSequence": 1,
+            "final": true
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "shell_exec",
+              "argsDigest": "2a796ab392d991dcc81548509a7780281534242b1da433778232ca1b1d0c38ff",
+              "resultDigest": "253ffec0dc7bf2498414dbf6874dcf33de1ac7a729f0627322b43961e6f49627",
+              "outcome": "ok",
+              "count": 1,
+              "firstCallSequence": 1,
+              "lastCallSequence": 1
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "688f0f63f83489d2b93802d20ffab8c4cb9027754a5044007cdcf5a2b2fcd1e7",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      ],
+      "expected": "tool-undeclared"
+    },
+    {
+      "name": "a document altered after signing fails its preimage digest",
+      "parameters": {
+        "repeatThreshold": 3,
+        "planToolNames": ["search", "fetch_document"]
+      },
+      "observations": [
+        {
+          "schemaVersion": "libre-ai.tool-invocation-observation.v1",
+          "id": "urn:libre-ai:tool-invocation-observation:synthetic-window-1",
+          "organizationId": "ten_1234567890abcdef",
+          "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+          "planDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "graphDigest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "runId": "urn:libre-ai:run:synthetic-run-1",
+          "generation": 1,
+          "stepId": "urn:libre-ai:step:synthetic-step-1",
+          "attemptId": "urn:libre-ai:attempt:synthetic-attempt-1",
+          "workerInvocationId": "urn:libre-ai:worker-invocation:synthetic-worker-invocation-1",
+          "harnessAttestationDigest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "digestKey": {
+            "keyId": "run_digest_key_1",
+            "scope": "run",
+            "algorithm": "hmac-sha-256",
+            "canonicalization": "rfc8785-jcs"
+          },
+          "window": {
+            "sequence": 1,
+            "windowSize": 64,
+            "firstCallSequence": 2,
+            "lastCallSequence": 3,
+            "final": false
+          },
+          "previousObservationDigest": null,
+          "entries": [
+            {
+              "toolName": "search",
+              "argsDigest": "841b721b86665fffd449a289f5cb41b5ce1ebb61825247a08cf68cfac6628093",
+              "resultDigest": "52887dabc5334fd2249a89e476a8f7f7738f0e18e681bdc331b5f9341bb2d6fe",
+              "outcome": "ok",
+              "count": 1,
+              "firstCallSequence": 2,
+              "lastCallSequence": 2
+            },
+            {
+              "toolName": "fetch_document",
+              "argsDigest": "3ab981717b52a053c95113d698f9161031c03a32e5a4a8d3d8e51e789fcaa6f5",
+              "resultDigest": "d541d0c5c42b65ac35e28a7d7fd33379685f007a20b0032c53004e81832a695b",
+              "outcome": "empty",
+              "count": 1,
+              "firstCallSequence": 3,
+              "lastCallSequence": 3
+            }
+          ],
+          "closedAt": "2026-10-09T10:00:00Z",
+          "signingKeyId": "harness_key_1",
+          "preimageDigest": "b3dd4ed9197b5090e4b3ed6ea538a74dbebc561069f90f59a319c5a5269ff92a",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      ],
+      "expected": "attestation-invalid"
+    }
+  ]
+}

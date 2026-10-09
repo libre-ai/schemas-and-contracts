@@ -442,6 +442,11 @@
 			"declaration": "step-invocation.v1.d.ts"
 		},
 		{
+			"schema": "tool-invocation-observation.v1.schema.json",
+			"schemaSha256": "953c608dcf9950f913bd3b776814063ee5a54c47268f099aa2a5590fe76b0564",
+			"declaration": "tool-invocation-observation.v1.d.ts"
+		},
+		{
 			"schema": "work-package-plan.v1.schema.json",
 			"schemaSha256": "306d9fe38132073bc228b917495f0c766fb9843ef254604e37aac376a4db7de3",
 			"declaration": "work-package-plan.v1.d.ts"

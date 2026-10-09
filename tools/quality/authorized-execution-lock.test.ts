@@ -134,9 +134,14 @@ describe("authorized execution Specification Lock", () => {
     const registeredLocked = registry.additions.filter(
       (addition) => addition.entry.status === "locked",
     ).length;
+    // A registered addition may be a candidate (ADR 2026-10-09: the registry
+    // admits an entry, it is not a role verdict); derive those, never restate.
+    const registeredCandidates = registry.additions
+      .filter((addition) => addition.entry.status === "candidate")
+      .map((addition) => addition.entry.id);
     expect(baselineLocked).toBe(114);
     expect(locked).toHaveLength(baselineLocked + registeredLocked);
-    expect(candidates).toEqual([...remainingCandidateIds].sort());
+    expect(candidates).toEqual([...remainingCandidateIds, ...registeredCandidates].sort());
   });
 
   test("preserves every reviewed authority and vector byte", async () => {

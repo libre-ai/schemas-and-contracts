@@ -29,6 +29,27 @@
         "classification": "tenant-private",
         "status": "locked"
       }
+    },
+    {
+      "decision": "docs/adr/2026-10-09-tool-invocation-observation-v1.md",
+      "ownerArbitration": "2026-10-09",
+      "entry": {
+        "id": "tool-invocation-observation-v1",
+        "kind": "json-schema",
+        "path": "contracts/schemas/tool-invocation-observation.v1.schema.json",
+        "owners": ["agent-harness"],
+        "consumers": ["agent-orchestrator", "proof", "sdk-ts", "sdk-rs"],
+        "compatibility": "major-versioned",
+        "classification": "tenant-private",
+        "status": "candidate",
+        "review": {
+          "state": "pending-independent-agent-review",
+          "reviewerKind": "agent",
+          "separation": "role-scoped-review-pass",
+          "required": ["architecture", "security", "privacy", "cryptography"],
+          "dossier": "docs/reviews/tool-invocation-observation-v1-review.md"
+        }
+      }
     }
   ]
 }
