@@ -12,11 +12,11 @@ import {
   retentionPolicyV2Failures,
 } from "./authorized-execution";
 import { retentionV4Failures } from "./build-brief-storage-v1";
-import { decisionBindingDocumentFailures } from "./decision-binding";
 import {
   candidateProtocolForVersion,
   candidateProtocolOperations,
 } from "./candidate-protocol-authority";
+import { decisionBindingDocumentFailures } from "./decision-binding";
 import { parseStrictJson } from "./policy-core-raw-inputs";
 import { localProtocolAuthorities } from "./protocol-authority";
 import {
