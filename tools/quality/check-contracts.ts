@@ -12,6 +12,7 @@ import {
   retentionPolicyV2Failures,
 } from "./authorized-execution";
 import { retentionV4Failures } from "./build-brief-storage-v1";
+import { decisionBindingDocumentFailures } from "./decision-binding";
 import {
   candidateProtocolForVersion,
   candidateProtocolOperations,
@@ -737,6 +738,35 @@ if (!(await authorizedExecutionVectorFile.exists())) {
   ) {
     for (const failure of authorizedExecutionVectorDocumentFailures(document)) {
       failures.push(`${authorizedExecutionVectorPath}: ${failure}`);
+    }
+  }
+}
+
+// Locked by docs/adr/2026-10-09-decision-binding-vectors-lock.md: the request
+// side of a human decision binds its step's policy. Same gates as the locked
+// semantic vectors, plus a replay of every case by the reference oracle.
+const decisionBindingVectorPath =
+  "contracts/fixtures/authorized-execution-v1/decision-binding-vectors.v1.json";
+const decisionBindingVectorFile = Bun.file(decisionBindingVectorPath);
+if (!(await decisionBindingVectorFile.exists())) {
+  failures.push(`${decisionBindingVectorPath}: required decision-binding vectors are missing`);
+} else if (decisionBindingVectorFile.size > 8 * 1024 * 1024) {
+  failures.push(`${decisionBindingVectorPath}: decision-binding vector file exceeds 8 MiB`);
+} else {
+  let document: unknown;
+  try {
+    document = parseStrictJson(new Uint8Array(await decisionBindingVectorFile.arrayBuffer()), 64);
+  } catch {
+    failures.push(`${decisionBindingVectorPath}: decision-binding vector is not strict UTF-8 JSON`);
+    document = null;
+  }
+  if (
+    document !== null &&
+    inspectSpecializedVectorBounds(document, decisionBindingVectorPath) &&
+    inspectSpecializedVectorPublicContent(document, decisionBindingVectorPath)
+  ) {
+    for (const failure of decisionBindingDocumentFailures(document)) {
+      failures.push(`${decisionBindingVectorPath}: ${failure}`);
     }
   }
 }

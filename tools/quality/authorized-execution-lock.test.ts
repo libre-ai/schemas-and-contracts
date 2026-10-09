@@ -55,6 +55,9 @@ const remainingCandidateIds = [
 const reviewedAuthorityHashes = {
   "contracts/data/retention.v2.json":
     "1622c32bf106160a524590db42bd0e8a0e7bbbadc2ee1bedd5dbb9bddef9db84",
+  // Locked after the family, by docs/adr/2026-10-09-decision-binding-vectors-lock.md.
+  "contracts/fixtures/authorized-execution-v1/decision-binding-vectors.v1.json":
+    "49328cae505b72e54275b1481ad8fc8b16547639ff02ceb49c68a6d911ab807e",
   "contracts/fixtures/authorized-execution-v1/digest-vectors.v1.json":
     "02e1d78866a0841f8fdb958a7979fe5621452d07e251221cd90334c1c16c9c04",
   "contracts/fixtures/authorized-execution-v1/semantic-vectors.v1.json":
