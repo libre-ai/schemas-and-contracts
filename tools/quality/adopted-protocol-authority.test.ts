@@ -26,6 +26,8 @@ beforeAll(async () => {
       delete row.review;
     }
   }
+  const additions = await Bun.file("contracts/catalog-post-lock-additions.v1.json").json();
+  for (const addition of additions.additions) catalog.contracts.push(addition.entry);
   inputs.targetCatalog = catalog;
 });
 

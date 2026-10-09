@@ -1,10 +1,18 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
+import registry from "../../contracts/catalog-post-lock-additions.v1.json";
 import evidence from "../../docs/reviews/build-brief-missions-specification-lock.json";
 import baseline from "../../docs/reviews/evidence/build-brief-missions-lock/baseline-catalog.json";
-import { specificationLockDocumentPaths, specificationLockFailures } from "./specification-lock";
+import {
+  POST_LOCK_ADDITIONS_PATH,
+  specificationLockDocumentPaths,
+  specificationLockFailures,
+} from "./specification-lock";
 
-function admittedCatalog(): typeof baseline {
+const registryBytes = readFileSync(POST_LOCK_ADDITIONS_PATH);
+
+/** The reviewed transition alone, before any post-lock addition. */
+function transitionedBaseline(): typeof baseline {
   const result = structuredClone(baseline);
   const admitted = new Set(evidence.transitions.map((entry) => entry.id));
   for (const entry of result.contracts) {
@@ -13,6 +21,14 @@ function admittedCatalog(): typeof baseline {
       delete entry.review;
     }
   }
+  return result;
+}
+
+function admittedCatalog(): typeof baseline {
+  const result = transitionedBaseline();
+  result.contracts.push(
+    ...(registry.additions.map((addition) => addition.entry) as typeof result.contracts),
+  );
   return result;
 }
 
@@ -33,8 +49,14 @@ function check(
   target: unknown = admittedCatalog(),
   proof: unknown = evidence,
   inputs: ReadonlyMap<string, Uint8Array> = documents(),
+  additions: Uint8Array = registryBytes,
 ): string[] {
-  return specificationLockFailures({ targetCatalog: target, evidence: proof, documents: inputs });
+  return specificationLockFailures({
+    targetCatalog: target,
+    evidence: proof,
+    documents: inputs,
+    postLockAdditions: additions,
+  });
 }
 
 describe("the fifteen-authority specification lock", () => {
@@ -151,6 +173,7 @@ describe("the fifteen-authority specification lock", () => {
           targetCatalog: admittedCatalog(),
           evidence: malformed,
           documents: documents(),
+          postLockAdditions: registryBytes,
         }).length,
       ).toBeGreaterThan(0);
       expect(() => specificationLockDocumentPaths(malformed)).toThrow();
@@ -196,5 +219,92 @@ describe("the fifteen-authority specification lock", () => {
     missing.delete(evidence.consumerMatrix.path);
     expect(check(admittedCatalog(), evidence, missing).length).toBeGreaterThan(0);
     expect(specificationLockDocumentPaths(evidence)).toContain(evidence.consumerMatrix.path);
+  });
+});
+
+describe("the post-lock additions registry", () => {
+  const encoder = new TextEncoder();
+  function editedRegistry(change: (value: typeof registry) => void): Uint8Array {
+    const value = structuredClone(registry);
+    change(value);
+    return encoder.encode(`${JSON.stringify(value, null, 2)}\n`);
+  }
+
+  test("admits the baseline transition followed by exactly the registered additions", () => {
+    expect(registry.additions.length).toBeGreaterThan(0);
+    expect(check()).toEqual([]);
+  });
+
+  test("refuses the transitioned baseline without the registered additions", () => {
+    expect(check(transitionedBaseline())).toEqual([
+      "Catalog differs from the exact fifteen-authority transition plus registered additions",
+    ]);
+  });
+
+  test("refuses a catalog entry that the registry does not list", () => {
+    const target = admittedCatalog();
+    const unregistered = structuredClone(target.contracts.at(-1));
+    if (!unregistered) throw new Error("Missing registered addition");
+    unregistered.id = "unregistered-addition-v1";
+    target.contracts.push(unregistered);
+    expect(check(target)).toEqual([
+      "Catalog differs from the exact fifteen-authority transition plus registered additions",
+    ]);
+  });
+
+  test("refuses a registry edited without updating its pinned digest", () => {
+    const extended = editedRegistry((value) => {
+      const first = value.additions[0];
+      if (!first) throw new Error("Missing registered addition");
+      value.additions.push({ ...first, entry: { ...first.entry, id: "unregistered-addition-v1" } });
+    });
+    const target = admittedCatalog();
+    const unregistered = structuredClone(target.contracts.at(-1));
+    if (!unregistered) throw new Error("Missing registered addition");
+    unregistered.id = "unregistered-addition-v1";
+    target.contracts.push(unregistered);
+    expect(check(target, evidence, documents(), extended)).toEqual([
+      "Unrecognized post-lock additions registry",
+    ]);
+    const emptied = editedRegistry((value) => {
+      value.additions = [];
+    });
+    expect(check(transitionedBaseline(), evidence, documents(), emptied)).toEqual([
+      "Unrecognized post-lock additions registry",
+    ]);
+    expect(check(admittedCatalog(), evidence, documents(), new Uint8Array())).toEqual([
+      "Unrecognized post-lock additions registry",
+    ]);
+  });
+
+  test("refuses a modified, removed or reordered baseline entry even with additions", () => {
+    const modified = admittedCatalog();
+    const first = modified.contracts[0];
+    if (!first) throw new Error("Missing baseline entry");
+    first.consumers = [...first.consumers, "unreviewed-consumer"];
+    const removed = admittedCatalog();
+    removed.contracts.splice(1, 1);
+    const reordered = admittedCatalog();
+    const [head, second] = reordered.contracts;
+    if (!head || !second) throw new Error("Missing baseline entries");
+    reordered.contracts[0] = second;
+    reordered.contracts[1] = head;
+    const additionFirst = admittedCatalog();
+    const addition = additionFirst.contracts.pop();
+    if (!addition) throw new Error("Missing registered addition");
+    additionFirst.contracts.unshift(addition);
+    for (const target of [modified, removed, reordered, additionFirst])
+      expect(check(target)).toEqual([
+        "Catalog differs from the exact fifteen-authority transition plus registered additions",
+      ]);
+  });
+
+  test("hashes its own copy of the registry bytes", () => {
+    const bytes = new Uint8Array(registryBytes);
+    expect(check(admittedCatalog(), evidence, documents(), bytes)).toEqual([]);
+    bytes[0] = 0x20;
+    expect(check(admittedCatalog(), evidence, documents(), bytes)).toEqual([
+      "Unrecognized post-lock additions registry",
+    ]);
   });
 });

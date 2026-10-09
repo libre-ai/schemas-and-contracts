@@ -3,7 +3,7 @@ import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from "node:fs/promis
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import evidence from "../../docs/reviews/build-brief-missions-specification-lock.json";
-import { specificationLockDocumentPaths } from "./specification-lock";
+import { POST_LOCK_ADDITIONS_PATH, specificationLockDocumentPaths } from "./specification-lock";
 import { readSpecificationLockInputs } from "./specification-lock-inputs";
 
 const script = resolve("tools/quality/check-specification-lock.ts");
@@ -26,6 +26,10 @@ beforeAll(async () => {
       delete row.review;
     }
   }
+  const additions = await readFile(POST_LOCK_ADDITIONS_PATH);
+  await writeFile(join(fixtureRoot, POST_LOCK_ADDITIONS_PATH), additions);
+  for (const addition of JSON.parse(additions.toString("utf8")).additions)
+    catalog.contracts.push(addition.entry);
   await writeFile(join(fixtureRoot, "contracts/catalog.v1.json"), JSON.stringify(catalog));
 });
 
