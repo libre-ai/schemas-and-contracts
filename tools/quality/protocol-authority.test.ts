@@ -54,7 +54,7 @@ describe("protocolAuthorityAnchors", () => {
   });
 
   test("the doctrine anchor is governance, never the archived hub", () => {
-    expect(DOCTRINE_ANCHOR).toBe("libre-ai/governance");
+    expect(DOCTRINE_ANCHOR).toBe("libre-ai/project-governance");
     expect(DOCTRINE_ANCHOR).not.toBe("libre-ai/libre-ai");
   });
 

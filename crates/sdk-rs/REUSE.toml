@@ -2,7 +2,7 @@
 version = 1
 SPDX-PackageName = "sdk-rs"
 SPDX-PackageSupplier = "Libre AI <https://github.com/libre-ai>"
-SPDX-PackageDownloadLocation = "https://github.com/libre-ai/sdk-rs"
+SPDX-PackageDownloadLocation = "https://github.com/libre-ai/schemas-and-contracts"
 
 [[annotations]]
 path = ["**"]
