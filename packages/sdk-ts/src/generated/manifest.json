@@ -312,6 +312,11 @@
 			"declaration": "orchestrator-event.v3.d.ts"
 		},
 		{
+			"schema": "p02-job.v1.schema.json",
+			"schemaSha256": "3a0233ef54f0bc2079badd9e5b043caec3195fea6bcf14994ceb1dbcdee8e822",
+			"declaration": "p02-job.v1.d.ts"
+		},
+		{
 			"schema": "policy-definition.v1.schema.json",
 			"schemaSha256": "3ae56712729cf48bff4a2432343173d5e1f01b2eb612917243816067d4776960",
 			"declaration": "policy-definition.v1.d.ts"

@@ -15,6 +15,20 @@
         "classification": "local",
         "status": "locked"
       }
+    },
+    {
+      "decision": "docs/adr/2026-10-09-p02-job-v1.md",
+      "ownerArbitration": "2026-10-09",
+      "entry": {
+        "id": "p02-job-v1",
+        "kind": "json-schema",
+        "path": "contracts/schemas/p02-job.v1.schema.json",
+        "owners": ["personal-knowledge-workspace"],
+        "consumers": ["personal-knowledge-workspace"],
+        "compatibility": "major-versioned",
+        "classification": "tenant-private",
+        "status": "locked"
+      }
     }
   ]
 }

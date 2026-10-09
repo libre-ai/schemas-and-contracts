@@ -1276,6 +1276,16 @@
       "compatibility": "major-versioned",
       "classification": "local",
       "status": "locked"
+    },
+    {
+      "id": "p02-job-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/p02-job.v1.schema.json",
+      "owners": ["personal-knowledge-workspace"],
+      "consumers": ["personal-knowledge-workspace"],
+      "compatibility": "major-versioned",
+      "classification": "tenant-private",
+      "status": "locked"
     }
   ]
 }
