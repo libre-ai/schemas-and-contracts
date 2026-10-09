@@ -92,7 +92,7 @@ binding before applying a decision.
   documents rather than proves, since the policy lives in the step and no other order is
   realizable.
 - Like the locked vectors, inputs are projections, not schema-complete documents (`"g"` for a
-  digest; `id`, `label`, `missionId` and the like are omitted). Each case still respects the
+  digest, `"o"` for an organization; `id`, `label`, `missionId` and the like are omitted). Each case still respects the
   schema's structural rules; the pure-removal case uses a three-choice policy against a
   two-choice request.
 - `tools/quality/decision-binding.test.ts`, 4 tests: replay of every case; inversion; document
@@ -118,7 +118,9 @@ binding before applying a decision.
   `approved`. The inversion by identifier is closed; the inversion by label is not. Closing it
   requires the policy to carry or bind the labels, which is a change to the locked
   `execution-graph-v1` (a new major), out of this candidate's reach. Until then the issuer must
-  derive labels from the policy and never accept them from a requester.
+  never accept a label supplied by the requester. It takes each label from a source it trusts
+  and maintains itself, keyed by the step's `choiceId` and `outcomeCode`, so that the text
+  shown is fixed by the issuer, never by the party asking.
 - **`other` asymmetry.** The request schema forces `other` → `replan-required`; the policy
   schema does not. A policy mapping `other` to anything else can be bound by no valid request
   (always `decision-policy-mismatch`). This is a liveness problem and belongs to graph
@@ -169,8 +171,15 @@ Both passes ran on fresh clones of the immutable commit, on two distinct models.
 | architecture | **accept-with-findings**, 0 blocking | 6 resolved, 3 partial: candidacy marker, pure removal outside the schema, composition order | Major N1: the `label` is not bound. Declared Not covered with its effect and the issuer's rule; the defect wording is corrected. Minor N2: vectors are projections; stated, and the removal case is made schema-conformant. Minor N3: the `other` asymmetry is declared. Partials: final location and pinning stated; composition order declared. The four published mutations were replayed identically, plus one precedence mutation of the reviewer's own that turns `case[13]` and `case[14]` red. Locked hashes 13 of 13 intact. |
 | security | **accept-with-findings**, 0 blocking | both majors resolved (the digest one as a declared precondition); minors resolved, or declared, or covered by probes | Minor N1: two empty choice lists are bound by the oracle alone; stated as excluded by the schema. Minor N2: the duplicate-step wording was broader than the behavior; reworded. No bypass found among the probes: absent organization, empty steps, `__proto__` and `constructor` ids, kind and step casing, a permuted mapping. |
 
-### Round 3 — documentation and one vector
+### Round 3 — commit `0b18606667b089e626b0290d0214f000d5db0d2d`
 
-Round 3 changes the dossier and makes the pure-removal vector schema-conformant (three-choice
-policy, two-choice request). The oracle and the other vectors are unchanged. Both roles confirm
-on the commit named in the pull request.
+Round 3 changed only the dossier and made the pure-removal vector schema-conformant
+(three-choice policy, two-choice request). The oracle and the other vectors were unchanged.
+
+| Role | Verdict | Disposition |
+| --- | --- | --- |
+| architecture | **accept** | N1, N2 and N3 and the three partials resolved (N1 and the composition order as declared limits). Two nits: `"o"` added to the projection sentence; "no consumer pins the candidate path" stays an instruction, to be enforced at promotion. Tests 4/4 and 3/3, scope limited to the two files. |
+| security | **accept-with-findings**, 0 blocking | N1 and N2 resolved, oracle unchanged. One minor: the issuer rule "derive labels from the policy" was not actionable, since the policy carries no label. Reworded to require a trusted, issuer-maintained source keyed by `choiceId` and `outcomeCode`, never the requester. |
+
+The two round-3 dispositions above change only the wording of this dossier. They were applied
+after both passes and were not re-reviewed.
