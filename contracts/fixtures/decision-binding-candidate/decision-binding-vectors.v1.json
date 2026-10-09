@@ -454,6 +454,10 @@
                   {
                     "choiceId": "reject",
                     "outcomeCode": "rejected"
+                  },
+                  {
+                    "choiceId": "defer",
+                    "outcomeCode": "deferred"
                   }
                 ],
                 "noResponseOutcomeCode": "expired",
@@ -470,6 +474,10 @@
             {
               "choiceId": "approve",
               "consequenceCode": "approved"
+            },
+            {
+              "choiceId": "reject",
+              "consequenceCode": "rejected"
             }
           ],
           "noResponseOutcomeCode": "expired",
