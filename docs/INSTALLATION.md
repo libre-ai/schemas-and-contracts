@@ -15,7 +15,7 @@ For a TypeScript consumer, use a local dependency on the selected package direct
 
 ## Working on this repository
 
-Follow the [shared local composition guide](https://github.com/libre-ai/project-governance/blob/main/docs/LOCAL-COMPOSITION.md) with target `schemas-and-contracts` and the full commit ID to verify. It supplies the pinned governance sibling and exact tools, then installs and checks the workspace. From the prepared repository root, selected checks are:
+Follow the [shared local composition guide](https://github.com/libre-ai/project-governance/blob/HEAD/docs/LOCAL-COMPOSITION.md) with target `schemas-and-contracts` and the full commit ID to verify. It supplies the pinned governance sibling and exact tools, then installs and checks the workspace. From the prepared repository root, selected checks are:
 
 ```sh
 bun run test
