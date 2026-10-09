@@ -4,19 +4,24 @@
 // The locked semantic vectors judge a request against its response only, so a
 // request may declare its own choices, outcome mapping, no-response outcome and
 // required role. This oracle adds the missing check without touching the locked
-// set: a request is bound when it names the graph by digest, names a
-// human-decision step of that graph, and restates that step's policy exactly.
+// set: a request is bound when it names the graph by digest and organization,
+// names a human-decision step of that graph, and restates that step's policy
+// exactly.
+//
+// Preconditions owned by the caller, not checked here: both documents are
+// schema-valid, and the graph is authorized and its digest recomputed from its
+// content (its preimage covers `organizationId` and `steps`).
 
 type JsonRecord = Record<string, unknown>;
 
 export type DecisionBindingOutcome =
-  | "decision-request-bound"
+  | "decision-binding-valid"
   | "graph-binding-mismatch"
   | "step-not-decision"
   | "decision-policy-mismatch";
 
 export const decisionBindingOutcomes = [
-  "decision-request-bound",
+  "decision-binding-valid",
   "graph-binding-mismatch",
   "step-not-decision",
   "decision-policy-mismatch",
@@ -74,14 +79,20 @@ export function evaluateDecisionBinding(vector: unknown): DecisionBindingOutcome
 
   if (
     requireString(request.graphDigest, "request.graphDigest") !==
-    requireString(graph.graphDigest, "graph.graphDigest")
+      requireString(graph.graphDigest, "graph.graphDigest") ||
+    requireString(request.organizationId, "request.organizationId") !==
+      requireString(graph.organizationId, "graph.organizationId")
   ) {
     return "graph-binding-mismatch";
   }
   const stepId = requireString(request.stepId, "request.stepId");
-  const step = requireArray(graph.steps, "graph.steps")
+  const named = requireArray(graph.steps, "graph.steps")
     .map((raw, index) => requireRecord(raw, `graph.steps.${index}`))
-    .find((candidate) => candidate.stepId === stepId);
+    .filter((candidate) => candidate.stepId === stepId);
+  // Two steps with one identifier make the answer depend on array order:
+  // malformed, never resolved by picking one.
+  if (named.length > 1) throw new TypeError(`graph.steps repeats step ${stepId}`);
+  const step = named[0];
   if (step === undefined || step.kind !== "human-decision") return "step-not-decision";
   const policy = requireRecord(step.decisionPolicy, "step.decisionPolicy");
 
@@ -104,7 +115,7 @@ export function evaluateDecisionBinding(vector: unknown): DecisionBindingOutcome
   ) {
     return "decision-policy-mismatch";
   }
-  return "decision-request-bound";
+  return "decision-binding-valid";
 }
 
 function hasExactKeys(record: JsonRecord, expected: readonly string[]): boolean {
@@ -138,8 +149,10 @@ export function decisionBindingDocumentFailures(document: unknown): string[] {
     if (!hasExactKeys(raw, ["domain", "expected", "id", "input"])) {
       failures.push(`${label} has unknown properties`);
     }
-    if (typeof raw.id !== "string" || ids.has(raw.id)) {
-      failures.push(`${label} id is missing or repeated`);
+    if (typeof raw.id !== "string" || !/^decision-binding-[a-z0-9-]{1,111}$/.test(raw.id)) {
+      failures.push(`${label} id is invalid`);
+    } else if (ids.has(raw.id)) {
+      failures.push(`${label} id is repeated`);
     } else {
       ids.add(raw.id);
     }
@@ -157,6 +170,15 @@ export function decisionBindingDocumentFailures(document: unknown): string[] {
       failures.push(`${label} expected outcome is unknown`);
     } else {
       covered.add(raw.expected);
+      // Replays the case, as the locked document checker does: a vector that
+      // contradicts the oracle, or cannot be evaluated, is a document failure.
+      try {
+        if (evaluateDecisionBinding(raw.input) !== raw.expected) {
+          failures.push(`${label} does not replay to its expected outcome`);
+        }
+      } catch {
+        failures.push(`${label} input is structurally invalid`);
+      }
     }
   }
   for (const outcome of decisionBindingOutcomes) {
