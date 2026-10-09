@@ -192,6 +192,11 @@
 			"declaration": "execution-plan-body.v3.d.ts"
 		},
 		{
+			"schema": "execution-plan-body.v4.schema.json",
+			"schemaSha256": "5039c0b2d2eb1a0f5552f9b11e94496570f5e637f248438b45cce2864aa3eae3",
+			"declaration": "execution-plan-body.v4.d.ts"
+		},
+		{
 			"schema": "execution-transfer.v1.schema.json",
 			"schemaSha256": "443ac48dbd9acb006d7d64f570ae41ce99493579289cab05b7085a23f3690b34",
 			"declaration": "execution-transfer.v1.d.ts"

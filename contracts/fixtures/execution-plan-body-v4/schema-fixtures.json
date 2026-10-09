@@ -1,0 +1,406 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "execution-plan-body.v4.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.execution-plan-body.v4",
+        "id": "urn:libre-ai:plan:synthetic-plan-4",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:synthetic-mission-1",
+        "executionGraph": {
+          "id": "urn:libre-ai:graph:synthetic-graph-1",
+          "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "mediaType": "application/schema+json"
+        },
+        "lineageMode": "initial",
+        "successorLineage": null,
+        "requestedGeneration": 1,
+        "decisionSchemaRefs": [
+          {
+            "id": "urn:libre-ai:schema:human-decision-request-v1",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "mediaType": "application/schema+json"
+          },
+          {
+            "id": "urn:libre-ai:schema:human-decision-response-v1",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "mediaType": "application/schema+json"
+          }
+        ],
+        "executorProfileRefs": [
+          {
+            "id": "urn:libre-ai:profile:synthetic-executor-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/schema+json"
+          }
+        ],
+        "acceptanceCriteria": ["criterion_1"],
+        "filesystem": {
+          "readPaths": ["src/**"],
+          "writePaths": ["src/**"],
+          "denyPaths": [".env", "**/.git/**"],
+          "copyIgnoredFiles": false
+        },
+        "budgets": {
+          "maxDurationSeconds": 3600,
+          "maxToolCalls": 100,
+          "maxInputTokens": 100000,
+          "maxOutputTokens": 50000,
+          "maxProcesses": 16,
+          "maxFilesChanged": 100,
+          "maxChangedBytes": 1048576,
+          "maxConcurrentAgents": 3
+        },
+        "network": {
+          "workerMode": "private-gateway-only",
+          "gatewayOrigins": [
+            {
+              "scheme": "https",
+              "host": "models.eu.example",
+              "port": 443
+            }
+          ]
+        },
+        "modelEgress": {
+          "purposeCode": "code_review",
+          "authorizationBasis": "contract",
+          "maximumClassification": "tenant-private",
+          "sourcePaths": ["src/**"],
+          "maxBytesPerRequest": 1048576,
+          "region": "eu",
+          "subprocessors": ["provider_eu"],
+          "zeroDataRetention": true,
+          "trainingAllowed": false,
+          "reuseAllowed": false,
+          "policyDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "harnessProfile": {
+          "id": "urn:libre-ai:profile:synthetic-harness-1",
+          "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mediaType": "application/json"
+        },
+        "workerManifests": [
+          {
+            "id": "urn:libre-ai:manifest:synthetic-worker-1",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "mediaType": "application/json"
+          }
+        ],
+        "evidenceDestinations": [
+          {
+            "id": "urn:libre-ai:artifact:synthetic-proof-destination-1",
+            "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "mediaType": "application/json"
+          }
+        ],
+        "createdAt": "2026-09-10T10:00:00Z",
+        "expiresAt": "2026-09-10T12:00:00Z",
+        "handoffBindingSchemaVersion": "libre-ai.mission-handoff-binding.v1",
+        "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+        "isolation": {
+          "realization": "plan-then-execute",
+          "toolResultDelivery": "opaque-reference",
+          "argumentPolicyAuthority": "agent-harness",
+          "argumentPolicyEvaluation": "per-argument-with-implicit-dependencies",
+          "argumentPolicyRefusal": "fail-closed-terminal"
+        },
+        "steps": [
+          {
+            "stepId": "urn:libre-ai:step:synthetic-extract-1",
+            "role": "quarantine",
+            "tools": [],
+            "inputs": [
+              {
+                "inputId": "incoming_document",
+                "source": {
+                  "kind": "untrusted-content",
+                  "contentRef": {
+                    "id": "urn:libre-ai:artifact:synthetic-inbound-1",
+                    "digest": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+                    "mediaType": "text/plain"
+                  }
+                },
+                "provenance": "untrusted",
+                "delivery": "in-context"
+              }
+            ],
+            "quarantineOutput": {
+              "fields": [
+                {
+                  "name": "request_kind",
+                  "kind": "enum",
+                  "values": ["meeting_request", "invoice", "other"]
+                },
+                {
+                  "name": "known_sender",
+                  "kind": "identifier",
+                  "referential": {
+                    "id": "urn:libre-ai:artifact:synthetic-contacts-1",
+                    "digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                    "mediaType": "application/json"
+                  }
+                },
+                {
+                  "name": "needs_reply",
+                  "kind": "boolean"
+                },
+                {
+                  "name": "attachment_count",
+                  "kind": "integer",
+                  "minimum": 0,
+                  "maximum": 32
+                }
+              ],
+              "failureCodes": ["unreadable", "insufficient_information"]
+            }
+          },
+          {
+            "stepId": "urn:libre-ai:step:synthetic-reply-1",
+            "role": "privileged",
+            "tools": [
+              {
+                "name": "read_file",
+                "access": "read",
+                "effectClass": "none",
+                "argumentPolicyDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "untrustedArgumentAdmissions": [],
+                "maxCalls": 20
+              },
+              {
+                "name": "send_message",
+                "access": "network",
+                "effectClass": "effect",
+                "argumentPolicyDigest": "abababababababababababababababababababababababababababababababab",
+                "untrustedArgumentAdmissions": [
+                  {
+                    "parameter": "recipient",
+                    "sourceStepId": "urn:libre-ai:step:synthetic-extract-1",
+                    "sourceField": "known_sender"
+                  }
+                ],
+                "maxCalls": 1
+              }
+            ],
+            "inputs": [
+              {
+                "inputId": "user_request",
+                "source": {
+                  "kind": "trusted-request"
+                },
+                "provenance": "trusted",
+                "delivery": "in-context"
+              },
+              {
+                "inputId": "extraction",
+                "source": {
+                  "kind": "step-output",
+                  "stepId": "urn:libre-ai:step:synthetic-extract-1"
+                },
+                "provenance": "untrusted",
+                "delivery": "opaque-reference"
+              }
+            ]
+          }
+        ],
+        "bodyDigest": "750870afb22dc735e38bcbc51b65caeeaa2cf096c95f4f7f3d2a796efa8cba6c"
+      },
+      "invalidMutations": [
+        {
+          "name": "quarantine step holding a tool",
+          "path": "/steps/0/tools",
+          "value": [
+            {
+              "name": "read_file",
+              "access": "read",
+              "effectClass": "none",
+              "argumentPolicyDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "untrustedArgumentAdmissions": [],
+              "maxCalls": 20
+            }
+          ]
+        },
+        {
+          "name": "untrusted input in a privileged context",
+          "path": "/steps/1/inputs/1/delivery",
+          "value": "in-context"
+        },
+        {
+          "name": "free-text quarantine field",
+          "path": "/steps/0/quarantineOutput/fields/0",
+          "value": {
+            "name": "summary",
+            "kind": "text"
+          }
+        },
+        {
+          "name": "quarantine step without closed output",
+          "path": "/steps/0/quarantineOutput",
+          "remove": true
+        },
+        {
+          "name": "quarantine output without failure codes",
+          "path": "/steps/0/quarantineOutput/failureCodes",
+          "remove": true
+        },
+        {
+          "name": "failure signalled by free text",
+          "path": "/steps/0/quarantineOutput/failureCodes/0",
+          "value": "The document could not be read because"
+        },
+        {
+          "name": "quarantine output with an explanation field",
+          "path": "/steps/0/quarantineOutput/explanation",
+          "value": "free text"
+        },
+        {
+          "name": "identifier field without referential",
+          "path": "/steps/0/quarantineOutput/fields/1/referential",
+          "remove": true
+        },
+        {
+          "name": "enum field without values",
+          "path": "/steps/0/quarantineOutput/fields/0/values",
+          "value": []
+        },
+        {
+          "name": "integer field without upper bound",
+          "path": "/steps/0/quarantineOutput/fields/3/maximum",
+          "remove": true
+        },
+        {
+          "name": "privileged step with a quarantine output",
+          "path": "/steps/1/quarantineOutput",
+          "value": {
+            "fields": [
+              {
+                "name": "request_kind",
+                "kind": "enum",
+                "values": ["meeting_request", "invoice", "other"]
+              },
+              {
+                "name": "known_sender",
+                "kind": "identifier",
+                "referential": {
+                  "id": "urn:libre-ai:artifact:synthetic-contacts-1",
+                  "digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                  "mediaType": "application/json"
+                }
+              },
+              {
+                "name": "needs_reply",
+                "kind": "boolean"
+              },
+              {
+                "name": "attachment_count",
+                "kind": "integer",
+                "minimum": 0,
+                "maximum": 32
+              }
+            ],
+            "failureCodes": ["unreadable", "insufficient_information"]
+          }
+        },
+        {
+          "name": "argument policy refusal routed to a human decision",
+          "path": "/isolation/argumentPolicyRefusal",
+          "value": "human-decision"
+        },
+        {
+          "name": "argument policy held by the orchestrator",
+          "path": "/isolation/argumentPolicyAuthority",
+          "value": "agent-orchestrator"
+        },
+        {
+          "name": "action-only argument policy",
+          "path": "/isolation/argumentPolicyEvaluation",
+          "value": "per-action"
+        },
+        {
+          "name": "tool result delivered into a model context",
+          "path": "/isolation/toolResultDelivery",
+          "value": "in-context"
+        },
+        {
+          "name": "network tool declared without effect",
+          "path": "/steps/1/tools/1/effectClass",
+          "value": "none"
+        },
+        {
+          "name": "read tool with a disagreeing effect class",
+          "path": "/steps/1/tools/0/effectClass",
+          "value": "effect"
+        },
+        {
+          "name": "untrusted content marked trusted",
+          "path": "/steps/0/inputs/0/provenance",
+          "value": "trusted"
+        },
+        {
+          "name": "step output marked trusted",
+          "path": "/steps/1/inputs/1/provenance",
+          "value": "trusted"
+        },
+        {
+          "name": "tool without an explicit admission list",
+          "path": "/steps/1/tools/0/untrustedArgumentAdmissions",
+          "remove": true
+        },
+        {
+          "name": "untrusted admission without parameter",
+          "path": "/steps/1/tools/1/untrustedArgumentAdmissions/0/parameter",
+          "remove": true
+        },
+        {
+          "name": "code-then-execute realization not yet opened",
+          "path": "/isolation/realization",
+          "value": "code-then-execute"
+        },
+        {
+          "name": "action selector with a quarantine step",
+          "path": "/isolation/realization",
+          "value": "action-selector"
+        },
+        {
+          "name": "repeat threshold declared by the plan",
+          "path": "/repeatThreshold",
+          "value": 3
+        },
+        {
+          "name": "window size declared by a step",
+          "path": "/steps/1/windowSize",
+          "value": 8
+        },
+        {
+          "name": "plan-wide tools list of v3",
+          "path": "/tools",
+          "value": [
+            {
+              "name": "read_file",
+              "access": "read",
+              "effectClass": "none",
+              "argumentPolicyDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "untrustedArgumentAdmissions": [],
+              "maxCalls": 20
+            }
+          ]
+        },
+        {
+          "name": "plan without steps",
+          "path": "/steps",
+          "value": []
+        },
+        {
+          "name": "unknown step role",
+          "path": "/steps/0/role",
+          "value": "observer"
+        },
+        {
+          "name": "previous major",
+          "path": "/schemaVersion",
+          "value": "libre-ai.execution-plan-body.v3"
+        }
+      ]
+    }
+  ]
+}

@@ -1303,6 +1303,23 @@
         "required": ["architecture", "security", "privacy", "cryptography"],
         "dossier": "docs/reviews/tool-invocation-observation-v1-review.md"
       }
+    },
+    {
+      "id": "execution-plan-body-v4",
+      "kind": "json-schema",
+      "path": "contracts/schemas/execution-plan-body.v4.schema.json",
+      "owners": ["missions", "agent-orchestrator"],
+      "consumers": ["missions", "agent-orchestrator", "agent-harness", "sdk-ts", "sdk-rs"],
+      "compatibility": "major-versioned",
+      "classification": "tenant-private",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security"],
+        "dossier": "docs/reviews/execution-plan-body-v4-review.md"
+      }
     }
   ]
 }

@@ -89,6 +89,10 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/tool-invocation-observation-v1/schema-fixtures.json"
     ))
     .expect("tool invocation observation fixture document");
+    let execution_plan_v4_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/execution-plan-body-v4/schema-fixtures.json"
+    ))
+    .expect("execution plan body v4 fixture document");
     let cases = fixtures["cases"]
         .as_array()
         .expect("fixture cases")
@@ -118,6 +122,11 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
             tool_observation_fixtures["cases"]
                 .as_array()
                 .expect("tool invocation observation fixture cases"),
+        )
+        .chain(
+            execution_plan_v4_fixtures["cases"]
+                .as_array()
+                .expect("execution plan body v4 fixture cases"),
         )
         .collect::<Vec<_>>();
     assert_eq!(schema_count, cases.len() + 1);
