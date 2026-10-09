@@ -25,7 +25,7 @@ async function validInput(): Promise<Record<string, unknown>> {
   return structuredClone(valid.input);
 }
 
-describe("candidate decision-binding vectors", () => {
+describe("locked decision-binding vectors", () => {
   test("replay every case with its exact closed outcome", async () => {
     const document = await readDocument();
     expect(decisionBindingDocumentFailures(document)).toEqual([]);

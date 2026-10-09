@@ -1,7 +1,9 @@
 # Lock of the decision-binding vectors
 
 Decision identifier: `urn:libre-ai:decision:2026-10-09-decision-binding-vectors-lock`.
-Status: proposed. The owner's merge of this record is the lock.
+Status: accepted by the owner's merge of the pull request that adds this record (#22), which
+is the lock; governance record ADR-0047 / D69 (`libre-ai/project-governance` #83).
+Owner-arbitration: 2026-10-09 — preparation requested in chat; the merge is the signature
 
 ## Context
 
@@ -31,12 +33,13 @@ round-3 commit `0b18606`. Only the path changes.
 
 | Alternative | Effect |
 | --- | --- |
-| A new catalog kind for vector files | Every file under `contracts/fixtures/` becomes a managed authority that needs a catalog entry, and the checker's root rules change for all of them. The locked `semantic-vectors.v1` and `digest-vectors.v1` would have to be catalogued in the same change. |
+| A new catalog kind for vector files | The checker's managed roots and kind rules change. Whatever root the kind takes, the locked `semantic-vectors.v1` and `digest-vectors.v1` must either be catalogued too, or be the only uncatalogued vector files of the family. Every entry also goes through the pinned post-lock registry (`2026-10-09-catalog-post-lock-additions.md`), so the registry digest changes. The existing `vectors` adjunct (`check-contracts.ts`) does not apply: it is reserved to `kind: "wit"`. |
 | The precedent of the locked family: reviewed hash plus checker gate | The same guard as `semantic-vectors.v1`. Its bytes are pinned by `reviewedAuthorityHashes` in `authorized-execution-lock.test.ts`, and `check-contracts.ts` validates and replays the document. No catalog change. |
 
 The candidate dossier named the first alternative as the expected lock-time act. This record
-selects the second, because it is the form the locked family already uses. Cataloguing vector
-files remains possible later, for every vector file at once.
+selects the second, because it is the form the locked family already uses. The role reviewers
+judged the vector content, not this choice of lock form; the owner's merge signs it. Cataloguing
+vector files remains possible later, for every vector file at once.
 
 ## Decision
 
