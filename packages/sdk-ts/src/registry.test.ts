@@ -124,6 +124,10 @@ const toolObservationFixtureDocument = (await Bun.file(
   "../../contracts/fixtures/tool-invocation-observation-v1/schema-fixtures.json",
 ).json()) as { cases: Fixture[] };
 fixtureDocument.cases.push(...toolObservationFixtureDocument.cases);
+const harnessProfileV3FixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/harness-profile-v3/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...harnessProfileV3FixtureDocument.cases);
 const authorityCatalog = (await Bun.file("../../contracts/catalog.v1.json").json()) as {
   contracts: CatalogEntry[];
 };
