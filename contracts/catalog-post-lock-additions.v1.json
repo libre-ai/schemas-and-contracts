@@ -71,6 +71,27 @@
           "dossier": "docs/reviews/harness-profile-v3-review.md"
         }
       }
+    },
+    {
+      "decision": "docs/adr/2026-10-09-execution-plan-body-v4.md",
+      "ownerArbitration": "2026-10-09",
+      "entry": {
+        "id": "execution-plan-body-v4",
+        "kind": "json-schema",
+        "path": "contracts/schemas/execution-plan-body.v4.schema.json",
+        "owners": ["missions", "agent-orchestrator"],
+        "consumers": ["missions", "agent-orchestrator", "agent-harness", "sdk-ts", "sdk-rs"],
+        "compatibility": "major-versioned",
+        "classification": "tenant-private",
+        "status": "candidate",
+        "review": {
+          "state": "pending-independent-agent-review",
+          "reviewerKind": "agent",
+          "separation": "role-scoped-review-pass",
+          "required": ["architecture", "security"],
+          "dossier": "docs/reviews/execution-plan-body-v4-review.md"
+        }
+      }
     }
   ]
 }

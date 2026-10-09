@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 8 |
-| total | 124 |
+| candidate | 9 |
+| total | 125 |
 
 ## Counts by family
 
@@ -27,7 +27,7 @@ they disagree with this page, this page states the current catalog.
 | biscuit-authority | 2 | 2 | 0 |
 | biscuit-policy | 5 | 5 | 0 |
 | data-policy | 4 | 3 | 1 |
-| json-schema | 91 | 84 | 7 |
+| json-schema | 92 | 84 | 8 |
 | openapi | 13 | 13 | 0 |
 | wit | 9 | 9 | 0 |
 
@@ -59,7 +59,7 @@ they disagree with this page, this page states the current catalog.
 | `retention-policy-v3` | candidate | pending-independent-agent-review | `contracts/data/retention.v3.json` |
 | `retention-policy-v4` | locked | none | `contracts/data/retention.v4.json` |
 
-### json-schema (91)
+### json-schema (92)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -101,6 +101,7 @@ they disagree with this page, this page states the current catalog.
 | `execution-plan-body-v1` | locked | none | `contracts/schemas/execution-plan-body.v1.schema.json` |
 | `execution-plan-body-v2` | locked | none | `contracts/schemas/execution-plan-body.v2.schema.json` |
 | `execution-plan-body-v3` | locked | none | `contracts/schemas/execution-plan-body.v3.schema.json` |
+| `execution-plan-body-v4` | candidate | pending-independent-agent-review | `contracts/schemas/execution-plan-body.v4.schema.json` |
 | `execution-transfer-v1` | locked | none | `contracts/schemas/execution-transfer.v1.schema.json` |
 | `feed-fetch-v1` | locked | none | `contracts/schemas/feed-fetch.v1.schema.json` |
 | `harness-attestation-v1` | locked | none | `contracts/schemas/harness-attestation.v1.schema.json` |
