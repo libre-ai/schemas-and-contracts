@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.libre-ai.fr/schemas/p02-job.v1.schema.json",
+  "title": "Libre AI P02 Worker Job Command or Result v1",
+  "description": "Internal exchange between the P02 API (producer of commands) and the P02 worker (producer of results) through the P02 PostgreSQL job queue. Every string is untrusted data, never instructions.",
+  "oneOf": [{ "$ref": "#/$defs/command" }, { "$ref": "#/$defs/result" }],
+  "$defs": {
+    "base": {
+      "type": "object",
+      "required": ["schemaVersion", "kind", "jobId", "tenantId"],
+      "properties": {
+        "schemaVersion": { "const": "libre-ai.p02-job.v1" },
+        "kind": { "enum": ["command", "result"] },
+        "jobId": { "$ref": "common.v1.schema.json#/$defs/identifier" },
+        "tenantId": { "$ref": "common.v1.schema.json#/$defs/tenantId" }
+      }
+    },
+    "validators": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "etag": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^[\\x20-\\x7E]+$"
+        },
+        "lastModified": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^[\\x20-\\x7E]+$"
+        }
+      }
+    },
+    "fetchSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "sourceId", "url", "bodyKind"],
+      "properties": {
+        "type": { "const": "fetch-source" },
+        "sourceId": { "$ref": "common.v1.schema.json#/$defs/identifier" },
+        "url": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 2048,
+          "pattern": "^https?://[\\x21-\\x2E\\x30-\\x3F\\x41-\\x7E]+(?:/[\\x21-\\x7E]*)?$"
+        },
+        "bodyKind": { "enum": ["feed", "page"] },
+        "validators": { "$ref": "#/$defs/validators" }
+      }
+    },
+    "command": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "schemaVersion",
+            "kind",
+            "jobId",
+            "tenantId",
+            "idempotencyKey",
+            "enqueuedAt",
+            "operation"
+          ],
+          "properties": {
+            "schemaVersion": true,
+            "kind": { "const": "command" },
+            "jobId": true,
+            "tenantId": true,
+            "idempotencyKey": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+            },
+            "enqueuedAt": { "$ref": "common.v1.schema.json#/$defs/timestamp" },
+            "operation": { "$ref": "#/$defs/fetchSource" }
+          }
+        }
+      ]
+    },
+    "bodyDigest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bytes", "blake3"],
+      "properties": {
+        "bytes": { "type": "integer", "minimum": 0, "maximum": 10485760 },
+        "blake3": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+      }
+    },
+    "fetchSourceOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "finalUrl", "httpStatus", "redirects", "notModified"],
+      "properties": {
+        "type": { "const": "fetch-source" },
+        "finalUrl": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 2048,
+          "pattern": "^https?://[\\x21-\\x2E\\x30-\\x3F\\x41-\\x7E]+(?:/[\\x21-\\x7E]*)?$"
+        },
+        "httpStatus": { "type": "integer", "minimum": 100, "maximum": 599 },
+        "redirects": { "type": "integer", "minimum": 0, "maximum": 3 },
+        "notModified": { "type": "boolean" },
+        "etag": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^[\\x20-\\x7E]+$"
+        },
+        "lastModified": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^[\\x20-\\x7E]+$"
+        },
+        "contentType": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[\\x20-\\x7E]+$"
+        },
+        "retryAfter": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024,
+          "pattern": "^[\\x20-\\x7E]+$"
+        },
+        "body": { "$ref": "#/$defs/bodyDigest" }
+      }
+    },
+    "result": {
+      "allOf": [
+        { "$ref": "#/$defs/base" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["schemaVersion", "kind", "jobId", "tenantId", "completedAt", "status"],
+          "properties": {
+            "schemaVersion": true,
+            "kind": { "const": "result" },
+            "jobId": true,
+            "tenantId": true,
+            "completedAt": { "$ref": "common.v1.schema.json#/$defs/timestamp" },
+            "status": { "enum": ["succeeded", "refused", "failed"] },
+            "outcome": { "$ref": "#/$defs/fetchSourceOutcome" },
+            "reasonCode": { "type": "string", "pattern": "^(?:fetch|job)\\.[a-z][a-z0-9_]{0,63}$" }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": { "status": { "const": "succeeded" } },
+            "required": ["status"]
+          },
+          "then": {
+            "type": "object",
+            "properties": { "outcome": true, "reasonCode": false },
+            "required": ["outcome"]
+          },
+          "else": {
+            "type": "object",
+            "properties": { "outcome": false, "reasonCode": true },
+            "required": ["reasonCode"]
+          }
+        }
+      ]
+    }
+  }
+}

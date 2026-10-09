@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "p02-job.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.p02-job.v1",
+        "kind": "command",
+        "jobId": "job-0001",
+        "tenantId": "ten_0123456789abcdef",
+        "idempotencyKey": "fetch:src-example:2026-10-09T08:00:00Z",
+        "enqueuedAt": "2026-10-09T08:00:00Z",
+        "operation": {
+          "type": "fetch-source",
+          "sourceId": "src-example",
+          "url": "https://feeds.example.org/atom.xml",
+          "bodyKind": "feed"
+        }
+      },
+      "invalidMutations": [
+        {
+          "name": "unknown root",
+          "path": "/unexpected",
+          "value": true
+        },
+        {
+          "name": "unknown operation field",
+          "path": "/operation/headers",
+          "value": {}
+        },
+        {
+          "name": "non-http URL",
+          "path": "/operation/url",
+          "value": "file:///etc/passwd"
+        },
+        {
+          "name": "malformed tenant",
+          "path": "/tenantId",
+          "value": "tenant-1"
+        }
+      ]
+    }
+  ]
+}
