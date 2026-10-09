@@ -77,6 +77,10 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/missions-v3/schema-fixtures.json"
     ))
     .expect("Missions fixture document");
+    let signalement_export_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/signalement-local-export-v1/schema-fixtures.json"
+    ))
+    .expect("Signalement local export fixture document");
     let cases = fixtures["cases"]
         .as_array()
         .expect("fixture cases")
@@ -91,6 +95,11 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
             missions_fixtures["cases"]
                 .as_array()
                 .expect("Missions fixture cases"),
+        )
+        .chain(
+            signalement_export_fixtures["cases"]
+                .as_array()
+                .expect("Signalement local export fixture cases"),
         )
         .collect::<Vec<_>>();
     assert_eq!(schema_count, cases.len() + 1);

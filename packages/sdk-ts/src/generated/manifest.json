@@ -417,6 +417,11 @@
 			"declaration": "session-export.v1.d.ts"
 		},
 		{
+			"schema": "signalement-local-export.v1.schema.json",
+			"schemaSha256": "ddb63e43cfa76253079df8b10cb31ee4575927cfc22226d4a7942e4c51d83d0e",
+			"declaration": "signalement-local-export.v1.d.ts"
+		},
+		{
 			"schema": "spec-package.v1.schema.json",
 			"schemaSha256": "2c89d9a7aa9fb086bbf669f6cbdecdfa53615f90a5ee047210cb0335a0d08cd9",
 			"declaration": "spec-package.v1.d.ts"

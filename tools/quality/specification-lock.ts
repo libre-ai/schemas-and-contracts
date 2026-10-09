@@ -7,10 +7,40 @@ import type approvedEvidence from "../../docs/reviews/build-brief-missions-speci
 // cannot broaden the transition or replace their own baseline.
 const EVIDENCE_DIGEST = "39c8bb96a25cf1e5cb6e9d832f2a4f3e44acbf3a47a37b73d3f0b5de75888eb6";
 
+// Entries admitted after the reviewed baseline. The registry is data, but its
+// exact bytes are pinned here: adding an entry requires changing this digest
+// in a reviewed, owner-arbitrated change (ADR 2026-10-09).
+export const POST_LOCK_ADDITIONS_PATH = "contracts/catalog-post-lock-additions.v1.json";
+const POST_LOCK_ADDITIONS_DIGEST =
+  "4c414edd2dab7a3575d14c1db94463a2056ae0ef73070222949d0cb4adcb87db";
+
 export interface SpecificationLockInput {
   targetCatalog: unknown;
   evidence: unknown;
   documents: ReadonlyMap<string, Uint8Array>;
+  postLockAdditions: Uint8Array;
+}
+
+/** Catalog entries the pinned registry appends after the baseline, or null if unrecognized. */
+export function pinnedPostLockAdditions(bytes: Uint8Array): unknown[] | null {
+  // Hash our own copy so a caller buffer mutated after this check changes nothing.
+  const snapshot = new Uint8Array(bytes);
+  if (digest(snapshot) !== POST_LOCK_ADDITIONS_DIGEST) return null;
+  try {
+    const registry: unknown = JSON.parse(
+      new TextDecoder("utf-8", { fatal: true }).decode(snapshot),
+    );
+    if (
+      typeof registry !== "object" ||
+      registry === null ||
+      !("additions" in registry) ||
+      !Array.isArray(registry.additions)
+    )
+      return null;
+    return registry.additions.map((addition: { entry?: unknown }) => addition.entry);
+  } catch {
+    return null;
+  }
 }
 
 function digest(bytes: string | Uint8Array): string {
@@ -76,9 +106,14 @@ export function specificationLockFailures(input: SpecificationLockInput): string
       delete row.review;
     }
   }
+  const additions = pinnedPostLockAdditions(input.postLockAdditions);
+  if (!additions) return ["Unrecognized post-lock additions registry"];
+  // Baseline rows keep every field and position; registered additions follow
+  // in registry order. Nothing else may appear, move or change.
+  baseline.contracts.push(...(additions as typeof baseline.contracts));
   return isDeepStrictEqual(input.targetCatalog, baseline)
     ? []
-    : ["Catalog differs from the exact fifteen-authority transition"];
+    : ["Catalog differs from the exact fifteen-authority transition plus registered additions"];
 }
 
 /** Tooling provenance only: this result must never become a runtime authority. */

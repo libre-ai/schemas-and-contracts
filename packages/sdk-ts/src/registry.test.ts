@@ -112,6 +112,10 @@ const missionsFixtureDocument = (await Bun.file(
   "../../contracts/fixtures/missions-v3/schema-fixtures.json",
 ).json()) as { cases: Fixture[] };
 fixtureDocument.cases.push(...missionsFixtureDocument.cases);
+const signalementExportFixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/signalement-local-export-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...signalementExportFixtureDocument.cases);
 const authorityCatalog = (await Bun.file("../../contracts/catalog.v1.json").json()) as {
   contracts: CatalogEntry[];
 };
