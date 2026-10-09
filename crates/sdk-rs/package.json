@@ -7,9 +7,6 @@
   "engines": {
     "bun": ">=1.4.0"
   },
-  "overrides": {
-    "fast-uri": "4.1.4"
-  },
   "devDependencies": {
     "@libre-ai/governance": "file:../../../project-governance",
     "@biomejs/biome": "2.5.3",

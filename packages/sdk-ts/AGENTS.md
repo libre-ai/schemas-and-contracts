@@ -5,11 +5,11 @@
 TypeScript SDK projection (couche 4) of the Libre AI locked contracts —
 fail-closed validators and generated types. Everything under `schemas/` and
 `src/generated/` is a **verified projection** of the `contracts` authority
-(https://raw.githubusercontent.com/libre-ai/contracts/main/AGENTS.md) at
+(https://raw.githubusercontent.com/libre-ai/schemas-and-contracts/HEAD/AGENTS.md) at
 the revision pinned in `package.json`/`bun.lock` (I-05): byte-exact under
 `bun run generate:check`, never hand-edited, never canonical. The
-`governance` repository
-(https://raw.githubusercontent.com/libre-ai/governance/main/AGENTS.md)
+`project-governance` repository
+(https://raw.githubusercontent.com/libre-ai/project-governance/HEAD/AGENTS.md)
 owns doctrine and the fleet gate template, consumed here as pinned
 reusable workflows and a pinned tooling git-dep.
 

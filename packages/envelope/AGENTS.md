@@ -6,7 +6,7 @@ Integrity envelope for untrusted content, couche 3 kernel (K3) of the
 constellation: content that reaches a model from outside is wrapped as data,
 tagged `trusted:false`, and verified offline via a length-prefixed
 HMAC-SHA256 before it is ever rendered as instruction.
-Doctrine lives upstream: https://raw.githubusercontent.com/libre-ai/governance/main/AGENTS.md
+Doctrine lives upstream: https://raw.githubusercontent.com/libre-ai/project-governance/HEAD/AGENTS.md
 
 ## Boundaries
 

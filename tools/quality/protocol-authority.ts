@@ -13,7 +13,7 @@
  */
 
 /** Doctrine documents stayed with the doctrine, not with a product. */
-export const DOCTRINE_ANCHOR = "libre-ai/governance";
+export const DOCTRINE_ANCHOR = "libre-ai/project-governance";
 
 const APPLICATION_DIRECTORY = /^apps\/([a-z0-9][a-z0-9-]*)$/;
 const APPLICATION_DOCUMENT = /^docs\/apps\/([a-z0-9][a-z0-9-]*)\.md$/;
