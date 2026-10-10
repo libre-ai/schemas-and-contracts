@@ -97,6 +97,10 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/execution-plan-body-v4/schema-fixtures.json"
     ))
     .expect("execution plan body v4 fixture document");
+    let execution_authorization_v4_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/execution-authorization-v4/schema-fixtures.json"
+    ))
+    .expect("execution authorization v4 fixture document");
     let curated_item_export_v3_fixtures: Value = serde_json::from_str(include_str!(
         "../../../contracts/fixtures/curated-item-export-v3/schema-fixtures.json"
     ))
@@ -144,6 +148,11 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
             execution_plan_v4_fixtures["cases"]
                 .as_array()
                 .expect("execution plan body v4 fixture cases"),
+        )
+        .chain(
+            execution_authorization_v4_fixtures["cases"]
+                .as_array()
+                .expect("execution authorization v4 fixture cases"),
         )
         .chain(
             curated_item_export_v3_fixtures["cases"]

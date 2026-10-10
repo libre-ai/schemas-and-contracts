@@ -1339,6 +1339,23 @@
       }
     },
     {
+      "id": "execution-authorization-v4",
+      "kind": "json-schema",
+      "path": "contracts/schemas/execution-authorization.v4.schema.json",
+      "owners": ["missions"],
+      "consumers": ["agent-orchestrator", "authz-biscuit", "sdk-ts", "sdk-rs"],
+      "compatibility": "major-versioned",
+      "classification": "tenant-private",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security"],
+        "dossier": "docs/reviews/execution-authorization-v4-review.md"
+      }
+    },
+    {
       "id": "curated-item-export-v3",
       "kind": "json-schema",
       "path": "contracts/schemas/curated-item-export.v3.schema.json",

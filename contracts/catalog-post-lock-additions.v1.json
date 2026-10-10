@@ -94,6 +94,27 @@
       }
     },
     {
+      "decision": "docs/adr/2026-10-10-execution-authorization-v4.md",
+      "ownerArbitration": "2026-10-10",
+      "entry": {
+        "id": "execution-authorization-v4",
+        "kind": "json-schema",
+        "path": "contracts/schemas/execution-authorization.v4.schema.json",
+        "owners": ["missions"],
+        "consumers": ["agent-orchestrator", "authz-biscuit", "sdk-ts", "sdk-rs"],
+        "compatibility": "major-versioned",
+        "classification": "tenant-private",
+        "status": "candidate",
+        "review": {
+          "state": "pending-independent-agent-review",
+          "reviewerKind": "agent",
+          "separation": "role-scoped-review-pass",
+          "required": ["architecture", "security"],
+          "dossier": "docs/reviews/execution-authorization-v4-review.md"
+        }
+      }
+    },
+    {
       "decision": "docs/adr/2026-10-10-export-digests-i10.md",
       "ownerArbitration": "2026-10-10",
       "entry": {

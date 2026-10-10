@@ -177,6 +177,11 @@
 			"declaration": "execution-authorization.v3.d.ts"
 		},
 		{
+			"schema": "execution-authorization.v4.schema.json",
+			"schemaSha256": "5b4c295d644d8a787af1f8e18ca0bd3df1ad9fbd3d65f649a5023371a47a22e2",
+			"declaration": "execution-authorization.v4.d.ts"
+		},
+		{
 			"schema": "execution-graph.v1.schema.json",
 			"schemaSha256": "fb1abf6a75bfc4890e5c08acf43418dfc03719a85944d881baca7da7c3f153b6",
 			"declaration": "execution-graph.v1.d.ts"

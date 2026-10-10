@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 11 |
-| total | 127 |
+| candidate | 12 |
+| total | 128 |
 
 ## Counts by family
 
@@ -27,7 +27,7 @@ they disagree with this page, this page states the current catalog.
 | biscuit-authority | 2 | 2 | 0 |
 | biscuit-policy | 5 | 5 | 0 |
 | data-policy | 4 | 3 | 1 |
-| json-schema | 94 | 84 | 10 |
+| json-schema | 95 | 84 | 11 |
 | openapi | 13 | 13 | 0 |
 | wit | 9 | 9 | 0 |
 
@@ -59,7 +59,7 @@ they disagree with this page, this page states the current catalog.
 | `retention-policy-v3` | candidate | pending-independent-agent-review | `contracts/data/retention.v3.json` |
 | `retention-policy-v4` | locked | none | `contracts/data/retention.v4.json` |
 
-### json-schema (94)
+### json-schema (95)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -98,6 +98,7 @@ they disagree with this page, this page states the current catalog.
 | `execution-authorization-v1` | locked | none | `contracts/schemas/execution-authorization.v1.schema.json` |
 | `execution-authorization-v2` | locked | none | `contracts/schemas/execution-authorization.v2.schema.json` |
 | `execution-authorization-v3` | locked | none | `contracts/schemas/execution-authorization.v3.schema.json` |
+| `execution-authorization-v4` | candidate | pending-independent-agent-review | `contracts/schemas/execution-authorization.v4.schema.json` |
 | `execution-graph-v1` | locked | none | `contracts/schemas/execution-graph.v1.schema.json` |
 | `execution-plan-body-v1` | locked | none | `contracts/schemas/execution-plan-body.v1.schema.json` |
 | `execution-plan-body-v2` | locked | none | `contracts/schemas/execution-plan-body.v2.schema.json` |
