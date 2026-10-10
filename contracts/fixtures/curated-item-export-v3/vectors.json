@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "libre-ai.curated-item-export-vectors.v3",
+  "digests": [
+    {
+      "name": "empty export digest over the RFC 8785 form without digest",
+      "unsignedExport": {
+        "schemaVersion": "libre-ai.curated-item-export.v3",
+        "tenantId": "ten_1234567890abcdef",
+        "exportedAt": "2026-10-10T00:00:00Z",
+        "items": []
+      },
+      "expectedDigest": "7bbe3375e6d1ddc7ee72a96416ade72de50c1cf2cabbbe76aa715d9d32448b5b"
+    },
+    {
+      "name": "one-entry export digest over the RFC 8785 form without digest",
+      "unsignedExport": {
+        "schemaVersion": "libre-ai.curated-item-export.v3",
+        "tenantId": "ten_1234567890abcdef",
+        "exportedAt": "2026-10-10T00:00:00Z",
+        "items": [
+          {
+            "id": "urn:libre-ai:item:item-1",
+            "sourceId": "urn:libre-ai:source:feed-1",
+            "sourceUrl": "https://example.org/feed",
+            "title": "Item",
+            "normalizedDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "decision": "retain",
+            "ruleSetId": "urn:libre-ai:rules:radar-1",
+            "ruleSetVersion": 1,
+            "decidedAt": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      "expectedDigest": "8aceb1fd439b5dabc3fac4ece87c19e669a960a4d5decf7f3afa652433753850"
+    }
+  ],
+  "imports": [
+    {
+      "name": "compact export with its digest is importable",
+      "raw": "{\"schemaVersion\":\"libre-ai.curated-item-export.v3\",\"tenantId\":\"ten_1234567890abcdef\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"items\":[{\"id\":\"urn:libre-ai:item:item-1\",\"sourceId\":\"urn:libre-ai:source:feed-1\",\"sourceUrl\":\"https://example.org/feed\",\"title\":\"Item\",\"normalizedDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"decision\":\"retain\",\"ruleSetId\":\"urn:libre-ai:rules:radar-1\",\"ruleSetVersion\":1,\"decidedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"8aceb1fd439b5dabc3fac4ece87c19e669a960a4d5decf7f3afa652433753850\"}",
+      "expected": "export-importable",
+      "failures": []
+    },
+    {
+      "name": "reordered members and whitespace are importable",
+      "raw": "{\n  \"digest\": \"8aceb1fd439b5dabc3fac4ece87c19e669a960a4d5decf7f3afa652433753850\",\n  \"items\": [{\"id\":\"urn:libre-ai:item:item-1\",\"sourceId\":\"urn:libre-ai:source:feed-1\",\"sourceUrl\":\"https://example.org/feed\",\"title\":\"Item\",\"normalizedDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"decision\":\"retain\",\"ruleSetId\":\"urn:libre-ai:rules:radar-1\",\"ruleSetVersion\":1,\"decidedAt\":\"2026-10-10T00:00:00Z\"}],\n  \"exportedAt\": \"2026-10-10T00:00:00Z\",\n  \"tenantId\": \"ten_1234567890abcdef\",\n  \"schemaVersion\": \"libre-ai.curated-item-export.v3\"\n}\n",
+      "expected": "export-importable",
+      "failures": []
+    },
+    {
+      "name": "one flipped digest nibble is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.curated-item-export.v3\",\"tenantId\":\"ten_1234567890abcdef\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"items\":[{\"id\":\"urn:libre-ai:item:item-1\",\"sourceId\":\"urn:libre-ai:source:feed-1\",\"sourceUrl\":\"https://example.org/feed\",\"title\":\"Item\",\"normalizedDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"decision\":\"retain\",\"ruleSetId\":\"urn:libre-ai:rules:radar-1\",\"ruleSetVersion\":1,\"decidedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"8aceb1fd439b5dabc3fac4ece87c19e669a960a4d5decf7f3afa652433753851\"}",
+      "expected": "export-refused",
+      "failures": ["export.digest_mismatch"]
+    },
+    {
+      "name": "content changed under a kept digest is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.curated-item-export.v3\",\"tenantId\":\"ten_1234567890abcdef\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"items\":[{\"id\":\"urn:libre-ai:item:item-1\",\"sourceId\":\"urn:libre-ai:source:feed-1\",\"sourceUrl\":\"https://example.org/feed\",\"title\":\"Item\",\"normalizedDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"decision\":\"reject\",\"ruleSetId\":\"urn:libre-ai:rules:radar-1\",\"ruleSetVersion\":1,\"decidedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"8aceb1fd439b5dabc3fac4ece87c19e669a960a4d5decf7f3afa652433753850\"}",
+      "expected": "export-refused",
+      "failures": ["export.digest_mismatch"]
+    },
+    {
+      "name": "every entry dropped under a kept digest is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.curated-item-export.v3\",\"tenantId\":\"ten_1234567890abcdef\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"items\":[],\"digest\":\"8aceb1fd439b5dabc3fac4ece87c19e669a960a4d5decf7f3afa652433753850\"}",
+      "expected": "export-refused",
+      "failures": ["export.digest_mismatch"]
+    },
+    {
+      "name": "duplicate member masking a change is refused before parsing",
+      "raw": "{\"schemaVersion\":\"libre-ai.curated-item-export.v3\",\"tenantId\":\"ten_1234567890abcdef\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"items\":[{\"id\":\"urn:libre-ai:item:item-1\",\"sourceId\":\"urn:libre-ai:source:feed-1\",\"sourceUrl\":\"https://example.org/feed\",\"title\":\"Item\",\"normalizedDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"decision\":\"reject\",\"decision\":\"retain\",\"ruleSetId\":\"urn:libre-ai:rules:radar-1\",\"ruleSetVersion\":1,\"decidedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"8aceb1fd439b5dabc3fac4ece87c19e669a960a4d5decf7f3afa652433753850\"}",
+      "expected": "export-refused",
+      "failures": ["export.json_not_strict"]
+    },
+    {
+      "name": "export without digest is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.curated-item-export.v3\",\"tenantId\":\"ten_1234567890abcdef\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"items\":[{\"id\":\"urn:libre-ai:item:item-1\",\"sourceId\":\"urn:libre-ai:source:feed-1\",\"sourceUrl\":\"https://example.org/feed\",\"title\":\"Item\",\"normalizedDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"decision\":\"retain\",\"ruleSetId\":\"urn:libre-ai:rules:radar-1\",\"ruleSetVersion\":1,\"decidedAt\":\"2026-10-10T00:00:00Z\"}]}",
+      "expected": "export-refused",
+      "failures": ["export.schema_invalid"]
+    },
+    {
+      "name": "uppercase digest is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.curated-item-export.v3\",\"tenantId\":\"ten_1234567890abcdef\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"items\":[{\"id\":\"urn:libre-ai:item:item-1\",\"sourceId\":\"urn:libre-ai:source:feed-1\",\"sourceUrl\":\"https://example.org/feed\",\"title\":\"Item\",\"normalizedDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"decision\":\"retain\",\"ruleSetId\":\"urn:libre-ai:rules:radar-1\",\"ruleSetVersion\":1,\"decidedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"8ACEB1FD439B5DABC3FAC4ECE87C19E669A960A4D5DECF7F3AFA652433753850\"}",
+      "expected": "export-refused",
+      "failures": ["export.schema_invalid"]
+    }
+  ]
+}

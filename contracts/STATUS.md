@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 10 |
-| total | 126 |
+| candidate | 12 |
+| total | 128 |
 
 ## Counts by family
 
@@ -27,7 +27,7 @@ they disagree with this page, this page states the current catalog.
 | biscuit-authority | 2 | 2 | 0 |
 | biscuit-policy | 5 | 5 | 0 |
 | data-policy | 4 | 3 | 1 |
-| json-schema | 93 | 84 | 9 |
+| json-schema | 95 | 84 | 11 |
 | openapi | 13 | 13 | 0 |
 | wit | 9 | 9 | 0 |
 
@@ -59,7 +59,7 @@ they disagree with this page, this page states the current catalog.
 | `retention-policy-v3` | candidate | pending-independent-agent-review | `contracts/data/retention.v3.json` |
 | `retention-policy-v4` | locked | none | `contracts/data/retention.v4.json` |
 
-### json-schema (93)
+### json-schema (95)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -87,6 +87,7 @@ they disagree with this page, this page states the current catalog.
 | `correction-record-v1` | locked | none | `contracts/schemas/correction-record.v1.schema.json` |
 | `curated-item-export-v1` | locked | none | `contracts/schemas/curated-item-export.v1.schema.json` |
 | `curated-item-export-v2` | locked | none | `contracts/schemas/curated-item-export.v2.schema.json` |
+| `curated-item-export-v3` | candidate | pending-independent-agent-review | `contracts/schemas/curated-item-export.v3.schema.json` |
 | `curation-rule-set-v1` | locked | none | `contracts/schemas/curation-rule-set.v1.schema.json` |
 | `curation-rule-set-v2` | locked | none | `contracts/schemas/curation-rule-set.v2.schema.json` |
 | `deletion-receipt-v1` | locked | none | `contracts/schemas/deletion-receipt.v1.schema.json` |
@@ -136,6 +137,7 @@ they disagree with this page, this page states the current catalog.
 | `policy-need-v1` | locked | none | `contracts/schemas/policy-need.v1.schema.json` |
 | `policy-need-v2` | locked | none | `contracts/schemas/policy-need.v2.schema.json` |
 | `practice-progress-export-v1` | locked | none | `contracts/schemas/practice-progress-export.v1.schema.json` |
+| `practice-progress-export-v2` | candidate | pending-independent-agent-review | `contracts/schemas/practice-progress-export.v2.schema.json` |
 | `problem-details-v1` | locked | none | `contracts/schemas/problem-details.v1.schema.json` |
 | `public-projection-v1` | locked | none | `contracts/schemas/public-projection.v1.schema.json` |
 | `public-vote-dataset-v1` | locked | none | `contracts/schemas/public-vote-dataset.v1.schema.json` |

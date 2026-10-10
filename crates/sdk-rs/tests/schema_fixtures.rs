@@ -101,6 +101,14 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/execution-authorization-v4/schema-fixtures.json"
     ))
     .expect("execution authorization v4 fixture document");
+    let curated_item_export_v3_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/curated-item-export-v3/schema-fixtures.json"
+    ))
+    .expect("curated item export v3 fixture document");
+    let practice_progress_export_v2_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/practice-progress-export-v2/schema-fixtures.json"
+    ))
+    .expect("practice progress export v2 fixture document");
     let cases = fixtures["cases"]
         .as_array()
         .expect("fixture cases")
@@ -145,6 +153,16 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
             execution_authorization_v4_fixtures["cases"]
                 .as_array()
                 .expect("execution authorization v4 fixture cases"),
+        )
+        .chain(
+            curated_item_export_v3_fixtures["cases"]
+                .as_array()
+                .expect("curated item export v3 fixture cases"),
+        )
+        .chain(
+            practice_progress_export_v2_fixtures["cases"]
+                .as_array()
+                .expect("practice progress export v2 fixture cases"),
         )
         .collect::<Vec<_>>();
     assert_eq!(schema_count, cases.len() + 1);

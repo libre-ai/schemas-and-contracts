@@ -113,6 +113,48 @@
           "dossier": "docs/reviews/execution-authorization-v4-review.md"
         }
       }
+    },
+    {
+      "decision": "docs/adr/2026-10-10-export-digests-i10.md",
+      "ownerArbitration": "2026-10-10",
+      "entry": {
+        "id": "curated-item-export-v3",
+        "kind": "json-schema",
+        "path": "contracts/schemas/curated-item-export.v3.schema.json",
+        "owners": ["radar", "specialized-rust"],
+        "consumers": ["radar", "radar-engine"],
+        "compatibility": "major-versioned",
+        "classification": "personal",
+        "status": "candidate",
+        "review": {
+          "state": "pending-independent-agent-review",
+          "reviewerKind": "agent",
+          "separation": "role-scoped-review-pass",
+          "required": ["architecture", "security", "cryptography", "privacy"],
+          "dossier": "docs/reviews/export-digests-i10-review.md"
+        }
+      }
+    },
+    {
+      "decision": "docs/adr/2026-10-10-export-digests-i10.md",
+      "ownerArbitration": "2026-10-10",
+      "entry": {
+        "id": "practice-progress-export-v2",
+        "kind": "json-schema",
+        "path": "contracts/schemas/practice-progress-export.v2.schema.json",
+        "owners": ["practices"],
+        "consumers": ["practices"],
+        "compatibility": "major-versioned",
+        "classification": "personal",
+        "status": "candidate",
+        "review": {
+          "state": "pending-independent-agent-review",
+          "reviewerKind": "agent",
+          "separation": "role-scoped-review-pass",
+          "required": ["architecture", "security", "cryptography", "privacy"],
+          "dossier": "docs/reviews/export-digests-i10-review.md"
+        }
+      }
     }
   ]
 }
