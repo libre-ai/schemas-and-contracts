@@ -608,6 +608,20 @@ if (
 ) {
   failures.push("execution-plan-body-v4: invalid separate schema fixture inventory");
 } else fixtureCases.push(...(executionPlanV4Fixtures.cases as FixtureCase[]));
+// Export majors carrying a whole-export digest (I-10, ADR-0049).
+for (const exportMajor of ["curated-item-export-v3", "practice-progress-export-v2"]) {
+  const exportFixtures = await Bun.file(
+    `contracts/fixtures/${exportMajor}/schema-fixtures.json`,
+  ).json();
+  if (
+    !isRecord(exportFixtures) ||
+    exportFixtures.schemaVersion !== "libre-ai.schema-fixtures.v1" ||
+    !Array.isArray(exportFixtures.cases) ||
+    exportFixtures.cases.length !== 1
+  ) {
+    failures.push(`${exportMajor}: invalid separate schema fixture inventory`);
+  } else fixtureCases.push(...(exportFixtures.cases as FixtureCase[]));
+}
 
 if (fixtureCases.length === 0)
   failures.push("contracts/fixtures/schema-fixtures.v1.json: no fixtures");

@@ -132,6 +132,12 @@ const executionPlanV4FixtureDocument = (await Bun.file(
   "../../contracts/fixtures/execution-plan-body-v4/schema-fixtures.json",
 ).json()) as { cases: Fixture[] };
 fixtureDocument.cases.push(...executionPlanV4FixtureDocument.cases);
+for (const exportMajor of ["curated-item-export-v3", "practice-progress-export-v2"]) {
+  const exportFixtureDocument = (await Bun.file(
+    `../../contracts/fixtures/${exportMajor}/schema-fixtures.json`,
+  ).json()) as { cases: Fixture[] };
+  fixtureDocument.cases.push(...exportFixtureDocument.cases);
+}
 const authorityCatalog = (await Bun.file("../../contracts/catalog.v1.json").json()) as {
   contracts: CatalogEntry[];
 };

@@ -1337,6 +1337,40 @@
         "required": ["architecture", "security"],
         "dossier": "docs/reviews/execution-plan-body-v4-review.md"
       }
+    },
+    {
+      "id": "curated-item-export-v3",
+      "kind": "json-schema",
+      "path": "contracts/schemas/curated-item-export.v3.schema.json",
+      "owners": ["radar", "specialized-rust"],
+      "consumers": ["radar", "radar-engine"],
+      "compatibility": "major-versioned",
+      "classification": "personal",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography", "privacy"],
+        "dossier": "docs/reviews/export-digests-i10-review.md"
+      }
+    },
+    {
+      "id": "practice-progress-export-v2",
+      "kind": "json-schema",
+      "path": "contracts/schemas/practice-progress-export.v2.schema.json",
+      "owners": ["practices"],
+      "consumers": ["practices"],
+      "compatibility": "major-versioned",
+      "classification": "personal",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography", "privacy"],
+        "dossier": "docs/reviews/export-digests-i10-review.md"
+      }
     }
   ]
 }

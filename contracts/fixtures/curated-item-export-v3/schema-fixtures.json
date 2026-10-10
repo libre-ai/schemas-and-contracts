@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "curated-item-export.v3.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.curated-item-export.v3",
+        "tenantId": "ten_1234567890abcdef",
+        "exportedAt": "2026-10-10T00:00:00Z",
+        "items": [
+          {
+            "id": "urn:libre-ai:item:item-1",
+            "sourceId": "urn:libre-ai:source:feed-1",
+            "sourceUrl": "https://example.org/feed",
+            "title": "Item",
+            "normalizedDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "decision": "retain",
+            "ruleSetId": "urn:libre-ai:rules:radar-1",
+            "ruleSetVersion": 1,
+            "decidedAt": "2026-10-10T00:00:00Z"
+          }
+        ],
+        "digest": "8aceb1fd439b5dabc3fac4ece87c19e669a960a4d5decf7f3afa652433753850"
+      },
+      "invalidMutations": [
+        {
+          "name": "curated export without its export digest",
+          "path": "/digest",
+          "remove": true
+        },
+        {
+          "name": "curated export with a null export digest",
+          "path": "/digest",
+          "value": null
+        },
+        {
+          "name": "curated export with an uppercase export digest",
+          "path": "/digest",
+          "value": "8ACEB1FD439B5DABC3FAC4ECE87C19E669A960A4D5DECF7F3AFA652433753850"
+        },
+        {
+          "name": "curated export with a truncated export digest",
+          "path": "/digest",
+          "value": "8aceb1fd439b5dabc3fac4ece87c19e669a960a4d5decf7f3afa65243375385"
+        },
+        {
+          "name": "curated export claiming the previous major",
+          "path": "/schemaVersion",
+          "value": "libre-ai.curated-item-export.v2"
+        },
+        {
+          "name": "curated export without tenant",
+          "path": "/tenantId",
+          "remove": true
+        },
+        {
+          "name": "curated export with a credential-bearing source URL",
+          "path": "/items/0/sourceUrl",
+          "value": "https://user:secret@example.org/feed"
+        },
+        {
+          "name": "curated export with an undeclared signature member",
+          "path": "/signature",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ]
+    }
+  ]
+}
