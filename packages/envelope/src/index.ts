@@ -170,14 +170,26 @@ export interface VerifiedEnvelope {
  * model-facing path, which escapes the guard delimiters (architecture review
  * A-03). `envelope.integrity.keyId` is informational: the caller selects the
  * key, so keyId is not re-verified here (it becomes binding under the Ed25519
- * upgrade — crypto review C-01). The `mac` shape is assumed schema-validated
- * upstream (`envelope.v1.schema.json`); a malformed mac still fails closed
- * (crypto review C-02).
+ * upgrade — crypto review C-01). keyId is deliberately NOT in the MAC'd bytes:
+ * adding it changes the signed format of `libre-ai.envelope.v1`, which is a new
+ * contract version, not a hardening of this one; a relabelled keyId therefore
+ * still verifies under the key the caller passes (pinned by a test). The `mac`
+ * shape is assumed schema-validated upstream (`envelope.v1.schema.json`); a
+ * malformed mac still fails closed (crypto review C-02).
  */
 export function verifyEnvelope(envelope: UntrustedEnvelope, key: EnvelopeKey): VerifiedEnvelope {
-  // A forged trusted flag or schema version can never verify: the MAC is
-  // computed over the constants, so any deviation changes the expected MAC.
+  // A forged trusted flag or schema version can never verify, on two layers:
+  // this explicit refusal, and the MAC computed over the constants. The
+  // explicit check is what keeps a rollback refused if the MAC ever came to be
+  // computed over the declared version (anyone holding the shared HMAC key can
+  // MAC another version); the rollback tests pin the pair.
   if (envelope.trusted !== false || envelope.schemaVersion !== ENVELOPE_SCHEMA_VERSION) {
+    throw new EnvelopeIntegrityError();
+  }
+  // `alg` is not in the canonical bytes, so the MAC alone cannot detect a
+  // swapped algorithm label. v1 knows exactly one algorithm: refuse any other
+  // fail-closed, so no future verifier can be steered by a downgraded label.
+  if (envelope.integrity.alg !== "HMAC-SHA256") {
     throw new EnvelopeIntegrityError();
   }
   // The source enum is what lets renderGuarded interpolate `source` into the

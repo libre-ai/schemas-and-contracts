@@ -90,6 +90,87 @@ describe("verifyEnvelope", () => {
   });
 });
 
+/**
+ * Recompute a VALID MAC with the test key over an arbitrary schema version,
+ * reproducing the length-prefixed canonical serialization of index.ts. Anyone
+ * holding the shared HMAC key (HMAC proves integrity, not origin) can mint such
+ * an envelope, so refusing another version must not rest on a MAC mismatch.
+ */
+function macForVersion(schemaVersion: string, env: UntrustedEnvelope): string {
+  const encoder = new TextEncoder();
+  const fields = [
+    schemaVersion,
+    "false",
+    env.source,
+    env.label === undefined ? "0" : "1",
+    env.label ?? "",
+    env.content,
+    env.capturedAt,
+  ];
+  const canonical = Buffer.concat(
+    fields.map((field) => {
+      const bytes = encoder.encode(field);
+      return Buffer.concat([encoder.encode(`${bytes.length}:`), bytes]);
+    }),
+  );
+  return createHmac("sha256", KEY.secret).update(canonical).digest("base64url");
+}
+
+describe("version rollback guards (threat triage, threat 4)", () => {
+  test("the MAC helper reproduces the v1 MAC, so the forged MACs below are valid", () => {
+    // Guards the forgery itself: without it, a helper drift would let the
+    // rollback tests pass on a mere MAC mismatch and prove nothing.
+    const env = wrapUntrusted(INPUT, KEY);
+    expect(macForVersion(ENVELOPE_SCHEMA_VERSION, env)).toBe(env.integrity.mac);
+  });
+
+  test.each([
+    "libre-ai.envelope.v0",
+    "libre-ai.envelope.v2",
+  ])("refuses schemaVersion %s even with a MAC recomputed over that version", (version) => {
+    const env = wrapUntrusted(INPUT, KEY);
+    const forged = {
+      ...env,
+      schemaVersion: version,
+      integrity: { ...env.integrity, mac: macForVersion(version, env) },
+    } as unknown as UntrustedEnvelope;
+    expect(() => verifyEnvelope(forged, KEY)).toThrow(EnvelopeIntegrityError);
+    expect(() => renderGuarded(forged, KEY)).toThrow(EnvelopeIntegrityError);
+  });
+
+  test.each([
+    "HMAC-SHA1",
+    "HMAC-SHA512",
+    "none",
+    "",
+  ])("refuses integrity.alg %p even when the MAC itself is valid", (alg) => {
+    // `alg` is not in the canonical bytes, so the untouched MAC still matches:
+    // only an explicit alg check refuses this envelope.
+    const env = wrapUntrusted(INPUT, KEY);
+    const forged = {
+      ...env,
+      integrity: { ...env.integrity, alg },
+    } as unknown as UntrustedEnvelope;
+    expect(() => verifyEnvelope(forged, KEY)).toThrow(EnvelopeIntegrityError);
+    expect(() => renderGuarded(forged, KEY)).toThrow(EnvelopeIntegrityError);
+  });
+
+  test("keyId is NOT bound to the MAC: a relabelled keyId still verifies (frozen v1 behaviour)", () => {
+    // Pins the envelope.v1 contract documented on verifyEnvelope: the caller
+    // selects the key and keyId is informational, outside the canonical bytes.
+    // Binding it changes the signed format, hence a new contract version: if
+    // this test turns red, the change is a contract change, not a fix.
+    const env = wrapUntrusted(INPUT, KEY);
+    const relabelled: UntrustedEnvelope = {
+      ...env,
+      integrity: { ...env.integrity, keyId: OTHER_KEY.id },
+    };
+    expect(verifyEnvelope(relabelled, KEY).content).toBe(INPUT.content);
+    // The key the caller passes still decides, whatever keyId claims.
+    expect(() => verifyEnvelope(relabelled, OTHER_KEY)).toThrow(EnvelopeIntegrityError);
+  });
+});
+
 describe("renderGuarded", () => {
   // K4 review of f49fc18: renderGuarded's comment cites the closed enum as the
   // reason `source` needs no escaping, but the enum was only checked in
