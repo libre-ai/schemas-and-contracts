@@ -28,7 +28,7 @@
     "check:bun:runtime": "bun node_modules/@libre-ai/governance/tools/quality/check-bun-minimum.ts",
     "check:bun": "bun run check:bun:runtime && bun node_modules/@libre-ai/governance/tools/quality/check-bun-manifests.ts",
     "check:toolchain": "bun run check:bun && bun node_modules/@libre-ai/governance/tools/quality/check-toolchain.ts",
-    "check:contracts": "bun run check:bun:runtime && bun tools/quality/check-contracts.ts && bun run check:build-brief && bun run check:build-brief-storage && bun run check:missions-v3 && bun run check:candidate-protocol && bun run check:specification-lock && bun run check:signalement-export && bun run check:p02-job && bun run check:tool-invocation-observation && bun run check:harness-profile-v3 && bun run check:execution-plan-body-v4 && bun run check:mls-sender-authentication",
+    "check:contracts": "bun run check:bun:runtime && bun tools/quality/check-contracts.ts && bun run check:build-brief && bun run check:build-brief-storage && bun run check:missions-v3 && bun run check:candidate-protocol && bun run check:specification-lock && bun run check:signalement-export && bun run check:p02-job && bun run check:tool-invocation-observation && bun run check:harness-profile-v3 && bun run check:execution-plan-body-v4 && bun run check:mls-sender-authentication && bun run check:execution-authorization-v4",
     "check:catalog-status": "bun run check:bun:runtime && bun tools/quality/catalog-status-page.ts --check",
     "check:secret-scan": "bun run check:bun:runtime && bun node_modules/@libre-ai/governance/tools/quality/check-secret-scan.ts",
     "check:personal-data": "bun run check:bun:runtime && bun node_modules/@libre-ai/governance/tools/quality/check-personal-data-boundary.ts",
@@ -50,6 +50,7 @@
     "check:harness-profile-v3": "bun run check:bun:runtime && bun test tools/quality/harness-profile-v3.test.ts",
     "check:execution-plan-body-v4": "bun run check:bun:runtime && bun test tools/quality/execution-plan-body-v4.test.ts",
     "check:mls-sender-authentication": "bun run check:bun:runtime && bun test tools/quality/mls-sender-authentication.test.ts",
+    "check:execution-authorization-v4": "bun run check:bun:runtime && bun test tools/quality/execution-authorization-v4.test.ts",
     "check:specification-lock": "bun run check:bun:runtime && bun tools/quality/check-specification-lock.ts && bun test --config=tools/quality/specification-lock.bunfig.toml tools/quality/specification-lock.test.ts tools/quality/specification-lock-cli.test.ts tools/quality/adopted-protocol-authority.test.ts tools/quality/candidate-protocol-authority.test.ts"
   },
   "workspaces": [

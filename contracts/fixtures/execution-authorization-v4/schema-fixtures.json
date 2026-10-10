@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "execution-authorization.v4.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.execution-authorization.v4",
+        "id": "urn:libre-ai:authorization:synthetic-authorization-4",
+        "organizationId": "ten_1234567890abcdef",
+        "missionId": "urn:libre-ai:mission:mission-1",
+        "missionRevision": 8,
+        "missionRecordDigest": "f2e4991dbb89a3b3403c36492595410399ebd674d5051e169c131f85d7c26a27",
+        "planId": "urn:libre-ai:plan:synthetic-plan-4",
+        "planDigest": "389429e7adfb892514285653f6e3bf332c8bad00f4fb8dc3b37b68b20c71c7fa",
+        "graphDigest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "planQuorum": {
+          "id": "urn:libre-ai:quorum:plan-quorum-1",
+          "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mediaType": "application/json"
+        },
+        "generation": 1,
+        "lineageMode": "initial",
+        "successorBinding": null,
+        "revocationId": "urn:libre-ai:revocation:synthetic-revocation-1",
+        "issuedAt": "2026-09-10T10:20:00Z",
+        "expiresAt": "2026-09-10T11:00:00Z",
+        "authorizationDigest": "248ffdd58ef716cd4b29fd42883c8ce2b8bb85762ad54811b52d98951e62915c",
+        "missionRecordSchemaVersion": "libre-ai.mission-record.v3",
+        "planSchemaVersion": "libre-ai.execution-plan-body.v4",
+        "handoffBindingDigest": "490f44fbc7be1157d42270822a185d1ca0e360ab3e9eacd8de8b44d195ce08bb",
+        "harnessProfileSchemaVersion": "libre-ai.harness-profile.v3",
+        "harnessProfileDigest": "876e5ff909f3bea27af2deb40800c7b3c68294f9ddd8fde2ff276312f5489f09"
+      },
+      "invalidMutations": [
+        {
+          "name": "v4 authorization generation zero",
+          "path": "/generation",
+          "value": 0
+        },
+        {
+          "name": "v4 successor authorization with null binding",
+          "path": "/lineageMode",
+          "value": "successor"
+        },
+        {
+          "name": "v4 authorization old-major",
+          "path": "/schemaVersion",
+          "value": "libre-ai.execution-authorization.v3"
+        },
+        {
+          "name": "v4 authorization of a v3 plan",
+          "path": "/planSchemaVersion",
+          "value": "libre-ai.execution-plan-body.v3"
+        },
+        {
+          "name": "v4 authorization old-mission-source",
+          "path": "/missionRecordSchemaVersion",
+          "value": "libre-ai.mission-record.v2"
+        },
+        {
+          "name": "v4 authorization over a v2 harness profile",
+          "path": "/harnessProfileSchemaVersion",
+          "value": "libre-ai.harness-profile.v2"
+        },
+        {
+          "name": "v4 authorization without harness profile major",
+          "path": "/harnessProfileSchemaVersion",
+          "remove": true
+        },
+        {
+          "name": "v4 authorization without harness profile digest",
+          "path": "/harnessProfileDigest",
+          "remove": true
+        },
+        {
+          "name": "v4 authorization missing-binding",
+          "path": "/handoffBindingDigest",
+          "remove": true
+        },
+        {
+          "name": "v4 authorization with an unknown field",
+          "path": "/runtimeActivation",
+          "value": "enabled"
+        }
+      ]
+    }
+  ]
+}
