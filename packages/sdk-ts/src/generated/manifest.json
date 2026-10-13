@@ -122,6 +122,11 @@
 			"declaration": "curated-item-export.v2.d.ts"
 		},
 		{
+			"schema": "curated-item-export.v3.schema.json",
+			"schemaSha256": "f82551c4d712a79fe85c682e37e2546f0cfa25d8082410eef0dd56c9c3177584",
+			"declaration": "curated-item-export.v3.d.ts"
+		},
+		{
 			"schema": "curation-rule-set.v1.schema.json",
 			"schemaSha256": "7e25a5c8e23bf6a28ab3f1e59e9b3e20b3e55e17c4a0590361aaccf67fbdb43f",
 			"declaration": "curation-rule-set.v1.d.ts"
@@ -170,6 +175,11 @@
 			"schema": "execution-authorization.v3.schema.json",
 			"schemaSha256": "eb3f91a4411198a024de7ac11bba53324b7753089f87744e7183e5e437780ac9",
 			"declaration": "execution-authorization.v3.d.ts"
+		},
+		{
+			"schema": "execution-authorization.v4.schema.json",
+			"schemaSha256": "5b4c295d644d8a787af1f8e18ca0bd3df1ad9fbd3d65f649a5023371a47a22e2",
+			"declaration": "execution-authorization.v4.d.ts"
 		},
 		{
 			"schema": "execution-graph.v1.schema.json",
@@ -360,6 +370,11 @@
 			"schema": "practice-progress-export.v1.schema.json",
 			"schemaSha256": "eea04723643094c38fbd90e03d782831049542d6fec3f015e15eea5226346e02",
 			"declaration": "practice-progress-export.v1.d.ts"
+		},
+		{
+			"schema": "practice-progress-export.v2.schema.json",
+			"schemaSha256": "a9653a90e94f62ec65ffcf5f3d2868faed72905d85e0302e6f390135aa6b8897",
+			"declaration": "practice-progress-export.v2.d.ts"
 		},
 		{
 			"schema": "problem-details.v1.schema.json",

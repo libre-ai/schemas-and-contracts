@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           repository: libre-ai/project-governance
-          ref: 1c8b37c80beb41f640982768ec27304a911e0b8e
+          ref: 5ef12472d043f3ed1799ca09cff89c27ff024d79
           path: tooling
           persist-credentials: false
       - name: Install pinned REUSE toolchain
@@ -49,7 +49,8 @@ jobs:
         run: |
           bash tooling/.github/composition/install-toolchains.sh \
             "$GITHUB_WORKSPACE/tooling/toolchains/bun.json" \
-            "$GITHUB_WORKSPACE/tooling/toolchains/notebook-qualification.json"
+            "$GITHUB_WORKSPACE/tooling/toolchains/notebook-qualification.json" \
+            "$GITHUB_WORKSPACE/tooling/toolchains/cargo-deny.json"
       - name: Compare declared and effective package licences
         working-directory: source
         run: bun ../tooling/tools/quality/check-declared-licenses.ts

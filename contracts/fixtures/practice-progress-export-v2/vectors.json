@@ -1,0 +1,85 @@
+{
+  "schemaVersion": "libre-ai.practice-progress-export-vectors.v2",
+  "digests": [
+    {
+      "name": "empty export digest over the RFC 8785 form without digest",
+      "unsignedExport": {
+        "schemaVersion": "libre-ai.practice-progress-export.v2",
+        "exportedAt": "2026-10-10T00:00:00Z",
+        "outcomes": []
+      },
+      "expectedDigest": "b98c5cc7d65f664e162a14c3baed3e36ce702206ba94f201202bf8899f1b7260"
+    },
+    {
+      "name": "one-entry export digest over the RFC 8785 form without digest",
+      "unsignedExport": {
+        "schemaVersion": "libre-ai.practice-progress-export.v2",
+        "exportedAt": "2026-10-10T00:00:00Z",
+        "outcomes": [
+          {
+            "schemaVersion": "libre-ai.activity-outcome.v1",
+            "id": "urn:libre-ai:outcome:outcome-1",
+            "activityId": "urn:libre-ai:activity:activity-1",
+            "activityVersion": "1.0.0",
+            "localSessionId": "session_1",
+            "state": "completed",
+            "responseDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "feedbackRuleIds": ["feedback_1"],
+            "recordedAt": "2026-10-10T00:00:00Z"
+          }
+        ]
+      },
+      "expectedDigest": "42b440021215ee30819d1b0494859ebfe35e176fbe61a2fc2e657b9c468cfbf4"
+    }
+  ],
+  "imports": [
+    {
+      "name": "compact export with its digest is importable",
+      "raw": "{\"schemaVersion\":\"libre-ai.practice-progress-export.v2\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"outcomes\":[{\"schemaVersion\":\"libre-ai.activity-outcome.v1\",\"id\":\"urn:libre-ai:outcome:outcome-1\",\"activityId\":\"urn:libre-ai:activity:activity-1\",\"activityVersion\":\"1.0.0\",\"localSessionId\":\"session_1\",\"state\":\"completed\",\"responseDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"feedbackRuleIds\":[\"feedback_1\"],\"recordedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"42b440021215ee30819d1b0494859ebfe35e176fbe61a2fc2e657b9c468cfbf4\"}",
+      "expected": "export-importable",
+      "failures": []
+    },
+    {
+      "name": "reordered members and whitespace are importable",
+      "raw": "{\n  \"digest\": \"42b440021215ee30819d1b0494859ebfe35e176fbe61a2fc2e657b9c468cfbf4\",\n  \"outcomes\": [{\"schemaVersion\":\"libre-ai.activity-outcome.v1\",\"id\":\"urn:libre-ai:outcome:outcome-1\",\"activityId\":\"urn:libre-ai:activity:activity-1\",\"activityVersion\":\"1.0.0\",\"localSessionId\":\"session_1\",\"state\":\"completed\",\"responseDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"feedbackRuleIds\":[\"feedback_1\"],\"recordedAt\":\"2026-10-10T00:00:00Z\"}],\n  \"exportedAt\": \"2026-10-10T00:00:00Z\",\n  \"schemaVersion\": \"libre-ai.practice-progress-export.v2\"\n}\n",
+      "expected": "export-importable",
+      "failures": []
+    },
+    {
+      "name": "one flipped digest nibble is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.practice-progress-export.v2\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"outcomes\":[{\"schemaVersion\":\"libre-ai.activity-outcome.v1\",\"id\":\"urn:libre-ai:outcome:outcome-1\",\"activityId\":\"urn:libre-ai:activity:activity-1\",\"activityVersion\":\"1.0.0\",\"localSessionId\":\"session_1\",\"state\":\"completed\",\"responseDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"feedbackRuleIds\":[\"feedback_1\"],\"recordedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"42b440021215ee30819d1b0494859ebfe35e176fbe61a2fc2e657b9c468cfbf0\"}",
+      "expected": "export-refused",
+      "failures": ["export.digest_mismatch"]
+    },
+    {
+      "name": "content changed under a kept digest is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.practice-progress-export.v2\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"outcomes\":[{\"schemaVersion\":\"libre-ai.activity-outcome.v1\",\"id\":\"urn:libre-ai:outcome:outcome-1\",\"activityId\":\"urn:libre-ai:activity:activity-1\",\"activityVersion\":\"1.0.0\",\"localSessionId\":\"session_1\",\"state\":\"stopped\",\"responseDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"feedbackRuleIds\":[\"feedback_1\"],\"recordedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"42b440021215ee30819d1b0494859ebfe35e176fbe61a2fc2e657b9c468cfbf4\"}",
+      "expected": "export-refused",
+      "failures": ["export.digest_mismatch"]
+    },
+    {
+      "name": "every entry dropped under a kept digest is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.practice-progress-export.v2\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"outcomes\":[],\"digest\":\"42b440021215ee30819d1b0494859ebfe35e176fbe61a2fc2e657b9c468cfbf4\"}",
+      "expected": "export-refused",
+      "failures": ["export.digest_mismatch"]
+    },
+    {
+      "name": "duplicate member masking a change is refused before parsing",
+      "raw": "{\"schemaVersion\":\"libre-ai.practice-progress-export.v2\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"outcomes\":[{\"schemaVersion\":\"libre-ai.activity-outcome.v1\",\"id\":\"urn:libre-ai:outcome:outcome-1\",\"activityId\":\"urn:libre-ai:activity:activity-1\",\"activityVersion\":\"1.0.0\",\"localSessionId\":\"session_1\",\"state\":\"stopped\",\"state\":\"completed\",\"responseDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"feedbackRuleIds\":[\"feedback_1\"],\"recordedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"42b440021215ee30819d1b0494859ebfe35e176fbe61a2fc2e657b9c468cfbf4\"}",
+      "expected": "export-refused",
+      "failures": ["export.json_not_strict"]
+    },
+    {
+      "name": "export without digest is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.practice-progress-export.v2\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"outcomes\":[{\"schemaVersion\":\"libre-ai.activity-outcome.v1\",\"id\":\"urn:libre-ai:outcome:outcome-1\",\"activityId\":\"urn:libre-ai:activity:activity-1\",\"activityVersion\":\"1.0.0\",\"localSessionId\":\"session_1\",\"state\":\"completed\",\"responseDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"feedbackRuleIds\":[\"feedback_1\"],\"recordedAt\":\"2026-10-10T00:00:00Z\"}]}",
+      "expected": "export-refused",
+      "failures": ["export.schema_invalid"]
+    },
+    {
+      "name": "uppercase digest is refused",
+      "raw": "{\"schemaVersion\":\"libre-ai.practice-progress-export.v2\",\"exportedAt\":\"2026-10-10T00:00:00Z\",\"outcomes\":[{\"schemaVersion\":\"libre-ai.activity-outcome.v1\",\"id\":\"urn:libre-ai:outcome:outcome-1\",\"activityId\":\"urn:libre-ai:activity:activity-1\",\"activityVersion\":\"1.0.0\",\"localSessionId\":\"session_1\",\"state\":\"completed\",\"responseDigest\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\"feedbackRuleIds\":[\"feedback_1\"],\"recordedAt\":\"2026-10-10T00:00:00Z\"}],\"digest\":\"42B440021215EE30819D1B0494859EBFE35E176FBE61A2FC2E657B9C468CFBF4\"}",
+      "expected": "export-refused",
+      "failures": ["export.schema_invalid"]
+    }
+  ]
+}

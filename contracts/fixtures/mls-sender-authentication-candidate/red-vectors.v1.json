@@ -1,0 +1,650 @@
+{
+  "schemaVersion": "libre-ai.mls-sender-authentication-red-vectors.v1",
+  "decision": "libre-ai/project-governance ADR-0048, invariant I-34",
+  "record": "docs/adr/2026-10-10-mls-sender-authentication-red-vectors.md",
+  "semantics": "contracts/mls-sender-authentication-candidate/SEMANTICS.md",
+  "rfc": {
+    "number": 9420,
+    "text": "https://www.rfc-editor.org/rfc/rfc9420.txt",
+    "readOn": "2026-10-10",
+    "sha256": "251ab11076c43fd4b8dc080a068a8caaf55e2fc5e6aa61d4274961627f32624b"
+  },
+  "cryptoMaterial": "to-generate",
+  "verdicts": [
+    "applied",
+    "refused-not-mls-private-message",
+    "refused-stale-epoch",
+    "refused-future-epoch",
+    "refused-group-authentication",
+    "refused-unknown-sender-leaf",
+    "refused-replay",
+    "refused-signature-invalid"
+  ],
+  "properties": [
+    "native-private-message-framing",
+    "epoch-not-stale",
+    "epoch-not-future",
+    "content-key-from-secret-tree",
+    "group-authentication",
+    "sender-leaf-non-blank",
+    "generation-not-consumed",
+    "sender-signature"
+  ],
+  "i34Clauses": [
+    "sender-forgery-by-member",
+    "signature-absent-or-invalid",
+    "content-sealed-under-exported-or-derived-key",
+    "application-content-outside-private-message",
+    "stale-or-future-epoch",
+    "replay",
+    "relay-forged-frame"
+  ],
+  "receiver": {
+    "groupId": "urn:libre-ai:test:collab-group-1",
+    "epoch": 7,
+    "receiverLeafIndex": 0,
+    "leaves": [
+      { "leafIndex": 0, "state": "member" },
+      { "leafIndex": 1, "state": "member" },
+      { "leafIndex": 2, "state": "blank" },
+      { "leafIndex": 3, "state": "member" }
+    ],
+    "consumedApplicationGenerations": [{ "leafIndex": 1, "generation": 4 }]
+  },
+  "knownGaps": [
+    {
+      "id": "cds-sealed-frame-without-sender",
+      "repository": "libre-ai/collaborative-data-sync",
+      "revision": "8c50e51f7c2c7c255fff9c1e18a6596933ac3606",
+      "locations": [
+        "packages/core/src/crypto-types.ts:33-38",
+        "packages/relay/src/relay-server.ts:51-52"
+      ],
+      "statement": "SealedFrame carries epoch, nonce, ciphertext and tag only: no MLSMessage wire format, no sender, no FramedContentAuthData signature. The relay documentation states that recipients trust the AEAD tag for identity. Under I-34 such a frame is refused as content outside the MLS framing.",
+      "vectors": ["i34-content-sealed-frame-under-exported-key"]
+    },
+    {
+      "id": "sc-protocol-per-epoch-group-key",
+      "repository": "libre-ai/schemas-and-contracts",
+      "revision": "489702cba7a614536f8a007a7b6d593dca2cdf7a",
+      "locations": [
+        "docs/protocols/sessions/sessions.md:35",
+        "docs/protocols/spec-studio/specifications.md:15"
+      ],
+      "statement": "Both protocol authorities describe CRDT deltas sealed with a per-epoch group key derived through MLS, the R4 form that ADR-0048 retires. Both files are pinned by sha256 in contracts/protocol-authorities.v1.json, so this record does not edit them: their correction is an amendment of a pinned protocol authority, outside ADR-0048's authorization.",
+      "vectors": [
+        "i34-content-sealed-frame-under-exported-key",
+        "i34-content-under-exporter-key-in-private-message",
+        "i34-content-under-epoch-secret-hkdf-key"
+      ]
+    }
+  ],
+  "vectors": [
+    {
+      "id": "i34-green-canonical-application-message",
+      "polarity": "green",
+      "name": "a PrivateMessage from member leaf 1, sealed under its application ratchet and signed by leaf 1 over this content, is applied",
+      "rfc": ["6.1", "6.3.1", "6.3.2", "16.5"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "applied",
+      "documentMutated": true,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-green-out-of-order-unconsumed-generation",
+      "polarity": "green",
+      "name": "a delayed message at an earlier generation that was never consumed is applied",
+      "rfc": ["9.2", "15.3"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 3, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "applied",
+      "documentMutated": true,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-sender-forged-by-member",
+      "polarity": "red",
+      "i34Clause": "sender-forgery-by-member",
+      "name": "member leaf 3 seals under leaf 1's ratchet (valid AEAD) and attributes the content to leaf 1, but signs with its own leaf key: refused",
+      "rfc": ["6.1", "6.3.1", "16.5"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 3,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-signature-invalid",
+      "violatedProperties": ["sender-signature"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/signature/signerLeafIndex"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-sender-claims-blank-leaf",
+      "polarity": "red",
+      "i34Clause": "sender-forgery-by-member",
+      "name": "a valid AEAD whose sender data names blank leaf 2 (a removed member), signed under that leaf's former key: refused",
+      "rfc": ["6.3.2"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 2, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 2,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-unknown-sender-leaf",
+      "violatedProperties": ["sender-leaf-non-blank"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/senderData/leafIndex", "/signature/signerLeafIndex"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-signature-absent",
+      "polarity": "red",
+      "i34Clause": "signature-absent-or-invalid",
+      "name": "a valid AEAD from leaf 1 whose FramedContentAuthData carries an empty signature: refused",
+      "rfc": ["6.1", "6.3.1"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "absent",
+          "signerLeafIndex": null,
+          "signedContent": null
+        }
+      },
+      "expected": "refused-signature-invalid",
+      "violatedProperties": ["sender-signature"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": [
+        "/signature/encoding",
+        "/signature/signerLeafIndex",
+        "/signature/signedContent"
+      ],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-signature-truncated",
+      "polarity": "red",
+      "i34Clause": "signature-absent-or-invalid",
+      "name": "leaf 1's signature truncated by one octet: refused",
+      "rfc": ["6.1", "6.3.1"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "truncated",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-signature-invalid",
+      "violatedProperties": ["sender-signature"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/signature/encoding"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-signature-over-other-content",
+      "polarity": "red",
+      "i34Clause": "signature-absent-or-invalid",
+      "name": "a genuine leaf 1 signature lifted from another of its messages, attached to new content: refused",
+      "rfc": ["6.1"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "other-framed-content"
+        }
+      },
+      "expected": "refused-signature-invalid",
+      "violatedProperties": ["sender-signature"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/signature/signedContent"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-signature-over-previous-epoch-context",
+      "polarity": "red",
+      "i34Clause": "signature-absent-or-invalid",
+      "name": "leaf 1's signature computed over the epoch 6 GroupContext, carried into epoch 7: refused",
+      "rfc": ["6.1"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "other-epoch-group-context"
+        }
+      },
+      "expected": "refused-signature-invalid",
+      "violatedProperties": ["sender-signature"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/signature/signedContent"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-content-sealed-frame-under-exported-key",
+      "polarity": "red",
+      "i34Clause": "content-sealed-under-exported-or-derived-key",
+      "name": "a delta sealed by AEAD under a key from MLS-Exporter, in an application frame carrying no MLS framing and no signature (the SealedFrame shape): refused",
+      "rfc": ["6", "8.5", "16.5"],
+      "message": {
+        "transport": "application-sealed-frame",
+        "wireFormat": null,
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "mls-exporter-derived-key",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "absent",
+          "signerLeafIndex": null,
+          "signedContent": null
+        }
+      },
+      "expected": "refused-not-mls-private-message",
+      "violatedProperties": [
+        "native-private-message-framing",
+        "content-key-from-secret-tree",
+        "sender-signature"
+      ],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": [
+        "/transport",
+        "/wireFormat",
+        "/contentProtection",
+        "/signature/encoding",
+        "/signature/signerLeafIndex",
+        "/signature/signedContent"
+      ],
+      "knownGaps": ["cds-sealed-frame-without-sender", "sc-protocol-per-epoch-group-key"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-content-under-exporter-key-in-private-message",
+      "polarity": "red",
+      "i34Clause": "content-sealed-under-exported-or-derived-key",
+      "name": "a PrivateMessage-shaped frame, correctly signed by leaf 1, whose content is sealed under an MLS-Exporter key instead of leaf 1's application ratchet: refused",
+      "rfc": ["6.3.1", "8.5", "16.5"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "mls-exporter-derived-key",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-group-authentication",
+      "violatedProperties": ["content-key-from-secret-tree"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/contentProtection"],
+      "knownGaps": ["sc-protocol-per-epoch-group-key"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-content-under-epoch-secret-hkdf-key",
+      "polarity": "red",
+      "i34Clause": "content-sealed-under-exported-or-derived-key",
+      "name": "content sealed under a key derived by HKDF directly from epoch_secret: refused",
+      "rfc": ["6.3.1", "16.5"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "epoch-secret-hkdf",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-group-authentication",
+      "violatedProperties": ["content-key-from-secret-tree"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/contentProtection"],
+      "knownGaps": ["sc-protocol-per-epoch-group-key"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-content-under-application-hkdf-key",
+      "polarity": "red",
+      "i34Clause": "content-sealed-under-exported-or-derived-key",
+      "name": "content sealed under an application HKDF key shared by the group: refused",
+      "rfc": ["6.3.1", "16.5"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "application-hkdf",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-group-authentication",
+      "violatedProperties": ["content-key-from-secret-tree"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/contentProtection"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-application-data-in-public-message",
+      "polarity": "red",
+      "i34Clause": "application-content-outside-private-message",
+      "name": "application data sent as a signed PublicMessage, outside PrivateMessage: refused",
+      "rfc": ["6"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_public_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-not-mls-private-message",
+      "violatedProperties": ["native-private-message-framing"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/wireFormat"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-stale-epoch",
+      "polarity": "red",
+      "i34Clause": "stale-or-future-epoch",
+      "name": "a well-formed, signed message of epoch 6 received at epoch 7: refused",
+      "rfc": ["6.1", "15.2"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 6,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-stale-epoch",
+      "violatedProperties": ["epoch-not-stale"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/epoch"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-future-epoch",
+      "polarity": "red",
+      "i34Clause": "stale-or-future-epoch",
+      "name": "a message claiming epoch 8 before the receiver has processed the commit to epoch 8: refused",
+      "rfc": ["6.1", "15.2"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 8,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-future-epoch",
+      "violatedProperties": ["epoch-not-future"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/epoch"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-replay-verbatim",
+      "polarity": "red",
+      "i34Clause": "replay",
+      "name": "an already applied message (leaf 1, generation 4) delivered again byte for byte: refused",
+      "rfc": ["9.2", "15.3"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 4, "reuseGuard": "repeated" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-replay",
+      "violatedProperties": ["generation-not-consumed"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/senderData/generation", "/senderData/reuseGuard"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-replay-consumed-generation-fresh-nonce",
+      "polarity": "red",
+      "i34Clause": "replay",
+      "name": "a consumed generation re-sent with a fresh reuse guard, hence a nonce never seen: refused, replay is keyed on (leaf, generation), not on the nonce",
+      "rfc": ["6.3.1", "9.2"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 4, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "this-framed-content"
+        }
+      },
+      "expected": "refused-replay",
+      "violatedProperties": ["generation-not-consumed"],
+      "pairedGreen": "i34-green-out-of-order-unconsumed-generation",
+      "differsAt": ["/senderData/generation"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-relay-forged-frame",
+      "polarity": "red",
+      "i34Clause": "relay-forged-frame",
+      "name": "the relay, holding no group secret, fabricates a PrivateMessage attributed to leaf 1: refused",
+      "rfc": ["6.3", "16.1", "16.5"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "relay-without-group-secrets",
+        "inTransitAlteration": "none",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "absent",
+          "signerLeafIndex": null,
+          "signedContent": null
+        }
+      },
+      "expected": "refused-group-authentication",
+      "violatedProperties": ["group-authentication", "sender-signature"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": [
+        "/aeadSealedBy",
+        "/signature/encoding",
+        "/signature/signerLeafIndex",
+        "/signature/signedContent"
+      ],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    },
+    {
+      "id": "i34-relay-rewrites-authenticated-data",
+      "polarity": "red",
+      "i34Clause": "relay-forged-frame",
+      "name": "the relay rewrites the cleartext authenticated_data of a genuine leaf 1 message: refused",
+      "rfc": ["6.1", "6.3.1"],
+      "message": {
+        "transport": "mls-message",
+        "wireFormat": "mls_private_message",
+        "groupId": "urn:libre-ai:test:collab-group-1",
+        "epoch": 7,
+        "contentType": "application",
+        "contentProtection": "secret-tree-application-ratchet",
+        "aeadSealedBy": "member-holding-epoch-secrets",
+        "inTransitAlteration": "authenticated-data-rewritten",
+        "senderData": { "leafIndex": 1, "generation": 5, "reuseGuard": "fresh" },
+        "signature": {
+          "encoding": "complete",
+          "signerLeafIndex": 1,
+          "signedContent": "other-framed-content"
+        }
+      },
+      "expected": "refused-group-authentication",
+      "violatedProperties": ["group-authentication", "sender-signature"],
+      "pairedGreen": "i34-green-canonical-application-message",
+      "differsAt": ["/inTransitAlteration", "/signature/signedContent"],
+      "documentMutated": false,
+      "cryptoMaterial": "to-generate"
+    }
+  ]
+}

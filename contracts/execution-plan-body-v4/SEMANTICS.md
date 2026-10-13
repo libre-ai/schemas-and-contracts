@@ -111,6 +111,8 @@ success together) measures a runtime, not a contract, and is not represented her
 
 ## Not covered
 
-No `execution-authorization` successor accepts a v4 plan:
-`execution-authorization.v3` fixes `planSchemaVersion` to v3. A v4 plan can
-therefore not be authorized, which matches ADR-0045: no runtime capability opens.
+`execution-authorization.v3` fixes `planSchemaVersion` to v3. Only the candidate
+`execution-authorization.v4` accepts a v4 plan
+(`contracts/execution-authorization-v4/SEMANTICS.md`), and it activates nothing:
+no harness executes a v4 plan before this oracle, or that harness, passes the
+ADR-0045 red vectors. No runtime capability opens, which matches ADR-0045.

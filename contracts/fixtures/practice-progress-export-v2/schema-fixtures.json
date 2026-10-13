@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "practice-progress-export.v2.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.practice-progress-export.v2",
+        "exportedAt": "2026-10-10T00:00:00Z",
+        "outcomes": [
+          {
+            "schemaVersion": "libre-ai.activity-outcome.v1",
+            "id": "urn:libre-ai:outcome:outcome-1",
+            "activityId": "urn:libre-ai:activity:activity-1",
+            "activityVersion": "1.0.0",
+            "localSessionId": "session_1",
+            "state": "completed",
+            "responseDigest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "feedbackRuleIds": ["feedback_1"],
+            "recordedAt": "2026-10-10T00:00:00Z"
+          }
+        ],
+        "digest": "42b440021215ee30819d1b0494859ebfe35e176fbe61a2fc2e657b9c468cfbf4"
+      },
+      "invalidMutations": [
+        {
+          "name": "practice export without its export digest",
+          "path": "/digest",
+          "remove": true
+        },
+        {
+          "name": "practice export with a null export digest",
+          "path": "/digest",
+          "value": null
+        },
+        {
+          "name": "practice export with an uppercase export digest",
+          "path": "/digest",
+          "value": "42B440021215EE30819D1B0494859EBFE35E176FBE61A2FC2E657B9C468CFBF4"
+        },
+        {
+          "name": "practice export with a truncated export digest",
+          "path": "/digest",
+          "value": "42b440021215ee30819d1b0494859ebfe35e176fbe61a2fc2e657b9c468cfbf"
+        },
+        {
+          "name": "practice export claiming the previous major",
+          "path": "/schemaVersion",
+          "value": "libre-ai.practice-progress-export.v1"
+        },
+        {
+          "name": "practice export leaking a server tenant",
+          "path": "/tenantId",
+          "value": "ten_1234567890abcdef"
+        },
+        {
+          "name": "practice export with an undeclared signature member",
+          "path": "/signature",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ]
+    }
+  ]
+}
