@@ -1,5 +1,13 @@
 # Review dossier — decision-binding vectors v1 (a request restates its step's policy)
 
+> **Lock (2026-10-09).** Locked by `docs/adr/2026-10-09-decision-binding-vectors-lock.md`,
+> on the owner's merge. The reviewed bytes (SHA-256 `49328cae…ab807e`) moved unchanged to
+> `contracts/fixtures/authorized-execution-v1/decision-binding-vectors.v1.json`. They are pinned
+> by `authorized-execution-lock.test.ts` and gated by `check-contracts.ts`, as
+> `semantic-vectors.v1` is. That record supersedes the "Catalog registration" item below: no
+> catalog kind is added. The rest of this dossier is the candidate-time review evidence, kept
+> as written.
+
 - **Candidate:** semantic vector set
   `contracts/fixtures/decision-binding-candidate/decision-binding-vectors.v1.json`
   (`libre-ai.authorized-execution-decision-binding-vectors.v1`) and its reference oracle
