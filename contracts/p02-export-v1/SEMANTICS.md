@@ -20,9 +20,21 @@ Each item records, in `provenance`: the source and feed URL at the moment of
 fetch, the fetch identifier, the HTTP status, the validators (`etag`,
 `lastModified`), the collection instant, the declared publication date with
 its state (`present` with a value, `absent`, or `malformed` with no value), the
-declared GUID, the canonical URL with the name of the canonicalisation rule,
-and the sanitiser and extractor versions. Each version of the item carries the
-BLAKE3 digest of its content and the instant it was recorded.
+declared GUID, and the canonical URL with the name of the canonicalisation rule.
+
+Each version of the item carries its own transform chain, because the content
+of two versions can come from different origins:
+
+- `contentOrigin` is required, and is `feed` (the content is the feed entry) or
+  `extracted` (the content was extracted from the page the entry links to);
+- `sanitizerVersion` is required and non-null in both cases;
+- `extractorVersion` is **required and non-null** when `contentOrigin` is
+  `extracted`, and **absent** when `contentOrigin` is `feed`. The schema encodes
+  this with a conditional on the version object. An export therefore always
+  says which extractor produced the content it carries, or that none did.
+
+Each version also carries the BLAKE3 digest of its content and the instant it
+was recorded.
 
 ## Digest (invariant I-10)
 

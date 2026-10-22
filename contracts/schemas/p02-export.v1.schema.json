@@ -134,9 +134,7 @@
         "declaredPublishedAt",
         "guid",
         "canonicalUrl",
-        "canonicalizationRule",
-        "sanitizerVersion",
-        "extractorVersion"
+        "canonicalizationRule"
       ],
       "properties": {
         "feedUrl": { "$ref": "#/$defs/uri" },
@@ -164,22 +162,36 @@
           "minLength": 1,
           "maxLength": 64,
           "pattern": "^[a-z][a-z0-9.-]*$"
-        },
-        "sanitizerVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
-        "extractorVersion": {
-          "anyOf": [{ "type": "string", "minLength": 1, "maxLength": 64 }, { "type": "null" }]
         }
       }
     },
     "version": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["number", "blake3", "recordedAt"],
+      "required": ["number", "blake3", "recordedAt", "contentOrigin", "sanitizerVersion"],
       "properties": {
         "number": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
         "blake3": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
-        "recordedAt": { "$ref": "#/$defs/timestamp" }
-      }
+        "recordedAt": { "$ref": "#/$defs/timestamp" },
+        "contentOrigin": { "enum": ["feed", "extracted"] },
+        "sanitizerVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "extractorVersion": { "type": "string", "minLength": 1, "maxLength": 64 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["contentOrigin"],
+            "properties": { "contentOrigin": { "const": "extracted" } }
+          },
+          "then": {
+            "required": ["extractorVersion"],
+            "properties": {
+              "extractorVersion": { "type": "string", "minLength": 1, "maxLength": 64 }
+            }
+          },
+          "else": { "properties": { "extractorVersion": false } }
+        }
+      ]
     },
     "item": {
       "type": "object",

@@ -39,10 +39,15 @@ export type LibreAiP02ExportV1 = {
 			guid: string | null;
 			canonicalUrl: string;
 			canonicalizationRule: string;
-			sanitizerVersion: string;
-			extractorVersion: string | null;
 		};
-		versions: Array<{ number: number; blake3: string; recordedAt: string }>;
+		versions: Array<{
+			number: number;
+			blake3: string;
+			recordedAt: string;
+			contentOrigin: "feed" | "extracted";
+			sanitizerVersion: string;
+			extractorVersion?: string;
+		}>;
 	}>;
 	states: Array<{
 		itemId: string;
@@ -1027,11 +1032,16 @@ export type Provenance = {
 	guid: string | null;
 	canonicalUrl: string;
 	canonicalizationRule: string;
-	sanitizerVersion: string;
-	extractorVersion: string | null;
 };
 
-export type Version = { number: number; blake3: string; recordedAt: string };
+export type Version = {
+	number: number;
+	blake3: string;
+	recordedAt: string;
+	contentOrigin: "feed" | "extracted";
+	sanitizerVersion: string;
+	extractorVersion?: string;
+};
 
 export type Item = {
 	id: string;
@@ -1051,10 +1061,15 @@ export type Item = {
 		guid: string | null;
 		canonicalUrl: string;
 		canonicalizationRule: string;
-		sanitizerVersion: string;
-		extractorVersion: string | null;
 	};
-	versions: Array<{ number: number; blake3: string; recordedAt: string }>;
+	versions: Array<{
+		number: number;
+		blake3: string;
+		recordedAt: string;
+		contentOrigin: "feed" | "extracted";
+		sanitizerVersion: string;
+		extractorVersion?: string;
+	}>;
 };
 
 export type State = {

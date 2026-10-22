@@ -52,20 +52,23 @@
               },
               "guid": null,
               "canonicalUrl": "https://news.example.org/story",
-              "canonicalizationRule": "url-rfc3986-v1",
-              "sanitizerVersion": "sanitizer-1",
-              "extractorVersion": "extractor-2"
+              "canonicalizationRule": "url-rfc3986-v1"
             },
             "versions": [
               {
                 "number": 1,
                 "blake3": "2222222222222222222222222222222222222222222222222222222222222222",
-                "recordedAt": "2026-10-22T07:00:00Z"
+                "recordedAt": "2026-10-22T07:00:00Z",
+                "contentOrigin": "feed",
+                "sanitizerVersion": "sanitizer-1"
               },
               {
                 "number": 2,
                 "blake3": "3333333333333333333333333333333333333333333333333333333333333333",
-                "recordedAt": "2026-10-22T08:00:00Z"
+                "recordedAt": "2026-10-22T08:00:00Z",
+                "contentOrigin": "extracted",
+                "sanitizerVersion": "sanitizer-1",
+                "extractorVersion": "extractor-2"
               }
             ]
           }
@@ -175,15 +178,15 @@
               "guid": null,
               "canonicalUrl": "https://news.example.org/story-4",
               "canonicalizationRule": "url-rfc3986-v1",
-              "sanitizerVersion": "sanitizer-1",
-              "extractorVersion": null,
               "body": "<p>page content</p>"
             },
             "versions": [
               {
                 "number": 1,
                 "blake3": "4444444444444444444444444444444444444444444444444444444444444444",
-                "recordedAt": "2026-10-22T07:00:00Z"
+                "recordedAt": "2026-10-22T07:00:00Z",
+                "contentOrigin": "feed",
+                "sanitizerVersion": "sanitizer-1"
               }
             ]
           }
