@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.libre-ai.fr/schemas/knowledge-excerpt.v1.schema.json",
+  "title": "Libre AI Knowledge Excerpt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "frontMatter", "body"],
+  "properties": {
+    "schemaVersion": { "const": "libre-ai.knowledge-excerpt.v1" },
+    "frontMatter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "itemId",
+        "sourceId",
+        "version",
+        "url",
+        "publishedAt",
+        "collectedAt",
+        "excerptAnchor"
+      ],
+      "properties": {
+        "itemId": { "$ref": "common.v1.schema.json#/$defs/urn" },
+        "sourceId": { "$ref": "common.v1.schema.json#/$defs/urn" },
+        "version": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "maxLength": 2048,
+          "pattern": "^https?://(?![^/?#]*@)"
+        },
+        "publishedAt": {
+          "anyOf": [
+            { "type": "string", "format": "date-time", "maxLength": 32 },
+            { "type": "null" }
+          ]
+        },
+        "collectedAt": { "type": "string", "format": "date-time", "maxLength": 32 },
+        "excerptAnchor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._-]+$"
+        }
+      }
+    },
+    "body": { "type": "string", "minLength": 1, "maxLength": 20000 }
+  }
+}

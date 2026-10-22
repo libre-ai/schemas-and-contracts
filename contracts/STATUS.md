@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 12 |
-| total | 128 |
+| candidate | 16 |
+| total | 132 |
 
 ## Counts by family
 
@@ -27,7 +27,7 @@ they disagree with this page, this page states the current catalog.
 | biscuit-authority | 2 | 2 | 0 |
 | biscuit-policy | 5 | 5 | 0 |
 | data-policy | 4 | 3 | 1 |
-| json-schema | 95 | 84 | 11 |
+| json-schema | 99 | 84 | 15 |
 | openapi | 13 | 13 | 0 |
 | wit | 9 | 9 | 0 |
 
@@ -59,7 +59,7 @@ they disagree with this page, this page states the current catalog.
 | `retention-policy-v3` | candidate | pending-independent-agent-review | `contracts/data/retention.v3.json` |
 | `retention-policy-v4` | locked | none | `contracts/data/retention.v4.json` |
 
-### json-schema (95)
+### json-schema (99)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -90,6 +90,7 @@ they disagree with this page, this page states the current catalog.
 | `curated-item-export-v3` | candidate | pending-independent-agent-review | `contracts/schemas/curated-item-export.v3.schema.json` |
 | `curation-rule-set-v1` | locked | none | `contracts/schemas/curation-rule-set.v1.schema.json` |
 | `curation-rule-set-v2` | locked | none | `contracts/schemas/curation-rule-set.v2.schema.json` |
+| `curation-rule-set-v3` | candidate | pending-independent-agent-review | `contracts/schemas/curation-rule-set.v3.schema.json` |
 | `deletion-receipt-v1` | locked | none | `contracts/schemas/deletion-receipt.v1.schema.json` |
 | `effect-attestation-v1` | locked | none | `contracts/schemas/effect-attestation.v1.schema.json` |
 | `engine-golden-vectors-v1` | locked | none | `contracts/schemas/engine-golden-vectors.v1.schema.json` |
@@ -112,6 +113,7 @@ they disagree with this page, this page states the current catalog.
 | `harness-profile-v3` | candidate | pending-independent-agent-review | `contracts/schemas/harness-profile.v3.schema.json` |
 | `human-decision-request-v1` | locked | none | `contracts/schemas/human-decision-request.v1.schema.json` |
 | `human-decision-response-v1` | locked | none | `contracts/schemas/human-decision-response.v1.schema.json` |
+| `knowledge-excerpt-v1` | candidate | pending-independent-agent-review | `contracts/schemas/knowledge-excerpt.v1.schema.json` |
 | `local-comparison-v1` | locked | none | `contracts/schemas/local-comparison.v1.schema.json` |
 | `local-comparison-v2` | locked | none | `contracts/schemas/local-comparison.v2.schema.json` |
 | `local-comparison-v3` | candidate | pending-independent-agent-review | `contracts/schemas/local-comparison.v3.schema.json` |
@@ -129,6 +131,7 @@ they disagree with this page, this page states the current catalog.
 | `orchestrator-event-v1` | locked | none | `contracts/schemas/orchestrator-event.v1.schema.json` |
 | `orchestrator-event-v2` | locked | none | `contracts/schemas/orchestrator-event.v2.schema.json` |
 | `orchestrator-event-v3` | locked | none | `contracts/schemas/orchestrator-event.v3.schema.json` |
+| `p02-export-v1` | candidate | pending-independent-agent-review | `contracts/schemas/p02-export.v1.schema.json` |
 | `p02-job-v1` | locked | none | `contracts/schemas/p02-job.v1.schema.json` |
 | `policy-definition-v1` | locked | none | `contracts/schemas/policy-definition.v1.schema.json` |
 | `policy-definition-v2` | locked | none | `contracts/schemas/policy-definition.v2.schema.json` |
@@ -157,6 +160,7 @@ they disagree with this page, this page states the current catalog.
 | `spec-package-v2` | locked | none | `contracts/schemas/spec-package.v2.schema.json` |
 | `step-invocation-v1` | locked | none | `contracts/schemas/step-invocation.v1.schema.json` |
 | `tool-invocation-observation-v1` | candidate | pending-independent-agent-review | `contracts/schemas/tool-invocation-observation.v1.schema.json` |
+| `usage-statement-v1` | candidate | pending-independent-agent-review | `contracts/schemas/usage-statement.v1.schema.json` |
 | `work-package-plan-v1` | locked | none | `contracts/schemas/work-package-plan.v1.schema.json` |
 
 ### openapi (13)

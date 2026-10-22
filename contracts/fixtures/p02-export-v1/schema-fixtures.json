@@ -1,0 +1,165 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "p02-export.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.p02-export.v1",
+        "organizationId": "ten_0123456789abcdef",
+        "exportedAt": "2026-10-22T09:00:00Z",
+        "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sources": [
+          {
+            "id": "urn:libre-ai:source:example-feed",
+            "url": "https://feeds.example.org/atom.xml",
+            "displayName": "Example feed",
+            "folderId": "urn:libre-ai:folder:reading",
+            "createdAt": "2026-10-01T08:00:00Z"
+          }
+        ],
+        "folders": [
+          {
+            "id": "urn:libre-ai:folder:reading",
+            "name": "Reading",
+            "createdAt": "2026-10-01T08:00:00Z"
+          }
+        ],
+        "items": [
+          {
+            "id": "urn:libre-ai:item:0001",
+            "sourceId": "urn:libre-ai:source:example-feed",
+            "title": "Example title",
+            "provenance": {
+              "feedUrl": "https://feeds.example.org/atom.xml",
+              "fetchId": "fetch-0001",
+              "httpStatus": 200,
+              "etag": "\"abc123\"",
+              "lastModified": "Wed, 21 Oct 2026 07:00:00 GMT",
+              "collectedAt": "2026-10-22T06:00:00Z",
+              "declaredPublishedAt": { "state": "present", "value": "2026-10-21T07:00:00Z" },
+              "guid": "urn:example:entry:1",
+              "canonicalUrl": "https://example.org/articles/1",
+              "canonicalizationRule": "url-rfc3986-v1",
+              "sanitizerVersion": "sanitizer-1",
+              "extractorVersion": null
+            },
+            "versions": [
+              {
+                "number": 1,
+                "blake3": "1111111111111111111111111111111111111111111111111111111111111111",
+                "recordedAt": "2026-10-22T06:00:00Z"
+              }
+            ]
+          }
+        ],
+        "states": [
+          {
+            "itemId": "urn:libre-ai:item:0001",
+            "read": true,
+            "favorite": false,
+            "followed": false,
+            "toRead": false,
+            "tags": ["security"],
+            "updatedAt": "2026-10-22T08:30:00Z"
+          }
+        ],
+        "annotations": [
+          {
+            "id": "urn:libre-ai:annotation:0001",
+            "itemId": "urn:libre-ai:item:0001",
+            "body": "Relevant for the quarterly review.",
+            "createdAt": "2026-10-22T08:31:00Z",
+            "updatedAt": "2026-10-22T08:31:00Z"
+          }
+        ],
+        "ruleSets": [
+          {
+            "schemaVersion": "libre-ai.curation-rule-set.v3",
+            "id": "urn:libre-ai:rule-set:default-v3",
+            "organizationId": "ten_0123456789abcdef",
+            "version": 1,
+            "status": "active",
+            "rules": [
+              {
+                "id": "hide-sponsored",
+                "name": "Hide sponsored posts",
+                "when": { "field": "title", "operator": "prefix", "value": "Sponsored" },
+                "then": [{ "hide": true }],
+                "explanation": "A title that starts with Sponsored is hidden."
+              }
+            ],
+            "createdAt": "2026-10-22T08:00:00Z"
+          }
+        ],
+        "decisions": [
+          {
+            "itemId": "urn:libre-ai:item:0001",
+            "ruleSetId": "urn:libre-ai:rule-set:default-v3",
+            "ruleSetVersion": 1,
+            "visibility": "visible",
+            "decidingRuleId": null,
+            "decidedAt": "2026-10-22T06:01:00Z"
+          }
+        ],
+        "preferences": { "theme": "system" }
+      },
+      "invalidMutations": [
+        {
+          "name": "digest absent",
+          "path": "/digest",
+          "remove": true
+        },
+        {
+          "name": "digest not lowercase hexadecimal SHA-256",
+          "path": "/digest",
+          "value": "ABC"
+        },
+        {
+          "name": "unknown root member",
+          "path": "/unexpected",
+          "value": true
+        },
+        {
+          "name": "provenance without ETag member",
+          "path": "/items/0/provenance/etag",
+          "remove": true
+        },
+        {
+          "name": "HTTP status outside 100-599",
+          "path": "/items/0/provenance/httpStatus",
+          "value": 700
+        },
+        {
+          "name": "feed URL carrying userinfo",
+          "path": "/items/0/provenance/feedUrl",
+          "value": "https://user@feeds.example.org/atom.xml"
+        },
+        {
+          "name": "declared publication date present without value",
+          "path": "/items/0/provenance/declaredPublishedAt",
+          "value": { "state": "present" }
+        },
+        {
+          "name": "item version without BLAKE3 digest",
+          "path": "/items/0/versions/0/blake3",
+          "value": "not-a-digest"
+        },
+        {
+          "name": "preference outside the closed set",
+          "path": "/preferences/theme",
+          "value": "solarized"
+        },
+        {
+          "name": "signature of the wrong length",
+          "path": "/signature",
+          "value": { "kid": "export-key-2026-10", "signature": "short" }
+        },
+        {
+          "name": "embedded rule set on the v2 schema version",
+          "path": "/ruleSets/0/schemaVersion",
+          "value": "libre-ai.curation-rule-set.v2"
+        }
+      ]
+    }
+  ]
+}

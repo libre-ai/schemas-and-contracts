@@ -1388,6 +1388,74 @@
         "required": ["architecture", "security", "cryptography", "privacy"],
         "dossier": "docs/reviews/export-digests-i10-review.md"
       }
+    },
+    {
+      "id": "curation-rule-set-v3",
+      "kind": "json-schema",
+      "path": "contracts/schemas/curation-rule-set.v3.schema.json",
+      "owners": ["information-watch"],
+      "consumers": ["information-watch"],
+      "compatibility": "major-versioned",
+      "classification": "tenant-private",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security"],
+        "dossier": "docs/reviews/p02-v1-contracts-review.md"
+      }
+    },
+    {
+      "id": "p02-export-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/p02-export.v1.schema.json",
+      "owners": ["information-watch"],
+      "consumers": ["information-watch"],
+      "compatibility": "major-versioned",
+      "classification": "personal",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "privacy", "cryptography"],
+        "dossier": "docs/reviews/p02-v1-contracts-review.md"
+      }
+    },
+    {
+      "id": "knowledge-excerpt-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/knowledge-excerpt.v1.schema.json",
+      "owners": ["information-watch"],
+      "consumers": ["information-watch", "notes"],
+      "compatibility": "major-versioned",
+      "classification": "personal",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "privacy"],
+        "dossier": "docs/reviews/p02-v1-contracts-review.md"
+      }
+    },
+    {
+      "id": "usage-statement-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/usage-statement.v1.schema.json",
+      "owners": ["information-watch"],
+      "consumers": ["information-watch"],
+      "compatibility": "major-versioned",
+      "classification": "tenant-private",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "privacy", "cryptography"],
+        "dossier": "docs/reviews/p02-v1-contracts-review.md"
+      }
     }
   ]
 }

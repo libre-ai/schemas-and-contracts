@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "usage-statement.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.usage-statement.v1",
+        "organizationId": "ten_0123456789abcdef",
+        "period": {
+          "from": "2026-10-01T00:00:00Z",
+          "to": "2026-10-31T23:59:59Z"
+        },
+        "counters": {
+          "sources": 12,
+          "itemsRetained": 340,
+          "fetches": 2880,
+          "members": 1
+        },
+        "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "signature": {
+          "kid": "usage-key-2026-10",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      },
+      "invalidMutations": [
+        {
+          "name": "unknown root member",
+          "path": "/unexpected",
+          "value": true
+        },
+        {
+          "name": "content field added at the root",
+          "path": "/itemTitles",
+          "value": ["Example title"]
+        },
+        {
+          "name": "content field added to the counters",
+          "path": "/counters/itemTitle",
+          "value": "Example title"
+        },
+        {
+          "name": "statement without digest",
+          "path": "/digest",
+          "remove": true
+        },
+        {
+          "name": "statement without signature",
+          "path": "/signature",
+          "remove": true
+        },
+        {
+          "name": "signature with a key identifier that is not lowercase",
+          "path": "/signature/kid",
+          "value": "Usage-Key"
+        },
+        {
+          "name": "signature of the wrong length",
+          "path": "/signature/signature",
+          "value": "short"
+        },
+        {
+          "name": "negative counter",
+          "path": "/counters/fetches",
+          "value": -1
+        },
+        {
+          "name": "period without end",
+          "path": "/period/to",
+          "remove": true
+        }
+      ]
+    }
+  ]
+}

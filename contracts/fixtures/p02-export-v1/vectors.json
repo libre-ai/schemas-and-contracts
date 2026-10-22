@@ -1,0 +1,201 @@
+{
+  "schemaVersion": "libre-ai.p02-export-vectors.v1",
+  "valid": [
+    {
+      "name": "organization with an empty library",
+      "document": {
+        "schemaVersion": "libre-ai.p02-export.v1",
+        "organizationId": "ten_fedcba9876543210",
+        "exportedAt": "2026-10-22T09:00:00Z",
+        "sources": [],
+        "folders": [],
+        "items": [],
+        "states": [],
+        "annotations": [],
+        "ruleSets": [],
+        "decisions": [],
+        "preferences": {
+          "theme": "dark"
+        }
+      }
+    },
+    {
+      "name": "item with two versions, a deciding rule and a null folder",
+      "document": {
+        "schemaVersion": "libre-ai.p02-export.v1",
+        "organizationId": "ten_0123456789abcdef",
+        "exportedAt": "2026-10-22T09:00:00Z",
+        "sources": [
+          {
+            "id": "urn:libre-ai:source:example-news",
+            "url": "https://news.example.org/rss",
+            "displayName": "Example news",
+            "folderId": null,
+            "createdAt": "2026-10-02T08:00:00Z"
+          }
+        ],
+        "folders": [],
+        "items": [
+          {
+            "id": "urn:libre-ai:item:0002",
+            "sourceId": "urn:libre-ai:source:example-news",
+            "title": "Story revised once",
+            "provenance": {
+              "feedUrl": "https://news.example.org/rss",
+              "fetchId": "fetch-0002",
+              "httpStatus": 304,
+              "etag": null,
+              "lastModified": null,
+              "collectedAt": "2026-10-22T07:00:00Z",
+              "declaredPublishedAt": {
+                "state": "malformed"
+              },
+              "guid": null,
+              "canonicalUrl": "https://news.example.org/story",
+              "canonicalizationRule": "url-rfc3986-v1",
+              "sanitizerVersion": "sanitizer-1",
+              "extractorVersion": "extractor-2"
+            },
+            "versions": [
+              {
+                "number": 1,
+                "blake3": "2222222222222222222222222222222222222222222222222222222222222222",
+                "recordedAt": "2026-10-22T07:00:00Z"
+              },
+              {
+                "number": 2,
+                "blake3": "3333333333333333333333333333333333333333333333333333333333333333",
+                "recordedAt": "2026-10-22T08:00:00Z"
+              }
+            ]
+          }
+        ],
+        "states": [
+          {
+            "itemId": "urn:libre-ai:item:0002",
+            "read": false,
+            "favorite": true,
+            "followed": true,
+            "toRead": false,
+            "tags": [],
+            "updatedAt": "2026-10-22T08:10:00Z"
+          }
+        ],
+        "annotations": [],
+        "ruleSets": [],
+        "decisions": [
+          {
+            "itemId": "urn:libre-ai:item:0002",
+            "ruleSetId": "urn:libre-ai:rule-set:default-v3",
+            "ruleSetVersion": 1,
+            "visibility": "hidden",
+            "decidingRuleId": "hide-sponsored",
+            "decidedAt": "2026-10-22T08:00:00Z"
+          }
+        ],
+        "preferences": {
+          "theme": "system"
+        }
+      }
+    },
+    {
+      "name": "signed export with a key identifier and a 86-character signature",
+      "document": {
+        "schemaVersion": "libre-ai.p02-export.v1",
+        "organizationId": "ten_0123456789abcdef",
+        "exportedAt": "2026-10-22T09:00:00Z",
+        "sources": [],
+        "folders": [],
+        "items": [],
+        "states": [],
+        "annotations": [],
+        "ruleSets": [],
+        "decisions": [],
+        "preferences": {
+          "theme": "light"
+        },
+        "signature": {
+          "kid": "export-key-2026-10",
+          "signature": "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "decision visibility outside the closed set",
+      "document": {
+        "schemaVersion": "libre-ai.p02-export.v1",
+        "organizationId": "ten_0123456789abcdef",
+        "exportedAt": "2026-10-22T09:00:00Z",
+        "sources": [],
+        "folders": [],
+        "items": [],
+        "states": [],
+        "annotations": [],
+        "ruleSets": [],
+        "decisions": [
+          {
+            "itemId": "urn:libre-ai:item:0003",
+            "ruleSetId": "urn:libre-ai:rule-set:default-v3",
+            "ruleSetVersion": 1,
+            "visibility": "archived",
+            "decidingRuleId": null,
+            "decidedAt": "2026-10-22T08:00:00Z"
+          }
+        ],
+        "preferences": {
+          "theme": "system"
+        }
+      }
+    },
+    {
+      "name": "item provenance carrying the page body",
+      "document": {
+        "schemaVersion": "libre-ai.p02-export.v1",
+        "organizationId": "ten_0123456789abcdef",
+        "exportedAt": "2026-10-22T09:00:00Z",
+        "sources": [],
+        "folders": [],
+        "items": [
+          {
+            "id": "urn:libre-ai:item:0004",
+            "sourceId": "urn:libre-ai:source:example-news",
+            "title": "Story with a body in its provenance",
+            "provenance": {
+              "feedUrl": "https://news.example.org/rss",
+              "fetchId": "fetch-0004",
+              "httpStatus": 200,
+              "etag": null,
+              "lastModified": null,
+              "collectedAt": "2026-10-22T07:00:00Z",
+              "declaredPublishedAt": {
+                "state": "absent"
+              },
+              "guid": null,
+              "canonicalUrl": "https://news.example.org/story-4",
+              "canonicalizationRule": "url-rfc3986-v1",
+              "sanitizerVersion": "sanitizer-1",
+              "extractorVersion": null,
+              "body": "<p>page content</p>"
+            },
+            "versions": [
+              {
+                "number": 1,
+                "blake3": "4444444444444444444444444444444444444444444444444444444444444444",
+                "recordedAt": "2026-10-22T07:00:00Z"
+              }
+            ]
+          }
+        ],
+        "states": [],
+        "annotations": [],
+        "ruleSets": [],
+        "decisions": [],
+        "preferences": {
+          "theme": "system"
+        }
+      }
+    }
+  ]
+}

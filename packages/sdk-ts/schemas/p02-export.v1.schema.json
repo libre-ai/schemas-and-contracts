@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.libre-ai.fr/schemas/p02-export.v1.schema.json",
+  "title": "Libre AI P02 Export v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "organizationId",
+    "exportedAt",
+    "digest",
+    "sources",
+    "folders",
+    "items",
+    "states",
+    "annotations",
+    "ruleSets",
+    "decisions",
+    "preferences"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "libre-ai.p02-export.v1" },
+    "organizationId": { "$ref": "common.v1.schema.json#/$defs/tenantId" },
+    "exportedAt": { "type": "string", "format": "date-time", "maxLength": 32 },
+    "digest": { "$ref": "common.v1.schema.json#/$defs/sha256" },
+    "signature": { "$ref": "#/$defs/signature" },
+    "sources": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "folders": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": { "$ref": "#/$defs/folder" }
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 500000,
+      "items": { "$ref": "#/$defs/item" }
+    },
+    "states": {
+      "type": "array",
+      "maxItems": 500000,
+      "items": { "$ref": "#/$defs/state" }
+    },
+    "annotations": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": { "$ref": "#/$defs/annotation" }
+    },
+    "ruleSets": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": { "$ref": "curation-rule-set.v3.schema.json" }
+    },
+    "decisions": {
+      "type": "array",
+      "maxItems": 5000000,
+      "items": { "$ref": "#/$defs/decision" }
+    },
+    "preferences": { "$ref": "#/$defs/preferences" }
+  },
+  "$defs": {
+    "urn": { "$ref": "common.v1.schema.json#/$defs/urn" },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "maxLength": 32
+    },
+    "uri": {
+      "type": "string",
+      "format": "uri",
+      "maxLength": 2048,
+      "pattern": "^https?://(?![^/?#]*@)"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "url", "displayName", "folderId", "createdAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/urn" },
+        "url": { "$ref": "#/$defs/uri" },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "folderId": { "anyOf": [{ "$ref": "#/$defs/urn" }, { "type": "null" }] },
+        "createdAt": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "folder": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "name", "createdAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/urn" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "createdAt": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "declaredPublishedAt": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state", "value"],
+          "properties": {
+            "state": { "const": "present" },
+            "value": { "$ref": "#/$defs/timestamp" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state"],
+          "properties": { "state": { "const": "absent" } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["state"],
+          "properties": { "state": { "const": "malformed" } }
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "feedUrl",
+        "fetchId",
+        "httpStatus",
+        "etag",
+        "lastModified",
+        "collectedAt",
+        "declaredPublishedAt",
+        "guid",
+        "canonicalUrl",
+        "canonicalizationRule",
+        "sanitizerVersion",
+        "extractorVersion"
+      ],
+      "properties": {
+        "feedUrl": { "$ref": "#/$defs/uri" },
+        "fetchId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9._:-]+$"
+        },
+        "httpStatus": { "type": "integer", "minimum": 100, "maximum": 599 },
+        "etag": {
+          "anyOf": [{ "type": "string", "minLength": 1, "maxLength": 512 }, { "type": "null" }]
+        },
+        "lastModified": {
+          "anyOf": [{ "type": "string", "minLength": 1, "maxLength": 256 }, { "type": "null" }]
+        },
+        "collectedAt": { "$ref": "#/$defs/timestamp" },
+        "declaredPublishedAt": { "$ref": "#/$defs/declaredPublishedAt" },
+        "guid": {
+          "anyOf": [{ "type": "string", "minLength": 1, "maxLength": 2048 }, { "type": "null" }]
+        },
+        "canonicalUrl": { "$ref": "#/$defs/uri" },
+        "canonicalizationRule": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64,
+          "pattern": "^[a-z][a-z0-9.-]*$"
+        },
+        "sanitizerVersion": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "extractorVersion": {
+          "anyOf": [{ "type": "string", "minLength": 1, "maxLength": 64 }, { "type": "null" }]
+        }
+      }
+    },
+    "version": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["number", "blake3", "recordedAt"],
+      "properties": {
+        "number": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+        "blake3": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "recordedAt": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sourceId", "title", "provenance", "versions"],
+      "properties": {
+        "id": { "$ref": "#/$defs/urn" },
+        "sourceId": { "$ref": "#/$defs/urn" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "versions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "items": { "$ref": "#/$defs/version" }
+        }
+      }
+    },
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["itemId", "read", "favorite", "followed", "toRead", "tags", "updatedAt"],
+      "properties": {
+        "itemId": { "$ref": "#/$defs/urn" },
+        "read": { "type": "boolean" },
+        "favorite": { "type": "boolean" },
+        "followed": { "type": "boolean" },
+        "toRead": { "type": "boolean" },
+        "tags": {
+          "type": "array",
+          "maxItems": 64,
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        },
+        "updatedAt": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "itemId", "body", "createdAt", "updatedAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/urn" },
+        "itemId": { "$ref": "#/$defs/urn" },
+        "body": { "type": "string", "minLength": 1, "maxLength": 20000 },
+        "createdAt": { "$ref": "#/$defs/timestamp" },
+        "updatedAt": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "itemId",
+        "ruleSetId",
+        "ruleSetVersion",
+        "visibility",
+        "decidingRuleId",
+        "decidedAt"
+      ],
+      "properties": {
+        "itemId": { "$ref": "#/$defs/urn" },
+        "ruleSetId": { "$ref": "#/$defs/urn" },
+        "ruleSetVersion": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+        "visibility": { "enum": ["visible", "hidden"] },
+        "decidingRuleId": {
+          "anyOf": [{ "$ref": "common.v1.schema.json#/$defs/identifier" }, { "type": "null" }]
+        },
+        "decidedAt": { "$ref": "#/$defs/timestamp" }
+      }
+    },
+    "preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["theme"],
+      "properties": {
+        "theme": { "enum": ["system", "light", "dark"] }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kid", "signature"],
+      "properties": {
+        "kid": { "$ref": "common.v1.schema.json#/$defs/identifier" },
+        "signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+      }
+    }
+  }
+}
