@@ -5,14 +5,14 @@ import type approvedEvidence from "../../docs/reviews/build-brief-missions-speci
 // This gate admits one reviewed change, not an extensible source of permissions.
 // Updating the proof requires a new reviewed pin; caller-controlled manifests
 // cannot broaden the transition or replace their own baseline.
-const EVIDENCE_DIGEST = "39c8bb96a25cf1e5cb6e9d832f2a4f3e44acbf3a47a37b73d3f0b5de75888eb6";
+const EVIDENCE_DIGEST: string = "39c8bb96a25cf1e5cb6e9d832f2a4f3e44acbf3a47a37b73d3f0b5de75888eb6";
 
 // Entries admitted after the reviewed baseline. The registry is data, but its
 // exact bytes are pinned here: adding an entry requires changing this digest
 // in a reviewed, owner-arbitrated change (ADR 2026-10-09).
-export const POST_LOCK_ADDITIONS_PATH = "contracts/catalog-post-lock-additions.v1.json";
-const POST_LOCK_ADDITIONS_DIGEST =
-  "ca982271ed2e0fd5e01ca934fdae30547eb30b62aba08abfff71b0bc7d89848c";
+export const POST_LOCK_ADDITIONS_PATH: string = "contracts/catalog-post-lock-additions.v1.json";
+const POST_LOCK_ADDITIONS_DIGEST: string =
+  "6e1f92954e4e80b725858caf2c79b9fbdcc8e9c7223f53a0cabb4deffae73e4a";
 
 export interface SpecificationLockInput {
   targetCatalog: unknown;

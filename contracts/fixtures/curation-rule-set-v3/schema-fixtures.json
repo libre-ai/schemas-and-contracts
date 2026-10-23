@@ -1,0 +1,114 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "curation-rule-set.v3.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.curation-rule-set.v3",
+        "id": "urn:libre-ai:rule-set:default-v3",
+        "organizationId": "ten_0123456789abcdef",
+        "version": 1,
+        "status": "active",
+        "rules": [
+          {
+            "id": "hide-sponsored",
+            "name": "Hide sponsored posts",
+            "when": { "field": "title", "operator": "prefix", "value": "Sponsored" },
+            "then": [{ "hide": true }],
+            "explanation": "A title that starts with Sponsored is hidden: the publisher labels it as advertising."
+          },
+          {
+            "id": "tag-recent-security",
+            "name": "Tag recent security items",
+            "when": {
+              "all": [
+                { "field": "categories", "operator": "contains", "value": "security" },
+                { "field": "publishedAt", "operator": "after", "value": "2026-10-01T00:00:00Z" },
+                { "not": { "field": "author", "operator": "equals", "value": "bot" } }
+              ]
+            },
+            "then": [{ "tag": "security" }, { "alert": true }],
+            "explanation": "Recent security items are tagged and alerted; automated authors are excluded."
+          }
+        ],
+        "createdAt": "2026-10-22T08:00:00Z"
+      },
+      "invalidMutations": [
+        {
+          "name": "legacy tenantId instead of organizationId",
+          "path": "/tenantId",
+          "value": "ten_0123456789abcdef"
+        },
+        {
+          "name": "missing organizationId",
+          "path": "/organizationId",
+          "remove": true
+        },
+        {
+          "name": "no rule",
+          "path": "/rules",
+          "value": []
+        },
+        {
+          "name": "condition of depth 5",
+          "path": "/rules/0/when",
+          "value": {
+            "all": [
+              {
+                "any": [
+                  {
+                    "not": {
+                      "all": [{ "field": "title", "operator": "contains", "value": "deep" }]
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "after operator on a text field",
+          "path": "/rules/0/when/operator",
+          "value": "after"
+        },
+        {
+          "name": "contains operator on a date field",
+          "path": "/rules/1/when/all/1/operator",
+          "value": "contains"
+        },
+        {
+          "name": "date value without Z suffix",
+          "path": "/rules/1/when/all/1/value",
+          "value": "2026-10-01"
+        },
+        {
+          "name": "six actions",
+          "path": "/rules/0/then",
+          "value": [
+            { "hide": true },
+            { "hide": true },
+            { "hide": true },
+            { "hide": true },
+            { "hide": true },
+            { "hide": true }
+          ]
+        },
+        {
+          "name": "unknown action",
+          "path": "/rules/1/then/0",
+          "value": { "archive": true }
+        },
+        {
+          "name": "action with two keys",
+          "path": "/rules/0/then/0",
+          "value": { "hide": true, "keep": true }
+        },
+        {
+          "name": "unknown status",
+          "path": "/status",
+          "value": "archived"
+        }
+      ]
+    }
+  ]
+}

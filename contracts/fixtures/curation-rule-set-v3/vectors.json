@@ -1,0 +1,166 @@
+{
+  "schemaVersion": "libre-ai.curation-rule-set-v3-vectors.v1",
+  "valid": [
+    {
+      "name": "two rules with all, not and a date bound",
+      "document": {
+        "schemaVersion": "libre-ai.curation-rule-set.v3",
+        "id": "urn:libre-ai:rule-set:default-v3",
+        "organizationId": "ten_0123456789abcdef",
+        "version": 1,
+        "status": "active",
+        "rules": [
+          {
+            "id": "hide-sponsored",
+            "name": "Hide sponsored posts",
+            "when": { "field": "title", "operator": "prefix", "value": "Sponsored" },
+            "then": [{ "hide": true }],
+            "explanation": "A title that starts with Sponsored is hidden: the publisher labels it as advertising."
+          },
+          {
+            "id": "tag-recent-security",
+            "name": "Tag recent security items",
+            "when": {
+              "all": [
+                { "field": "categories", "operator": "contains", "value": "security" },
+                { "field": "publishedAt", "operator": "after", "value": "2026-10-01T00:00:00Z" },
+                { "not": { "field": "author", "operator": "equals", "value": "bot" } }
+              ]
+            },
+            "then": [{ "tag": "security" }, { "alert": true }],
+            "explanation": "Recent security items are tagged and alerted; automated authors are excluded."
+          }
+        ],
+        "createdAt": "2026-10-22T08:00:00Z"
+      }
+    },
+    {
+      "name": "depth-4 condition: all, any, not, leaf",
+      "document": {
+        "schemaVersion": "libre-ai.curation-rule-set.v3",
+        "id": "urn:libre-ai:rule-set:depth-four",
+        "organizationId": "ten_0123456789abcdef",
+        "version": 2,
+        "status": "draft",
+        "rules": [
+          {
+            "id": "keep-deep",
+            "name": "Keep matching items",
+            "when": {
+              "all": [
+                {
+                  "any": [
+                    {
+                      "not": { "field": "sourceHost", "operator": "equals", "value": "example.org" }
+                    }
+                  ]
+                }
+              ]
+            },
+            "then": [{ "keep": true }],
+            "explanation": "Items from other hosts are kept."
+          }
+        ],
+        "createdAt": "2026-10-22T08:00:00Z"
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "condition of depth 5 (all, any, not, all, leaf)",
+      "document": {
+        "schemaVersion": "libre-ai.curation-rule-set.v3",
+        "id": "urn:libre-ai:rule-set:depth-five",
+        "organizationId": "ten_0123456789abcdef",
+        "version": 1,
+        "status": "draft",
+        "rules": [
+          {
+            "id": "too-deep",
+            "name": "Too deep",
+            "when": {
+              "all": [
+                {
+                  "any": [
+                    {
+                      "not": {
+                        "all": [{ "field": "title", "operator": "contains", "value": "deep" }]
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "then": [{ "hide": true }],
+            "explanation": "Depth five is refused."
+          }
+        ],
+        "createdAt": "2026-10-22T08:00:00Z"
+      }
+    },
+    {
+      "name": "after operator on title",
+      "document": {
+        "schemaVersion": "libre-ai.curation-rule-set.v3",
+        "id": "urn:libre-ai:rule-set:date-on-text",
+        "organizationId": "ten_0123456789abcdef",
+        "version": 1,
+        "status": "draft",
+        "rules": [
+          {
+            "id": "date-on-title",
+            "name": "Date operator on a text field",
+            "when": { "field": "title", "operator": "after", "value": "2026-10-01T00:00:00Z" },
+            "then": [{ "hide": true }],
+            "explanation": "The after operator applies to date fields only."
+          }
+        ],
+        "createdAt": "2026-10-22T08:00:00Z"
+      }
+    },
+    {
+      "name": "contains operator on publishedAt",
+      "document": {
+        "schemaVersion": "libre-ai.curation-rule-set.v3",
+        "id": "urn:libre-ai:rule-set:text-on-date",
+        "organizationId": "ten_0123456789abcdef",
+        "version": 1,
+        "status": "draft",
+        "rules": [
+          {
+            "id": "text-on-date",
+            "name": "Text operator on a date field",
+            "when": { "field": "publishedAt", "operator": "contains", "value": "2026" },
+            "then": [{ "hide": true }],
+            "explanation": "The contains operator applies to text fields only."
+          }
+        ],
+        "createdAt": "2026-10-22T08:00:00Z"
+      }
+    },
+    {
+      "name": "action outside the closed set",
+      "document": {
+        "schemaVersion": "libre-ai.curation-rule-set.v3",
+        "id": "urn:libre-ai:rule-set:unknown-action",
+        "organizationId": "ten_0123456789abcdef",
+        "version": 1,
+        "status": "draft",
+        "rules": [
+          {
+            "id": "archive-old",
+            "name": "Archive old items",
+            "when": {
+              "field": "collectedAt",
+              "operator": "before",
+              "value": "2026-01-01T00:00:00Z"
+            },
+            "then": [{ "archive": true }],
+            "explanation": "archive is not an action of v3."
+          }
+        ],
+        "createdAt": "2026-10-22T08:00:00Z"
+      }
+    }
+  ]
+}

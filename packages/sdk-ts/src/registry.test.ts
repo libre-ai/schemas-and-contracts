@@ -142,6 +142,22 @@ for (const exportMajor of ["curated-item-export-v3", "practice-progress-export-v
   ).json()) as { cases: Fixture[] };
   fixtureDocument.cases.push(...exportFixtureDocument.cases);
 }
+const curationRuleSetV3FixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/curation-rule-set-v3/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...curationRuleSetV3FixtureDocument.cases);
+const p02ExportV1FixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/p02-export-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...p02ExportV1FixtureDocument.cases);
+const knowledgeExcerptV1FixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/knowledge-excerpt-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...knowledgeExcerptV1FixtureDocument.cases);
+const usageStatementV1FixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/usage-statement-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...usageStatementV1FixtureDocument.cases);
 const authorityCatalog = (await Bun.file("../../contracts/catalog.v1.json").json()) as {
   contracts: CatalogEntry[];
 };

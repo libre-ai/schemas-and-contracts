@@ -109,6 +109,22 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/practice-progress-export-v2/schema-fixtures.json"
     ))
     .expect("practice progress export v2 fixture document");
+    let curation_rule_set_v3_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/curation-rule-set-v3/schema-fixtures.json"
+    ))
+    .expect("curation rule set v3 fixture document");
+    let p02_export_v1_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/p02-export-v1/schema-fixtures.json"
+    ))
+    .expect("P02 export v1 fixture document");
+    let knowledge_excerpt_v1_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/knowledge-excerpt-v1/schema-fixtures.json"
+    ))
+    .expect("knowledge excerpt v1 fixture document");
+    let usage_statement_v1_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/usage-statement-v1/schema-fixtures.json"
+    ))
+    .expect("usage statement v1 fixture document");
     let cases = fixtures["cases"]
         .as_array()
         .expect("fixture cases")
@@ -163,6 +179,26 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
             practice_progress_export_v2_fixtures["cases"]
                 .as_array()
                 .expect("practice progress export v2 fixture cases"),
+        )
+        .chain(
+            curation_rule_set_v3_fixtures["cases"]
+                .as_array()
+                .expect("curation rule set v3 fixture cases"),
+        )
+        .chain(
+            p02_export_v1_fixtures["cases"]
+                .as_array()
+                .expect("P02 export v1 fixture cases"),
+        )
+        .chain(
+            knowledge_excerpt_v1_fixtures["cases"]
+                .as_array()
+                .expect("knowledge excerpt v1 fixture cases"),
+        )
+        .chain(
+            usage_statement_v1_fixtures["cases"]
+                .as_array()
+                .expect("usage statement v1 fixture cases"),
         )
         .collect::<Vec<_>>();
     assert_eq!(schema_count, cases.len() + 1);

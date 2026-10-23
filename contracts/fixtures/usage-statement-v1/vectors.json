@@ -1,0 +1,100 @@
+{
+  "schemaVersion": "libre-ai.usage-statement-vectors.v1",
+  "valid": [
+    {
+      "name": "empty month with zero counters",
+      "document": {
+        "schemaVersion": "libre-ai.usage-statement.v1",
+        "organizationId": "ten_fedcba9876543210",
+        "period": {
+          "from": "2026-09-01T00:00:00Z",
+          "to": "2026-09-30T23:59:59Z"
+        },
+        "counters": {
+          "sources": 0,
+          "itemsRetained": 0,
+          "fetches": 0,
+          "members": 1
+        },
+        "signature": {
+          "kid": "usage-key-2026-10",
+          "signature": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+        }
+      }
+    },
+    {
+      "name": "team organization over a quarter",
+      "document": {
+        "schemaVersion": "libre-ai.usage-statement.v1",
+        "organizationId": "ten_0123456789abcdef",
+        "period": {
+          "from": "2026-07-01T00:00:00Z",
+          "to": "2026-09-30T23:59:59Z"
+        },
+        "counters": {
+          "sources": 640,
+          "itemsRetained": 118000,
+          "fetches": 96000,
+          "members": 10
+        },
+        "signature": {
+          "kid": "usage-key-2026-10",
+          "signature": "CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC"
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "item titles listed next to the counters",
+      "document": {
+        "schemaVersion": "libre-ai.usage-statement.v1",
+        "organizationId": "ten_0123456789abcdef",
+        "period": {
+          "from": "2026-10-01T00:00:00Z",
+          "to": "2026-10-31T23:59:59Z"
+        },
+        "counters": {
+          "sources": 1,
+          "itemsRetained": 1,
+          "fetches": 1,
+          "members": 1
+        },
+        "items": [
+          {
+            "title": "Example title",
+            "url": "https://example.org/articles/1"
+          }
+        ],
+        "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "signature": {
+          "kid": "usage-key-2026-10",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      }
+    },
+    {
+      "name": "counter outside the closed set",
+      "document": {
+        "schemaVersion": "libre-ai.usage-statement.v1",
+        "organizationId": "ten_0123456789abcdef",
+        "period": {
+          "from": "2026-10-01T00:00:00Z",
+          "to": "2026-10-31T23:59:59Z"
+        },
+        "counters": {
+          "sources": 1,
+          "itemsRetained": 1,
+          "fetches": 1,
+          "members": 1,
+          "exports": 3
+        },
+        "digest": "0000000000000000000000000000000000000000000000000000000000000000",
+        "signature": {
+          "kid": "usage-key-2026-10",
+          "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        }
+      }
+    }
+  ]
+}

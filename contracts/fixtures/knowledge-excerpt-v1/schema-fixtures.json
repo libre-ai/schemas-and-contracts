@@ -1,0 +1,63 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "knowledge-excerpt.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.knowledge-excerpt.v1",
+        "frontMatter": {
+          "itemId": "urn:libre-ai:item:0001",
+          "sourceId": "urn:libre-ai:source:example-feed",
+          "version": 1,
+          "url": "https://example.org/articles/1",
+          "publishedAt": "2026-10-21T07:00:00Z",
+          "collectedAt": "2026-10-22T06:00:00Z",
+          "excerptAnchor": "p-3"
+        },
+        "body": "> The sanitized sentence selected by the reader.\n\nThe reader's own note follows."
+      },
+      "invalidMutations": [
+        {
+          "name": "unknown root member",
+          "path": "/unexpected",
+          "value": true
+        },
+        {
+          "name": "front matter without version",
+          "path": "/frontMatter/version",
+          "remove": true
+        },
+        {
+          "name": "front matter without declared publication (null is allowed, absence is not)",
+          "path": "/frontMatter/publishedAt",
+          "remove": true
+        },
+        {
+          "name": "malformed publication timestamp",
+          "path": "/frontMatter/publishedAt",
+          "value": "2026/10/21"
+        },
+        {
+          "name": "URL carrying userinfo",
+          "path": "/frontMatter/url",
+          "value": "https://user@example.org/articles/1"
+        },
+        {
+          "name": "anchor with a space",
+          "path": "/frontMatter/excerptAnchor",
+          "value": "p 3"
+        },
+        {
+          "name": "empty body",
+          "path": "/body",
+          "value": ""
+        },
+        {
+          "name": "body as a structured object instead of Markdown text",
+          "path": "/body",
+          "value": { "markdown": "text" }
+        }
+      ]
+    }
+  ]
+}

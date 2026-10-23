@@ -1,0 +1,88 @@
+{
+  "schemaVersion": "libre-ai.knowledge-excerpt-vectors.v1",
+  "valid": [
+    {
+      "name": "excerpt of an item whose publication date was absent",
+      "document": {
+        "schemaVersion": "libre-ai.knowledge-excerpt.v1",
+        "frontMatter": {
+          "itemId": "urn:libre-ai:item:0002",
+          "sourceId": "urn:libre-ai:source:example-feed",
+          "version": 3,
+          "url": "https://example.org/articles/2",
+          "publishedAt": null,
+          "collectedAt": "2026-10-22T06:00:00Z",
+          "excerptAnchor": "section-2.1"
+        },
+        "body": "A paragraph kept verbatim after sanitization."
+      }
+    },
+    {
+      "name": "excerpt with a multi-paragraph Markdown body",
+      "document": {
+        "schemaVersion": "libre-ai.knowledge-excerpt.v1",
+        "frontMatter": {
+          "itemId": "urn:libre-ai:item:0003",
+          "sourceId": "urn:libre-ai:source:example-news",
+          "version": 1,
+          "url": "https://news.example.org/2026/10/21/story",
+          "publishedAt": "2026-10-21T18:00:00Z",
+          "collectedAt": "2026-10-22T06:05:00Z",
+          "excerptAnchor": "p-7"
+        },
+        "body": "First paragraph.\n\nSecond paragraph with a [link](https://example.org/ref).\n\n- one\n- two"
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "version zero",
+      "document": {
+        "schemaVersion": "libre-ai.knowledge-excerpt.v1",
+        "frontMatter": {
+          "itemId": "urn:libre-ai:item:0004",
+          "sourceId": "urn:libre-ai:source:example-feed",
+          "version": 0,
+          "url": "https://example.org/articles/4",
+          "publishedAt": null,
+          "collectedAt": "2026-10-22T06:00:00Z",
+          "excerptAnchor": "p-1"
+        },
+        "body": "Text."
+      }
+    },
+    {
+      "name": "front matter member outside the closed set",
+      "document": {
+        "schemaVersion": "libre-ai.knowledge-excerpt.v1",
+        "frontMatter": {
+          "itemId": "urn:libre-ai:item:0005",
+          "sourceId": "urn:libre-ai:source:example-feed",
+          "version": 1,
+          "url": "https://example.org/articles/5",
+          "publishedAt": null,
+          "collectedAt": "2026-10-22T06:00:00Z",
+          "excerptAnchor": "p-1",
+          "tags": ["security"]
+        },
+        "body": "Text."
+      }
+    },
+    {
+      "name": "source identifier that is not a URN",
+      "document": {
+        "schemaVersion": "libre-ai.knowledge-excerpt.v1",
+        "frontMatter": {
+          "itemId": "urn:libre-ai:item:0006",
+          "sourceId": "example-feed",
+          "version": 1,
+          "url": "https://example.org/articles/6",
+          "publishedAt": null,
+          "collectedAt": "2026-10-22T06:00:00Z",
+          "excerptAnchor": "p-1"
+        },
+        "body": "Text."
+      }
+    }
+  ]
+}

@@ -17,6 +17,7 @@ import {
   candidateProtocolOperations,
 } from "./candidate-protocol-authority";
 import { decisionBindingDocumentFailures } from "./decision-binding";
+import { loadP02ContractFixtureCases } from "./p02-v1-fixture-inventory";
 import { parseStrictJson } from "./policy-core-raw-inputs";
 import { localProtocolAuthorities } from "./protocol-authority";
 import {
@@ -634,6 +635,10 @@ for (const exportMajor of ["curated-item-export-v3", "practice-progress-export-v
     failures.push(`${exportMajor}: invalid separate schema fixture inventory`);
   } else fixtureCases.push(...(exportFixtures.cases as FixtureCase[]));
 }
+// P02 v1 contracts (candidate, ADR 2026-10-22): one schema-fixture document each.
+const p02Inventory = await loadP02ContractFixtureCases();
+failures.push(...p02Inventory.failures);
+fixtureCases.push(...p02Inventory.cases);
 
 if (fixtureCases.length === 0)
   failures.push("contracts/fixtures/schema-fixtures.v1.json: no fixtures");
