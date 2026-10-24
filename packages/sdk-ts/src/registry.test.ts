@@ -158,6 +158,10 @@ const usageStatementV1FixtureDocument = (await Bun.file(
   "../../contracts/fixtures/usage-statement-v1/schema-fixtures.json",
 ).json()) as { cases: Fixture[] };
 fixtureDocument.cases.push(...usageStatementV1FixtureDocument.cases);
+const signalementDeliveryEnvelopeV1FixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/signalement-delivery-envelope-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...signalementDeliveryEnvelopeV1FixtureDocument.cases);
 const authorityCatalog = (await Bun.file("../../contracts/catalog.v1.json").json()) as {
   contracts: CatalogEntry[];
 };

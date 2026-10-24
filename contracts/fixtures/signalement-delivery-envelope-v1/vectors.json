@@ -1,0 +1,436 @@
+{
+  "schemaVersion": "libre-ai.signalement-delivery-envelope-vectors.v1",
+  "valid": [
+    {
+      "name": "https origin without port",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://app.example.com"
+      }
+    },
+    {
+      "name": "http localhost with port",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "http://localhost:8080"
+      }
+    },
+    {
+      "name": "absent origin is null",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": null
+      }
+    },
+    {
+      "name": "ipv4 host with port",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "http://127.0.0.1:3000"
+      }
+    },
+    {
+      "name": "ipv6 host",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://[2001:db8::1]"
+      }
+    },
+    {
+      "name": "smallest export",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 1,
+        "observedOrigin": null
+      }
+    },
+    {
+      "name": "largest export",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 269500416,
+        "observedOrigin": "https://app.example.com"
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "origin with a path",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://app.example.com/report"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin with a trailing slash",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://app.example.com/"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin with a query",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://app.example.com?x=1"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin with an upper-case host",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://App.Example.com"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin with an upper-case scheme",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "HTTPS://app.example.com"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin is the string null",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "null"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin with a file scheme",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "file:///etc/hosts"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin with a javascript scheme",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "javascript:alert(1)"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin with a zero port",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://app.example.com:0"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin with a trailing dot host",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://app.example.com."
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin is an empty string",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": ""
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin is a number",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": 443
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "origin repeats the default https port",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://app.example.com:443"
+      },
+      "failures": ["envelope.origin_non_canonical"]
+    },
+    {
+      "name": "origin repeats the default http port",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "http://app.example.com:80"
+      },
+      "failures": ["envelope.origin_non_canonical"]
+    },
+    {
+      "name": "origin port beyond 65535",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://app.example.com:65536"
+      },
+      "failures": ["envelope.origin_non_canonical"]
+    },
+    {
+      "name": "delivery id is not a UUID",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "delivery-1",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "delivery id is a version 1 UUID",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-1d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "delivery id has a wrong variant",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-ce21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "delivery id is upper-case",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3F2B8C1E-5A47-4D9B-8E21-7C6D0A9F4B13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "export digest is upper-case",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08",
+        "exportByteLength": 2048,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "export digest is 63 characters",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a0",
+        "exportByteLength": 2048,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "export length is zero",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 0,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "export length exceeds the cap by one",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 269500417,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "export length is negative",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": -1,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "export length is fractional",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048.5,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "export length is a string",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": "2048",
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "schema version differs",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v2",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": null
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "unknown member",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": null,
+        "note": "unexpected"
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "required member absent",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048
+      },
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "root is an array",
+      "document": [],
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "root is null",
+      "document": null,
+      "failures": ["envelope.schema"]
+    },
+    {
+      "name": "duplicate member",
+      "raw": "eyJzY2hlbWFWZXJzaW9uIjoibGlicmUtYWkuc2lnbmFsZW1lbnQtZGVsaXZlcnktZW52ZWxvcGUudjEiLCJkZWxpdmVyeUlkIjoiM2YyYjhjMWUtNWE0Ny00ZDliLThlMjEtN2M2ZDBhOWY0YjEzIiwiZGVsaXZlcnlJZCI6IjNmMmI4YzFlLTVhNDctNGQ5Yi04ZTIxLTdjNmQwYTlmNGIxMyIsImV4cG9ydFNoYTI1NiI6IjlmODZkMDgxODg0YzdkNjU5YTJmZWFhMGM1NWFkMDE1YTNiZjRmMWIyYjBiODIyY2QxNWQ2YzE1YjBmMDBhMDgiLCJleHBvcnRCeXRlTGVuZ3RoIjoyMDQ4LCJvYnNlcnZlZE9yaWdpbiI6bnVsbH0",
+      "failures": ["envelope.raw_json"]
+    },
+    {
+      "name": "byte order mark",
+      "raw": "77u_eyJzY2hlbWFWZXJzaW9uIjoibGlicmUtYWkuc2lnbmFsZW1lbnQtZGVsaXZlcnktZW52ZWxvcGUudjEiLCJkZWxpdmVyeUlkIjoiM2YyYjhjMWUtNWE0Ny00ZDliLThlMjEtN2M2ZDBhOWY0YjEzIiwiZXhwb3J0U2hhMjU2IjoiOWY4NmQwODE4ODRjN2Q2NTlhMmZlYWEwYzU1YWQwMTVhM2JmNGYxYjJiMGI4MjJjZDE1ZDZjMTViMGYwMGEwOCIsImV4cG9ydEJ5dGVMZW5ndGgiOjIwNDgsIm9ic2VydmVkT3JpZ2luIjpudWxsfQ",
+      "failures": ["envelope.raw_json"]
+    },
+    {
+      "name": "invalid UTF-8",
+      "raw": "eyJzY2hlbWFWZXJzaW9uIjoi_yJ9",
+      "failures": ["envelope.raw_json"]
+    },
+    {
+      "name": "nesting deeper than 8",
+      "raw": "W1tbW1tbW1tbMV1dXV1dXV1dXQ",
+      "failures": ["envelope.raw_json"]
+    },
+    {
+      "name": "truncated JSON",
+      "raw": "eyJzY2hlbWFWZXJzaW9uIjoibGlicmUtYWkuc2lnbmFsZW1lbnQtZGVsaXZlcnktZW52ZWxvcGUudjEiLCJkZWxpdmVyeUlkIjoiM2YyYjhjMWUtNWE0Ny00ZDliLThlMjEtNw",
+      "failures": ["envelope.raw_json"]
+    },
+    {
+      "name": "4097 bytes",
+      "raw": "eyJzY2hlbWFWZXJzaW9uIjoibGlicmUtYWkuc2lnbmFsZW1lbnQtZGVsaXZlcnktZW52ZWxvcGUudjEiLCJkZWxpdmVyeUlkIjoiM2YyYjhjMWUtNWE0Ny00ZDliLThlMjEtN2M2ZDBhOWY0YjEzIiwiZXhwb3J0U2hhMjU2IjoiOWY4NmQwODE4ODRjN2Q2NTlhMmZlYWEwYzU1YWQwMTVhM2JmNGYxYjJiMGI4MjJjZDE1ZDZjMTViMGYwMGEwOCIsImV4cG9ydEJ5dGVMZW5ndGgiOjIwNDgsIm9ic2VydmVkT3JpZ2luIjpudWxsfSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA",
+      "failures": ["envelope.size_limit"]
+    }
+  ]
+}

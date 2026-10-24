@@ -11,7 +11,9 @@ export interface SignalementFixtureInventory {
 }
 
 // Grows with each admitted contract (step 6 of the admission procedure).
-export const SIGNALEMENT_V1_FIXTURE_DIRECTORIES: readonly string[] = [];
+export const SIGNALEMENT_V1_FIXTURE_DIRECTORIES: readonly string[] = [
+  "signalement-delivery-envelope-v1",
+];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

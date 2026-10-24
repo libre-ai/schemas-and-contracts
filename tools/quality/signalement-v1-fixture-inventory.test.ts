@@ -42,4 +42,4 @@ test("a directory without a well-formed single-case fixture document is a named 
 });
 
 test("the production list equals the admitted contracts", () =>
-  expect(SIGNALEMENT_V1_FIXTURE_DIRECTORIES).toEqual([])); // grows with each admission
+  expect(SIGNALEMENT_V1_FIXTURE_DIRECTORIES).toEqual(["signalement-delivery-envelope-v1"])); // grows with each admission
