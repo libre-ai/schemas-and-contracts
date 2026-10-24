@@ -37,6 +37,10 @@ All five members are required; the document is closed (no other member).
 | `exportByteLength` | integer | length in octets of those ZIP bytes, from 1 to 269500416 inclusive |
 | `observedOrigin` | string or `null` | an origin as serialized by `new URL(x).origin`, or `null` when the sender observed none |
 
+- `exportByteLength` is any JSON number whose value is an integer in range: `2048`, `2048.0`
+  and `2.048e3` are the same envelope value. The lexical form of a number is not normative,
+  and the envelope is not required to be in RFC 8785 (JCS) form, because no digest or
+  signature covers its bytes. A receiver MUST compare the parsed value, never the text.
 - `exportSha256` is the digest of the ZIP as transmitted, not of any file inside it, so a
   receiver can check it without parsing the archive. A receiver MUST compute the digest and
   the length on the bytes it received and refuse the delivery when either differs from the
@@ -50,7 +54,7 @@ All five members are required; the document is closed (no other member).
   or fragment. The string `"null"`, an empty string, and any other scheme are refused. The
   schema pattern is
   `^https?://(?:[a-z0-9-]+(?:\.[a-z0-9-]+)*|\[[0-9a-f:.]+\])(?::[1-9][0-9]{0,4})?$` with at most
-  262 characters. The pattern alone admits values that the URL serializer rewrites
+  267 characters. The pattern alone admits values that the URL serializer rewrites
   (`https://app.example.com:443`, a port above 65535); the verifier therefore also requires
   `new URL(observedOrigin).origin === observedOrigin`, and a value for which `new URL` throws
   fails the same check.
@@ -61,7 +65,7 @@ All five members are required; the document is closed (no other member).
 | --- | --- | --- |
 | Envelope, in octets | 4096 | ceiling of the `Signalement-Delivery-Envelope` header |
 | Export ZIP, in octets | 269500416 | 268435456 (content, see the export semantics) + 1048576 (manifest) + 16384 (container margin) |
-| `observedOrigin`, in characters | 262 | schema `maxLength` |
+| `observedOrigin`, in characters | 267 | schema `maxLength`: `https://` (8) + longest DNS name (253) + `:65535` (6) |
 | JSON nesting depth | 8 | strict parser limit |
 
 The envelope size is measured on the octets received, before any decoding or parsing. An

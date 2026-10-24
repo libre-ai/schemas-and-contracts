@@ -84,8 +84,12 @@ describe("rawDeliveryEnvelopeFailures", () => {
       expect(rawDeliveryEnvelopeFailures(bytesOf(vector))).toEqual([]));
   }
   for (const vector of vectorFile.invalid as Vector[]) {
-    test(`refuses ${vector.name}`, () =>
-      expect(rawDeliveryEnvelopeFailures(bytesOf(vector))).toEqual(vector.failures ?? []));
+    test(`refuses ${vector.name}`, () => {
+      // An invalid vector without an exact expected list would silently expect acceptance.
+      expect(vector.failures, `${vector.name} must declare its failures`).toBeDefined();
+      expect(vector.failures?.length).toBeGreaterThanOrEqual(1);
+      expect(rawDeliveryEnvelopeFailures(bytesOf(vector))).toEqual(vector.failures as string[]);
+    });
   }
 });
 
@@ -151,11 +155,25 @@ describe("bounds", () => {
     ).toEqual(["envelope.schema"]);
   });
 
-  test("observedOrigin is at most 262 characters", () => {
-    const host262 = (length: number) => `https://${"a".repeat(length - "https://".length)}`;
-    expect(host262(262)).toHaveLength(262);
-    expect(rawDeliveryEnvelopeFailures(envelope({ observedOrigin: host262(262) }))).toEqual([]);
-    expect(rawDeliveryEnvelopeFailures(envelope({ observedOrigin: host262(263) }))).toEqual([
+  test("observedOrigin is at most 267 characters: scheme 8 + DNS name 253 + port :65535 (6)", () => {
+    // Labels of at most 63 characters joined by dots; 63+63+63+61 plus three dots = 253.
+    const dnsName = (length: number): string => {
+      const labels: string[] = [];
+      let remaining = length;
+      while (remaining > 0) {
+        const label = Math.min(63, remaining);
+        labels.push("a".repeat(label));
+        remaining -= label + 1;
+      }
+      return labels.join(".");
+    };
+    const longest = `https://${dnsName(253)}:65535`;
+    expect(dnsName(253)).toHaveLength(253);
+    expect(longest).toHaveLength(267);
+    expect(rawDeliveryEnvelopeFailures(envelope({ observedOrigin: longest }))).toEqual([]);
+    const oneTooLong = `https://${dnsName(254)}:65535`;
+    expect(oneTooLong).toHaveLength(268);
+    expect(rawDeliveryEnvelopeFailures(envelope({ observedOrigin: oneTooLong }))).toEqual([
       "envelope.schema",
     ]);
   });

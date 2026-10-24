@@ -463,7 +463,7 @@
 		},
 		{
 			"schema": "signalement-delivery-envelope.v1.schema.json",
-			"schemaSha256": "6d5fd5de5036806ddd96298afc056338a8de54cb4a075c2961b3bd4a08cf11da",
+			"schemaSha256": "e09809c4901c8863376d3a2a45a8669eac2d1a3d884e2a8e56d3b042182eae85",
 			"declaration": "signalement-delivery-envelope.v1.d.ts"
 		},
 		{
