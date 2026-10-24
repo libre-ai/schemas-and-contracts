@@ -337,4 +337,5 @@ of two members is an error. A declared part that is absent or unreadable is an e
 the directory named `<stem>*.json` that the entry does not declare is an error (orphan). Any
 such error refuses the whole set of vectors. Vector order is the order so obtained.
 `vectors.json` declares `vectors.part-2.json`, `vectors.part-3.json` then `vectors.part-4.json`.
-No vector of this contract is a generation recipe: each stores its `document` or `raw` octets.
+No vector of this contract is a generation recipe: each stores its `document` or `raw` octets,
+and a vector that carries a `recipe` member is an error that refuses the whole set of vectors.

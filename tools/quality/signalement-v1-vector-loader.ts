@@ -13,17 +13,19 @@
 //    member by member, an absent member is added. Any other meeting is refused. A declared part
 //    that is absent or unreadable is a failure; a `<stem>*.json` file in the directory that the
 //    entry does not declare is a failure (orphan).
-// 2. Recipes. A vector (an object with a string `name` in a vector list) MAY replace `document`
-//    and `raw` by `recipe` plus `sha256`, the lowercase hex SHA-256 of the generated octets. The
-//    vocabulary is closed:
-//    - `document` (required): a JSON value;
+// 2. Recipes, only for a contract whose SEMANTICS defines them (the caller passes
+//    `admitRecipes: true`); elsewhere any recipe vector is a failure. A vector (an object with a
+//    string `name` in a vector list) MAY replace `document` and `raw` by `recipe` plus `sha256`,
+//    the lowercase hex SHA-256 of the generated octets. The vocabulary is closed:
+//    - `document` (required): a JSON value whose numbers are safe integers;
 //    - `repeat` (optional): `{ member, count, element, indexMember, indexPrefix }`; `document` is
 //      an object whose `member` is an array; that array is replaced by `count` (0..4096) copies
 //      of the object `element`, the copy at index i (from 0) having its member `indexMember` set
 //      to the string `indexPrefix` followed by i in decimal;
 //    - `padWithSpacesTo` (optional): an octet length (at most 1 MiB).
 //    The octets are the UTF-8 JCS form (RFC 8785) of the document after `repeat`, followed by
-//    U+0020 octets up to `padWithSpacesTo` when present (never shorter than the JCS form).
+//    U+0020 octets up to `padWithSpacesTo` when present (never shorter than the JCS form). The
+//    generated octets never exceed 1 MiB (1,048,576), padded or not.
 //    A recipe is resolved to `raw` (base64url of the octets); `recipe` and `sha256` are dropped.
 //    Regenerated octets with another digest are refused: no verifier ever sees them.
 //
@@ -41,6 +43,11 @@ export interface LoadedVectorFile {
   /** Entry and parts merged, recipes resolved to `raw`; null whenever a failure is named. */
   vectors: JsonObject | null;
   failures: string[];
+}
+
+export interface VectorLoadOptions {
+  /** Only a contract whose SEMANTICS defines recipes admits them; the default refuses them. */
+  admitRecipes: boolean;
 }
 
 export const RECIPE_MAX_COUNT = 4096;
@@ -151,12 +158,21 @@ function recipeOctets(recipe: unknown): Uint8Array | null {
  * arrays reached through objects (families such as `valid` or `keySetVectors.invalid`); a vector
  * is never descended into, so a document member is never read as a recipe.
  */
-function resolveRecipes(value: unknown, file: string, failures: string[]): void {
+function resolveRecipes(
+  value: unknown,
+  file: string,
+  admitRecipes: boolean,
+  failures: string[],
+): void {
   if (Array.isArray(value)) {
     value.forEach((element, index) => {
       if (!isVector(element) || !Object.hasOwn(element, "recipe")) return;
       const { recipe, sha256, ...rest } = element;
       const label = `${file}: vector ${JSON.stringify(element.name)}`;
+      if (!admitRecipes) {
+        failures.push(`${label}: recipe not admitted for these vectors`);
+        return;
+      }
       const octets =
         typeof sha256 === "string" &&
         /^[0-9a-f]{64}$/.test(sha256) &&
@@ -177,7 +193,9 @@ function resolveRecipes(value: unknown, file: string, failures: string[]): void 
     return;
   }
   if (isRecord(value)) {
-    for (const member of Object.values(value)) resolveRecipes(member, file, failures);
+    for (const member of Object.values(value)) {
+      resolveRecipes(member, file, admitRecipes, failures);
+    }
   }
 }
 
@@ -200,7 +218,9 @@ function append(target: JsonObject, part: JsonObject, pointer: string): string |
 export async function loadSignalementV1Vectors(
   directory: string,
   entry: string = "vectors.json",
+  options: VectorLoadOptions = { admitRecipes: false },
 ): Promise<LoadedVectorFile> {
+  const { admitRecipes } = options;
   const failures: string[] = [];
   const refused = (): LoadedVectorFile => ({ vectors: null, failures });
   const stem = entry.slice(0, -".json".length);
@@ -223,7 +243,7 @@ export async function loadSignalementV1Vectors(
     return refused();
   }
   delete merged.parts;
-  resolveRecipes(merged, entry, failures);
+  resolveRecipes(merged, entry, admitRecipes, failures);
 
   let siblings: string[];
   try {
@@ -262,7 +282,7 @@ export async function loadSignalementV1Vectors(
       continue;
     }
     const { schemaVersion: _, ...members } = part;
-    resolveRecipes(members, name, failures);
+    resolveRecipes(members, name, admitRecipes, failures);
     const conflict = append(merged, members, "");
     if (conflict !== null)
       failures.push(`${name}: member ${conflict} cannot be appended to ${entry}`);

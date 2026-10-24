@@ -318,7 +318,8 @@ generates. The recipe vocabulary is closed; any other member, value or type is a
 
 The generated octets are the UTF-8 JCS form (RFC 8785) of `document` after `repeat`, followed by
 octets 0x20 up to `padWithSpacesTo` when present; a `padWithSpacesTo` below the length of the JCS
-form is an error. Regenerated octets whose SHA-256 differs from `sha256` are an error, and a
+form is an error. The generated octets never exceed 1,048,576, padded or not: a JCS form longer
+than that is an error even without `padWithSpacesTo`. Regenerated octets whose SHA-256 differs from `sha256` are an error, and a
 reader MUST NOT run a verifier on them. Otherwise the vector stands for those octets exactly as
 a `raw` vector would. Any error of this section refuses the whole set of vectors, never only the
 vector or file at fault. Three vectors are recipes, with

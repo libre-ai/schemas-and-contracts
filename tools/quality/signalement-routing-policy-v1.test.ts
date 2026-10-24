@@ -90,7 +90,8 @@ const fixture = fixtureFile.cases[0] as {
   invalidMutations: Mutation[];
 };
 const valid = fixture.valid as Policy;
-// Entry and declared parts (SEMANTICS "Test material"); a refused file stops the suite.
+// Entry and declared parts (SEMANTICS "Test material"); a refused file stops the suite. The
+// default refuses any recipe vector: this contract defines none.
 const loaded = await loadSignalementV1Vectors(
   `${import.meta.dir}/../../contracts/fixtures/signalement-routing-policy-v1`,
 );

@@ -79,6 +79,25 @@ test("the budget counts code points of the decoded text, not octets nor UTF-16 u
   expect(report.largest).toEqual({ path: "d/bom.json", codePoints: 5 });
 });
 
+test("the budget also holds after NFKC, normalized character by character as the scanner does", async () => {
+  const root: string = await mkdtemp(join(tmpdir(), "signalement-budget-"));
+  await mkdir(join(root, "d"));
+  // U+FDFA is 1 code point as written and 18 after NFKC: over a budget of 4 only once normalized.
+  await writeFile(join(root, "d", "ligature.json"), "\u{FDFA}");
+  // U+0344 decomposes to two marks. Normalized alone it gives 2 code points, so "e" + U+0344 gives
+  // 3; normalizing the whole string composes "e" + U+0308 into one code point and gives only 2.
+  await writeFile(join(root, "d", "marks.json"), "e\u{0344}");
+  // Composition never lowers the count below the text as written: "e" + U+0301 stays 2.
+  await writeFile(join(root, "d", "composable.json"), "e\u{0301}");
+  const report = await measureSignalementV1FixtureBudget(root, ["d"], 2);
+  expect(report.failures).toEqual([
+    "d/ligature.json: 18 code points after NFKC normalization, over the budget of 2",
+    "d/marks.json: 3 code points after NFKC normalization, over the budget of 2",
+  ]);
+  expect(report.examined).toBe(3);
+  expect(report.largest).toEqual({ path: "d/ligature.json", codePoints: 18 });
+});
+
 test("an unreadable, non-UTF-8 or absent source fails closed; a link is counted apart", async () => {
   const root: string = await mkdtemp(join(tmpdir(), "signalement-budget-"));
   await mkdir(join(root, "d", "nested"), { recursive: true });

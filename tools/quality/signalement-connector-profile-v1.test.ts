@@ -2,12 +2,12 @@ import { describe, expect, test } from "bun:test";
 import Ajv2020 from "ajv/dist/2020";
 import profiles from "../../contracts/fixtures/signalement-connector-profile-v1/profiles.v1.json";
 import fixtureFile from "../../contracts/fixtures/signalement-connector-profile-v1/schema-fixtures.json";
-import vectorFile from "../../contracts/fixtures/signalement-connector-profile-v1/vectors.json";
 import schema from "../../contracts/schemas/signalement-connector-profile.v1.schema.json";
 import {
   CONNECTOR_PROFILE_MAX_BYTES,
   rawConnectorProfileFailures,
 } from "./signalement-connector-profile-v1";
+import { loadSignalementV1Vectors } from "./signalement-v1-vector-loader";
 
 type JsonObject = Record<string, unknown>;
 
@@ -26,6 +26,20 @@ interface Vector {
 }
 
 const encoder = new TextEncoder();
+
+// Through the shared loader, so a continuation file is read and an orphan refused, never
+// ignored; a refused file stops the suite. The default refuses any recipe: none is defined here.
+const loaded = await loadSignalementV1Vectors(
+  `${import.meta.dir}/../../contracts/fixtures/signalement-connector-profile-v1`,
+);
+if (loaded.vectors === null) {
+  throw new Error(`connector profile vector files refused: ${loaded.failures.join("; ")}`);
+}
+const vectorFile = loaded.vectors as unknown as {
+  schemaVersion: string;
+  valid: Vector[];
+  invalid: Vector[];
+};
 
 /** `raw` is base64url for octets that are not JSON; otherwise the document is serialized. */
 function bytesOf(vector: Vector): Uint8Array {

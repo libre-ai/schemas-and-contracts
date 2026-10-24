@@ -12,6 +12,7 @@ import {
 type JsonObject = Record<string, unknown>;
 
 const SCHEMA_VERSION = "libre-ai.example-vectors.v1";
+const ADMIT_RECIPES = { admitRecipes: true } as const;
 
 async function directoryWith(files: Record<string, unknown>): Promise<string> {
   const directory: string = await mkdtemp(join(tmpdir(), "signalement-vectors-"));
@@ -244,12 +245,62 @@ describe("recipes", () => {
     const directory = await directoryWith({
       "vectors.json": { schemaVersion: SCHEMA_VERSION, invalid: [vector] },
     });
-    return loadSignalementV1Vectors(directory);
+    return loadSignalementV1Vectors(directory, "vectors.json", ADMIT_RECIPES);
   }
 
   test("the bounds of a recipe are 4096 repeated elements and 1 MiB of octets", () => {
     expect(RECIPE_MAX_COUNT).toBe(4096);
     expect(RECIPE_MAX_OCTETS).toBe(1_048_576);
+  });
+
+  test("a recipe is refused, in the entry or a part, unless the contract admits recipes", async () => {
+    const expected = '{"a":1}';
+    const recipeVector = (name: string): JsonObject => ({
+      name,
+      recipe: { document: { a: 1 } },
+      sha256: sha256Hex(expected),
+    });
+    const directory = await directoryWith({
+      "vectors.json": {
+        schemaVersion: SCHEMA_VERSION,
+        parts: ["vectors.part-2.json"],
+        invalid: [recipeVector("in the entry")],
+      },
+      "vectors.part-2.json": {
+        schemaVersion: SCHEMA_VERSION,
+        invalid: [recipeVector("in a part")],
+      },
+    });
+    const refusal = {
+      vectors: null,
+      failures: [
+        'vectors.json: vector "in the entry": recipe not admitted for these vectors',
+        'vectors.part-2.json: vector "in a part": recipe not admitted for these vectors',
+      ],
+    };
+    // Refusal is the default: a contract whose semantics define no recipe passes nothing.
+    expect(await loadSignalementV1Vectors(directory)).toEqual(refusal);
+    expect(
+      await loadSignalementV1Vectors(directory, "vectors.json", { admitRecipes: false }),
+    ).toEqual(refusal);
+    const admitted = await loadSignalementV1Vectors(directory, "vectors.json", ADMIT_RECIPES);
+    expect(admitted.failures).toEqual([]);
+    expect(decoded(admitted.vectors, "invalid", 1)).toBe(expected);
+  });
+
+  test("generated octets never exceed 1 MiB, padded or not", async () => {
+    // The JCS form alone: `{"s":"` + the string + `"}` is 8 octets more than the string.
+    const atBound = "a".repeat(RECIPE_MAX_OCTETS - 8);
+    const vector = (text: string): JsonObject => ({
+      name: "unpadded",
+      recipe: { document: { s: text } },
+      sha256: sha256Hex(`{"s":"${text}"}`),
+    });
+    expect((await loadRecipe(vector(atBound))).failures).toEqual([]);
+    expect(await loadRecipe(vector(`${atBound}a`))).toEqual({
+      vectors: null,
+      failures: ['vectors.json: vector "unpadded": invalid recipe'],
+    });
   });
 
   test("a document is written in JCS, then padded with spaces to the stated octet length", async () => {
@@ -341,7 +392,9 @@ describe("recipes", () => {
         ],
       },
     });
-    expect((await loadSignalementV1Vectors(directory)).failures).toEqual([
+    expect(
+      (await loadSignalementV1Vectors(directory, "vectors.json", ADMIT_RECIPES)).failures,
+    ).toEqual([
       'vectors.part-2.json: vector "bad": regenerated octets do not match the recorded SHA-256',
     ]);
   });

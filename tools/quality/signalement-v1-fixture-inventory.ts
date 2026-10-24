@@ -6,7 +6,13 @@
 // It also measures the fixture size budget: signalement scans every tracked file with its
 // public-boundary scanner, which refuses as sensitive any file above 65,536 Unicode code points
 // (governance tools/quality/public-source-scanner.ts, maximumDecodedCodePoints), and it vendors
-// these fixtures. A file over that budget would be refused there, whatever it contains.
+// these fixtures. A file over that budget would be refused there, whatever it contains. The
+// scanner applies the limit to the text as written and to its NFKC projection, which it builds
+// character by character (normalizePreservingNonAsciiCfws). NFKC can expand text (U+FDFA gives
+// 18 code points), so both counts are held to the budget. The per-character projection is never
+// shorter than NFKC of the whole string, which can compose characters. Not modeled: the
+// scanner normalizes after decoding escapes (decodeSensitiveMarkers), so an escape such as
+// `ﷺ` can still expand there.
 
 import type { Dirent } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
@@ -51,6 +57,13 @@ export interface FixtureBudgetReport {
 function countCodePoints(text: string): number {
   let count = 0;
   for (const _codePoint of text) count += 1;
+  return count;
+}
+
+/** Code points of the scanner's NFKC projection: each character normalized on its own. */
+function countNfkcCodePoints(text: string): number {
+  let count = 0;
+  for (const character of text) count += countCodePoints(character.normalize("NFKC"));
   return count;
 }
 
@@ -107,12 +120,17 @@ export async function measureSignalementV1FixtureBudget(
         continue;
       }
       report.examined += 1;
-      const codePoints = countCodePoints(text);
+      const written = countCodePoints(text);
+      const normalized = countNfkcCodePoints(text);
+      const codePoints = Math.max(written, normalized);
       if (report.largest === null || codePoints > report.largest.codePoints) {
         report.largest = { path, codePoints };
       }
       if (codePoints > budget) {
-        report.failures.push(`${path}: ${codePoints} code points, over the budget of ${budget}`);
+        const projection = normalized > written ? " after NFKC normalization" : "";
+        report.failures.push(
+          `${path}: ${codePoints} code points${projection}, over the budget of ${budget}`,
+        );
       }
     }
     return true;

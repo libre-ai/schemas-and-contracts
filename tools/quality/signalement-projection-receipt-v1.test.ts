@@ -117,6 +117,8 @@ const valid = fixture.valid;
 // Entry, declared parts and recipes (SEMANTICS "Test material"); a refused file stops the suite.
 const loaded = await loadSignalementV1Vectors(
   `${import.meta.dir}/../../contracts/fixtures/signalement-projection-receipt-v1`,
+  "vectors.json",
+  { admitRecipes: true },
 );
 if (loaded.vectors === null) {
   throw new Error(`receipt vector files refused: ${loaded.failures.join("; ")}`);

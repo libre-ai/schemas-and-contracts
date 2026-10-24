@@ -1,13 +1,13 @@
 import { describe, expect, test } from "bun:test";
 import Ajv2020 from "ajv/dist/2020";
 import fixtureFile from "../../contracts/fixtures/signalement-delivery-envelope-v1/schema-fixtures.json";
-import vectorFile from "../../contracts/fixtures/signalement-delivery-envelope-v1/vectors.json";
 import schema from "../../contracts/schemas/signalement-delivery-envelope.v1.schema.json";
 import {
   DELIVERY_ENVELOPE_MAX_BYTES,
   EXPORT_MAX_BYTES,
   rawDeliveryEnvelopeFailures,
 } from "./signalement-delivery-envelope-v1";
+import { loadSignalementV1Vectors } from "./signalement-v1-vector-loader";
 
 type JsonObject = Record<string, unknown>;
 
@@ -26,6 +26,20 @@ interface Vector {
 }
 
 const encoder = new TextEncoder();
+
+// Through the shared loader, so a continuation file is read and an orphan refused, never
+// ignored; a refused file stops the suite. The default refuses any recipe: none is defined here.
+const loaded = await loadSignalementV1Vectors(
+  `${import.meta.dir}/../../contracts/fixtures/signalement-delivery-envelope-v1`,
+);
+if (loaded.vectors === null) {
+  throw new Error(`delivery envelope vector files refused: ${loaded.failures.join("; ")}`);
+}
+const vectorFile = loaded.vectors as unknown as {
+  schemaVersion: string;
+  valid: Vector[];
+  invalid: Vector[];
+};
 
 /** `raw` is base64url for octets that are not JSON; otherwise the document is serialized. */
 function bytesOf(vector: Vector): Uint8Array {
