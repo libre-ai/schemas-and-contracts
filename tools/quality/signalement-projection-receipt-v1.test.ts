@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
-import { cp, mkdtemp, readdir, writeFile } from "node:fs/promises";
+import { cp, mkdtemp, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { ed25519 } from "@noble/curves/ed25519.js";
 import Ajv2020 from "ajv/dist/2020";
@@ -699,14 +699,19 @@ describe("verifyProjectionReceiptSignature against the signature corpus", () => 
   test("the corpus check names a changed file and an undeclared one", async () => {
     expect((await checkReceiptVectors(FIXTURE_DIRECTORY)).failures).toEqual([]);
     const copy = await mkdtemp(`${tmpdir()}/receipt-corpus-`);
-    await cp(FIXTURE_DIRECTORY, copy, { recursive: true });
-    const entry = `${copy}/${SIGNATURE_CORPUS_ENTRY}`;
-    await writeFile(entry, `${await Bun.file(entry).text()} `);
-    await writeFile(`${copy}/signature-vectors.v1.part-99.json`, "{}\n");
-    expect((await checkReceiptVectors(copy)).failures).toEqual([
-      `${SIGNATURE_CORPUS_ENTRY}: differs from the generator output`,
-      "signature-vectors.v1.part-99.json: not produced by the generator",
-    ]);
+    // The copy lives in the system temp directory: removed whatever the assertions do.
+    try {
+      await cp(FIXTURE_DIRECTORY, copy, { recursive: true });
+      const entry = `${copy}/${SIGNATURE_CORPUS_ENTRY}`;
+      await writeFile(entry, `${await Bun.file(entry).text()} `);
+      await writeFile(`${copy}/signature-vectors.v1.part-99.json`, "{}\n");
+      expect((await checkReceiptVectors(copy)).failures).toEqual([
+        `${SIGNATURE_CORPUS_ENTRY}: differs from the generator output`,
+        "signature-vectors.v1.part-99.json: not produced by the generator",
+      ]);
+    } finally {
+      await rm(copy, { recursive: true, force: true });
+    }
   });
 
   test("sign cases are deterministic Ed25519 over a message rebuilt outside the code under test", () => {

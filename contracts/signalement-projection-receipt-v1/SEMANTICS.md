@@ -352,7 +352,9 @@ document without `signature`, `remote.url` set to
 `https://tracker.example.com/example-project/issues/42`. Torsion points T_0 (identity) to T_7
 are the `torsion-<i>` points of `contracts/fixtures/build-brief-v2/strict-ed25519-vectors.json`.
 A forgery nonce is r = SHA-512(UTF-8 `libre-ai.signalement-receipt-test-nonce.<vector id>`) mod
-L, and k = SHA-512(R ‖ A ‖ M) mod L over the exact encodings, M the signing message.
+L, and k = SHA-512(R ‖ A ‖ M) mod L over the exact encodings, M the signing message; in both,
+the 64-octet digest is read as a little-endian integer before the reduction (RFC 8032 section
+5.1.6). Every scalar S is written as 32 octets little-endian.
 
 | Vectors | Construction | Expected |
 | --- | --- | --- |
