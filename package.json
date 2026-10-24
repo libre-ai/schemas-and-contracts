@@ -58,7 +58,7 @@
     "check:specification-lock": "bun run check:bun:runtime && bun tools/quality/check-specification-lock.ts && bun test --config=tools/quality/specification-lock.bunfig.toml tools/quality/specification-lock.test.ts tools/quality/specification-lock-cli.test.ts tools/quality/adopted-protocol-authority.test.ts tools/quality/candidate-protocol-authority.test.ts",
     "check:signalement-connector-profile-v1": "bun run check:bun:runtime && bun test --config=tools/quality/signalement-connector-profile-v1.bunfig.toml tools/quality/signalement-connector-profile-v1.test.ts",
     "check:signalement-routing-policy-v1": "bun run check:bun:runtime && bun test --config=tools/quality/signalement-routing-policy-v1.bunfig.toml tools/quality/signalement-routing-policy-v1.test.ts",
-    "check:signalement-projection-receipt-v1": "bun run check:bun:runtime && bun test --config=tools/quality/signalement-projection-receipt-v1.bunfig.toml tools/quality/signalement-projection-receipt-v1.test.ts",
+    "check:signalement-projection-receipt-v1": "bun run check:bun:runtime && bun test --config=tools/quality/signalement-projection-receipt-v1.bunfig.toml tools/quality/signalement-projection-receipt-v1.test.ts && bun tools/quality/signalement-receipt-vectors.ts --check",
     "check:signalement-v1-vector-loader": "bun run check:bun:runtime && bun test --config=tools/quality/signalement-v1-vector-loader.bunfig.toml tools/quality/signalement-v1-vector-loader.test.ts"
   },
   "workspaces": [

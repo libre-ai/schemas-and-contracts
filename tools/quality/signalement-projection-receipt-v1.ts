@@ -1,7 +1,8 @@
 // Authority-fixture verifier only; no browser, privacy or implementation admission.
 // It admits or refuses the structure of a signed projection receipt and of a signing key set,
-// and builds the signing message. Signature verification and key admissibility are not here.
+// builds the signing message, and verifies a signature strictly against a key set.
 import { createHash } from "node:crypto";
+import { ed25519 } from "@noble/curves/ed25519.js";
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { canonicalJson } from "./authorized-execution";
@@ -33,7 +34,14 @@ interface SigningKey {
 }
 
 interface SigningKeySet {
+  organization: string;
   keys: SigningKey[];
+}
+
+interface SignedProjectionReceipt extends ProjectionReceipt {
+  organization: string;
+  keyId: string;
+  signature: { algorithm: "ed25519"; value: string };
 }
 
 const RECEIPT_SCHEMA_URL = new URL(
@@ -171,4 +179,96 @@ export function receiptSigningMessage(unsigned: unknown): Uint8Array {
   message[domain.byteLength] = 0;
   message.set(digest, domain.byteLength + 1);
   return message;
+}
+
+export type ReceiptSignatureOutcome =
+  | {
+      kind: "verdict";
+      signature: "valid" | "invalid" | "unknown-key" | "unreadable";
+      keyId: string | null;
+      keyStatus: "active" | "retired" | null;
+      reason: string | null;
+    }
+  | { kind: "refused"; code: string };
+
+/**
+ * Admissible Ed25519 point: canonical encoding (y < p, no negative zero, re-encodes to the same
+ * octets), not the identity, and in the prime-order subgroup. Same rule as `isBuildBriefPoint`
+ * of build-brief-v2, duplicated so that the vendored verifier does not import that file.
+ */
+function isAdmissiblePoint(bytes: Uint8Array): boolean {
+  try {
+    const point = ed25519.Point.fromBytes(bytes, false);
+    return !point.is0() && point.isTorsionFree() && sameBytes(point.toBytes(), bytes);
+  } catch {
+    return false;
+  }
+}
+
+function sameBytes(left: Uint8Array, right: Uint8Array): boolean {
+  return Buffer.from(left).equals(Buffer.from(right));
+}
+
+function littleEndian(bytes: Uint8Array): bigint {
+  return BigInt(`0x${Buffer.from(bytes).reverse().toString("hex")}`);
+}
+
+function verdict(
+  signature: "valid" | "invalid" | "unknown-key" | "unreadable",
+  keyId: string | null,
+  keyStatus: "active" | "retired" | null,
+  reason: string | null,
+): ReceiptSignatureOutcome {
+  return { kind: "verdict", signature, keyId, keyStatus, reason };
+}
+
+/**
+ * Strict verification of a signed receipt against an organization's key set, in the normative
+ * order of SEMANTICS "Signature verification". Every step before the last is a check that a
+ * cofactored Ed25519 verifier does not make: noble's strict mode rejects a small-order key but
+ * accepts a mixed-order key and a small-order R (measured by the corpus tests), so admissibility
+ * of A and R is decided here, before the equation. Reasons carry no document data.
+ */
+export function verifyProjectionReceiptSignature(
+  signed: Uint8Array,
+  publicKeys: Uint8Array,
+): ReceiptSignatureOutcome {
+  // 1. The receipt must be readable: structure, then the canonical encoding of its signature.
+  const [receiptFailure] = rawProjectionReceiptFailures(signed);
+  if (receiptFailure !== undefined) return verdict("unreadable", null, null, receiptFailure);
+  const receipt = parseStrictJson(signed, 8) as SignedProjectionReceipt;
+  const signature = new Uint8Array(Buffer.from(receipt.signature.value, "base64url"));
+  if (Buffer.from(signature).toString("base64url") !== receipt.signature.value)
+    return verdict("unreadable", null, null, "signature.encoding");
+  // 2. An unreadable key set verifies nothing: refused, no verdict.
+  const [keySetFailure] = rawSigningKeySetFailures(publicKeys);
+  if (keySetFailure !== undefined) return { kind: "refused", code: keySetFailure };
+  const keySet = parseStrictJson(publicKeys, 8) as SigningKeySet;
+  const { keyId } = receipt;
+  // 3. A key set of another organization verifies nothing, whatever keys it holds.
+  if (receipt.organization !== keySet.organization)
+    return verdict("invalid", keyId, null, "key.organization_mismatch");
+  const key = keySet.keys.find((candidate) => candidate.keyId === keyId);
+  if (key === undefined) return verdict("unknown-key", keyId, null, "key.unknown");
+  // 4. Window [notBefore, notAfter): timestamps have one fixed width, lexical is chronological.
+  if (
+    receipt.issuedAt < key.notBefore ||
+    (key.notAfter !== null && receipt.issuedAt >= key.notAfter)
+  )
+    return verdict("invalid", keyId, key.status, "key.outside_validity");
+  // 5. and 6. Admissible A, then admissible R.
+  const publicKey = new Uint8Array(Buffer.from(key.publicKey, "base64url"));
+  if (!isAdmissiblePoint(publicKey))
+    return verdict("invalid", keyId, key.status, "key.not_admissible");
+  if (!isAdmissiblePoint(signature.subarray(0, 32)))
+    return verdict("invalid", keyId, key.status, "signature.r_not_admissible");
+  // 7. S < L: S + L verifies the same equation, and a second encoding is malleability.
+  if (littleEndian(signature.subarray(32)) >= ed25519.Point.Fn.ORDER)
+    return verdict("invalid", keyId, key.status, "signature.s_non_canonical");
+  // 8. The equation over the signing message of the unsigned receipt.
+  const { signature: _signature, ...unsigned } = receipt;
+  const message = receiptSigningMessage(unsigned);
+  if (!ed25519.verify(signature, message, publicKey, { zip215: false }))
+    return verdict("invalid", keyId, key.status, "signature.mismatch");
+  return verdict("valid", keyId, key.status, null);
 }

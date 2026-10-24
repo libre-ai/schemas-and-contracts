@@ -1,5 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
+import { cp, mkdtemp, readdir, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { ed25519 } from "@noble/curves/ed25519.js";
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import fixtureFile from "../../contracts/fixtures/signalement-projection-receipt-v1/schema-fixtures.json";
@@ -12,7 +15,13 @@ import {
   rawSigningKeySetFailures,
   receiptSigningMessage,
   SIGNING_KEY_SET_MAX_BYTES,
+  verifyProjectionReceiptSignature,
 } from "./signalement-projection-receipt-v1";
+import {
+  checkReceiptVectors,
+  generateReceiptVectors,
+  SIGNATURE_CORPUS_ENTRY,
+} from "./signalement-receipt-vectors";
 import { loadSignalementV1Vectors } from "./signalement-v1-vector-loader";
 
 type JsonObject = Record<string, unknown>;
@@ -114,12 +123,11 @@ const fixture = fixtureFile.cases[0] as {
   invalidMutations: Mutation[];
 };
 const valid = fixture.valid;
+const FIXTURE_DIRECTORY = `${import.meta.dir}/../../contracts/fixtures/signalement-projection-receipt-v1`;
 // Entry, declared parts and recipes (SEMANTICS "Test material"); a refused file stops the suite.
-const loaded = await loadSignalementV1Vectors(
-  `${import.meta.dir}/../../contracts/fixtures/signalement-projection-receipt-v1`,
-  "vectors.json",
-  { admitRecipes: true },
-);
+const loaded = await loadSignalementV1Vectors(FIXTURE_DIRECTORY, "vectors.json", {
+  admitRecipes: true,
+});
 if (loaded.vectors === null) {
   throw new Error(`receipt vector files refused: ${loaded.failures.join("; ")}`);
 }
@@ -465,5 +473,384 @@ describe("bounds", () => {
       (vector) => vector.failures ?? [],
     );
     for (const code of codes) expect(code).toMatch(/^(receipt|keys)\.[a-z_]+$/);
+  });
+});
+
+// ---------------------------------------------------------------------------------------------
+// Signature verification and its corpus (SEMANTICS "Signature verification").
+
+interface VerdictExpectation {
+  signature: "valid" | "invalid" | "unknown-key" | "unreadable";
+  keyId: string | null;
+  keyStatus: "active" | "retired" | null;
+  reason: string | null;
+}
+
+interface SignatureVector {
+  id: string;
+  description: string;
+  keySet: KeySet;
+  signed: string;
+  expected: VerdictExpectation | { refused: string };
+}
+
+interface SignCase {
+  id: string;
+  seed: string;
+  unsigned: JsonObject;
+  signed: string;
+}
+
+interface SignatureCorpus {
+  schemaVersion: string;
+  testMaterialWarning: string;
+  domain: string;
+  vectors: SignatureVector[];
+  signCases: SignCase[];
+}
+
+interface SignedDocument extends JsonObject {
+  keyId: string;
+  signature: { algorithm: string; value: string };
+}
+
+// The corpus has no recipe: every vector is a stored signed document.
+const signatureLoaded = await loadSignalementV1Vectors(FIXTURE_DIRECTORY, SIGNATURE_CORPUS_ENTRY);
+if (signatureLoaded.vectors === null) {
+  throw new Error(`signature corpus files refused: ${signatureLoaded.failures.join("; ")}`);
+}
+const corpus = signatureLoaded.vectors as unknown as SignatureCorpus;
+
+/** Order of the prime subgroup, RFC 8032 section 5.1: 2^252 + 27742317777372353535851937790883648493. */
+const GROUP_ORDER = 2n ** 252n + 27742317777372353535851937790883648493n;
+
+function b64u(text: string): Uint8Array {
+  return new Uint8Array(Buffer.from(text, "base64url"));
+}
+
+function littleEndian(bytes: Uint8Array): bigint {
+  return BigInt(`0x${Buffer.from(bytes).reverse().toString("hex") || "0"}`);
+}
+
+function littleEndian32(value: bigint): Uint8Array {
+  return new Uint8Array(Buffer.from(value.toString(16).padStart(64, "0"), "hex").reverse());
+}
+
+function byId(id: string): SignatureVector {
+  const vector = corpus.vectors.find((candidate) => candidate.id === id);
+  if (vector === undefined) throw new Error(`no signature vector ${id}`);
+  return vector;
+}
+
+function documentOf(vector: SignatureVector): SignedDocument {
+  return JSON.parse(Buffer.from(vector.signed, "base64url").toString("utf8")) as SignedDocument;
+}
+
+function sigOf(vector: SignatureVector): Uint8Array {
+  return b64u(documentOf(vector).signature.value);
+}
+
+/** The signing message rebuilt with this file's own serializer and hash, not the code under test. */
+function independentMessage(unsigned: JsonObject): Uint8Array {
+  const digest = createHash("sha256").update(jcs(unsigned)).digest();
+  return new Uint8Array(
+    Buffer.concat([
+      Buffer.from("libre-ai.signalement-projection-receipt.v1"),
+      Buffer.of(0),
+      digest,
+    ]),
+  );
+}
+
+function messageOf(vector: SignatureVector): Uint8Array {
+  const { signature: _, ...unsigned } = documentOf(vector);
+  return independentMessage(unsigned);
+}
+
+function keyOf(vector: SignatureVector): Uint8Array {
+  const { keyId } = documentOf(vector);
+  const key = vector.keySet.keys.find((candidate) => candidate.keyId === keyId);
+  if (key === undefined) throw new Error(`${vector.id}: no key ${keyId}`);
+  return b64u(key.publicKey);
+}
+
+function byPrefix(pattern: RegExp): SignatureVector[] {
+  return corpus.vectors.filter((vector) => pattern.test(vector.id));
+}
+
+/** The same R with S reduced modulo L verifies strictly: S + L is a re-encoding, not a forgery. */
+function verifiesStrictlyOnceReduced(vector: SignatureVector): boolean {
+  const signature = sigOf(vector);
+  const s = littleEndian(signature.subarray(32));
+  if (s < GROUP_ORDER) return false;
+  const reduced = new Uint8Array(64);
+  reduced.set(signature.subarray(0, 32));
+  reduced.set(littleEndian32(s % GROUP_ORDER), 32);
+  return ed25519.verify(reduced, messageOf(vector), keyOf(vector), { zip215: false });
+}
+
+function testSeed(n: number): Uint8Array {
+  return new Uint8Array(
+    createHash("sha256").update(`libre-ai.signalement-receipt-test-key.${n}`).digest(),
+  );
+}
+
+/** A receipt signed here with test seed 1, with this file's serializer: material the corpus lacks. */
+function signedHere(patch: JsonObject): Uint8Array {
+  const base = corpus.signCases.find((signCase) => signCase.id === "valid-active");
+  if (base === undefined) throw new Error("no valid-active sign case");
+  const unsigned = { ...base.unsigned, ...patch };
+  const value = Buffer.from(ed25519.sign(independentMessage(unsigned), testSeed(1))).toString(
+    "base64url",
+  );
+  return encode({ ...unsigned, signature: { algorithm: "ed25519", value } });
+}
+
+const REQUIRED_SIGNATURE_VECTORS = [
+  "valid-active",
+  "valid-retired",
+  "key-unknown",
+  "key-outside-validity",
+  "key-identity",
+  ...[1, 2, 3, 4, 5, 6, 7].map((index) => `key-mixed-order-${index}`),
+  "r-identity",
+  ...[1, 2, 3, 4, 5, 6, 7].map((index) => `r-torsion-${index}`),
+  "s-non-canonical",
+  "body-byte-modified",
+  "transmitted-digest-modified",
+  "rendered-digest-modified",
+  "revision-modified",
+  "signed-over-non-jcs",
+  "document-whitespace",
+  "document-key-order",
+  "document-duplicate-member",
+  "document-fractional-revision-whitespace",
+  "signature-encoding",
+  "keyset-duplicate-key-id",
+  "keyset-other-organization",
+];
+
+const POINT_FORGERY = /^(key-identity|key-mixed-order-|r-identity|r-torsion-)/;
+
+describe("verifyProjectionReceiptSignature against the signature corpus", () => {
+  test("the corpus declares its version, its warning and the signing domain", () => {
+    expect(corpus.schemaVersion).toBe(
+      "libre-ai.signalement-projection-receipt-signature-vectors.v1",
+    );
+    expect(corpus.testMaterialWarning).toBe(
+      "Synthetic keys derived from public labels. Never use outside tests.",
+    );
+    expect(corpus.domain).toBe("libre-ai.signalement-projection-receipt.v1");
+  });
+
+  for (const vector of corpus.vectors) {
+    test(`signature vector ${vector.id}`, () => {
+      const out = verifyProjectionReceiptSignature(b64u(vector.signed), encode(vector.keySet));
+      if ("refused" in vector.expected)
+        expect(out).toEqual({ kind: "refused", code: vector.expected.refused });
+      else expect(out).toEqual({ kind: "verdict", ...vector.expected });
+    });
+  }
+
+  test("the corpus covers every required family, each vector once", () => {
+    const ids = corpus.vectors.map((vector) => vector.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect([...ids].sort()).toEqual([...REQUIRED_SIGNATURE_VECTORS].sort());
+    expect(ids.length).toBe(33);
+  });
+
+  test("every point forgery is accepted by a permissive verifier, so it discriminates", () => {
+    const forgeries = byPrefix(POINT_FORGERY);
+    expect(forgeries.length).toBe(16);
+    for (const vector of forgeries)
+      expect(
+        ed25519.verify(sigOf(vector), messageOf(vector), keyOf(vector), { zip215: true }),
+        vector.id,
+      ).toBeTrue();
+    expect(verifiesStrictlyOnceReduced(byId("s-non-canonical"))).toBeTrue();
+    // The L stated in SEMANTICS is the one the verifier compares S with.
+    expect(ed25519.Point.Fn.ORDER).toBe(GROUP_ORDER);
+  });
+
+  test("noble's strict mode alone accepts the mixed-order key and torsion R forgeries", () => {
+    // Measured on @noble/curves: zip215 false rejects only a small-order A and checks the
+    // cofactored equation, so only the admissibility steps refuse these 15 forgeries.
+    for (const vector of byPrefix(/^(key-mixed-order-|r-identity|r-torsion-)/))
+      expect(
+        ed25519.verify(sigOf(vector), messageOf(vector), keyOf(vector), { zip215: false }),
+        vector.id,
+      ).toBeTrue();
+    const identity = byId("key-identity");
+    expect(
+      ed25519.verify(sigOf(identity), messageOf(identity), keyOf(identity), { zip215: false }),
+    ).toBeFalse();
+  });
+
+  test("the generator reproduces the committed corpus byte for byte, every file", async () => {
+    const generated = await generateReceiptVectors();
+    const onDisk = (await readdir(FIXTURE_DIRECTORY))
+      .filter((name) => name.startsWith("signature-vectors.v1") && name.endsWith(".json"))
+      .sort();
+    expect(generated.map((file) => file.name).sort()).toEqual(onDisk);
+    for (const file of generated)
+      expect(file.text, file.name).toBe(await Bun.file(`${FIXTURE_DIRECTORY}/${file.name}`).text());
+  });
+
+  test("the corpus check names a changed file and an undeclared one", async () => {
+    expect((await checkReceiptVectors(FIXTURE_DIRECTORY)).failures).toEqual([]);
+    const copy = await mkdtemp(`${tmpdir()}/receipt-corpus-`);
+    await cp(FIXTURE_DIRECTORY, copy, { recursive: true });
+    const entry = `${copy}/${SIGNATURE_CORPUS_ENTRY}`;
+    await writeFile(entry, `${await Bun.file(entry).text()} `);
+    await writeFile(`${copy}/signature-vectors.v1.part-99.json`, "{}\n");
+    expect((await checkReceiptVectors(copy)).failures).toEqual([
+      `${SIGNATURE_CORPUS_ENTRY}: differs from the generator output`,
+      "signature-vectors.v1.part-99.json: not produced by the generator",
+    ]);
+  });
+
+  test("sign cases are deterministic Ed25519 over a message rebuilt outside the code under test", () => {
+    expect(corpus.signCases.map((signCase) => signCase.id)).toEqual([
+      "valid-active",
+      "valid-retired",
+    ]);
+    corpus.signCases.forEach((signCase, index) => {
+      expect(b64u(signCase.seed)).toEqual(testSeed(index + 1));
+      const value = Buffer.from(
+        ed25519.sign(independentMessage(signCase.unsigned), b64u(signCase.seed)),
+      ).toString("base64url");
+      const expected = encode({ ...signCase.unsigned, signature: { algorithm: "ed25519", value } });
+      expect(b64u(signCase.signed)).toEqual(expected);
+      expect(byId(signCase.id).signed).toBe(signCase.signed);
+    });
+  });
+
+  test("the corpus keys are those of the structural vectors' test seeds", () => {
+    const keySetOfCorpus = byId("valid-active").keySet;
+    expect(keySetOfCorpus).toEqual(validKeySet);
+    for (const n of [1, 2])
+      expect(Buffer.from(ed25519.getPublicKey(testSeed(n))).toString("base64url")).toBe(
+        (validKeySet.keys[n - 1] as SigningKey).publicKey,
+      );
+  });
+
+  test("the validity window is half-open: notBefore included, notAfter excluded", () => {
+    // test-key-1 is valid from 2026-09-01T00:00:00Z; key-outside-validity covers notAfter.
+    const keys = encode(validKeySet);
+    const at = (issuedAt: string, deliveredAt: string) =>
+      verifyProjectionReceiptSignature(signedHere({ issuedAt, deliveredAt }), keys);
+    expect(at("2026-09-01T00:00:00Z", "2026-09-01T00:00:00Z")).toEqual({
+      kind: "verdict",
+      signature: "valid",
+      keyId: "test-key-1",
+      keyStatus: "active",
+      reason: null,
+    });
+    expect(at("2026-08-31T23:59:59Z", "2026-08-31T23:59:59Z")).toEqual({
+      kind: "verdict",
+      signature: "invalid",
+      keyId: "test-key-1",
+      keyStatus: "active",
+      reason: "key.outside_validity",
+    });
+  });
+
+  test("an unreadable receipt is reported before an unreadable key set", () => {
+    expect(verifyProjectionReceiptSignature(encoder.encode("{"), encoder.encode("{"))).toEqual({
+      kind: "verdict",
+      signature: "unreadable",
+      keyId: null,
+      keyStatus: null,
+      reason: "receipt.raw_json",
+    });
+    expect(
+      verifyProjectionReceiptSignature(b64u(byId("valid-active").signed), encoder.encode("{")),
+    ).toEqual({ kind: "refused", code: "keys.raw_json" });
+  });
+
+  test("the organization is compared before any key lookup, so it never yields unknown-key", () => {
+    const otherOrganization = keySet((draft) => {
+      draft.organization = "other-org";
+      draft.keys = draft.keys.filter((key) => key.keyId === "test-key-2");
+    });
+    expect(
+      verifyProjectionReceiptSignature(
+        b64u(byId("valid-active").signed),
+        encode(otherOrganization),
+      ),
+    ).toEqual({
+      kind: "verdict",
+      signature: "invalid",
+      keyId: "test-key-1",
+      keyStatus: null,
+      reason: "key.organization_mismatch",
+    });
+  });
+
+  test("a key valid for another key identifier does not verify", () => {
+    const swapped = keySet((draft) => {
+      const [first, second] = draft.keys as [SigningKey, SigningKey];
+      [first.publicKey, second.publicKey] = [second.publicKey, first.publicKey];
+    });
+    expect(
+      verifyProjectionReceiptSignature(b64u(byId("valid-active").signed), encode(swapped)),
+    ).toEqual({
+      kind: "verdict",
+      signature: "invalid",
+      keyId: "test-key-1",
+      keyStatus: "active",
+      reason: "signature.mismatch",
+    });
+  });
+
+  test("undecodable and non-canonical encodings are admissible neither as A nor as R", async () => {
+    // Encodings from the build-brief v2 strict vectors: y not on the curve, y >= p, and x = 0
+    // written with its sign bit. Each is a canonical base64url string, so it passes the key set.
+    const strict = (await Bun.file(
+      `${import.meta.dir}/../../contracts/fixtures/build-brief-v2/strict-ed25519-vectors.json`,
+    ).json()) as { points: { id: string; point: string }[] };
+    const ids = [
+      "invalid-point",
+      "noncanonical-y-p",
+      "noncanonical-identity",
+      "negative-zero-identity",
+    ];
+    const base = byId("valid-active");
+    const document = documentOf(base);
+    const signature = sigOf(base);
+    for (const id of ids) {
+      const point = strict.points.find((candidate) => candidate.id === id)?.point;
+      if (point === undefined) throw new Error(`no point ${id}`);
+      const asKey = keySet((draft) => {
+        (draft.keys[0] as SigningKey).publicKey = point;
+      });
+      expect(rawSigningKeySetFailures(encode(asKey)), id).toEqual([]);
+      expect(verifyProjectionReceiptSignature(b64u(base.signed), encode(asKey)), id).toEqual({
+        kind: "verdict",
+        signature: "invalid",
+        keyId: "test-key-1",
+        keyStatus: "active",
+        reason: "key.not_admissible",
+      });
+      const forged = new Uint8Array(signature);
+      forged.set(b64u(point), 0);
+      const value = Buffer.from(forged).toString("base64url");
+      const asR = encode({ ...document, signature: { algorithm: "ed25519", value } });
+      expect(verifyProjectionReceiptSignature(asR, encode(validKeySet)), id).toEqual({
+        kind: "verdict",
+        signature: "invalid",
+        keyId: "test-key-1",
+        keyStatus: "active",
+        reason: "signature.r_not_admissible",
+      });
+    }
+  });
+
+  test("verdict reasons carry no document data", () => {
+    for (const vector of corpus.vectors) {
+      const reason =
+        "refused" in vector.expected ? vector.expected.refused : vector.expected.reason;
+      if (reason !== null) expect(reason).toMatch(/^(receipt|keys|key|signature)\.[a-z_]+$/);
+    }
   });
 });
