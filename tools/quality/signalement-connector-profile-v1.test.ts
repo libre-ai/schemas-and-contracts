@@ -203,6 +203,15 @@ describe("published profiles", () => {
     }
   });
 
+  test("the first four valid vectors are the published profiles, cell for cell", () => {
+    const vectorDocuments = (vectorFile.valid as Vector[]).slice(0, 4).map((v) => v.document);
+    expect(vectorDocuments).toEqual(profiles.profiles);
+    // The comparison is not vacuous: one altered cell of a copy makes it fail.
+    const altered = structuredClone(vectorDocuments) as Profile[];
+    (altered[1] as Profile).capabilities.consistentLookup.status = "supported";
+    expect(altered).not.toEqual(profiles.profiles);
+  });
+
   test("a self-hosted profile has no provider version until qualification", () => {
     expect(profiles.profiles[3]?.providerVersion).toBeNull();
   });

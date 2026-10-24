@@ -59,6 +59,14 @@ value.
   tracker is known not to offer it; a capability MUST NOT go from `unsupported` to
   `supported` without a new profile version. A value such as `partial` is refused: a
   capability that holds only in part is split into members, never blurred.
+- On a published profile, `supported` and `unsupported` are **declarations taken from the
+  tracker's documentation**, not qualification evidence: no published profile has passed
+  qualification by being published. Qualification evidence is recorded only by the consumer,
+  in `qualification/provider-matrix.yaml` of `signalement`. A consumer MUST NOT serve a
+  profile, or any capability of it, as available without that evidence, whatever value the
+  profile declares. `unproven` is the only value a consumer reads as absent from the
+  profile alone; reading `supported` as proven is a consumer error, not a feature of the
+  profile.
 - `profileId` is the registry key of the profile and MUST equal
   `` `${family}/${edition}/${api.style}-${api.version}` ``. The id is derived, not chosen: a
   document whose id disagrees with its own members describes a different profile than it
