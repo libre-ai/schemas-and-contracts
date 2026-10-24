@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.libre-ai.fr/schemas/signalement-connector-profile.v1.schema.json",
+  "title": "Libre AI Signalement Connector Profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "profileId",
+    "family",
+    "edition",
+    "api",
+    "providerVersion",
+    "auth",
+    "bodyFormat",
+    "capabilities",
+    "limits",
+    "conflictPolicy"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "libre-ai.signalement-connector-profile.v1" },
+    "profileId": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 106,
+      "pattern": "^[a-z0-9-]{1,32}/[a-z0-9.-]{1,32}/(?:rest|graphql)-[a-z0-9.-]{1,32}$"
+    },
+    "family": { "$ref": "#/$defs/family" },
+    "edition": { "$ref": "#/$defs/edition" },
+    "api": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["style", "version"],
+      "properties": {
+        "style": { "enum": ["rest", "graphql"] },
+        "version": { "$ref": "#/$defs/edition" }
+      }
+    },
+    "providerVersion": {
+      "anyOf": [{ "type": "string", "minLength": 1, "maxLength": 64 }, { "type": "null" }]
+    },
+    "auth": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "scopes"],
+      "properties": {
+        "mode": {
+          "enum": [
+            "fine-grained-token",
+            "project-access-token",
+            "personal-access-token",
+            "api-token",
+            "api-key"
+          ]
+        },
+        "scopes": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1, "maxLength": 64 }
+        }
+      }
+    },
+    "bodyFormat": { "enum": ["markdown-gfm", "markdown-glfm", "adf", "html"] },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "discovery",
+        "mappingValidation",
+        "idempotentCreate",
+        "attachExisting",
+        "attachmentUpload",
+        "comment",
+        "cursorRead",
+        "visibility",
+        "consistentLookup"
+      ],
+      "properties": {
+        "discovery": { "$ref": "#/$defs/capability" },
+        "mappingValidation": { "$ref": "#/$defs/capability" },
+        "idempotentCreate": { "$ref": "#/$defs/capability" },
+        "attachExisting": { "$ref": "#/$defs/capability" },
+        "attachmentUpload": { "$ref": "#/$defs/capability" },
+        "comment": { "$ref": "#/$defs/capability" },
+        "cursorRead": { "$ref": "#/$defs/capability" },
+        "visibility": { "enum": ["discovered", "declared"] },
+        "consistentLookup": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["method", "status"],
+          "properties": {
+            "method": {
+              "enum": [
+                "issue-list",
+                "filtered-list",
+                "jql",
+                "entity-property",
+                "external-id",
+                "none"
+              ]
+            },
+            "status": { "$ref": "#/$defs/capability" }
+          }
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["maxBodyBytes", "maxAttachmentBytes", "maxAttachmentsPerItem"],
+      "properties": {
+        "maxBodyBytes": { "$ref": "#/$defs/positiveLimit" },
+        "maxAttachmentBytes": { "$ref": "#/$defs/positiveLimit" },
+        "maxAttachmentsPerItem": { "$ref": "#/$defs/countLimit" }
+      }
+    },
+    "conflictPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "body", "attachments", "comments", "status", "closure"],
+      "properties": {
+        "title": { "$ref": "#/$defs/policy" },
+        "body": { "$ref": "#/$defs/policy" },
+        "attachments": { "$ref": "#/$defs/policy" },
+        "comments": { "$ref": "#/$defs/policy" },
+        "status": { "$ref": "#/$defs/policy" },
+        "closure": { "$ref": "#/$defs/policy" }
+      }
+    }
+  },
+  "$defs": {
+    "family": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[a-z0-9-]{1,32}$"
+    },
+    "edition": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[a-z0-9.-]{1,32}$"
+    },
+    "capability": { "enum": ["supported", "unsupported", "unproven"] },
+    "policy": { "enum": ["dossier-owned", "provider-owned", "merge-set", "human-resolution"] },
+    "positiveLimit": {
+      "anyOf": [
+        { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        { "type": "null" }
+      ]
+    },
+    "countLimit": {
+      "anyOf": [
+        { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+        { "type": "null" }
+      ]
+    }
+  }
+}

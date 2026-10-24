@@ -1473,6 +1473,23 @@
         "required": ["architecture", "security", "privacy"],
         "dossier": "docs/reviews/signalement-v1-contracts-review.md"
       }
+    },
+    {
+      "id": "signalement-connector-profile-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/signalement-connector-profile.v1.schema.json",
+      "owners": ["signalement"],
+      "consumers": ["signalement"],
+      "compatibility": "major-versioned",
+      "classification": "public",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security"],
+        "dossier": "docs/reviews/signalement-v1-contracts-review.md"
+      }
     }
   ]
 }

@@ -13,6 +13,7 @@ export interface SignalementFixtureInventory {
 // Grows with each admitted contract (step 6 of the admission procedure).
 export const SIGNALEMENT_V1_FIXTURE_DIRECTORIES: readonly string[] = [
   "signalement-delivery-envelope-v1",
+  "signalement-connector-profile-v1",
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {

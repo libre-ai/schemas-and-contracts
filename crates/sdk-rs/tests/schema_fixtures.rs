@@ -129,6 +129,10 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/signalement-delivery-envelope-v1/schema-fixtures.json"
     ))
     .expect("signalement delivery envelope v1 fixture document");
+    let signalement_connector_profile_v1_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/signalement-connector-profile-v1/schema-fixtures.json"
+    ))
+    .expect("signalement connector profile v1 fixture document");
     let cases = fixtures["cases"]
         .as_array()
         .expect("fixture cases")
@@ -208,6 +212,11 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
             signalement_delivery_envelope_v1_fixtures["cases"]
                 .as_array()
                 .expect("signalement delivery envelope v1 fixture cases"),
+        )
+        .chain(
+            signalement_connector_profile_v1_fixtures["cases"]
+                .as_array()
+                .expect("signalement connector profile v1 fixture cases"),
         )
         .collect::<Vec<_>>();
     assert_eq!(schema_count, cases.len() + 1);

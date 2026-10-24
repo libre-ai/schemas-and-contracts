@@ -1,0 +1,9 @@
+[test]
+coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "coverage/signalement-connector-profile-v1"
+coverageThreshold = 0.9
+coverageSkipTestFiles = true
+# The canonicalizer and strict JSON parser retain their dedicated full suites;
+# this gate covers only the connector profile verifier.
+coveragePathIgnorePatterns = ["**/authorized-execution.ts", "**/policy-core-raw-inputs.ts"]

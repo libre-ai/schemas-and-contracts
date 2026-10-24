@@ -462,6 +462,11 @@
 			"declaration": "session-export.v1.d.ts"
 		},
 		{
+			"schema": "signalement-connector-profile.v1.schema.json",
+			"schemaSha256": "25613fe8f2d282271e3cedc4c9f04e05cb7bf9205b169be6e6b486137d34826f",
+			"declaration": "signalement-connector-profile.v1.d.ts"
+		},
+		{
 			"schema": "signalement-delivery-envelope.v1.schema.json",
 			"schemaSha256": "e09809c4901c8863376d3a2a45a8669eac2d1a3d884e2a8e56d3b042182eae85",
 			"declaration": "signalement-delivery-envelope.v1.d.ts"
