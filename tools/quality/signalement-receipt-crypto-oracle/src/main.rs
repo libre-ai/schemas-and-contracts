@@ -97,9 +97,20 @@ fn timestamp(value: &Value) -> Option<String> {
     shaped.then(|| text.to_owned())
 }
 
+/// 2^53 - 1: above it a binary64 value is no longer an exact integer, and JCS (RFC 8785) writes
+/// the binary64 value, so `9007199254740993` would become `9007199254740992`.
+const MAX_SAFE_INTEGER: u64 = (1 << 53) - 1;
+
+/// Every number is integral with magnitude at most 2^53 - 1: rule 2 of SEMANTICS "Canonical
+/// form", the domain where `serde_json` and JCS write the same text. A float never qualifies:
+/// `serde_json` writes `1.0` where JCS writes `1`.
 fn integers_only(value: &Value) -> bool {
     match value {
-        Value::Number(number) => number.is_i64() || number.is_u64(),
+        Value::Number(number) => match (number.as_u64(), number.as_i64()) {
+            (Some(positive), _) => positive <= MAX_SAFE_INTEGER,
+            (None, Some(negative)) => negative.unsigned_abs() <= MAX_SAFE_INTEGER,
+            (None, None) => false,
+        },
         Value::Array(items) => items.iter().all(integers_only),
         Value::Object(members) => members.values().all(integers_only),
         _ => true,
@@ -108,8 +119,8 @@ fn integers_only(value: &Value) -> bool {
 
 /// `serde_json::to_vec` of a `Value` equals its JCS form (RFC 8785) when the text is ASCII (keys
 /// sorted by octet equal keys sorted by UTF-16 unit, and no escaping difference) and every number
-/// is an integer (no float formatting difference). `Map` sorts its keys because the
-/// `preserve_order` feature is off. Outside that premise the oracle cannot decide, so it stops.
+/// passes `integers_only`. `Map` sorts its keys because the `preserve_order` feature is off.
+/// Outside that premise the oracle cannot decide, so it stops.
 fn jcs_octets(value: &Value) -> Result<Vec<u8>, &'static str> {
     let octets = serde_json::to_vec(value).map_err(|_| "output")?;
     if !octets.is_ascii() || !integers_only(value) {
@@ -127,11 +138,14 @@ fn signing_message(unsigned: &Value) -> Result<Vec<u8>, &'static str> {
 
 /// `None` is the class `unreadable`. A duplicate member parses (last one wins) but then
 /// serializes to fewer octets, so it fails the canonical comparison like any non-JCS text.
+/// A number outside `integers_only` is `unreadable` too, as SEMANTICS "Canonical form"
+/// prescribes: a float is `receipt.non_canonical` or `receipt.schema`, an integer above
+/// 2^53 - 1 is `receipt.schema`. Only non-ASCII text, which no rule decides here, stops the run.
 fn read_receipt(signed: &[u8]) -> Result<Option<Receipt>, &'static str> {
     let Ok(value) = serde_json::from_slice::<Value>(signed) else {
         return Ok(None);
     };
-    if serde_json::to_vec(&value).map_err(|_| "output")? != signed {
+    if serde_json::to_vec(&value).map_err(|_| "output")? != signed || !integers_only(&value) {
         return Ok(None);
     }
     jcs_octets(&value)?;
@@ -643,5 +657,78 @@ mod tests {
             );
         }
         assert_eq!(locked_version(CARGO_LOCK, "absent-crate"), None);
+    }
+
+    fn valid_active() -> Value {
+        corpus_members(ENTRY_NAME)["vectors"]
+            .as_array()
+            .and_then(|vectors| vectors.iter().find(|vector| vector["id"] == "valid-active"))
+            .cloned()
+            .expect("valid-active vector")
+    }
+
+    /// The vector with its receipt edited, then written back as its own `serde_json` octets, so
+    /// that the canonical round trip holds and only the checks after it can decide.
+    fn with_receipt(vector: &Value, edit: impl FnOnce(&mut Value)) -> Value {
+        let octets = field(vector, "signed").expect("signed octets");
+        let mut receipt: Value = serde_json::from_slice(&octets).expect("receipt parses");
+        edit(&mut receipt);
+        let mut edited = vector.clone();
+        edited["signed"] = Value::from(
+            URL_SAFE_NO_PAD.encode(serde_json::to_vec(&receipt).expect("receipt serializes")),
+        );
+        edited
+    }
+
+    #[test]
+    fn reads_a_revision_beyond_two_to_the_53_minus_one_as_unreadable() {
+        // SEMANTICS "Canonical form" rules 2 and 3: a number of magnitude above 2^53 - 1 skips the
+        // canonical comparison and cannot pass the schema (`receipt.schema`), so the class is
+        // `unreadable`. serde_json reads 2^53 + 1 as an exact integer and writes it back
+        // unchanged, so only the magnitude bound stops it from being verified as a receipt.
+        let vector = valid_active();
+        for revision in [
+            Value::from(9_007_199_254_740_993_u64),
+            Value::from(-9_007_199_254_740_993_i64),
+        ] {
+            let edited = with_receipt(&vector, |receipt| receipt["revision"] = revision.clone());
+            assert_eq!(classify(&edited), Ok("unreadable"), "{revision}");
+        }
+    }
+
+    #[test]
+    fn reads_a_revision_of_magnitude_two_to_the_53_minus_one() {
+        // Boundary accepted by rule 2: the receipt is readable and reaches the equation, which
+        // fails because the signature covers revision 1.
+        let vector = valid_active();
+        for revision in [9_007_199_254_740_991_i64, -9_007_199_254_740_991] {
+            let edited = with_receipt(&vector, |receipt| {
+                receipt["revision"] = Value::from(revision)
+            });
+            assert_eq!(classify(&edited), Ok("invalid"), "{revision}");
+        }
+    }
+
+    #[test]
+    fn stops_on_a_non_ascii_receipt() {
+        // Outside ASCII, octet order of keys and UTF-16 order (JCS) may differ: no class is claimed.
+        let edited = with_receipt(&valid_active(), |receipt| {
+            receipt["organization"] = Value::from("exämple-org")
+        });
+        assert_eq!(classify(&edited), Err("jcs-premise"));
+    }
+
+    #[test]
+    fn refuses_a_file_one_octet_past_one_mebibyte() {
+        let mut at_bound = br#"{"schemaVersion":"x"}"#.to_vec();
+        at_bound.resize(MAX_FILE_OCTETS as usize, b' ');
+        assert_eq!(run_document(&at_bound), Err("version"));
+        let mut past = at_bound.clone();
+        past.push(b' ');
+        assert_eq!(run_document(&past), Err("input-size"));
+        let scratch = Scratch::new("oversized-part");
+        scratch.copy(ENTRY_NAME, ENTRY_NAME);
+        fs::write(scratch.0.join("signature-vectors.v1.part-2.json"), &past).expect("write part");
+        assert_eq!(run_path(&scratch.0.join(ENTRY_NAME)), Err("input-size"));
     }
 }

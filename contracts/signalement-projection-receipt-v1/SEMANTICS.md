@@ -386,10 +386,17 @@ and curve25519-dalek point checks, at the exact crate versions of `build-brief-c
 It reads the entry and each part it declares, in order, under the rules of "Vector files"
 below (each file at most 1 MiB, same `schemaVersion`, a part carrying only `schemaVersion` and
 `vectors`, a declared part absent or unreadable and an undeclared `signature-vectors.v1*` file
-both refused), and requires `domain` to equal the signing domain it states itself. A receipt is
-readable when `serde_json` serializes its parsed value back to the exact signed octets; this
-equals the JCS comparison because the receipt is ASCII and its only number is the integer
-`revision` (the oracle stops with `jcs-premise` outside that premise). It then runs the steps of
+both refused), and requires `domain` to equal the signing domain it states itself. It is not a
+schema validator: it reads only the members verification needs (`organization`, `keyId`,
+`issuedAt`, `signature`, and each key's `keyId`, `algorithm`, `publicKey`, `status`,
+`notBefore`, `notAfter`), so a receipt that is canonical but outside the schema in any other
+member (a `revision` above 2147483647, a missing `exportDigest`) is not `unreadable` for it. A
+receipt is readable when `serde_json` serializes its parsed value back to the exact signed
+octets and every number is an integer of magnitude at most 2^53 − 1; this equals the JCS
+comparison of "Canonical form" for an ASCII receipt, and a number outside rule 2 is
+`unreadable`, as rule 3 prescribes (`serde_json` would rewrite `9007199254740993` unchanged,
+where JCS writes the binary64 value `9007199254740992`). Non-ASCII text, where key order by
+octet and by UTF-16 unit may differ, stops the oracle with `jcs-premise`. It then runs the steps of
 "Signature verification" (organization, key, window, admissible A and R, then `verify_strict`,
 which also refuses S ≥ L) and compares the **class** of each outcome (`valid`, `invalid`,
 `unknown-key`, `unreadable`, `refused`) with the class of `expected`, never the reason; each
