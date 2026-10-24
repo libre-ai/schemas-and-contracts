@@ -33,9 +33,12 @@ export const SIGNALEMENT_V1_FIXTURE_DIRECTORIES: readonly string[] = [
 
 export const SIGNALEMENT_V1_FIXTURE_CODE_POINT_BUDGET = 65_536;
 
-// The locked local export is vendored by signalement too, so it is held to the same budget.
+// The locked local export is vendored by signalement too, so it is held to the same budget,
+// and so are the golden vectors of the policy-receipt world, which has no schema fixture
+// (hence no place in the list above).
 export const SIGNALEMENT_V1_BUDGETED_DIRECTORIES: readonly string[] = [
   ...SIGNALEMENT_V1_FIXTURE_DIRECTORIES,
+  "signalement-policy-receipt-v1",
   "signalement-local-export-v1",
 ];
 

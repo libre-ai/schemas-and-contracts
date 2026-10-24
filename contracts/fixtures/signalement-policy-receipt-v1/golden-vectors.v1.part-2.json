@@ -1,0 +1,1043 @@
+{
+  "schemaVersion": "libre-ai.signalement-policy-receipt-golden-vectors.v1",
+  "cases": [
+    {
+      "id": "visibility-unknown",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "eu",
+              "visibilitySource": "discovered"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-public-media",
+              "roles": ["screenshot", "video"],
+              "when": { "visibility": "public" },
+              "decision": "withhold"
+            },
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            {
+              "path": "media/screen-1.png",
+              "role": "screenshot",
+              "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "discovered": {}
+        }
+      },
+      "expected": {
+        "ok": {
+          "policyVersion": "1",
+          "policyDigest": "de42a23d98ae680ab155453b6c5804a9d7f1a03376e556a1a526993d9d2ef0fd",
+          "matchedRuleIds": ["r-app"],
+          "destinations": [
+            {
+              "destinationId": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "routing": "imposed",
+              "files": [
+                { "path": "README.md", "decision": "withhold", "reason": "visibility-unknown" },
+                {
+                  "path": "media/screen-1.png",
+                  "decision": "withhold",
+                  "reason": "visibility-unknown"
+                }
+              ],
+              "media": "withhold"
+            }
+          ],
+          "override": "denied",
+          "deniedCount": 0
+        }
+      },
+      "rationale": "routing-policy SEMANTICS, Evaluation, Input and 5.1: a destination absent from discovered reads visibility unknown, and every file is withheld with visibility-unknown, whatever the rules say."
+    },
+    {
+      "id": "gitlab-internal-is-public",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gl",
+              "profileId": "gitlab-issues/gitlab.com/rest-v4",
+              "target": { "kind": "gitlab-project", "projectPath": "example-group/widgets" },
+              "residency": "eu",
+              "visibilitySource": "discovered"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gl"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-public-media",
+              "roles": ["screenshot", "video"],
+              "when": { "visibility": "public" },
+              "decision": "withhold"
+            },
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            {
+              "path": "media/screen-1.png",
+              "role": "screenshot",
+              "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "discovered": { "gl": { "visibility": "internal", "attachmentUpload": true } }
+        }
+      },
+      "expected": {
+        "ok": {
+          "policyVersion": "1",
+          "policyDigest": "998412a7bf10270c3ae293267f4d169f61471c85660554a3624ba695bd7d020d",
+          "matchedRuleIds": ["r-app"],
+          "destinations": [
+            {
+              "destinationId": "gl",
+              "profileId": "gitlab-issues/gitlab.com/rest-v4",
+              "routing": "imposed",
+              "files": [
+                { "path": "README.md", "decision": "transmit", "reason": null },
+                {
+                  "path": "media/screen-1.png",
+                  "decision": "withhold",
+                  "reason": "public-destination"
+                }
+              ],
+              "media": "withhold"
+            }
+          ],
+          "override": "denied",
+          "deniedCount": 0
+        }
+      },
+      "rationale": "routing-policy SEMANTICS, Evaluation 4: internal counts as public, so the visibility public rule applies (5.2)."
+    },
+    {
+      "id": "residency-withhold",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "non-eu",
+              "visibilitySource": "discovered"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-non-eu-video",
+              "roles": ["video"],
+              "when": { "residency": "non-eu" },
+              "decision": "withhold"
+            },
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            {
+              "path": "media/clip-1.webm",
+              "role": "video",
+              "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            }
+          ],
+          "discovered": { "gh": { "visibility": "private", "attachmentUpload": true } }
+        }
+      },
+      "expected": {
+        "ok": {
+          "policyVersion": "1",
+          "policyDigest": "4b5aa37231103edc1365da3ff98b6c2aadf9775bf5144b04fb4ce5124098e109",
+          "matchedRuleIds": ["r-app"],
+          "destinations": [
+            {
+              "destinationId": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "routing": "imposed",
+              "files": [
+                { "path": "README.md", "decision": "transmit", "reason": null },
+                { "path": "media/clip-1.webm", "decision": "withhold", "reason": "residency" }
+              ],
+              "media": "withhold"
+            }
+          ],
+          "override": "denied",
+          "deniedCount": 0
+        }
+      },
+      "rationale": "routing-policy SEMANTICS, Evaluation 5: the residency non-eu rule applies to the video for a non-eu destination; reason residency."
+    },
+    {
+      "id": "attachment-upload-ignored",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "eu",
+              "visibilitySource": "discovered",
+              "mediaFallback": "link"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            {
+              "path": "media/screen-1.png",
+              "role": "screenshot",
+              "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "discovered": { "gh": { "visibility": "private", "attachmentUpload": false } }
+        }
+      },
+      "expected": {
+        "ok": {
+          "policyVersion": "1",
+          "policyDigest": "e4d5ae08e0e0a44d36a67ef74b51ab0883f26294d3211efa3fad48f7978cd1de",
+          "matchedRuleIds": ["r-app"],
+          "destinations": [
+            {
+              "destinationId": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "routing": "imposed",
+              "files": [
+                { "path": "README.md", "decision": "transmit", "reason": null },
+                { "path": "media/screen-1.png", "decision": "transmit", "reason": null }
+              ],
+              "media": "link"
+            }
+          ],
+          "override": "denied",
+          "deniedCount": 0
+        }
+      },
+      "rationale": "routing-policy SEMANTICS, Evaluation, Input: evaluate never reads attachmentUpload and never yields attachment-unsupported; media is the mediaFallback (3)."
+    },
+    {
+      "id": "denied-in-unmatched-rule-not-counted",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "eu",
+              "visibilitySource": "discovered"
+            },
+            {
+              "id": "gl",
+              "profileId": "gitlab-issues/gitlab.com/rest-v4",
+              "target": { "kind": "gitlab-project", "projectPath": "example-group/widgets" },
+              "residency": "eu",
+              "visibilitySource": "discovered"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": ["gl"],
+              "denied": [],
+              "override": "allowed"
+            },
+            {
+              "id": "r-other",
+              "match": { "origin": "https://other.example.org" },
+              "imposed": [],
+              "optional": [],
+              "selectable": [],
+              "denied": ["gh", "gl"],
+              "override": "denied"
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ],
+          "discovered": {
+            "gh": { "visibility": "private", "attachmentUpload": true },
+            "gl": { "visibility": "private", "attachmentUpload": true }
+          }
+        }
+      },
+      "expected": {
+        "ok": {
+          "policyVersion": "1",
+          "policyDigest": "af39c15df5bf7fe8762652ffcb515587f35684ae66fd7e95514e069b24d75bb8",
+          "matchedRuleIds": ["r-app"],
+          "destinations": [
+            {
+              "destinationId": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "routing": "imposed",
+              "files": [{ "path": "README.md", "decision": "transmit", "reason": null }],
+              "media": "withhold"
+            },
+            {
+              "destinationId": "gl",
+              "profileId": "gitlab-issues/gitlab.com/rest-v4",
+              "routing": "selectable",
+              "files": [{ "path": "README.md", "decision": "transmit", "reason": null }],
+              "media": "withhold"
+            }
+          ],
+          "override": "allowed",
+          "deniedCount": 0
+        }
+      },
+      "rationale": "routing-policy SEMANTICS, Evaluation 2: a rule that does not match contributes nothing: its denied list is not counted and its override is not considered."
+    },
+    {
+      "id": "selectable-visibility-unknown",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "eu",
+              "visibilitySource": "discovered"
+            },
+            {
+              "id": "gl",
+              "profileId": "gitlab-issues/gitlab.com/rest-v4",
+              "target": { "kind": "gitlab-project", "projectPath": "example-group/widgets" },
+              "residency": "eu",
+              "visibilitySource": "discovered"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": ["gl"],
+              "denied": [],
+              "override": "allowed"
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            {
+              "path": "media/screen-1.png",
+              "role": "screenshot",
+              "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "discovered": { "gh": { "visibility": "private", "attachmentUpload": true } }
+        }
+      },
+      "expected": {
+        "ok": {
+          "policyVersion": "1",
+          "policyDigest": "23d1411c7280f6f0b282f1222fa5f53991d6ed0e7d15f1813e4da6bfcb6bfed0",
+          "matchedRuleIds": ["r-app"],
+          "destinations": [
+            {
+              "destinationId": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "routing": "imposed",
+              "files": [
+                { "path": "README.md", "decision": "transmit", "reason": null },
+                { "path": "media/screen-1.png", "decision": "transmit", "reason": null }
+              ],
+              "media": "withhold"
+            },
+            {
+              "destinationId": "gl",
+              "profileId": "gitlab-issues/gitlab.com/rest-v4",
+              "routing": "selectable",
+              "files": [
+                { "path": "README.md", "decision": "withhold", "reason": "visibility-unknown" },
+                {
+                  "path": "media/screen-1.png",
+                  "decision": "withhold",
+                  "reason": "visibility-unknown"
+                }
+              ],
+              "media": "withhold"
+            }
+          ],
+          "override": "allowed",
+          "deniedCount": 0
+        }
+      },
+      "rationale": "routing-policy SEMANTICS, Evaluation 5.1: visibility-unknown withholds every file whatever the routing class, selectable included."
+    },
+    {
+      "id": "declared-ignores-discovered",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "jira",
+              "profileId": "jira-cloud/cloud/rest-v3",
+              "target": {
+                "kind": "jira-project",
+                "siteUrl": "https://example.atlassian.net",
+                "projectKey": "WID"
+              },
+              "residency": "non-eu",
+              "visibilitySource": "declared",
+              "declaredVisibility": "private"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["jira"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-public-media",
+              "roles": ["screenshot", "video"],
+              "when": { "visibility": "public" },
+              "decision": "withhold"
+            },
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            {
+              "path": "media/screen-1.png",
+              "role": "screenshot",
+              "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "discovered": {
+            "ghost": { "visibility": "public", "attachmentUpload": true },
+            "jira": { "visibility": "public", "attachmentUpload": true }
+          }
+        }
+      },
+      "expected": {
+        "ok": {
+          "policyVersion": "1",
+          "policyDigest": "8fb8c4db9272ffd40190a1f8c2c9b6d31c1caeb521beb6d58f1620a278593c2f",
+          "matchedRuleIds": ["r-app"],
+          "destinations": [
+            {
+              "destinationId": "jira",
+              "profileId": "jira-cloud/cloud/rest-v3",
+              "routing": "imposed",
+              "files": [
+                { "path": "README.md", "decision": "transmit", "reason": null },
+                { "path": "media/screen-1.png", "decision": "transmit", "reason": null }
+              ],
+              "media": "withhold"
+            }
+          ],
+          "override": "denied",
+          "deniedCount": 0
+        }
+      },
+      "rationale": "routing-policy SEMANTICS, Evaluation 4 and Input: a declared destination never reads discovered (its private visibility holds) and an entry for an id that names no destination is ignored."
+    },
+    {
+      "id": "reason-precedence-independent-of-order",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "non-eu",
+              "visibilitySource": "discovered"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-always-video",
+              "roles": ["video"],
+              "when": { "always": true },
+              "decision": "withhold"
+            },
+            {
+              "id": "x-non-eu",
+              "roles": ["screenshot", "video"],
+              "when": { "residency": "non-eu" },
+              "decision": "withhold"
+            },
+            {
+              "id": "x-public-video",
+              "roles": ["video"],
+              "when": { "visibility": "public" },
+              "decision": "withhold"
+            },
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            {
+              "path": "media/clip-1.webm",
+              "role": "video",
+              "sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            },
+            {
+              "path": "media/screen-1.png",
+              "role": "screenshot",
+              "sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+            }
+          ],
+          "discovered": { "gh": { "visibility": "public", "attachmentUpload": true } }
+        }
+      },
+      "expected": {
+        "ok": {
+          "policyVersion": "1",
+          "policyDigest": "3e724234f59053178107af1e4e07e181d564c2b9fec4e2402a5cabe02cb6b04d",
+          "matchedRuleIds": ["r-app"],
+          "destinations": [
+            {
+              "destinationId": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "routing": "imposed",
+              "files": [
+                { "path": "README.md", "decision": "transmit", "reason": null },
+                {
+                  "path": "media/clip-1.webm",
+                  "decision": "withhold",
+                  "reason": "public-destination"
+                },
+                { "path": "media/screen-1.png", "decision": "withhold", "reason": "residency" }
+              ],
+              "media": "withhold"
+            }
+          ],
+          "override": "denied",
+          "deniedCount": 0
+        }
+      },
+      "rationale": "routing-policy SEMANTICS, Evaluation 5.2: the reason is the candidate of highest precedence (public-destination > residency > default-withhold), never the first withholding rule in document order (here always)."
+    },
+    {
+      "id": "origin-with-path",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "eu",
+              "visibilitySource": "discovered",
+              "mediaFallback": "link"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com/path",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ],
+          "discovered": { "gh": { "visibility": "private", "attachmentUpload": true } }
+        }
+      },
+      "expected": { "error": { "code": "input.origin_invalid" } },
+      "rationale": "World SEMANTICS, evaluate step 4: an observed origin with a path is not the URL serializer's origin."
+    },
+    {
+      "id": "origin-default-port",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "eu",
+              "visibilitySource": "discovered",
+              "mediaFallback": "link"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com:443",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ],
+          "discovered": { "gh": { "visibility": "private", "attachmentUpload": true } }
+        }
+      },
+      "expected": { "error": { "code": "input.origin_invalid" } },
+      "rationale": "World SEMANTICS, evaluate step 4: the default port is never written in a serialized origin."
+    },
+    {
+      "id": "input-duplicate-path",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "eu",
+              "visibilitySource": "discovered",
+              "mediaFallback": "link"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ],
+          "discovered": { "gh": { "visibility": "private", "attachmentUpload": true } }
+        }
+      },
+      "expected": { "error": { "code": "input.invalid" } },
+      "rationale": "World SEMANTICS, evaluate step 3: two files with the same path."
+    },
+    {
+      "id": "policy-unknown-destination",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "eu",
+              "visibilitySource": "discovered"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com" },
+              "imposed": ["ghost"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ],
+          "discovered": { "gh": { "visibility": "private", "attachmentUpload": true } }
+        }
+      },
+      "expected": { "error": { "code": "policy.invalid" } },
+      "rationale": "World SEMANTICS, evaluate step 2: the routing-policy verifier refuses it (policy.unknown_destination:r-app)."
+    },
+    {
+      "id": "policy-non-canonical-origin",
+      "operation": "evaluate",
+      "args": {
+        "policy": {
+          "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+          "organization": "example-org",
+          "policyId": "golden",
+          "version": "1",
+          "destinations": [
+            {
+              "id": "gh",
+              "profileId": "github-issues/github.com/rest-2022-11-28",
+              "target": {
+                "kind": "github-repository",
+                "owner": "example-org",
+                "repository": "widgets"
+              },
+              "residency": "eu",
+              "visibilitySource": "discovered"
+            }
+          ],
+          "routingRules": [
+            {
+              "id": "r-app",
+              "match": { "origin": "https://app.example.com:443" },
+              "imposed": ["gh"],
+              "optional": [],
+              "selectable": [],
+              "denied": []
+            }
+          ],
+          "disclosureRules": [
+            {
+              "id": "x-default",
+              "roles": ["document", "screenshot", "video"],
+              "when": { "always": true },
+              "decision": "transmit"
+            }
+          ]
+        },
+        "input": {
+          "observedOrigin": "https://app.example.com",
+          "files": [
+            {
+              "path": "README.md",
+              "role": "document",
+              "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ],
+          "discovered": { "gh": { "visibility": "private", "attachmentUpload": true } }
+        }
+      },
+      "expected": { "error": { "code": "policy.invalid" } },
+      "rationale": "World SEMANTICS, evaluate step 2: the routing-policy verifier refuses it (policy.origin_non_canonical:r-app)."
+    }
+  ]
+}

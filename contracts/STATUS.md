@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 20 |
-| total | 136 |
+| candidate | 21 |
+| total | 137 |
 
 ## Counts by family
 
@@ -29,7 +29,7 @@ they disagree with this page, this page states the current catalog.
 | data-policy | 4 | 3 | 1 |
 | json-schema | 103 | 84 | 19 |
 | openapi | 13 | 13 | 0 |
-| wit | 9 | 9 | 0 |
+| wit | 10 | 9 | 1 |
 
 ## Contracts by family
 
@@ -185,7 +185,7 @@ they disagree with this page, this page states the current catalog.
 | `specifications-api-v2` | locked | none | `contracts/openapi/specifications.v2.yaml` |
 | `website-api-v1` | locked | none | `contracts/openapi/website.v1.yaml` |
 
-### wit (9)
+### wit (10)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -198,3 +198,4 @@ they disagree with this page, this page states the current catalog.
 | `practice-scoring-v1` | locked | none | `contracts/wit/practice-scoring-v1/world.wit` |
 | `radar-engine-v1` | locked | none | `contracts/wit/radar-engine-v1/world.wit` |
 | `radar-engine-v2` | locked | none | `contracts/wit/radar-engine-v2/world.wit` |
+| `signalement-policy-receipt-v1` | candidate | pending-independent-agent-review | `contracts/wit/signalement-policy-receipt-v1/world.wit` |

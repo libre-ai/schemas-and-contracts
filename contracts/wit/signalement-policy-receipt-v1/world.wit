@@ -1,0 +1,26 @@
+package libre-ai:signalement-policy-receipt@1.0.0;
+
+/// Routing-policy evaluation, JSON canonicalization and Ed25519 receipt signing and
+/// verification for signalement v1. Every argument and every result is JSON octets.
+/// SEMANTICS.md is normative for bounds, validation order, outputs and error codes.
+interface api {
+  /// `code` is one of the codes of SEMANTICS.md; `message` never contains input octets.
+  record contract-error { code: string, message: string }
+
+  /// signalement-routing-policy-v1 document and EvaluationInput -> JCS PolicyVerdict.
+  evaluate: func(policy: list<u8>, input: list<u8>) -> result<list<u8>, contract-error>;
+
+  /// A JSON value whose numbers are safe integers -> its RFC 8785 (JCS) form.
+  canonicalize: func(json: list<u8>) -> result<list<u8>, contract-error>;
+
+  /// UnsignedReceipt (keyId inside) and a 32-octet Ed25519 seed -> JCS signed receipt.
+  sign-receipt: func(unsigned: list<u8>, secret-key: list<u8>) -> result<list<u8>, contract-error>;
+
+  /// Signed receipt octets and a PublicKeySet -> JCS ReceiptVerification.
+  verify-receipt: func(signed: list<u8>, public-keys: list<u8>) -> result<list<u8>, contract-error>;
+}
+
+/// Pure component: no host capability, no clock, no randomness.
+world signalement-policy-receipt {
+  export api;
+}

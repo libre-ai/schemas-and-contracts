@@ -54,10 +54,11 @@ test("the production list equals the admitted contracts", () =>
 
 // The budget is the public-boundary scanner of signalement (maximumDecodedCodePoints in the
 // governance public-source-scanner): above it a file is unscannable, hence refused as sensitive.
-test("the budget is 65536 code points over the admitted contracts and the local export", () => {
+test("the budget is 65536 code points over the admitted contracts, the world's golden vectors and the local export", () => {
   expect(SIGNALEMENT_V1_FIXTURE_CODE_POINT_BUDGET).toBe(65_536);
   expect(SIGNALEMENT_V1_BUDGETED_DIRECTORIES).toEqual([
     ...SIGNALEMENT_V1_FIXTURE_DIRECTORIES,
+    "signalement-policy-receipt-v1",
     "signalement-local-export-v1",
   ]);
 });

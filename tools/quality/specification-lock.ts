@@ -12,7 +12,7 @@ const EVIDENCE_DIGEST: string = "39c8bb96a25cf1e5cb6e9d832f2a4f3e44acbf3a47a37b7
 // in a reviewed, owner-arbitrated change (ADR 2026-10-09).
 export const POST_LOCK_ADDITIONS_PATH: string = "contracts/catalog-post-lock-additions.v1.json";
 const POST_LOCK_ADDITIONS_DIGEST: string =
-  "a8e15b3d6d640aa14978da1b92703c0f4d74eb202d93e6359db26b8f6cb8199c";
+  "0e7f5f666edcad61049c71a9ec644ed32167b0d862eca72800a9ffa695e334d7";
 
 export interface SpecificationLockInput {
   targetCatalog: unknown;

@@ -1524,6 +1524,31 @@
         "required": ["architecture", "security", "cryptography", "privacy"],
         "dossier": "docs/reviews/signalement-v1-contracts-review.md"
       }
+    },
+    {
+      "id": "signalement-policy-receipt-v1",
+      "kind": "wit",
+      "path": "contracts/wit/signalement-policy-receipt-v1/world.wit",
+      "owners": ["signalement", "specialized-rust"],
+      "consumers": ["signalement"],
+      "compatibility": "major-versioned",
+      "classification": "tenant-private",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography"],
+        "dossier": "docs/reviews/signalement-v1-contracts-review.md"
+      },
+      "profiles": ["contracts/wit/signalement-policy-receipt-v1/SEMANTICS.md"],
+      "vectors": [
+        "contracts/fixtures/signalement-policy-receipt-v1/golden-vectors.v1.json",
+        "contracts/fixtures/signalement-policy-receipt-v1/golden-vectors.v1.part-2.json",
+        "contracts/fixtures/signalement-policy-receipt-v1/golden-vectors.v1.part-3.json",
+        "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.json",
+        "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-2.json"
+      ]
     }
   ]
 }

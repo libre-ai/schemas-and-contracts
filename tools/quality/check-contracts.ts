@@ -24,6 +24,10 @@ import {
   containsSensitivePublicMarker,
   publicSourceScannerSelfTestFailures,
 } from "./public-source-scanner";
+import {
+  loadPolicyReceiptGolden,
+  POLICY_RECEIPT_GOLDEN_PATH,
+} from "./signalement-policy-receipt-v1";
 import { loadSignalementV1FixtureCases } from "./signalement-v1-fixture-inventory";
 import { readSpecificationLockInputs } from "./specification-lock-inputs";
 
@@ -704,6 +708,7 @@ const specializedVectorPaths = [
   "contracts/fixtures/policy-core-v1/golden.json",
   "contracts/fixtures/policy-core-v2/golden.json",
   "contracts/fixtures/boussole-scoring-v2/golden-vectors.v1.json",
+  POLICY_RECEIPT_GOLDEN_PATH,
 ] as const;
 const specializedVectorValidator = validatorByName.get("engine-golden-vectors.v1.schema.json");
 if (
@@ -725,11 +730,26 @@ for (const path of specializedVectorPaths) {
     continue;
   }
   let document: unknown;
-  try {
-    document = parseStrictJson(new Uint8Array(await file.arrayBuffer()), 64);
-  } catch {
-    failures.push(`${path}: specialized vector is not strict UTF-8 JSON`);
-    continue;
+  if (path === POLICY_RECEIPT_GOLDEN_PATH) {
+    // Its cases continue in parts the entry declares (world SEMANTICS, "Continuation files").
+    // The envelope is checked on the merged document, `parts` removed, so every case of every
+    // part meets the same bounds and $defs/vectorList as in one file; an absent, oversized or
+    // undeclared part refuses the whole document.
+    const loaded = await loadPolicyReceiptGolden(dirname(path));
+    if (loaded.document === null) {
+      for (const failure of loaded.failures) failures.push(`${path}: ${failure}`);
+      // A refusal is never silent, even if the loader named no reason.
+      if (loaded.failures.length === 0) failures.push(`${path}: golden files refused`);
+      continue;
+    }
+    document = loaded.document;
+  } else {
+    try {
+      document = parseStrictJson(new Uint8Array(await file.arrayBuffer()), 64);
+    } catch {
+      failures.push(`${path}: specialized vector is not strict UTF-8 JSON`);
+      continue;
+    }
   }
   if (!inspectSpecializedVectorBounds(document, path)) continue;
   if (!inspectSpecializedVectorPublicContent(document, path)) continue;
