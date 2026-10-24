@@ -14,6 +14,7 @@ export interface SignalementFixtureInventory {
 export const SIGNALEMENT_V1_FIXTURE_DIRECTORIES: readonly string[] = [
   "signalement-delivery-envelope-v1",
   "signalement-connector-profile-v1",
+  "signalement-routing-policy-v1",
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {

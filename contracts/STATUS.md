@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 18 |
-| total | 134 |
+| candidate | 19 |
+| total | 135 |
 
 ## Counts by family
 
@@ -27,7 +27,7 @@ they disagree with this page, this page states the current catalog.
 | biscuit-authority | 2 | 2 | 0 |
 | biscuit-policy | 5 | 5 | 0 |
 | data-policy | 4 | 3 | 1 |
-| json-schema | 101 | 84 | 17 |
+| json-schema | 102 | 84 | 18 |
 | openapi | 13 | 13 | 0 |
 | wit | 9 | 9 | 0 |
 
@@ -59,7 +59,7 @@ they disagree with this page, this page states the current catalog.
 | `retention-policy-v3` | candidate | pending-independent-agent-review | `contracts/data/retention.v3.json` |
 | `retention-policy-v4` | locked | none | `contracts/data/retention.v4.json` |
 
-### json-schema (101)
+### json-schema (102)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -158,6 +158,7 @@ they disagree with this page, this page states the current catalog.
 | `signalement-connector-profile-v1` | candidate | pending-independent-agent-review | `contracts/schemas/signalement-connector-profile.v1.schema.json` |
 | `signalement-delivery-envelope-v1` | candidate | pending-independent-agent-review | `contracts/schemas/signalement-delivery-envelope.v1.schema.json` |
 | `signalement-local-export-v1` | locked | none | `contracts/schemas/signalement-local-export.v1.schema.json` |
+| `signalement-routing-policy-v1` | candidate | pending-independent-agent-review | `contracts/schemas/signalement-routing-policy.v1.schema.json` |
 | `spec-package-v1` | locked | none | `contracts/schemas/spec-package.v1.schema.json` |
 | `spec-package-v2` | locked | none | `contracts/schemas/spec-package.v2.schema.json` |
 | `step-invocation-v1` | locked | none | `contracts/schemas/step-invocation.v1.schema.json` |

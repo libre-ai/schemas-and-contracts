@@ -1,0 +1,5209 @@
+{
+  "schemaVersion": "libre-ai.signalement-routing-policy-vectors.v1",
+  "valid": [
+    {
+      "name": "four destinations, three match forms, three disclosure conditions",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "minimal policy without any rule",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          }
+        ],
+        "routingRules": [],
+        "disclosureRules": []
+      }
+    },
+    {
+      "name": "largest version string",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "9999999999",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "host pattern with an explicit port and several labels",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "http",
+              "hostPattern": "*.dev.example.test",
+              "port": 8080
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "same destination imposed by one rule and denied by another",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl", "d-jira"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "declared public visibility and no media fallback",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "public"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a destination named by no rule",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "origin with an explicit non-default port",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "http://localhost:5173"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "origin with an IPv6 documentation address",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://[2001:db8::1]"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      }
+    },
+    {
+      "name": "rule with every list empty",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": [],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "rule naming an unknown destination",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-unknown",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-missing"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.unknown_destination:r-unknown"]
+    },
+    {
+      "name": "unknown destination in a selectable list",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh", "d-other"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.unknown_destination:r-app"]
+    },
+    {
+      "name": "same destination imposed and denied by one rule",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-overlap",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-gh"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"]
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.routing_overlap:r-overlap"]
+    },
+    {
+      "name": "same destination optional and selectable in one rule",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gl"],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.routing_overlap:r-absent"]
+    },
+    {
+      "name": "jira project target on a github issues profile",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.target_profile_mismatch:d-gh"]
+    },
+    {
+      "name": "github repository target on a gitlab issues profile",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.target_profile_mismatch:d-gl"]
+    },
+    {
+      "name": "profile family with no target kind",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "redmine/self-hosted/rest-v5",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.target_profile_mismatch:d-plane"]
+    },
+    {
+      "name": "duplicate destination id",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gh",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.duplicate_id:d-gh"]
+    },
+    {
+      "name": "routing rule id equal to a destination id",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "d-jira",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.duplicate_id:d-jira"]
+    },
+    {
+      "name": "disclosure rule id equal to a routing rule id",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "r-app",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.duplicate_id:r-app"]
+    },
+    {
+      "name": "declared visibility absent on a declared destination",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "declared visibility present on a discovered destination",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link",
+            "declaredVisibility": "private"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "host pattern on a top-level domain",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "host pattern without wildcard names an apex",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "host pattern with a nested wildcard",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "override neither allowed nor denied",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "maybe"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "match with two forms",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com",
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "absent match set to false",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": false
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "origin with a path",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com/report"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "host pattern match without its port member",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com"
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "port written as a string",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": "443"
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "duplicate entry in one destination list",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane", "d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "rule list absent",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "no destination",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "version with a leading zero",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "01",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "version as a number",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": 1,
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "unknown member at the root",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ],
+        "state": "approved"
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "unknown member in a target",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets",
+              "token": "x"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "disclosure rule without a role",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": [],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "disclosure condition with two members",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true,
+              "residency": "eu"
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "disclosure condition on internal visibility",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "internal"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "jira site outside atlassian.net",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://jira.example.com",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "plane base URL over http",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "http://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "media fallback inline",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "inline"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "failures": ["policy.schema"]
+    },
+    {
+      "name": "duplicate member",
+      "raw": "eyJ2ZXJzaW9uIjoiMiIsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1yb3V0aW5nLXBvbGljeS52MSIsIm9yZ2FuaXphdGlvbiI6ImV4YW1wbGUtb3JnIiwicG9saWN5SWQiOiJkZWZhdWx0LXJvdXRpbmciLCJ2ZXJzaW9uIjoiMSIsImRlc3RpbmF0aW9ucyI6W3siaWQiOiJkLWdoIiwicHJvZmlsZUlkIjoiZ2l0aHViLWlzc3Vlcy9naXRodWIuY29tL3Jlc3QtMjAyMi0xMS0yOCIsInRhcmdldCI6eyJraW5kIjoiZ2l0aHViLXJlcG9zaXRvcnkiLCJvd25lciI6ImV4YW1wbGUtb3JnIiwicmVwb3NpdG9yeSI6IndpZGdldHMifSwicmVzaWRlbmN5Ijoibm9uLWV1IiwidmlzaWJpbGl0eVNvdXJjZSI6ImRpc2NvdmVyZWQiLCJtZWRpYUZhbGxiYWNrIjoibGluayJ9LHsiaWQiOiJkLWdsIiwicHJvZmlsZUlkIjoiZ2l0bGFiLWlzc3Vlcy9naXRsYWIuY29tL3Jlc3QtdjQiLCJ0YXJnZXQiOnsia2luZCI6ImdpdGxhYi1wcm9qZWN0IiwicHJvamVjdFBhdGgiOiJleGFtcGxlLWdyb3VwL3dpZGdldHMifSwicmVzaWRlbmN5IjoiZXUiLCJ2aXNpYmlsaXR5U291cmNlIjoiZGlzY292ZXJlZCJ9LHsiaWQiOiJkLWppcmEiLCJwcm9maWxlSWQiOiJqaXJhLWNsb3VkL2Nsb3VkL3Jlc3QtdjMiLCJ0YXJnZXQiOnsia2luZCI6ImppcmEtcHJvamVjdCIsInNpdGVVcmwiOiJodHRwczovL2V4YW1wbGUuYXRsYXNzaWFuLm5ldCIsInByb2plY3RLZXkiOiJXSUQifSwicmVzaWRlbmN5Ijoibm9uLWV1IiwidmlzaWJpbGl0eVNvdXJjZSI6ImRlY2xhcmVkIiwiZGVjbGFyZWRWaXNpYmlsaXR5IjoicHJpdmF0ZSIsIm1lZGlhRmFsbGJhY2siOiJ3aXRoaG9sZCJ9LHsiaWQiOiJkLXBsYW5lIiwicHJvZmlsZUlkIjoicGxhbmUvc2VsZi1ob3N0ZWQvcmVzdC12MSIsInRhcmdldCI6eyJraW5kIjoicGxhbmUtcHJvamVjdCIsImJhc2VVcmwiOiJodHRwczovL3BsYW5lLmV4YW1wbGUub3JnIiwid29ya3NwYWNlU2x1ZyI6ImV4YW1wbGUiLCJwcm9qZWN0SWQiOiIzZjFjMmE5ZS01YjdkLTRjMWUtOWEyYi02ZDhlMGYxYTJiM2MifSwicmVzaWRlbmN5IjoiZXUiLCJ2aXNpYmlsaXR5U291cmNlIjoiZGVjbGFyZWQiLCJkZWNsYXJlZFZpc2liaWxpdHkiOiJwcml2YXRlIn1dLCJyb3V0aW5nUnVsZXMiOlt7ImlkIjoici1hcHAiLCJtYXRjaCI6eyJvcmlnaW4iOiJodHRwczovL2FwcC5leGFtcGxlLmNvbSJ9LCJpbXBvc2VkIjpbImQtcGxhbmUiXSwib3B0aW9uYWwiOlsiZC1nbCJdLCJzZWxlY3RhYmxlIjpbImQtZ2giXSwiZGVuaWVkIjpbImQtamlyYSJdLCJvdmVycmlkZSI6ImFsbG93ZWQifSx7ImlkIjoici1zdWJkb21haW5zIiwibWF0Y2giOnsic2NoZW1lIjoiaHR0cHMiLCJob3N0UGF0dGVybiI6IiouZXhhbXBsZS5jb20iLCJwb3J0IjpudWxsfSwiaW1wb3NlZCI6WyJkLWdsIl0sIm9wdGlvbmFsIjpbXSwic2VsZWN0YWJsZSI6W10sImRlbmllZCI6W119LHsiaWQiOiJyLWFic2VudCIsIm1hdGNoIjp7ImFic2VudCI6dHJ1ZX0sImltcG9zZWQiOlsiZC1wbGFuZSJdLCJvcHRpb25hbCI6W10sInNlbGVjdGFibGUiOltdLCJkZW5pZWQiOlsiZC1naCJdLCJvdmVycmlkZSI6ImRlbmllZCJ9XSwiZGlzY2xvc3VyZVJ1bGVzIjpbeyJpZCI6IngtcHVibGljLW1lZGlhIiwicm9sZXMiOlsic2NyZWVuc2hvdCIsInZpZGVvIl0sIndoZW4iOnsidmlzaWJpbGl0eSI6InB1YmxpYyJ9LCJkZWNpc2lvbiI6IndpdGhob2xkIn0seyJpZCI6Ingtbm9uLWV1LXZpZGVvIiwicm9sZXMiOlsidmlkZW8iXSwid2hlbiI6eyJyZXNpZGVuY3kiOiJub24tZXUifSwiZGVjaXNpb24iOiJ3aXRoaG9sZCJ9LHsiaWQiOiJ4LWRlZmF1bHQiLCJyb2xlcyI6WyJkb2N1bWVudCIsInNjcmVlbnNob3QiLCJ2aWRlbyJdLCJ3aGVuIjp7ImFsd2F5cyI6dHJ1ZX0sImRlY2lzaW9uIjoidHJhbnNtaXQifV19",
+      "failures": ["policy.raw_json"]
+    },
+    {
+      "name": "truncated json",
+      "raw": "eyJzY2hlbWFWZXJzaW9uIjoibGlicmUtYWkuc2lnbmFsZW1lbnQtcg",
+      "failures": ["policy.raw_json"]
+    },
+    {
+      "name": "byte order mark before the document",
+      "raw": "77u_eyJzY2hlbWFWZXJzaW9uIjoibGlicmUtYWkuc2lnbmFsZW1lbnQtcm91dGluZy1wb2xpY3kudjEiLCJvcmdhbml6YXRpb24iOiJleGFtcGxlLW9yZyIsInBvbGljeUlkIjoiZGVmYXVsdC1yb3V0aW5nIiwidmVyc2lvbiI6IjEiLCJkZXN0aW5hdGlvbnMiOlt7ImlkIjoiZC1naCIsInByb2ZpbGVJZCI6ImdpdGh1Yi1pc3N1ZXMvZ2l0aHViLmNvbS9yZXN0LTIwMjItMTEtMjgiLCJ0YXJnZXQiOnsia2luZCI6ImdpdGh1Yi1yZXBvc2l0b3J5Iiwib3duZXIiOiJleGFtcGxlLW9yZyIsInJlcG9zaXRvcnkiOiJ3aWRnZXRzIn0sInJlc2lkZW5jeSI6Im5vbi1ldSIsInZpc2liaWxpdHlTb3VyY2UiOiJkaXNjb3ZlcmVkIiwibWVkaWFGYWxsYmFjayI6ImxpbmsifSx7ImlkIjoiZC1nbCIsInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwidGFyZ2V0Ijp7ImtpbmQiOiJnaXRsYWItcHJvamVjdCIsInByb2plY3RQYXRoIjoiZXhhbXBsZS1ncm91cC93aWRnZXRzIn0sInJlc2lkZW5jeSI6ImV1IiwidmlzaWJpbGl0eVNvdXJjZSI6ImRpc2NvdmVyZWQifSx7ImlkIjoiZC1qaXJhIiwicHJvZmlsZUlkIjoiamlyYS1jbG91ZC9jbG91ZC9yZXN0LXYzIiwidGFyZ2V0Ijp7ImtpbmQiOiJqaXJhLXByb2plY3QiLCJzaXRlVXJsIjoiaHR0cHM6Ly9leGFtcGxlLmF0bGFzc2lhbi5uZXQiLCJwcm9qZWN0S2V5IjoiV0lEIn0sInJlc2lkZW5jeSI6Im5vbi1ldSIsInZpc2liaWxpdHlTb3VyY2UiOiJkZWNsYXJlZCIsImRlY2xhcmVkVmlzaWJpbGl0eSI6InByaXZhdGUiLCJtZWRpYUZhbGxiYWNrIjoid2l0aGhvbGQifSx7ImlkIjoiZC1wbGFuZSIsInByb2ZpbGVJZCI6InBsYW5lL3NlbGYtaG9zdGVkL3Jlc3QtdjEiLCJ0YXJnZXQiOnsia2luZCI6InBsYW5lLXByb2plY3QiLCJiYXNlVXJsIjoiaHR0cHM6Ly9wbGFuZS5leGFtcGxlLm9yZyIsIndvcmtzcGFjZVNsdWciOiJleGFtcGxlIiwicHJvamVjdElkIjoiM2YxYzJhOWUtNWI3ZC00YzFlLTlhMmItNmQ4ZTBmMWEyYjNjIn0sInJlc2lkZW5jeSI6ImV1IiwidmlzaWJpbGl0eVNvdXJjZSI6ImRlY2xhcmVkIiwiZGVjbGFyZWRWaXNpYmlsaXR5IjoicHJpdmF0ZSJ9XSwicm91dGluZ1J1bGVzIjpbeyJpZCI6InItYXBwIiwibWF0Y2giOnsib3JpZ2luIjoiaHR0cHM6Ly9hcHAuZXhhbXBsZS5jb20ifSwiaW1wb3NlZCI6WyJkLXBsYW5lIl0sIm9wdGlvbmFsIjpbImQtZ2wiXSwic2VsZWN0YWJsZSI6WyJkLWdoIl0sImRlbmllZCI6WyJkLWppcmEiXSwib3ZlcnJpZGUiOiJhbGxvd2VkIn0seyJpZCI6InItc3ViZG9tYWlucyIsIm1hdGNoIjp7InNjaGVtZSI6Imh0dHBzIiwiaG9zdFBhdHRlcm4iOiIqLmV4YW1wbGUuY29tIiwicG9ydCI6bnVsbH0sImltcG9zZWQiOlsiZC1nbCJdLCJvcHRpb25hbCI6W10sInNlbGVjdGFibGUiOltdLCJkZW5pZWQiOltdfSx7ImlkIjoici1hYnNlbnQiLCJtYXRjaCI6eyJhYnNlbnQiOnRydWV9LCJpbXBvc2VkIjpbImQtcGxhbmUiXSwib3B0aW9uYWwiOltdLCJzZWxlY3RhYmxlIjpbXSwiZGVuaWVkIjpbImQtZ2giXSwib3ZlcnJpZGUiOiJkZW5pZWQifV0sImRpc2Nsb3N1cmVSdWxlcyI6W3siaWQiOiJ4LXB1YmxpYy1tZWRpYSIsInJvbGVzIjpbInNjcmVlbnNob3QiLCJ2aWRlbyJdLCJ3aGVuIjp7InZpc2liaWxpdHkiOiJwdWJsaWMifSwiZGVjaXNpb24iOiJ3aXRoaG9sZCJ9LHsiaWQiOiJ4LW5vbi1ldS12aWRlbyIsInJvbGVzIjpbInZpZGVvIl0sIndoZW4iOnsicmVzaWRlbmN5Ijoibm9uLWV1In0sImRlY2lzaW9uIjoid2l0aGhvbGQifSx7ImlkIjoieC1kZWZhdWx0Iiwicm9sZXMiOlsiZG9jdW1lbnQiLCJzY3JlZW5zaG90IiwidmlkZW8iXSwid2hlbiI6eyJhbHdheXMiOnRydWV9LCJkZWNpc2lvbiI6InRyYW5zbWl0In1dfQ",
+      "failures": ["policy.raw_json"]
+    }
+  ]
+}

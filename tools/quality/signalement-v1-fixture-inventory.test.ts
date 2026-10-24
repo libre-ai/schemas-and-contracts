@@ -45,4 +45,5 @@ test("the production list equals the admitted contracts", () =>
   expect(SIGNALEMENT_V1_FIXTURE_DIRECTORIES).toEqual([
     "signalement-delivery-envelope-v1",
     "signalement-connector-profile-v1",
+    "signalement-routing-policy-v1",
   ])); // grows with each admission
