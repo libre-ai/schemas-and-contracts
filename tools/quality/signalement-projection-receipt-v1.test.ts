@@ -3,7 +3,6 @@ import { createHash } from "node:crypto";
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import fixtureFile from "../../contracts/fixtures/signalement-projection-receipt-v1/schema-fixtures.json";
-import vectorFile from "../../contracts/fixtures/signalement-projection-receipt-v1/vectors.json";
 import schema from "../../contracts/schemas/signalement-projection-receipt.v1.schema.json";
 import { canonicalJson } from "./authorized-execution";
 import {
@@ -14,6 +13,7 @@ import {
   receiptSigningMessage,
   SIGNING_KEY_SET_MAX_BYTES,
 } from "./signalement-projection-receipt-v1";
+import { loadSignalementV1Vectors } from "./signalement-v1-vector-loader";
 
 type JsonObject = Record<string, unknown>;
 
@@ -34,6 +34,11 @@ interface Vector {
 interface VectorFamily {
   valid: Vector[];
   invalid: Vector[];
+}
+
+interface ReceiptVectorFile extends VectorFamily {
+  schemaVersion: string;
+  keySetVectors: VectorFamily;
 }
 
 interface SigningKey extends JsonObject {
@@ -109,8 +114,16 @@ const fixture = fixtureFile.cases[0] as {
   invalidMutations: Mutation[];
 };
 const valid = fixture.valid;
-const receipts = vectorFile as unknown as VectorFamily;
-const keySets = vectorFile.keySetVectors as unknown as VectorFamily;
+// Entry, declared parts and recipes (SEMANTICS "Test material"); a refused file stops the suite.
+const loaded = await loadSignalementV1Vectors(
+  `${import.meta.dir}/../../contracts/fixtures/signalement-projection-receipt-v1`,
+);
+if (loaded.vectors === null) {
+  throw new Error(`receipt vector files refused: ${loaded.failures.join("; ")}`);
+}
+const vectorFile = loaded.vectors as unknown as ReceiptVectorFile;
+const receipts: VectorFamily = vectorFile;
+const keySets: VectorFamily = vectorFile.keySetVectors;
 const validKeySet = keySets.valid[0]?.document as KeySet;
 
 function keySet(patch: (draft: KeySet) => void): KeySet {

@@ -2,7 +2,6 @@ import { describe, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
 import Ajv2020 from "ajv/dist/2020";
 import fixtureFile from "../../contracts/fixtures/signalement-routing-policy-v1/schema-fixtures.json";
-import vectorFile from "../../contracts/fixtures/signalement-routing-policy-v1/vectors.json";
 import schema from "../../contracts/schemas/signalement-routing-policy.v1.schema.json";
 import { canonicalJson } from "./authorized-execution";
 import {
@@ -10,6 +9,7 @@ import {
   rawRoutingPolicyFailures,
   routingPolicyDigest,
 } from "./signalement-routing-policy-v1";
+import { loadSignalementV1Vectors } from "./signalement-v1-vector-loader";
 
 type JsonObject = Record<string, unknown>;
 
@@ -90,6 +90,18 @@ const fixture = fixtureFile.cases[0] as {
   invalidMutations: Mutation[];
 };
 const valid = fixture.valid as Policy;
+// Entry and declared parts (SEMANTICS "Test material"); a refused file stops the suite.
+const loaded = await loadSignalementV1Vectors(
+  `${import.meta.dir}/../../contracts/fixtures/signalement-routing-policy-v1`,
+);
+if (loaded.vectors === null) {
+  throw new Error(`routing policy vector files refused: ${loaded.failures.join("; ")}`);
+}
+const vectorFile = loaded.vectors as unknown as {
+  schemaVersion: string;
+  valid: Vector[];
+  invalid: Vector[];
+};
 const vectors = vectorFile as unknown as { valid: { document: Policy }[] };
 
 function policy(patch: (draft: Policy) => void): Policy {

@@ -319,3 +319,22 @@ host patterns on a top-level domain or an apex, an override `maybe`, a duplicate
 truncated document, a byte order mark). The oversized document and the documents at the
 array bounds are built in the test at run time rather than stored; an origin carrying
 userinfo is assembled at run time so that no credential-shaped literal is stored.
+
+### Vector files: size budget and continuation files
+
+Every file of `contracts/fixtures/signalement-routing-policy-v1/` MUST hold at most 65,536
+Unicode code points of UTF-8 text: the consumer that vendors these fixtures refuses any larger file
+as unscannable. An implementation that reads the vectors (this authority's tests, a mirror in
+another language) MUST therefore read them as follows.
+
+The entry file keeps its fixed name, `vectors.json`. It MAY carry `parts`: a non-empty list of
+distinct bare file names in the same directory, each beginning with the entry name without
+`.json` (its stem) and ending with `.json`, none equal to the entry. Each part is a JSON object
+with the entry's `schemaVersion` and no `parts`. The vectors are the entry followed by each part
+in declaration order: every member of a part is appended to the entry at the same member path
+(an array to the array, an object member by member, an absent member added); any other meeting
+of two members is an error. A declared part that is absent or unreadable is an error. A file of
+the directory named `<stem>*.json` that the entry does not declare is an error (orphan). Any
+such error refuses the whole set of vectors. Vector order is the order so obtained.
+`vectors.json` declares `vectors.part-2.json`, `vectors.part-3.json` then `vectors.part-4.json`.
+No vector of this contract is a generation recipe: each stores its `document` or `raw` octets.

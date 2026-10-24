@@ -284,3 +284,45 @@ public and MUST NOT be used outside tests. The `signature.value` of the structur
 a placeholder (SHA-512 of a public label, base64url), not a signature over the receipt;
 signatures that verify belong to the signature corpus. Organizations, destinations and URLs use example
 names. No fixture contains a credential or personal data.
+
+### Vector files: size budget, continuation files and recipes
+
+Every file of `contracts/fixtures/signalement-projection-receipt-v1/` MUST hold at most 65,536
+Unicode code points of UTF-8 text: the consumer that vendors these fixtures refuses any larger file
+as unscannable. Two means keep a vector file under that budget; an implementation that reads the
+vectors (this authority's tests, a mirror in another language) MUST apply both as stated here.
+
+Continuation files. The entry file keeps its fixed name (`vectors.json`, and
+`signature-vectors.v1.json` for the signature corpus). It MAY carry `parts`: a non-empty list of
+distinct bare file names in the same directory, each beginning with the entry name without
+`.json` (its stem) and ending with `.json`, none equal to the entry. Each part is a JSON object
+with the entry's `schemaVersion` and no `parts`. The vectors are the entry followed by each part
+in declaration order: every member of a part is appended to the entry at the same member path
+(an array to the array, an object member by member, an absent member added); any other meeting
+of two members is an error. A declared part that is absent or unreadable is an error. A file of
+the directory named `<stem>*.json` that the entry does not declare is an error (orphan). Vector
+order is the order so obtained. `vectors.json` declares `vectors.part-2.json` then
+`vectors.part-3.json`.
+
+Recipes. A vector whose octets are too large to store MAY carry, instead of `document` and
+`raw`, a `recipe` and `sha256`, the lowercase hexadecimal SHA-256 of the octets the recipe
+generates. The recipe vocabulary is closed; any other member, value or type is an error:
+
+- `document` (required): a JSON value whose numbers are safe integers;
+- `repeat` (optional): `{ "member", "count", "element", "indexMember", "indexPrefix" }`, all
+  five present. `document` is an object and its member `member` is an array; that array is
+  replaced by `count` (an integer, 0 to 4096) copies of the object `element`, in which the copy
+  at index i (counted from 0) has its member `indexMember` set (added or overwritten) to the
+  string `indexPrefix` followed by i in decimal without leading zeros;
+- `padWithSpacesTo` (optional): an integer octet length, at most 1,048,576.
+
+The generated octets are the UTF-8 JCS form (RFC 8785) of `document` after `repeat`, followed by
+octets 0x20 up to `padWithSpacesTo` when present; a `padWithSpacesTo` below the length of the JCS
+form is an error. Regenerated octets whose SHA-256 differs from `sha256` are an error, and a
+reader MUST NOT run a verifier on them. Otherwise the vector stands for those octets exactly as
+a `raw` vector would. Any error of this section refuses the whole set of vectors, never only the
+vector or file at fault. Three vectors are recipes, with
+these expected failures: the 65,537-octet receipt (the first valid receipt padded),
+`receipt.size_limit`; the key set of 1025 keys (the first key of the first valid key set
+repeated, `keyId` `k-0` to `k-1024`), `keys.schema`; the 262,145-octet key set (the first valid
+key set in JCS form, padded), `keys.size_limit`.

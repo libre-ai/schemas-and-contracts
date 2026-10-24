@@ -1,0 +1,9 @@
+[test]
+coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "coverage/signalement-v1-vector-loader"
+coverageThreshold = 0.9
+coverageSkipTestFiles = true
+# The canonicalizer and strict JSON parser retain their dedicated full suites;
+# this gate covers only the signalement v1 vector file loader.
+coveragePathIgnorePatterns = ["**/authorized-execution.ts", "**/policy-core-raw-inputs.ts"]
