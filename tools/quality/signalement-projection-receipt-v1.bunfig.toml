@@ -1,0 +1,9 @@
+[test]
+coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "coverage/signalement-projection-receipt-v1"
+coverageThreshold = 0.9
+coverageSkipTestFiles = true
+# The canonicalizer and strict JSON parser retain their dedicated full suites;
+# this gate covers only the projection receipt and signing key set verifier.
+coveragePathIgnorePatterns = ["**/authorized-execution.ts", "**/policy-core-raw-inputs.ts"]

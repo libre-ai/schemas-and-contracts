@@ -170,6 +170,10 @@ const signalementRoutingPolicyV1FixtureDocument = (await Bun.file(
   "../../contracts/fixtures/signalement-routing-policy-v1/schema-fixtures.json",
 ).json()) as { cases: Fixture[] };
 fixtureDocument.cases.push(...signalementRoutingPolicyV1FixtureDocument.cases);
+const signalementProjectionReceiptV1FixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/signalement-projection-receipt-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...signalementProjectionReceiptV1FixtureDocument.cases);
 const authorityCatalog = (await Bun.file("../../contracts/catalog.v1.json").json()) as {
   contracts: CatalogEntry[];
 };

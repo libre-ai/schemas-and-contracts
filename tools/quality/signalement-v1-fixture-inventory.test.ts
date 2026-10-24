@@ -46,4 +46,5 @@ test("the production list equals the admitted contracts", () =>
     "signalement-delivery-envelope-v1",
     "signalement-connector-profile-v1",
     "signalement-routing-policy-v1",
+    "signalement-projection-receipt-v1",
   ])); // grows with each admission

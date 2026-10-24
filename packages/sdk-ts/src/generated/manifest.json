@@ -477,6 +477,11 @@
 			"declaration": "signalement-local-export.v1.d.ts"
 		},
 		{
+			"schema": "signalement-projection-receipt.v1.schema.json",
+			"schemaSha256": "247ca06e1d8e51a0a6c9d9c070f21ebb5397772505013ae3fa334889d2677b11",
+			"declaration": "signalement-projection-receipt.v1.d.ts"
+		},
+		{
 			"schema": "signalement-routing-policy.v1.schema.json",
 			"schemaSha256": "378190b4668402fce0ad7567e5cf726ff7327a170bbd15ca16d8216ae1fd1992",
 			"declaration": "signalement-routing-policy.v1.d.ts"

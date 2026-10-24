@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.libre-ai.fr/schemas/signalement-projection-receipt.v1.schema.json",
+  "title": "Libre AI Signalement Projection Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "organization",
+    "keyId",
+    "issuedAt",
+    "deliveredAt",
+    "exportDigest",
+    "projectionId",
+    "mappingVersion",
+    "operation",
+    "revision",
+    "destinationId",
+    "profileId",
+    "remote",
+    "transmitted",
+    "withheld",
+    "rendered",
+    "requestBodyDigests",
+    "policy",
+    "approval",
+    "signature"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "libre-ai.signalement-projection-receipt.v1" },
+    "organization": { "$ref": "#/$defs/organization" },
+    "keyId": { "$ref": "#/$defs/keyId" },
+    "issuedAt": { "$ref": "#/$defs/timestamp" },
+    "deliveredAt": { "$ref": "#/$defs/timestamp" },
+    "exportDigest": { "$ref": "#/$defs/digest" },
+    "projectionId": { "$ref": "#/$defs/digest" },
+    "mappingVersion": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 32,
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "operation": { "enum": ["create", "comment"] },
+    "revision": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+    "destinationId": { "$ref": "#/$defs/id" },
+    "profileId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 106,
+      "pattern": "^[a-z0-9-]+/[a-z0-9.-]+/[a-z0-9.-]+$"
+    },
+    "remote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "url"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256,
+          "pattern": "^[\\x21-\\x7e]{1,256}$"
+        },
+        "url": { "$ref": "#/$defs/httpsUrl" }
+      }
+    },
+    "transmitted": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 33,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "via"],
+        "properties": {
+          "path": { "$ref": "#/$defs/path" },
+          "sha256": { "$ref": "#/$defs/digest" },
+          "via": { "enum": ["body", "attachment", "link"] }
+        }
+      }
+    },
+    "withheld": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 33,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "reason"],
+        "properties": {
+          "path": { "$ref": "#/$defs/path" },
+          "reason": {
+            "enum": [
+              "default-withhold",
+              "public-destination",
+              "residency",
+              "attachment-unsupported",
+              "visibility-unknown",
+              "user-withheld"
+            ]
+          }
+        }
+      }
+    },
+    "rendered": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rendererVersion", "bodyDigest", "mediaLinks"],
+      "properties": {
+        "rendererVersion": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 32,
+          "pattern": "^(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)\\.(?:0|[1-9][0-9]*)$"
+        },
+        "bodyDigest": { "$ref": "#/$defs/digest" },
+        "mediaLinks": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 33,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "url"],
+            "properties": {
+              "path": { "$ref": "#/$defs/path" },
+              "url": { "$ref": "#/$defs/httpsUrl" }
+            }
+          }
+        }
+      }
+    },
+    "requestBodyDigests": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/digest" }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "digest"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10,
+          "pattern": "^[1-9][0-9]{0,9}$"
+        },
+        "digest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference"],
+      "properties": {
+        "reference": { "$ref": "#/$defs/id" }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value"],
+      "properties": {
+        "algorithm": { "const": "ed25519" },
+        "value": {
+          "type": "string",
+          "minLength": 86,
+          "maxLength": 86,
+          "pattern": "^[A-Za-z0-9_-]{86}$"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "organization": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+    },
+    "keyId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 20,
+      "maxLength": 20,
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 9,
+      "maxLength": 80,
+      "pattern": "^(README\\.md|media/(?!(?:con|prn|aux|nul|com[1-9]|lpt[1-9])\\.)[a-z][a-z0-9-]{0,63}\\.(png|webm|mp4))$"
+    },
+    "httpsUrl": {
+      "type": "string",
+      "minLength": 9,
+      "maxLength": 2048,
+      "pattern": "^https://[\\x21-\\x7e]{1,2040}$"
+    },
+    "signingKeySet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["organization", "keys"],
+      "properties": {
+        "organization": { "$ref": "#/$defs/organization" },
+        "keys": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1024,
+          "items": { "$ref": "#/$defs/signingKey" }
+        }
+      }
+    },
+    "signingKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["keyId", "algorithm", "publicKey", "status", "notBefore", "notAfter"],
+      "properties": {
+        "keyId": { "$ref": "#/$defs/keyId" },
+        "algorithm": { "const": "ed25519" },
+        "publicKey": {
+          "type": "string",
+          "minLength": 43,
+          "maxLength": 43,
+          "pattern": "^[A-Za-z0-9_-]{43}$"
+        },
+        "status": { "enum": ["active", "retired"] },
+        "notBefore": { "$ref": "#/$defs/timestamp" },
+        "notAfter": {
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/timestamp" }]
+        }
+      }
+    }
+  }
+}
