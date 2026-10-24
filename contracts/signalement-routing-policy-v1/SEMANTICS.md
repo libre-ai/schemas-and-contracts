@@ -74,7 +74,7 @@ A **destination** has:
 | `profileId` | string | `^[a-z0-9-]+/[a-z0-9.-]+/[a-z0-9.-]+$`, at most 106 characters: the id of a connector profile (`signalement-connector-profile-v1`) |
 | `target` | object | one of the four kinds below |
 | `residency` | enum | `eu` or `non-eu`; declared, never discovered |
-| `visibilitySource` | enum | `discovered` (the connector reads the visibility from the tracker) or `declared` |
+| `visibilitySource` | enum | `discovered` (the connector reads the visibility from the tracker) or `declared`; fixed by the profile family (below) |
 | `declaredVisibility` | enum, conditional | `public` or `private`; **required** when `visibilitySource` is `declared`, **refused** when it is `discovered` |
 | `mediaFallback` | enum, optional | `link` or `withhold`; absent means `withhold` |
 
@@ -91,6 +91,13 @@ The family of `profileId` (its first segment) fixes the only admissible target k
 `github-issues` → `github-repository`, `gitlab-issues` → `gitlab-project`, `jira-cloud` →
 `jira-project`, `plane` → `plane-project`. Any other family addresses no target kind of this
 version, so a destination of another family is refused.
+
+The family also fixes `visibilitySource` (design section 5.3: visibility is discovered for the
+profiles that expose it, declared for the others; published connector profiles):
+`github-issues` → `discovered`, `gitlab-issues` → `discovered`, `jira-cloud` → `declared`,
+`plane` → `declared`. A declared visibility on a profile that exposes it would never be read
+again, so a repository made public would keep receiving media. A policy whose destination
+disagrees with this table is refused, and a consumer MUST refuse to record or evaluate it.
 
 A **routing rule** has an `id`, a `match`, the four destination lists `imposed`, `optional`,
 `selectable` and `denied` (each a set of 0 to 64 destination ids, all four present, empty
@@ -111,9 +118,15 @@ union below decides.
 - `{ "absent": true }` — the sender observed no origin.
 
 The observed origin is in the canonical form of the URL serializer (delivery envelope
-semantics): lowercase, no default port. A rule `origin` that is not in that form, and a
-`port` equal to the default port of its `scheme` (443 for `https`, 80 for `http`), therefore
-never match. The verifier does not refuse them; a producer SHOULD NOT write them.
+semantics): lowercase, no default port, IPv4 in dotted decimal, IPv6 compressed. A rule that
+could never match such an origin is dead, and under the union a dead rule silently drops its
+`denied` list and its restrictive `override`: it is a fail-open. Therefore a rule `origin`
+MUST be canonical, `new URL(origin).origin === origin` (a value for which `new URL` throws is
+not canonical); refused. A host-pattern rule MUST NOT carry the default port of its own
+`scheme` (443 for `https`, 80 for `http`; the other scheme's default is an ordinary port);
+refused. Examples refused: `https://app.example.com:443`, `http://example.com:80`,
+`https://example.com:99999`, `http://127.1`, `http://0x7f.0.0.1`, `http://[0:0:0:0:0:0:0:1]`,
+`http://[::ffff:1.2.3.4]`.
 
 A **disclosure rule** has an `id`, `roles` (a set of 1 to 3 of `document`, `screenshot`,
 `video`, the file roles of the local export v1), a condition `when` that is exactly one of
@@ -185,7 +198,8 @@ WithholdReason = "default-withhold" | "public-destination" | "residency"
    when at least one rule matches and **every** matching rule declares `override: "allowed"`;
    otherwise `denied` (the most restrictive override applies). When no rule matches:
    `matchedRuleIds: []`, `destinations: []`, `deniedCount: 0`, `override: "denied"`. There is
-   no implicit destination.
+   no implicit destination. A rule that does not match contributes nothing: its `denied` list
+   is not counted in `deniedCount` and its `override` is not considered.
 3. **Destinations of the verdict.** Each destination of `I` with `routing: "imposed"`, each of
    `O` with `routing: "optional"`, and, **only when `override` is `allowed`**, each of `S` with
    `routing: "selectable"`; sorted by `destinationId` in UTF-16 code unit order. A destination
@@ -195,23 +209,28 @@ WithholdReason = "default-withhold" | "public-destination" | "residency"
    destination added by override is never without a plan.
 4. **Effective visibility.** `declaredVisibility` when `visibilitySource` is `declared`;
    otherwise the `visibility` of the destination's entry in `discovered`. `internal` counts as
-   `public`.
+   `public`. A `declared` destination never reads `discovered`, even when an entry exists for
+   its id.
 5. **Decision per file.** For each verdict destination, one entry per input file, sorted by
    `path` in UTF-16 code unit order. A disclosure rule applies to a file for a destination when
    the file's `role` is in `roles` and `when` holds: `always`; `visibility` equal to the
    effective visibility; `residency` equal to the destination's `residency`. Then, in this
    order:
    1. effective visibility `unknown` → `withhold`, reason `visibility-unknown`, for **every**
-      file of the destination (closed failure: a visibility read that failed or never ran
+      file of the destination, whatever its routing class (`selectable` included) and whatever
+      the disclosure rules say (closed failure: a visibility read that failed or never ran
       withholds everything, which is stricter than counting it as public);
-   2. at least one applicable rule decides `withhold` → `withhold`, with the reason of the
-      first such rule in document order: `visibility` → `public-destination`, `residency` →
-      `residency`, `always` → `default-withhold`;
+   2. at least one applicable rule decides `withhold` → `withhold`. Each applicable withholding
+      rule yields a candidate reason from its condition: `visibility` → `public-destination`,
+      `residency` → `residency`, `always` → `default-withhold`. The reason is the candidate of
+      highest precedence in the fixed order `public-destination` > `residency` >
+      `default-withhold`, never the reason of the first rule in document order;
    3. no applicable rule decides `transmit` → `withhold`, reason `default-withhold`;
    4. otherwise `transmit`, `reason: null`.
 
    A withholding rule dominates a transmitting one, and nothing is transmitted without an
-   explicit applicable `transmit` rule.
+   explicit applicable `transmit` rule. Across the whole step, the precedence of reasons is
+   `visibility-unknown` > `public-destination` > `residency` > `default-withhold`.
 6. `policyVersion` is the document's `version`; `policyDigest` is `routingPolicyDigest(document)`,
    the SHA-256, lowercase hexadecimal, of the RFC 8785 (JCS) form of the document. The verdict
    is serialized in JCS form.
@@ -222,9 +241,9 @@ WithholdReason = "default-withhold" | "public-destination" | "residency"
 **Purity and order.** The same document, the same `observedOrigin`, the same set of files and
 the same discovered attributes produce the same verdict, byte for byte. The order of `files`
 in the input does not change the output. The order of rules in the document changes no
-destination, no routing class, no `override`, no `deniedCount` and no decision; it fixes only
-the order of `matchedRuleIds` and which withholding rule names the reason in step 5.2. A
-reordered document is another document, with another digest.
+destination, no routing class, no `override`, no `deniedCount`, no decision and no reason; it
+fixes only the order of `matchedRuleIds`. A reordered document is another document, with
+another digest, and its verdict differs from the original's at most in that order.
 
 **Staleness.** A verdict holds only for the discovered attributes it was computed on. A
 consumer MUST read them again just before sending; if any changed, or if the version was
@@ -262,17 +281,27 @@ to `^[a-z][a-z0-9-]*$`.
    member, a `declaredVisibility` missing on a `declared` destination or present on a
    `discovered` one, a host pattern on a top-level domain, an override other than `allowed`
    or `denied`, a duplicate entry inside one list, bound exceeded, root that is not an object).
-4. `policy.duplicate_id:<id>` — two of the destinations, routing rules and disclosure rules
+4. `policy.origin_non_canonical:<ruleId>` — routing rule `<ruleId>` can never match a canonical
+   observed origin: its `origin` differs from `new URL(origin).origin` (or `new URL` throws),
+   or its host pattern carries the default port of its own scheme.
+5. `policy.duplicate_id:<id>` — two of the destinations, routing rules and disclosure rules
    carry `<id>` (scanned destinations first, then routing rules, then disclosure rules).
-5. `policy.unknown_destination:<ruleId>` — routing rule `<ruleId>` names an id that is not a
+6. `policy.unknown_destination:<ruleId>` — routing rule `<ruleId>` names an id that is not a
    destination of the document.
-6. `policy.routing_overlap:<ruleId>` — routing rule `<ruleId>` names one destination in two of
+7. `policy.routing_overlap:<ruleId>` — routing rule `<ruleId>` names one destination in two of
    its four lists.
-7. `policy.target_profile_mismatch:<destId>` — the target kind of destination `<destId>` is not
+8. `policy.target_profile_mismatch:<destId>` — the target kind of destination `<destId>` is not
    the one its profile family addresses.
+9. `policy.visibility_source_mismatch:<destId>` — the `visibilitySource` of destination
+   `<destId>` is not the one its profile family fixes.
 
-A consumer MUST refuse the policy on any code. It MUST NOT repair a policy (drop an unknown
-id, pick one list for an overlapping destination, rewrite a target) and then accept it.
+Each code is one pass over the whole document: a destination with a target mismatch is
+reported before any visibility mismatch, wherever the two destinations stand. The family of a
+destination whose family addresses no target kind is reported by code 8, never by code 9.
+
+A consumer MUST refuse the policy on any code, and MUST NOT record or evaluate it. It MUST NOT
+repair a policy (drop an unknown id, pick one list for an overlapping destination, rewrite a
+target, a visibility source or an origin) and then accept it.
 
 ## Test material
 
@@ -282,8 +311,10 @@ the UUID are arbitrary, the origins and hosts use reserved example names (`examp
 site uses the name `example`. No fixture contains a credential, a token or personal data.
 `vectors.json` holds valid policies (all target kinds, the three match forms, the three
 disclosure conditions, a destination imposed by one rule and denied by another, a policy
-without any rule) and refused ones (unknown destination, overlap, target and profile
-mismatch, duplicate identifiers across the shared space, conditional `declaredVisibility`,
+without any rule) and refused ones (seven non-canonical rule origins and both default ports on
+a host pattern, unknown destination, overlap, target and profile mismatch, a visibility source
+against its profile in each direction, duplicate identifiers across the shared space,
+conditional `declaredVisibility`,
 host patterns on a top-level domain or an apex, an override `maybe`, a duplicate member, a
 truncated document, a byte order mark). The oversized document and the documents at the
 array bounds are built in the test at run time rather than stored; an origin carrying

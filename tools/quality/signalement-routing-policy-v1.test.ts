@@ -350,6 +350,20 @@ describe("failure codes", () => {
     // Duplicate member and a bad shape: raw_json wins over schema.
     const duplicate = encoder.encode('{"schemaVersion":"x","schemaVersion":"y","unknown":1}');
     expect(rawRoutingPolicyFailures(duplicate)).toEqual(["policy.raw_json"]);
+    // Schema failure and a dead origin: schema wins.
+    const schemaAndDeadOrigin = policy((draft) => {
+      (draft.routingRules[0] as RoutingRule).match = { origin: "https://app.example.com:443" };
+      draft.version = "0";
+    });
+    expect(rawRoutingPolicyFailures(encode(schemaAndDeadOrigin))).toEqual(["policy.schema"]);
+    // Dead origin and a duplicate id: origin_non_canonical wins.
+    const deadOriginAndDuplicate = policy((draft) => {
+      (draft.routingRules[2] as RoutingRule).match = { origin: "http://127.1" };
+      (draft.destinations[1] as Destination).id = "d-gh";
+    });
+    expect(rawRoutingPolicyFailures(encode(deadOriginAndDuplicate))).toEqual([
+      "policy.origin_non_canonical:r-absent",
+    ]);
     // Schema failure and a duplicate id: schema wins.
     const schemaAndDuplicate = policy((draft) => {
       (draft.destinations[1] as Destination).id = "d-gh";
@@ -379,6 +393,17 @@ describe("failure codes", () => {
     });
     expect(rawRoutingPolicyFailures(encode(overlapAndMismatch))).toEqual([
       "policy.routing_overlap:r-subdomains",
+    ]);
+    // Visibility mismatch on an earlier destination and a target mismatch on a later one:
+    // target_profile_mismatch wins, each code being a pass over every destination.
+    const visibilityAndMismatch = policy((draft) => {
+      const github = draft.destinations[0] as Destination;
+      github.visibilitySource = "declared";
+      github.declaredVisibility = "public";
+      (draft.destinations[3] as Destination).target = (draft.destinations[2] as Destination).target;
+    });
+    expect(rawRoutingPolicyFailures(encode(visibilityAndMismatch))).toEqual([
+      "policy.target_profile_mismatch:d-plane",
     ]);
   });
 
@@ -424,21 +449,100 @@ describe("failure codes", () => {
 
   test("each profile family addresses exactly one target kind", () => {
     const targets = valid.destinations.map((destination) => destination.target);
-    const profiles = valid.destinations.map((destination) => destination.profileId);
-    for (const [profileIndex, profileId] of profiles.entries()) {
+    for (const [profileIndex, source] of valid.destinations.entries()) {
       for (const [targetIndex, target] of targets.entries()) {
         const document = policy((draft) => {
-          const destination = draft.destinations[0] as Destination;
-          destination.profileId = profileId;
-          destination.target = target;
+          // Keep the visibility members of the source profile so only the target varies.
+          draft.destinations[0] = { ...structuredClone(source), id: "d-gh", target };
         });
         const expected =
           profileIndex === targetIndex ? [] : ["policy.target_profile_mismatch:d-gh"];
-        expect(rawRoutingPolicyFailures(encode(document)), `${profileId} ${target.kind}`).toEqual(
-          expected,
-        );
+        expect(
+          rawRoutingPolicyFailures(encode(document)),
+          `${source.profileId} ${target.kind}`,
+        ).toEqual(expected);
       }
     }
+  });
+
+  test("each profile family has exactly one visibility source", () => {
+    // Design section 5.3 and the published profiles: discovered where the tracker exposes it.
+    const expectedSource: Record<string, "discovered" | "declared"> = {
+      "d-gh": "discovered",
+      "d-gl": "discovered",
+      "d-jira": "declared",
+      "d-plane": "declared",
+    };
+    for (const [index, destination] of valid.destinations.entries()) {
+      for (const visibilitySource of ["discovered", "declared"] as const) {
+        const document = policy((draft) => {
+          const target = draft.destinations[index] as Destination;
+          target.visibilitySource = visibilitySource;
+          if (visibilitySource === "declared") target.declaredVisibility = "private";
+          else delete target.declaredVisibility;
+        });
+        const expected =
+          expectedSource[destination.id] === visibilitySource
+            ? []
+            : [`policy.visibility_source_mismatch:${destination.id}`];
+        expect(
+          rawRoutingPolicyFailures(encode(document)),
+          `${destination.id} ${visibilitySource}`,
+        ).toEqual(expected);
+      }
+    }
+  });
+
+  test("a rule origin must be the URL serializer's own form", () => {
+    const withOrigin = (origin: string): string[] =>
+      rawRoutingPolicyFailures(
+        encode(
+          policy((draft) => {
+            (draft.routingRules[0] as RoutingRule).match = { origin };
+          }),
+        ),
+      );
+    for (const canonical of [
+      "https://app.example.com",
+      "http://localhost:5173",
+      "https://example.com:8443",
+      "http://127.0.0.1",
+      "https://[::1]",
+    ]) {
+      expect(withOrigin(canonical), canonical).toEqual([]);
+    }
+    for (const rewritten of [
+      "https://example.com:443",
+      "http://example.com:80",
+      "https://example.com:65536",
+      "http://127.1",
+      "http://0x7f.0.0.1",
+      "http://[::0001]",
+      "http://[::ffff:1.2.3.4]",
+    ]) {
+      expect(withOrigin(rewritten), rewritten).toEqual(["policy.origin_non_canonical:r-app"]);
+    }
+  });
+
+  test("a host pattern with the default port of its own scheme is refused, the other scheme's is not", () => {
+    const withPort = (scheme: "https" | "http", port: number | null): string[] =>
+      rawRoutingPolicyFailures(
+        encode(
+          policy((draft) => {
+            (draft.routingRules[1] as RoutingRule).match = {
+              scheme,
+              hostPattern: "*.example.com",
+              port,
+            };
+          }),
+        ),
+      );
+    expect(withPort("https", 443)).toEqual(["policy.origin_non_canonical:r-subdomains"]);
+    expect(withPort("http", 80)).toEqual(["policy.origin_non_canonical:r-subdomains"]);
+    expect(withPort("https", 80)).toEqual([]);
+    expect(withPort("http", 443)).toEqual([]);
+    expect(withPort("https", null)).toEqual([]);
+    expect(withPort("http", null)).toEqual([]);
   });
 
   test("a verifier failure never echoes document data other than one identifier", () => {

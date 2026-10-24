@@ -11,14 +11,23 @@ export const ROUTING_POLICY_MAX_BYTES = 1048576;
 
 type TargetKind = "github-repository" | "gitlab-project" | "jira-project" | "plane-project";
 
+type VisibilitySource = "discovered" | "declared";
+
 interface Destination {
   id: string;
   profileId: string;
   target: { kind: TargetKind };
+  visibilitySource: VisibilitySource;
 }
+
+type Match =
+  | { origin: string }
+  | { scheme: "https" | "http"; hostPattern: string; port: number | null }
+  | { absent: true };
 
 interface RoutingRule {
   id: string;
+  match: Match;
   imposed: string[];
   optional: string[];
   selectable: string[];
@@ -39,12 +48,57 @@ const TARGET_KIND_BY_FAMILY: ReadonlyMap<string, TargetKind> = new Map([
   ["plane", "plane-project"],
 ]);
 
+/**
+ * Visibility is discovered from the tracker for the profiles that expose it, declared for the
+ * others (design section 5.3, published connector profiles). A declared visibility on a profile
+ * that exposes it would never be read again, so a repository made public would keep receiving.
+ */
+const VISIBILITY_SOURCE_BY_FAMILY: ReadonlyMap<string, VisibilitySource> = new Map([
+  ["github-issues", "discovered"],
+  ["gitlab-issues", "discovered"],
+  ["jira-cloud", "declared"],
+  ["plane", "declared"],
+]);
+
+const DEFAULT_PORT_BY_SCHEME: ReadonlyMap<string, number> = new Map([
+  ["https", 443],
+  ["http", 80],
+]);
+
+/**
+ * Second copy of the delivery envelope helper (cross-verifier imports are not admitted). The
+ * schema pattern admits shapes the URL serializer would rewrite: default port, port above 65535,
+ * short or hexadecimal IPv4, uncompressed or IPv4-mapped IPv6.
+ */
+function isCanonicalOrigin(origin: string): boolean {
+  try {
+    return new URL(origin).origin === origin;
+  } catch {
+    return false;
+  }
+}
+
 const ajv = new Ajv2020({ strict: true, allErrors: true });
 const validate = ajv.compile<RoutingPolicy>(
   await Bun.file(
     new URL("../../contracts/schemas/signalement-routing-policy.v1.schema.json", import.meta.url),
   ).json(),
 );
+
+/**
+ * A rule that can never match a canonical observed origin is dead; under the union a dead rule
+ * silently drops its denied list and its restrictive override, so it is refused.
+ */
+function isDeadMatch(match: Match): boolean {
+  if ("origin" in match) return !isCanonicalOrigin(match.origin);
+  if ("hostPattern" in match) return match.port === DEFAULT_PORT_BY_SCHEME.get(match.scheme);
+  return false;
+}
+
+function firstRuleWithNonCanonicalOrigin(policy: RoutingPolicy): string | null {
+  const rule = policy.routingRules.find((candidate) => isDeadMatch(candidate.match));
+  return rule?.id ?? null;
+}
 
 /** Destinations and both rule kinds share one identifier space, scanned in document order. */
 function firstDuplicateId(policy: RoutingPolicy): string | null {
@@ -90,6 +144,14 @@ function firstTargetProfileMismatch(policy: RoutingPolicy): string | null {
   return destination?.id ?? null;
 }
 
+function firstVisibilitySourceMismatch(policy: RoutingPolicy): string | null {
+  const destination = policy.destinations.find((candidate) => {
+    const family = candidate.profileId.split("/")[0] ?? "";
+    return VISIBILITY_SOURCE_BY_FAMILY.get(family) !== candidate.visibilitySource;
+  });
+  return destination?.id ?? null;
+}
+
 /**
  * The size is checked on octets before any parsing, so an oversized input is never decoded.
  * Exactly one code is returned, the first in the documented order. The only document data a
@@ -104,6 +166,8 @@ export function rawRoutingPolicyFailures(bytes: Uint8Array): string[] {
     return ["policy.raw_json"];
   }
   if (!validate(parsed)) return ["policy.schema"];
+  const nonCanonical = firstRuleWithNonCanonicalOrigin(parsed);
+  if (nonCanonical !== null) return [`policy.origin_non_canonical:${nonCanonical}`];
   const duplicate = firstDuplicateId(parsed);
   if (duplicate !== null) return [`policy.duplicate_id:${duplicate}`];
   const unknown = firstRuleWithUnknownDestination(parsed);
@@ -112,6 +176,8 @@ export function rawRoutingPolicyFailures(bytes: Uint8Array): string[] {
   if (overlap !== null) return [`policy.routing_overlap:${overlap}`];
   const mismatch = firstTargetProfileMismatch(parsed);
   if (mismatch !== null) return [`policy.target_profile_mismatch:${mismatch}`];
+  const visibility = firstVisibilitySourceMismatch(parsed);
+  if (visibility !== null) return [`policy.visibility_source_mismatch:${visibility}`];
   return [];
 }
 
