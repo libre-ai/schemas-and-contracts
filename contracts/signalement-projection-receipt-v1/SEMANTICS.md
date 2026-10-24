@@ -380,6 +380,33 @@ a test asserts both, so each vector discriminates a missing check rather than ca
 `signCases` (`valid-active`, `valid-retired`) give `seed`, `unsigned` and `signed`: Ed25519 is
 deterministic, so `signed` is the exact output a signer MUST produce for that seed and receipt.
 
+Independent oracle. `tools/quality/signalement-receipt-crypto-oracle/` is a nonpublished Rust
+fixture runner that shares no code with the TypeScript verifier: ed25519-dalek `verify_strict`
+and curve25519-dalek point checks, at the exact crate versions of `build-brief-crypto-oracle`.
+It reads the entry and each part it declares, in order, under the rules of "Vector files"
+below (each file at most 1 MiB, same `schemaVersion`, a part carrying only `schemaVersion` and
+`vectors`, a declared part absent or unreadable and an undeclared `signature-vectors.v1*` file
+both refused), and requires `domain` to equal the signing domain it states itself. A receipt is
+readable when `serde_json` serializes its parsed value back to the exact signed octets; this
+equals the JCS comparison because the receipt is ASCII and its only number is the integer
+`revision` (the oracle stops with `jcs-premise` outside that premise). It then runs the steps of
+"Signature verification" (organization, key, window, admissible A and R, then `verify_strict`,
+which also refuses S ≥ L) and compares the **class** of each outcome (`valid`, `invalid`,
+`unknown-key`, `unreadable`, `refused`) with the class of `expected`, never the reason; each
+sign case is re-signed from its seed and must rebuild `signed`. It is not part of `bun run
+check`, which never claims to have run it. Recipe, from the repository root with Rust installed:
+
+```sh
+bun run check:signalement-receipt:crypto-oracle
+# its own tests, then: Signalement receipt oracle: <N> vectors, <M> sign cases verified; ...
+jq -s '[.[].vectors | length] | add' contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1*.json   # N
+jq '.signCases | length' contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.json                # M
+cargo clippy --locked --manifest-path tools/quality/signalement-receipt-crypto-oracle/Cargo.toml -- -D warnings
+```
+
+A failure exits 1 with `signalement-receipt-crypto-oracle.<code>` on standard error, for
+instance `signature-verdict` when a vector's class differs from its `expected` class.
+
 ### Vector files: size budget, continuation files and recipes
 
 Every file of `contracts/fixtures/signalement-projection-receipt-v1/` MUST hold at most 65,536
