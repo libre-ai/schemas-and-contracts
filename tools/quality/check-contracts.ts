@@ -24,6 +24,7 @@ import {
   containsSensitivePublicMarker,
   publicSourceScannerSelfTestFailures,
 } from "./public-source-scanner";
+import { loadSignalementV1FixtureCases } from "./signalement-v1-fixture-inventory";
 import { readSpecificationLockInputs } from "./specification-lock-inputs";
 
 type JsonRecord = Record<string, unknown>;
@@ -639,6 +640,10 @@ for (const exportMajor of ["curated-item-export-v3", "practice-progress-export-v
 const p02Inventory = await loadP02ContractFixtureCases();
 failures.push(...p02Inventory.failures);
 fixtureCases.push(...p02Inventory.cases);
+// signalement v1 contracts (candidate, ADR signalement-v1-contracts): same shape.
+const signalementInventory = await loadSignalementV1FixtureCases();
+failures.push(...signalementInventory.failures);
+fixtureCases.push(...signalementInventory.cases);
 
 if (fixtureCases.length === 0)
   failures.push("contracts/fixtures/schema-fixtures.v1.json: no fixtures");
