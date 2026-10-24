@@ -271,6 +271,11 @@ describe("receiptSigningMessage", () => {
     );
   });
 
+  test("an object that still carries signature is refused", () => {
+    expect(() => receiptSigningMessage(valid)).toThrow(TypeError);
+    expect(() => receiptSigningMessage({ ...valid, signature: null })).toThrow(TypeError);
+  });
+
   test("member order does not change the message; any member value does", () => {
     const { signature: _, ...unsigned } = valid;
     const message = Buffer.from(receiptSigningMessage(unsigned)).toString("hex");
@@ -352,26 +357,92 @@ describe("bounds", () => {
     expect(rawProjectionReceiptFailures(encode(linked(34)))).toEqual(["receipt.schema"]);
   });
 
-  test("the schema admits receipts above the octet cap, which the cap then refuses", () => {
-    // SEMANTICS "Bounds": the octet ceiling is binding, so a producer must check it before signing.
-    const draft = structuredClone(valid) as JsonObject & {
-      transmitted: JsonObject[];
-      withheld: JsonObject[];
-      rendered: { mediaLinks: JsonObject[] };
-    };
-    const paths = Array.from(
-      { length: 33 },
-      (_, index) => `media/${"m".repeat(60)}${index + 100}.webm`,
-    );
-    draft.transmitted = paths.map((path) => ({ path, sha256: "a".repeat(64), via: "link" }));
-    draft.withheld = [];
-    draft.rendered.mediaLinks = paths.map((path) => ({ path, url: `https://${"u".repeat(2040)}` }));
+  test("the maximal schema-valid receipt fits under the octet cap", () => {
+    // Every string at its schema maximum, every array full, and `"` or `\` wherever the schema
+    // admits them, since JCS writes each of them on two octets. The URL lengths and the media
+    // link character are read from the schema, so loosening either bound turns this test red.
     const ajv = new Ajv2020({ allErrors: true, strict: true });
     addFormats(ajv);
-    expect(ajv.compile(schema)(draft)).toBe(true);
-    const bytes = encode(draft);
-    expect(bytes.byteLength).toBeGreaterThan(PROJECTION_RECEIPT_MAX_BYTES);
-    expect(rawProjectionReceiptFailures(bytes)).toEqual(["receipt.size_limit"]);
+    const validate = ajv.compile(schema);
+    const remoteUrlLength = schema.$defs.httpsUrl.maxLength - "https://".length;
+    const mediaUrlLength = schema.$defs.mediaUrl.maxLength - "https://".length;
+    const mediaUrlAdmits = (character: string) =>
+      new RegExp(schema.$defs.mediaUrl.pattern).test(`https://${character}`);
+    const mediaCharacter = ['"', "\\"].find(mediaUrlAdmits) ?? "~";
+    const longestPath = (prefix: string, index: number) =>
+      `media/${prefix.repeat(61)}${index + 100}.webm`;
+    const digest = "a".repeat(64);
+    const version = `${"1".repeat(14)}.${"1".repeat(8)}.${"1".repeat(8)}`;
+    const maximal = {
+      schemaVersion: "libre-ai.signalement-projection-receipt.v1",
+      organization: `o${"a".repeat(63)}`,
+      keyId: `k${"a".repeat(63)}`,
+      issuedAt: "2026-10-24T10:00:05Z",
+      deliveredAt: "2026-10-24T10:00:05Z",
+      exportDigest: digest,
+      projectionId: digest,
+      mappingVersion: version,
+      operation: "comment",
+      revision: 2147483647,
+      destinationId: `d${"a".repeat(63)}`,
+      profileId: `${"a".repeat(34)}/${"a".repeat(35)}/${"a".repeat(35)}`,
+      remote: { id: '"'.repeat(256), url: `https://${"\\".repeat(remoteUrlLength)}` },
+      transmitted: Array.from({ length: 33 }, (_, index) => ({
+        path: longestPath("m", index),
+        sha256: digest,
+        via: "attachment",
+      })),
+      withheld: Array.from({ length: 33 }, (_, index) => ({
+        path: longestPath("w", index),
+        reason: "attachment-unsupported",
+      })),
+      rendered: {
+        rendererVersion: version,
+        bodyDigest: digest,
+        mediaLinks: Array.from({ length: 33 }, (_, index) => ({
+          path: longestPath("m", index),
+          url: `https://${mediaCharacter.repeat(mediaUrlLength)}`,
+        })),
+      },
+      requestBodyDigests: Array.from({ length: 64 }, () => digest),
+      policy: { version: "9".repeat(10), digest },
+      approval: { reference: `r${"a".repeat(63)}` },
+      signature: { algorithm: "ed25519", value: "A".repeat(86) },
+    };
+    expect(validate(maximal)).toBe(true);
+    // One character more where a length is bounded is a schema failure.
+    expect(validate({ ...maximal, remote: { ...maximal.remote, id: '"'.repeat(257) } })).toBe(
+      false,
+    );
+    const longerLink = structuredClone(maximal);
+    (longerLink.rendered.mediaLinks[0] as { url: string }).url =
+      `https://${mediaCharacter.repeat(mediaUrlLength + 1)}`;
+    expect(validate(longerLink)).toBe(false);
+    expect(canonicalJson(maximal).length).toBe(jcs(maximal).length);
+    const bytes = encode(maximal);
+    expect(bytes.byteLength).toBeLessThan(PROJECTION_RECEIPT_MAX_BYTES);
+    // The figure stated in SEMANTICS "Bounds"; any change of a bound must restate it there.
+    expect(bytes.byteLength).toBe(57177);
+    expect(rawProjectionReceiptFailures(bytes)).not.toContain("receipt.size_limit");
+  });
+
+  test("a media link URL excludes the two characters JCS escapes; the remote URL does not", () => {
+    const ajv = new Ajv2020({ allErrors: true, strict: true });
+    addFormats(ajv);
+    const validate = ajv.compile(schema);
+    const withLink = (url: string) => {
+      const draft = structuredClone(valid) as JsonObject & {
+        rendered: { mediaLinks: { url: string }[] };
+      };
+      (draft.rendered.mediaLinks[0] as { url: string }).url = url;
+      return draft;
+    };
+    expect(validate(withLink(`https://${"~".repeat(1016)}`))).toBe(true);
+    expect(validate(withLink('https://media.example.com/"x'))).toBe(false);
+    expect(validate(withLink("https://media.example.com/\\x"))).toBe(false);
+    const remote = structuredClone(valid) as JsonObject & { remote: { url: string } };
+    remote.remote.url = 'https://gitlab.com/"x\\y';
+    expect(validate(remote)).toBe(true);
   });
 
   test("failure codes carry no document data", () => {

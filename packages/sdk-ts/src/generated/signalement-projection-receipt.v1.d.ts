@@ -61,6 +61,8 @@ export type Path = string;
 
 export type Httpsurl = string;
 
+export type Mediaurl = string;
+
 export type Signingkeyset = {
 	organization: string;
 	keys: Array<{

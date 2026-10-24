@@ -478,7 +478,7 @@
 		},
 		{
 			"schema": "signalement-projection-receipt.v1.schema.json",
-			"schemaSha256": "247ca06e1d8e51a0a6c9d9c070f21ebb5397772505013ae3fa334889d2677b11",
+			"schemaSha256": "c00a3c89e50dc2fc82d0233e3714ac5ea5acba53eaaa34471b3a9e494ed66e3f",
 			"declaration": "signalement-projection-receipt.v1.d.ts"
 		},
 		{

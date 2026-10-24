@@ -103,11 +103,30 @@ the export v1 (`README.md` or `media/<name>.(png|webm|mp4)`, no reserved device 
 A signed receipt MUST be transmitted and stored as the exact octets of its JCS form (RFC 8785):
 members sorted, no whitespace, no escape other than those JCS requires, `revision` written as
 a plain integer. A receiver MUST refuse other octets (`receipt.non_canonical`), never
-re-canonicalize and accept them. This contract uses the authority canonicalizer, which writes
-only safe integers: a document holding any other JSON number (`1.5`, `1e400`) cannot satisfy
-the schema, whose only number is the integer `revision`, so it is refused as
-`receipt.schema`; the canonical comparison applies to documents whose numbers are all safe
-integers.
+re-canonicalize and accept them.
+
+Numbers follow one rule, which every implementation MUST reproduce exactly:
+
+1. The strict decoder reads each JSON number as an IEEE-754 binary64 value, rounding half to
+   even. A literal whose value is not finite (`1e400`) is not strict JSON: `receipt.raw_json`.
+2. The canonical comparison applies only when **every** JSON number of the document, so read,
+   has an integral value of magnitude at most 2^53 − 1 (`-0` included). Then the document is
+   re-serialized in JCS form and compared octet for octet with the input; a literal whose
+   value qualifies but whose text is not the JCS text of that value is `receipt.non_canonical`.
+3. When some number does not qualify, the comparison is skipped and the document goes to the
+   schema check, which it cannot pass (the schema's only number is the integer `revision`, 1 to
+   2147483647): `receipt.schema`.
+
+Measured on `revision` (vectors in `vectors.json`):
+
+| Literal | Read as | Code |
+| --- | --- | --- |
+| `1.0`, `1.00000000000000001`, `0.99999999999999999` | 1 | `receipt.non_canonical` |
+| `1e-400`, `-0` | 0 | `receipt.non_canonical` |
+| `1.5` | 1.5 | `receipt.schema` |
+| `9007199254740993` | 2^53 (above 2^53 − 1) | `receipt.schema` |
+| `2147483648` | 2147483648 (integral, canonical, out of range) | `receipt.schema` |
+| `1e400` | not finite | `receipt.raw_json` |
 
 The signed message is the concatenation of:
 
@@ -116,9 +135,14 @@ The signed message is the concatenation of:
 3. the 32 raw octets of SHA-256 over the JCS form of the **unsigned** receipt (the signed
    receipt without its `signature` member).
 
-`receiptSigningMessage(unsigned)` returns these octets. The domain separates these signatures
-from any other family signed by the same key. The signature is Ed25519 over that message,
-encoded base64url without padding in `signature.value`.
+`receiptSigningMessage(unsigned)` returns these octets. It throws a `TypeError` when given an
+object that still carries a `signature` member (whatever its value): such a message would be
+rebuilt by no verifier, and the mistake would otherwise surface only as a signature that never
+verifies. The domain separates these signatures from any other family signed by the same key.
+The signature is Ed25519 over that message, encoded base64url without padding in
+`signature.value`. The structure checks only that `signature.value` has 86 base64url
+characters; that it is the canonical encoding of 64 octets (its 4 unused trailing bits zero) is
+checked by the signature verification section, which owns that rule.
 
 ## Rendering
 
@@ -128,9 +152,16 @@ encoded base64url without padding in `signature.value`.
   pre-release, at most 32 characters) of the renderer of `profileId`; the pair (profile,
   version) identifies the renderer.
 - `bodyDigest` is the SHA-256, lowercase hexadecimal, of the **JCS** of `RenderedBody.body`.
-- `mediaLinks[]` (0 to 33) are the media links the renderer wrote into the body, `{ path, url }`,
-  with `url` of the same form as `remote.url`. A media link MUST name a file of `transmitted`
-  whose `via` is `link` (`receipt.media_link_untransmitted` otherwise).
+- `mediaLinks[]` (0 to 33) are the media links the renderer wrote into the body, `{ path, url }`.
+  A media link `url` is `^https://[\x21\x23-\x5b\x5d-\x7e]{1,1016}$`, at most 1024 characters:
+  printable ASCII without space, without `"` and without `\`. Those two are not URI characters
+  (RFC 3986) and are the only characters of the printable range that JCS writes on two octets;
+  excluding them is what keeps the maximal receipt under the octet ceiling (see "Bounds").
+- A media link MUST name a file of `transmitted` whose `via` is `link`
+  (`receipt.media_link_untransmitted` otherwise), and every file of `transmitted` whose `via`
+  is `link` MUST have exactly one media link: none is `receipt.media_link_missing`, two are
+  `receipt.duplicate_path`. Without its media link, a file sent by link could not be placed in
+  the recomputed body.
 
 `bodyDigest` covers the rendered content, before any HTTP framing; `requestBodyDigests` covers
 the HTTP request bodies actually sent. They are distinct values and neither replaces the
@@ -146,8 +177,10 @@ A verifier holding a signed receipt, the organization's key set and the export Z
 2. MUST check that the SHA-256 of the exact ZIP octets equals `exportDigest`, without parsing
    the archive.
 3. MUST check that every `transmitted[].path` and every `withheld[].path` is a file of the
-   export manifest, and that each `transmitted[].sha256` equals the digest of that file in the
-   manifest.
+   export manifest, that each `transmitted[].sha256` equals the digest of that file in the
+   manifest, and that every manifest file appears in exactly one of the two lists
+   (`transmitted`, `withheld`). A file in neither list was neither sent nor accounted for, and
+   the receipt is then incomplete for that export.
 4. SHOULD recompute the rendered body and compare its digest with `rendered.bodyDigest`, but
    only with a renderer of exactly `rendererVersion` for `profileId`. When that version is not
    available, it MUST say so explicitly, and MUST NOT report the rendering as verified.
@@ -189,14 +222,17 @@ registry, exactly the `data` of the control plane endpoint that exports public k
 | `requestBodyDigests` | 1 to 64 |
 | `keys` | 1 to 1024 |
 | `revision` | 1 to 2147483647 |
-| `remote.url`, media link `url`, in characters | 2048 |
+| `remote.url`, in characters | 2048 |
+| media link `url`, in characters | 1024 |
 | JSON nesting depth | 8 |
 
 Sizes are measured on the octets received, before any decoding or parsing; an input above its
-ceiling is refused without being decoded. The schema bounds alone admit receipts larger than
-65536 octets (33 media links of 2048 characters); the octet ceiling is binding, and a producer
-MUST NOT sign a receipt whose JCS form exceeds it. Raising a bound changes the contract and is
-a compatibility decision.
+ceiling is refused without being decoded. Every schema-valid receipt fits under the octet
+ceiling: the maximal one (every string at its maximum length, `"` or `\` wherever the schema
+admits them, every array full) has a JCS form of 57177 octets, below 65536, so a receipt that
+satisfies the schema is never refused for its size after an irreversible delivery. A test
+builds that receipt from the schema bounds and asserts it. Raising a bound changes the contract
+and is a compatibility decision, and MUST keep that property.
 
 ## Verifier failure codes
 
@@ -208,19 +244,21 @@ data from the document.
 2. `receipt.raw_json` — the octets are not strict JSON: byte order mark, invalid UTF-8, a
    duplicate member name, an unpaired surrogate, an invalid number, a syntax error, or nesting
    deeper than 8.
-3. `receipt.non_canonical` — every number is a safe integer and the octets differ from the JCS
-   form of the parsed document (whitespace, member order, a trailing newline, an escaped
-   solidus or letter, `1.0` for `1`).
+3. `receipt.non_canonical` — every number qualifies under rule 2 of "Canonical form and
+   signing message" and the octets differ from the JCS form of the parsed document
+   (whitespace, member order, a trailing newline, an escaped solidus or letter, `1.0` or `-0`
+   for an integer).
 4. `receipt.schema` — the document does not satisfy the schema (missing, unknown or malformed
    member, a non-integer or out-of-range `revision`, a timestamp with a fraction or an offset,
    an `http` URL, an unknown withhold reason, a missing `signature`, bound exceeded, root that
-   is not an object).
+   is not an object), including any document holding a number that does not qualify.
 5. `receipt.duplicate_path` — a path appears twice in `transmitted`, in `withheld` or in
    `rendered.mediaLinks`.
 6. `receipt.file_overlap` — a path appears in both `transmitted` and `withheld`.
 7. `receipt.media_link_untransmitted` — a media link names a path that is not in
    `transmitted` with `via: "link"`.
-8. `receipt.timestamp_order` — `deliveredAt` is later than `issuedAt`.
+8. `receipt.media_link_missing` — a file of `transmitted` with `via: "link"` has no media link.
+9. `receipt.timestamp_order` — `deliveredAt` is later than `issuedAt`.
 
 `rawSigningKeySetFailures(bytes)` reads a key set, with the same discipline:
 

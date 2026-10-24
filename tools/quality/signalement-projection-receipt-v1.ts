@@ -52,9 +52,11 @@ const validateKeySet = ajv.compile<SigningKeySet>({
 const encoder = new TextEncoder();
 
 /**
- * The authority canonicalizer writes only safe integers. A document holding any other number
- * cannot satisfy the schema (its only number is the integer `revision`), so it is left to the
- * schema check instead of being called non-canonical.
+ * The authority canonicalizer writes only safe integers: every JSON number, read as an
+ * IEEE-754 binary64 value (round half to even), must be integral with a magnitude of at most
+ * 2^53 - 1 (-0 included). A document holding any other number cannot satisfy the schema (its
+ * only number is the integer `revision`), so it is left to the schema check instead of being
+ * called non-canonical.
  */
 function canonicalTextOrNull(value: unknown): string | null {
   try {
@@ -94,6 +96,12 @@ function hasUntransmittedMediaLink(receipt: ProjectionReceipt): boolean {
   return receipt.rendered.mediaLinks.some((link) => !linked.has(link.path));
 }
 
+/** A file transmitted `via: "link"` without its media link could not be recomputed offline. */
+function hasLinkedFileWithoutMediaLink(receipt: ProjectionReceipt): boolean {
+  const linkPaths = new Set(receipt.rendered.mediaLinks.map((link) => link.path));
+  return receipt.transmitted.some((file) => file.via === "link" && !linkPaths.has(file.path));
+}
+
 /**
  * Failure codes carry no receipt data. The size is checked on octets before any parsing, so an
  * oversized input is never decoded. Exactly one code is returned, the first in the documented
@@ -113,6 +121,7 @@ export function rawProjectionReceiptFailures(bytes: Uint8Array): string[] {
   if (hasDuplicatePath(parsed)) return ["receipt.duplicate_path"];
   if (hasFileOverlap(parsed)) return ["receipt.file_overlap"];
   if (hasUntransmittedMediaLink(parsed)) return ["receipt.media_link_untransmitted"];
+  if (hasLinkedFileWithoutMediaLink(parsed)) return ["receipt.media_link_missing"];
   if (parsed.deliveredAt > parsed.issuedAt) return ["receipt.timestamp_order"];
   return [];
 }
@@ -148,9 +157,13 @@ export function rawSigningKeySetFailures(bytes: Uint8Array): string[] {
 
 /**
  * The octets signed by Ed25519: the UTF-8 domain, one zero octet, then the 32 raw octets of
- * SHA-256 over the JCS form of the receipt without its `signature` member.
+ * SHA-256 over the JCS form of the receipt without its `signature` member. An object that still
+ * carries `signature` is refused with a TypeError: hashing it would yield a message that no
+ * verifier rebuilds, so the mistake would surface only as a signature that never verifies.
  */
 export function receiptSigningMessage(unsigned: unknown): Uint8Array {
+  if (typeof unsigned === "object" && unsigned !== null && Object.hasOwn(unsigned, "signature"))
+    throw new TypeError("receiptSigningMessage takes the unsigned receipt, without signature");
   const domain = encoder.encode(RECEIPT_SIGNATURE_DOMAIN);
   const digest = createHash("sha256").update(canonicalJson(unsigned)).digest();
   const message = new Uint8Array(domain.byteLength + 1 + digest.byteLength);
