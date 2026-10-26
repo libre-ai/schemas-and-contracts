@@ -5,23 +5,29 @@
 // implementing repository. Normative text: contracts/wit/signalement-policy-receipt-v1/SEMANTICS.md.
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { readdir, stat } from "node:fs/promises";
 import { canonicalJson } from "./authorized-execution";
 import { parseStrictJson } from "./policy-core-raw-inputs";
+import {
+  loadPolicyReceiptGolden,
+  POLICY_RECEIPT_GOLDEN_DIRECTORY,
+  POLICY_RECEIPT_GOLDEN_MAX_BYTES,
+} from "./signalement-policy-receipt-golden-files";
 import { rawProjectionReceiptFailures } from "./signalement-projection-receipt-v1";
 import { rawRoutingPolicyFailures, routingPolicyDigest } from "./signalement-routing-policy-v1";
-import { loadSignalementV1Vectors } from "./signalement-v1-vector-loader";
 
-/** Ceiling of one golden file, and of the merged document, in octets (8 MiB). */
-export const POLICY_RECEIPT_GOLDEN_MAX_BYTES = 8388608;
-export const POLICY_RECEIPT_GOLDEN_ENTRY = "golden-vectors.v1.json";
-/** Repository path of the entry, as check-contracts names it. */
-export const POLICY_RECEIPT_GOLDEN_PATH =
-  "contracts/fixtures/signalement-policy-receipt-v1/golden-vectors.v1.json";
+export {
+  type GoldenFile,
+  type LoadedPolicyReceiptGolden,
+  loadPolicyReceiptGolden,
+  POLICY_RECEIPT_GOLDEN_DIRECTORY,
+  POLICY_RECEIPT_GOLDEN_ENTRY,
+  POLICY_RECEIPT_GOLDEN_MAX_BYTES,
+  POLICY_RECEIPT_GOLDEN_PATH,
+} from "./signalement-policy-receipt-golden-files";
+
 // Contract files resolve against the authority root of this file's own location, so the same
 // check holds for a vendored copy (vendor/contracts/tools/quality/...).
 const AUTHORITY_ROOT = `${import.meta.dir}/../..`;
-export const POLICY_RECEIPT_GOLDEN_DIRECTORY = `${AUTHORITY_ROOT}/contracts/fixtures/signalement-policy-receipt-v1`;
 
 const SCHEMA_VERSION = "libre-ai.signalement-policy-receipt-golden-vectors.v1";
 const GOLDEN_DEPTH = 63; // parseStrictJson counts the top-level value as 0: 64 levels.
@@ -348,47 +354,6 @@ export function rawPolicyReceiptFailures(bytes: Uint8Array): string[] {
       failures.push(`golden.receipt_invalid:${golden.id}`);
   }
   return failures;
-}
-
-export interface LoadedPolicyReceiptGolden {
-  /** Entry and declared parts merged, `parts` removed; null whenever a failure is named. */
-  document: JsonObject | null;
-  failures: string[];
-}
-
-const GOLDEN_STEM = POLICY_RECEIPT_GOLDEN_ENTRY.slice(0, -".json".length);
-
-/**
- * Reads the entry and its declared parts with the signalement v1 continuation rule. Every
- * `golden-vectors.v1*.json` file is measured before any is read, so an oversized file is
- * never decoded.
- */
-export async function loadPolicyReceiptGolden(
-  directory: string = POLICY_RECEIPT_GOLDEN_DIRECTORY,
-): Promise<LoadedPolicyReceiptGolden> {
-  let names: string[];
-  try {
-    names = (await readdir(directory)).sort();
-  } catch {
-    return { document: null, failures: ["golden.parts:directory is unreadable"] };
-  }
-  const failures: string[] = [];
-  for (const name of names) {
-    if (!name.startsWith(GOLDEN_STEM) || !name.endsWith(".json")) continue;
-    const size = await stat(`${directory}/${name}`).then(
-      (entry) => entry.size,
-      () => 0,
-    );
-    if (size > POLICY_RECEIPT_GOLDEN_MAX_BYTES) failures.push(`golden.size_limit:${name}`);
-  }
-  if (failures.length > 0) return { document: null, failures };
-  const loaded = await loadSignalementV1Vectors(directory, POLICY_RECEIPT_GOLDEN_ENTRY);
-  if (loaded.vectors === null)
-    return {
-      document: null,
-      failures: loaded.failures.map((failure) => `golden.parts:${failure}`),
-    };
-  return { document: loaded.vectors, failures: [] };
 }
 
 /** Failures of the golden files of `directory`: reading failures, else the merged document's. */

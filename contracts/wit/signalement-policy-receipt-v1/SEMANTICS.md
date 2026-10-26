@@ -233,22 +233,30 @@ unscannable), and at most 8 MiB. The entry file `golden-vectors.v1.json` carries
 non-empty list of distinct bare file names in the same directory, each beginning with
 `golden-vectors.v1` and ending with `.json`, none equal to the entry; it declares
 `golden-vectors.v1.part-2.json` then `golden-vectors.v1.part-3.json`. Each part is an object
-with the entry's `schemaVersion`, no `parts`, and a `cases` array. The golden document is the
-entry without `parts`, each part's `cases` appended in declaration order. A declared part that
-is absent or unreadable, a file `golden-vectors.v1*.json` that the entry does not declare
-(orphan), or any other member meeting is an error that refuses the whole document. This is the
-reading rule of the signalement v1 vector files (routing-policy semantics, "Vector files"),
-with the entry named `golden-vectors.v1.json`.
+with exactly two members: the entry's `schemaVersion` and a `cases` array. The golden document
+is the entry without `parts`, each part's `cases` appended in declaration order. Each of the
+following is an error that refuses the whole document: a declared part that is absent or
+unreadable; a file `golden-vectors.v1*.json` that the entry does not declare (orphan); a part
+whose `schemaVersion` differs from the entry's or that declares `parts`; a part with any other
+member, or without `cases`, or whose `cases` is not an array (so a part never adds metadata,
+such as a second `contractFiles`, to the document). This is the reading rule of the
+signalement v1 vector files (routing-policy semantics, "Vector files"), with the entry named
+`golden-vectors.v1.json` and the members of a part restricted as above.
 
 The authority checks the merged document twice: `tools/quality/check-contracts.ts` validates it
 against the shared envelope `engine-golden-vectors.v1` (so every case of every part meets the
 same `$defs/vectorList` bounds as in one file), and the verifier below checks its contract.
+`check-contracts.ts` first inspects each file on its own for the shared size, depth and
+public-content bounds, so a finding names the file it is in; on the merged document only the
+aggregate bounds (number of cases, number of nodes) remain, and a finding there names the entry
+followed by the parts it was merged with.
 
 ### Verifier failure codes
 
 `policyReceiptGoldenFailures(directory)` reads the directory: a file `golden-vectors.v1*.json`
-above 8 MiB is `golden.size_limit:<file>`, and a reading error of the continuation rule is
-`golden.parts:<description>` (file names only); otherwise it returns
+above 8 MiB is `golden.size_limit:<file>`, a reading error of the continuation rule is
+`golden.parts:<description>` (file names only), and a declared part with other members than
+`schemaVersion` and a `cases` array is `golden.part_members:<file>`; otherwise it returns
 `rawPolicyReceiptFailures` of the merged document. `rawPolicyReceiptFailures(bytes)` reads one
 merged golden document; it does not import the `engine-golden-vectors.v1` schema. Codes, in
 this order:

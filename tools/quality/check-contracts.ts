@@ -25,9 +25,10 @@ import {
   publicSourceScannerSelfTestFailures,
 } from "./public-source-scanner";
 import {
+  goldenInspectionTargets,
   loadPolicyReceiptGolden,
   POLICY_RECEIPT_GOLDEN_PATH,
-} from "./signalement-policy-receipt-v1";
+} from "./signalement-policy-receipt-golden-files";
 import { loadSignalementV1FixtureCases } from "./signalement-v1-fixture-inventory";
 import { readSpecificationLockInputs } from "./specification-lock-inputs";
 
@@ -730,11 +731,13 @@ for (const path of specializedVectorPaths) {
     continue;
   }
   let document: unknown;
+  let inspectionLabel: string = path;
   if (path === POLICY_RECEIPT_GOLDEN_PATH) {
     // Its cases continue in parts the entry declares (world SEMANTICS, "Continuation files").
     // The envelope is checked on the merged document, `parts` removed, so every case of every
     // part meets the same bounds and $defs/vectorList as in one file; an absent, oversized or
-    // undeclared part refuses the whole document.
+    // undeclared part, or a part with other members than schemaVersion and cases, refuses the
+    // whole document.
     const loaded = await loadPolicyReceiptGolden(dirname(path));
     if (loaded.document === null) {
       for (const failure of loaded.failures) failures.push(`${path}: ${failure}`);
@@ -742,7 +745,17 @@ for (const path of specializedVectorPaths) {
       if (loaded.failures.length === 0) failures.push(`${path}: golden files refused`);
       continue;
     }
+    // Each file is inspected on its own first, so a finding names the file it is in; the
+    // merged inspection below can then fail only on aggregate bounds, and says so.
+    const targets = goldenInspectionTargets(loaded, path);
+    const fileFindings = targets.files.some(
+      (target) =>
+        !inspectSpecializedVectorBounds(target.document, target.label) ||
+        !inspectSpecializedVectorPublicContent(target.document, target.label),
+    );
+    if (fileFindings) continue;
     document = loaded.document;
+    inspectionLabel = targets.merged;
   } else {
     try {
       document = parseStrictJson(new Uint8Array(await file.arrayBuffer()), 64);
@@ -751,8 +764,8 @@ for (const path of specializedVectorPaths) {
       continue;
     }
   }
-  if (!inspectSpecializedVectorBounds(document, path)) continue;
-  if (!inspectSpecializedVectorPublicContent(document, path)) continue;
+  if (!inspectSpecializedVectorBounds(document, inspectionLabel)) continue;
+  if (!inspectSpecializedVectorPublicContent(document, inspectionLabel)) continue;
   if (!specializedVectorValidator?.(document)) {
     failures.push(
       `${path}: shared vector envelope rejected: ${safeErrors(specializedVectorValidator?.errors)}`,

@@ -5,6 +5,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { canonicalJson } from "./authorized-execution";
 import {
+  goldenInspectionTargets,
+  POLICY_RECEIPT_GOLDEN_PATH,
+} from "./signalement-policy-receipt-golden-files";
+import {
   loadPolicyReceiptGolden,
   OPERATION_ERROR_CODES,
   POLICY_RECEIPT_GOLDEN_DIRECTORY,
@@ -614,16 +618,115 @@ describe("failure codes", () => {
 });
 
 describe("continuation files", () => {
-  async function withCopy(edit: (dir: string) => Promise<void>): Promise<string[]> {
+  async function inCopy<T>(
+    edit: (dir: string) => Promise<void>,
+    read: (dir: string) => Promise<T>,
+  ): Promise<T> {
     const dir = await mkdtemp(join(tmpdir(), "policy-receipt-golden-"));
     try {
       await cp(POLICY_RECEIPT_GOLDEN_DIRECTORY, dir, { recursive: true });
       await edit(dir);
-      return await policyReceiptGoldenFailures(dir);
+      return await read(dir);
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
   }
+
+  function withCopy(edit: (dir: string) => Promise<void>): Promise<string[]> {
+    return inCopy(edit, (dir) => policyReceiptGoldenFailures(dir));
+  }
+
+  async function editPart(dir: string, name: string, edit: (part: JsonObject) => void) {
+    const path = join(dir, name);
+    const part = (await Bun.file(path).json()) as JsonObject;
+    edit(part);
+    await writeFile(path, JSON.stringify(part));
+  }
+
+  test("a part carries exactly schemaVersion and a cases array", async () => {
+    const extraContractFiles = await withCopy((dir) =>
+      editPart(dir, "golden-vectors.v1.part-2.json", (part) => {
+        part.contractFiles = [{ path: "contracts/catalog.v1.json", sha256: "0".repeat(64) }];
+      }),
+    );
+    expect(extraContractFiles).toEqual(["golden.part_members:golden-vectors.v1.part-2.json"]);
+    const withoutCases = await withCopy((dir) =>
+      editPart(dir, "golden-vectors.v1.part-3.json", (part) => {
+        delete part.cases;
+      }),
+    );
+    expect(withoutCases).toEqual(["golden.part_members:golden-vectors.v1.part-3.json"]);
+    // A cases member that is not an array cannot be appended: the loader refuses it first.
+    const casesObject = await withCopy((dir) =>
+      editPart(dir, "golden-vectors.v1.part-3.json", (part) => {
+        part.cases = {};
+      }),
+    );
+    expect(casesObject).toEqual([
+      "golden.parts:golden-vectors.v1.part-3.json: member /cases cannot be appended to golden-vectors.v1.json",
+    ]);
+  });
+
+  test("inspection targets name each file, then the merged document with its parts", async () => {
+    const loaded = await loadPolicyReceiptGolden();
+    const targets = goldenInspectionTargets(loaded, POLICY_RECEIPT_GOLDEN_PATH);
+    const directory = "contracts/fixtures/signalement-policy-receipt-v1";
+    expect(targets.files.map((target) => target.label)).toEqual([
+      `${directory}/golden-vectors.v1.json`,
+      `${directory}/golden-vectors.v1.part-2.json`,
+      `${directory}/golden-vectors.v1.part-3.json`,
+    ]);
+    expect(targets.merged).toBe(
+      `${POLICY_RECEIPT_GOLDEN_PATH} (merged with golden-vectors.v1.part-2.json, golden-vectors.v1.part-3.json)`,
+    );
+    expect(
+      goldenInspectionTargets({ document: {}, files: [], failures: [] }, "x/golden-vectors.v1.json")
+        .merged,
+    ).toBe("x/golden-vectors.v1.json");
+  });
+
+  test("a member found in a part is attributed to that part's file", async () => {
+    const longName = "k".repeat(129);
+    // Same rule as check-contracts' bounds inspection: a property name above 128 code points.
+    const hasLongName = (value: unknown): boolean =>
+      Array.isArray(value)
+        ? value.some(hasLongName)
+        : typeof value === "object" && value !== null
+          ? Object.entries(value).some(([key, item]) => key.length > 128 || hasLongName(item))
+          : false;
+    const flagged = await inCopy(
+      (dir) =>
+        editPart(dir, "golden-vectors.v1.part-3.json", (part) => {
+          const cases = part.cases as JsonObject[];
+          const last = cases[cases.length - 1];
+          if (last !== undefined) (last.args as JsonObject)[longName] = 1;
+        }),
+      async (dir) => {
+        const targets = goldenInspectionTargets(
+          await loadPolicyReceiptGolden(dir),
+          `${dir}/golden-vectors.v1.json`,
+        );
+        return targets.files.filter((target) => hasLongName(target.document)).map((t) => t.label);
+      },
+    );
+    expect(flagged).toHaveLength(1);
+    expect(flagged[0]?.endsWith("/golden-vectors.v1.part-3.json")).toBe(true);
+  });
+
+  test("reading the golden files loads no contract verifier", async () => {
+    const source = await Bun.file(
+      `${import.meta.dir}/signalement-policy-receipt-golden-files.ts`,
+    ).text();
+    const imports = [...source.matchAll(/^import .* from "([^"]+)";$/gm)].map((match) => match[1]);
+    expect(imports).toEqual([
+      "node:fs/promises",
+      "./policy-core-raw-inputs",
+      "./signalement-v1-vector-loader",
+    ]);
+    const gate = await Bun.file(`${import.meta.dir}/check-contracts.ts`).text();
+    expect(gate).toContain('from "./signalement-policy-receipt-golden-files";');
+    expect(gate).not.toContain('from "./signalement-policy-receipt-v1";');
+  });
 
   test("an unchanged copy elsewhere passes: contract files resolve from the verifier", async () => {
     expect(await withCopy(async () => {})).toEqual([]);
@@ -676,6 +779,7 @@ describe("continuation files", () => {
   test("an unreadable directory is a named failure", async () => {
     expect(await loadPolicyReceiptGolden(join(tmpdir(), "absent-policy-receipt-golden"))).toEqual({
       document: null,
+      files: [],
       failures: ["golden.parts:directory is unreadable"],
     });
   });
@@ -718,6 +822,7 @@ describe("world and semantics", () => {
       "golden.receipt_invalid:<id>",
       "golden.size_limit:<file>",
       "golden.parts:<description>",
+      "golden.part_members:<file>",
     ];
     for (const code of codes) expect(text).toContain(`\`${code}\``);
     for (const id of EXPECTED_REQUIRED) expect(text).toContain(`\`${id}\``);
