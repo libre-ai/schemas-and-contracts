@@ -25,9 +25,14 @@
 //    - `padWithSpacesTo` (optional): an octet length (at most 1 MiB).
 //    The octets are the UTF-8 JCS form (RFC 8785) of the document after `repeat`, followed by
 //    U+0020 octets up to `padWithSpacesTo` when present (never shorter than the JCS form). The
-//    generated octets never exceed 1 MiB (1,048,576), padded or not.
+//    generated octets never exceed 1 MiB (1,048,576), padded or not; a `repeat` is measured
+//    exactly before any copy is built, so an oversized one is never materialized.
 //    A recipe is resolved to `raw` (base64url of the octets); `recipe` and `sha256` are dropped.
-//    Regenerated octets with another digest are refused: no verifier ever sees them.
+//    Regenerated octets with another digest are refused: no verifier ever sees them. A list
+//    element that carries `recipe` without a string `name` is refused, never skipped.
+//
+// Every vector file, entry or part, is read up to 1 MiB, as the Rust oracle reads it: a larger
+// file is refused without being read whole.
 //
 // Any failure is named and returned, never thrown, and then no vector is returned at all, so a
 // broken fixture cannot shrink a suite to the vectors that happened to load.
@@ -52,6 +57,9 @@ export interface VectorLoadOptions {
 
 export const RECIPE_MAX_COUNT = 4096;
 export const RECIPE_MAX_OCTETS = 1_048_576;
+/** Read cap of one vector file, as the Rust oracle's (`MAX_FILE_OCTETS`). */
+export const VECTOR_FILE_MAX_OCTETS = 1_048_576;
+const OVERSIZED = `above ${VECTOR_FILE_MAX_OCTETS} octets, not read`;
 
 const RECIPE_MEMBERS = new Set(["document", "repeat", "padWithSpacesTo"]);
 const REPEAT_MEMBERS = ["count", "element", "indexMember", "indexPrefix", "member"];
@@ -64,15 +72,23 @@ function isVector(value: unknown): value is JsonObject {
   return isRecord(value) && typeof value.name === "string";
 }
 
-type FileRead = { kind: "parsed"; value: unknown } | { kind: "unreadable" } | { kind: "invalid" };
+type FileRead =
+  | { kind: "parsed"; value: unknown }
+  | { kind: "unreadable" }
+  | { kind: "invalid" }
+  | { kind: "oversized" };
 
+/** Reads at most one octet past the 1 MiB bound, so an oversized file is never loaded whole. */
 async function readStrictJson(path: string): Promise<FileRead> {
   let bytes: Uint8Array;
   try {
-    bytes = await Bun.file(path).bytes();
+    bytes = await Bun.file(path)
+      .slice(0, VECTOR_FILE_MAX_OCTETS + 1)
+      .bytes();
   } catch {
     return { kind: "unreadable" };
   }
+  if (bytes.byteLength > VECTOR_FILE_MAX_OCTETS) return { kind: "oversized" };
   try {
     return { kind: "parsed", value: parseStrictJson(bytes) };
   } catch {
@@ -107,15 +123,54 @@ function isNonNegativeInteger(value: unknown, maximum: number): value is number 
   return Number.isSafeInteger(value) && (value as number) >= 0 && (value as number) <= maximum;
 }
 
-/** The recipe's octets, or null when the recipe is outside the closed vocabulary. */
-function recipeOctets(recipe: unknown): Uint8Array | null {
-  if (!isRecord(recipe) || !Object.hasOwn(recipe, "document")) return null;
-  if (!Object.keys(recipe).every((member) => RECIPE_MEMBERS.has(member))) return null;
+type RecipeResult = Uint8Array | "invalid recipe" | "generated octets above 1048576";
+
+/** UTF-8 octets of the JCS form, or null when the value is not canonicalizable. */
+function jcsLength(value: unknown): number | null {
+  try {
+    return new TextEncoder().encode(canonicalJson(value)).length;
+  } catch {
+    return null;
+  }
+}
+
+/** Decimal digits written by the indexes 0 to count - 1, without leading zeros. */
+function indexDigits(count: number): number {
+  let digits = 0;
+  for (let index = 0; index < count; index += 1) digits += String(index).length;
+  return digits;
+}
+
+/**
+ * The exact octet length of the JCS form after `repeat`, measured without building the copies:
+ * the document with an empty array, plus each copy, plus the commas between copies. A copy is
+ * the element with its index member set to the prefix, plus the digits of its index: digits are
+ * ASCII, so they add one octet each and never an escape.
+ */
+function repeatedLength(
+  document: JsonObject,
+  member: string,
+  count: number,
+  element: JsonObject,
+  indexMember: string,
+  indexPrefix: string,
+): number | null {
+  const base = jcsLength({ ...document, [member]: [] });
+  const copy = jcsLength({ ...element, [indexMember]: indexPrefix });
+  if (base === null || copy === null) return null;
+  return base + count * copy + indexDigits(count) + Math.max(count - 1, 0);
+}
+
+/** The recipe's octets, or the failure: outside the closed vocabulary, or above 1 MiB. */
+function recipeOctets(recipe: unknown): RecipeResult {
+  if (!isRecord(recipe) || !Object.hasOwn(recipe, "document")) return "invalid recipe";
+  if (!Object.keys(recipe).every((member) => RECIPE_MEMBERS.has(member))) return "invalid recipe";
   let document: unknown = recipe.document;
-  if (Object.hasOwn(recipe, "repeat")) {
+  const repeated = Object.hasOwn(recipe, "repeat");
+  if (repeated) {
     const repeat: unknown = recipe.repeat;
     if (!isRecord(repeat) || Object.keys(repeat).sort().join() !== REPEAT_MEMBERS.join()) {
-      return null;
+      return "invalid recipe";
     }
     const { member, count, element, indexMember, indexPrefix } = repeat;
     if (
@@ -128,8 +183,12 @@ function recipeOctets(recipe: unknown): Uint8Array | null {
       typeof indexMember !== "string" ||
       typeof indexPrefix !== "string"
     ) {
-      return null;
+      return "invalid recipe";
     }
+    // Measured before any copy exists: an oversized recipe is never materialized.
+    const length = repeatedLength(document, member, count, element, indexMember, indexPrefix);
+    if (length === null) return "invalid recipe";
+    if (length > RECIPE_MAX_OCTETS) return "generated octets above 1048576";
     const copies = Array.from({ length: count }, (_, index) => ({
       ...element,
       [indexMember]: `${indexPrefix}${index}`,
@@ -140,14 +199,16 @@ function recipeOctets(recipe: unknown): Uint8Array | null {
   try {
     text = canonicalJson(document);
   } catch {
-    return null;
+    return "invalid recipe";
   }
   const canonical = new TextEncoder().encode(text);
-  if (!Object.hasOwn(recipe, "padWithSpacesTo")) {
-    return canonical.length <= RECIPE_MAX_OCTETS ? canonical : null;
-  }
+  // A repeated document was measured exactly above; a plain one is already in memory.
+  if (!repeated && canonical.length > RECIPE_MAX_OCTETS) return "generated octets above 1048576";
+  if (!Object.hasOwn(recipe, "padWithSpacesTo")) return canonical;
   const length: unknown = recipe.padWithSpacesTo;
-  if (!isNonNegativeInteger(length, RECIPE_MAX_OCTETS) || length < canonical.length) return null;
+  if (!isNonNegativeInteger(length, RECIPE_MAX_OCTETS) || length < canonical.length) {
+    return "invalid recipe";
+  }
   const padded = new Uint8Array(length).fill(0x20);
   padded.set(canonical);
   return padded;
@@ -165,8 +226,14 @@ function resolveRecipes(
   failures: string[],
 ): void {
   if (Array.isArray(value)) {
+    let namelessRecipe = false;
     value.forEach((element, index) => {
-      if (!isVector(element) || !Object.hasOwn(element, "recipe")) return;
+      if (!isRecord(element) || !Object.hasOwn(element, "recipe")) return;
+      // A recipe that no name labels would otherwise be neither resolved nor refused.
+      if (!isVector(element)) {
+        namelessRecipe = true;
+        return;
+      }
       const { recipe, sha256, ...rest } = element;
       const label = `${file}: vector ${JSON.stringify(element.name)}`;
       if (!admitRecipes) {
@@ -179,9 +246,9 @@ function resolveRecipes(
         !Object.hasOwn(rest, "document") &&
         !Object.hasOwn(rest, "raw")
           ? recipeOctets(recipe)
-          : null;
-      if (octets === null) {
-        failures.push(`${label}: invalid recipe`);
+          : "invalid recipe";
+      if (typeof octets === "string") {
+        failures.push(`${label}: ${octets}`);
         return;
       }
       if (createHash("sha256").update(octets).digest("hex") !== sha256) {
@@ -190,6 +257,8 @@ function resolveRecipes(
       }
       value[index] = { ...rest, raw: Buffer.from(octets).toString("base64url") };
     });
+    if (namelessRecipe)
+      failures.push(`${file}: a list element carries a recipe without a string name`);
     return;
   }
   if (isRecord(value)) {
@@ -227,9 +296,12 @@ export async function loadSignalementV1Vectors(
 
   const read = await readStrictJson(`${directory}/${entry}`);
   if (read.kind !== "parsed") {
-    failures.push(
-      `${entry}: ${read.kind === "unreadable" ? "absent or unreadable" : "not strict JSON"}`,
-    );
+    const reason = {
+      unreadable: "absent or unreadable",
+      invalid: "not strict JSON",
+      oversized: OVERSIZED,
+    }[read.kind];
+    failures.push(`${entry}: ${reason}`);
     return refused();
   }
   const merged: unknown = read.value;
@@ -266,6 +338,10 @@ export async function loadSignalementV1Vectors(
     }
     if (partRead.kind === "invalid") {
       failures.push(`${name}: not strict JSON`);
+      continue;
+    }
+    if (partRead.kind === "oversized") {
+      failures.push(`${name}: ${OVERSIZED}`);
       continue;
     }
     const part: unknown = partRead.value;

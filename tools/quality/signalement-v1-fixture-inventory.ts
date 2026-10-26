@@ -14,8 +14,8 @@
 // scanner normalizes after decoding escapes (decodeSensitiveMarkers), so an escape such as
 // `ﷺ` can still expand there.
 
-import type { Dirent } from "node:fs";
-import { readdir, readFile } from "node:fs/promises";
+import type { Dirent, Stats } from "node:fs";
+import { lstat, readdir, readFile } from "node:fs/promises";
 import type { P02FixtureCase } from "./p02-v1-fixture-inventory";
 
 export interface SignalementFixtureInventory {
@@ -42,10 +42,19 @@ export const SIGNALEMENT_V1_BUDGETED_DIRECTORIES: readonly string[] = [
   "signalement-local-export-v1",
 ];
 
+// Files outside those directories that signalement vendors too, relative to the repository
+// root: the catalog, which lists every contract and grows with each admission.
+export const SIGNALEMENT_V1_BUDGETED_FILES: readonly string[] = ["contracts/catalog.v1.json"];
+
 export interface FixtureBudgetReport {
   /** Budgeted directories that could be listed. */
   directories: number;
-  /** Entries met under them, other than directories: examined + unreadable + not regular. */
+  /** Budgeted files, outside the directories, that were examined (also counted in `examined`). */
+  files: number;
+  /**
+   * Entries met under the directories, other than directories, plus the budgeted files found:
+   * examined + unreadable + not regular.
+   */
   encountered: number;
   /** Regular files decoded and counted, within the budget or not. */
   examined: number;
@@ -70,13 +79,20 @@ function countNfkcCodePoints(text: string): number {
   return count;
 }
 
+/**
+ * `root` holds the budgeted directories; `fileRoot` (the repository root) holds the budgeted
+ * files. Both defaults are relative to the working directory, the repository root of the gate.
+ */
 export async function measureSignalementV1FixtureBudget(
   root: string = "contracts/fixtures",
   directories: readonly string[] = SIGNALEMENT_V1_BUDGETED_DIRECTORIES,
   budget: number = SIGNALEMENT_V1_FIXTURE_CODE_POINT_BUDGET,
+  files: readonly string[] = SIGNALEMENT_V1_BUDGETED_FILES,
+  fileRoot: string = ".",
 ): Promise<FixtureBudgetReport> {
   const report: FixtureBudgetReport = {
     directories: 0,
+    files: 0,
     encountered: 0,
     examined: 0,
     unreadable: 0,
@@ -86,6 +102,40 @@ export async function measureSignalementV1FixtureBudget(
   };
   // fatal: a file that is not UTF-8 has no code point count; ignoreBOM: a mark is counted.
   const decoder = new TextDecoder("utf-8", { fatal: true, ignoreBOM: true });
+
+  /** Measures one regular file, named `path` in the report; false when it could not be read. */
+  async function measure(location: string, path: string): Promise<boolean> {
+    let bytes: Uint8Array;
+    try {
+      bytes = await readFile(location);
+    } catch {
+      report.unreadable += 1;
+      report.failures.push(`${path}: unreadable`);
+      return false;
+    }
+    let text: string;
+    try {
+      text = decoder.decode(bytes);
+    } catch {
+      report.unreadable += 1;
+      report.failures.push(`${path}: not valid UTF-8`);
+      return false;
+    }
+    report.examined += 1;
+    const written = countCodePoints(text);
+    const normalized = countNfkcCodePoints(text);
+    const codePoints = Math.max(written, normalized);
+    if (report.largest === null || codePoints > report.largest.codePoints) {
+      report.largest = { path, codePoints };
+    }
+    if (codePoints > budget) {
+      const projection = normalized > written ? " after NFKC normalization" : "";
+      report.failures.push(
+        `${path}: ${codePoints} code points${projection}, over the budget of ${budget}`,
+      );
+    }
+    return true;
+  }
 
   async function walk(relative: string): Promise<boolean> {
     let entries: Dirent[];
@@ -106,35 +156,7 @@ export async function measureSignalementV1FixtureBudget(
         report.notRegular.push(path);
         continue;
       }
-      let bytes: Uint8Array;
-      try {
-        bytes = await readFile(`${root}/${path}`);
-      } catch {
-        report.unreadable += 1;
-        report.failures.push(`${path}: unreadable`);
-        continue;
-      }
-      let text: string;
-      try {
-        text = decoder.decode(bytes);
-      } catch {
-        report.unreadable += 1;
-        report.failures.push(`${path}: not valid UTF-8`);
-        continue;
-      }
-      report.examined += 1;
-      const written = countCodePoints(text);
-      const normalized = countNfkcCodePoints(text);
-      const codePoints = Math.max(written, normalized);
-      if (report.largest === null || codePoints > report.largest.codePoints) {
-        report.largest = { path, codePoints };
-      }
-      if (codePoints > budget) {
-        const projection = normalized > written ? " after NFKC normalization" : "";
-        report.failures.push(
-          `${path}: ${codePoints} code points${projection}, over the budget of ${budget}`,
-        );
-      }
+      await measure(`${root}/${path}`, path);
     }
     return true;
   }
@@ -142,6 +164,22 @@ export async function measureSignalementV1FixtureBudget(
   for (const directory of directories) {
     if (await walk(directory)) report.directories += 1;
     else report.failures.push(`${directory}: budgeted directory is absent or unreadable`);
+  }
+  for (const path of files) {
+    let entry: Stats;
+    try {
+      // lstat: a link is not followed, as in the directories.
+      entry = await lstat(`${fileRoot}/${path}`);
+    } catch {
+      report.failures.push(`${path}: budgeted file is absent or unreadable`);
+      continue;
+    }
+    report.encountered += 1;
+    if (!entry.isFile()) {
+      report.notRegular.push(path);
+      continue;
+    }
+    if (await measure(`${fileRoot}/${path}`, path)) report.files += 1;
   }
   return report;
 }

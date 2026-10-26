@@ -1,6 +1,7 @@
-import { describe, expect, test } from "bun:test";
+import { afterEach, describe, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
-import { chmod, mkdtemp, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { chmod, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -14,8 +15,24 @@ type JsonObject = Record<string, unknown>;
 const SCHEMA_VERSION = "libre-ai.example-vectors.v1";
 const ADMIT_RECIPES = { admitRecipes: true } as const;
 
+// Every temporary directory a test creates is removed after it, whatever its assertions do.
+const created: string[] = [];
+const everCreated: string[] = [];
+const removed: string[] = [];
+
+afterEach(async () => {
+  for (const directory of created.splice(0)) {
+    // A test may have withdrawn a permission: give it back so the removal cannot fail on it.
+    await chmod(directory, 0o700);
+    await rm(directory, { recursive: true, force: true });
+    removed.push(directory);
+  }
+});
+
 async function directoryWith(files: Record<string, unknown>): Promise<string> {
   const directory: string = await mkdtemp(join(tmpdir(), "signalement-vectors-"));
+  created.push(directory);
+  everCreated.push(directory);
   for (const [name, content] of Object.entries(files)) {
     await writeFile(
       join(directory, name),
@@ -138,9 +155,42 @@ describe("entry and continuation files", () => {
     });
     // Search without read: the entry can be opened, the directory cannot be listed.
     await chmod(directory, 0o300);
-    const result = await loadSignalementV1Vectors(directory);
-    await chmod(directory, 0o700);
+    let result: Awaited<ReturnType<typeof loadSignalementV1Vectors>>;
+    try {
+      result = await loadSignalementV1Vectors(directory);
+    } finally {
+      await chmod(directory, 0o700);
+    }
     expect(result).toEqual({ vectors: null, failures: ["vectors.json: directory is unreadable"] });
+  });
+
+  test("a vector file is read up to 1 MiB: one octet more is refused, entry or part", async () => {
+    const padded = (document: JsonObject, length: number): Uint8Array => {
+      const octets = new Uint8Array(length).fill(0x20);
+      octets.set(new TextEncoder().encode(JSON.stringify(document)));
+      return octets;
+    };
+    const entry = { schemaVersion: SCHEMA_VERSION, valid: [oneVector("a")] };
+    const atBound = await directoryWith({ "vectors.json": padded(entry, RECIPE_MAX_OCTETS) });
+    expect(await loadSignalementV1Vectors(atBound)).toEqual({ vectors: entry, failures: [] });
+    const overEntry = await directoryWith({
+      "vectors.json": padded(entry, RECIPE_MAX_OCTETS + 1),
+    });
+    expect(await loadSignalementV1Vectors(overEntry)).toEqual({
+      vectors: null,
+      failures: ["vectors.json: above 1048576 octets, not read"],
+    });
+    const overPart = await directoryWith({
+      "vectors.json": { ...entry, parts: ["vectors.part-2.json"] },
+      "vectors.part-2.json": padded(
+        { schemaVersion: SCHEMA_VERSION, valid: [oneVector("b")] },
+        RECIPE_MAX_OCTETS + 1,
+      ),
+    });
+    expect(await loadSignalementV1Vectors(overPart)).toEqual({
+      vectors: null,
+      failures: ["vectors.part-2.json: above 1048576 octets, not read"],
+    });
   });
 
   test("a vector inside a document is never read as a recipe", async () => {
@@ -289,18 +339,79 @@ describe("recipes", () => {
   });
 
   test("generated octets never exceed 1 MiB, padded or not", async () => {
-    // The JCS form alone: `{"s":"` + the string + `"}` is 8 octets more than the string.
-    const atBound = "a".repeat(RECIPE_MAX_OCTETS - 8);
-    const vector = (text: string): JsonObject => ({
-      name: "unpadded",
-      recipe: { document: { s: text } },
-      sha256: sha256Hex(`{"s":"${text}"}`),
-    });
-    expect((await loadRecipe(vector(atBound))).failures).toEqual([]);
-    expect(await loadRecipe(vector(`${atBound}a`))).toEqual({
+    // A vector file holds at most 1 MiB, so a plain document reaches the bound only through JCS
+    // expansion: `1e15` is 4 octets as written and 16 (`1000000000000000`) in JCS. Expected
+    // text written here from RFC 8785: `{"n":[` + 61680 numbers + `],"s":"` + pad + `"}`.
+    const count = 61_680;
+    const expected = (pad: string) =>
+      `{"n":[${Array(count).fill("1000000000000000").join(",")}],"s":"${pad}"}`;
+    expect(expected("aa").length).toBe(RECIPE_MAX_OCTETS);
+    const entry = (pad: string) =>
+      `{"schemaVersion":"${SCHEMA_VERSION}","invalid":[{"name":"unpadded","recipe":{"document":` +
+      `{"n":[${Array(count).fill("1e15").join(",")}],"s":"${pad}"}},` +
+      `"sha256":"${sha256Hex(expected(pad))}"}]}`;
+    const load = async (pad: string) =>
+      loadSignalementV1Vectors(
+        await directoryWith({ "vectors.json": entry(pad) }),
+        "vectors.json",
+        ADMIT_RECIPES,
+      );
+    const atBound = await load("aa");
+    expect(atBound.failures).toEqual([]);
+    expect(decoded(atBound.vectors, "invalid", 0)).toBe(expected("aa"));
+    expect(await load("aaa")).toEqual({
       vectors: null,
-      failures: ['vectors.json: vector "unpadded": invalid recipe'],
+      failures: ['vectors.json: vector "unpadded": generated octets above 1048576'],
     });
+  });
+
+  test("a repeat is measured before its copies are built, exactly, at the 1 MiB bound", async () => {
+    // Written here from RFC 8785, not by the code under test: members sorted ("i" < "p",
+    // "keys" < "pad"), copies joined by commas. 4096 copies hold 15274 index digits (0..4095).
+    const count = RECIPE_MAX_COUNT;
+    const fill = "x".repeat(236);
+    const copies = Array.from({ length: count }, (_, index) => `{"i":"${index}","p":"${fill}"}`);
+    const text = (pad: string) => `{"keys":[${copies.join(",")}],"pad":"${pad}"}`;
+    const exact = "y".repeat(1091);
+    expect(text(exact).length).toBe(RECIPE_MAX_OCTETS);
+    const vector = (pad: string): JsonObject => ({
+      name: "repeated to the bound",
+      recipe: {
+        document: { keys: [], pad },
+        repeat: { member: "keys", count, element: { p: fill }, indexMember: "i", indexPrefix: "" },
+      },
+      sha256: sha256Hex(text(pad)),
+    });
+    const atBound = await loadRecipe(vector(exact));
+    expect(atBound.failures).toEqual([]);
+    expect(decoded(atBound.vectors, "invalid", 0)).toBe(text(exact));
+    // One octet over: the recorded digest is that of the over-bound octets, so only the measure,
+    // taken before any copy is built, can refuse it.
+    expect(await loadRecipe(vector(`${exact}y`))).toEqual({
+      vectors: null,
+      failures: ['vectors.json: vector "repeated to the bound": generated octets above 1048576'],
+    });
+  });
+
+  test("a list element with a recipe but no string name is a named failure", async () => {
+    const digest = sha256Hex('{"a":1}');
+    for (const [label, element] of [
+      ["no name", { recipe: { document: { a: 1 } }, sha256: digest }],
+      ["numeric name", { name: 7, recipe: { document: { a: 1 } }, sha256: digest }],
+    ] as const) {
+      for (const options of [ADMIT_RECIPES, { admitRecipes: false }]) {
+        const directory = await directoryWith({
+          "vectors.json": { schemaVersion: SCHEMA_VERSION, invalid: [oneVector("a"), element] },
+        });
+        expect(
+          await loadSignalementV1Vectors(directory, "vectors.json", options),
+          `${label} ${options.admitRecipes}`,
+        ).toEqual({
+          vectors: null,
+          failures: ["vectors.json: a list element carries a recipe without a string name"],
+        });
+      }
+    }
   });
 
   test("a document is written in JCS, then padded with spaces to the stated octet length", async () => {
@@ -451,6 +562,13 @@ describe("recipes", () => {
         { recipe: { document: { keys: [] }, repeat: repeat({ count: -1 }) }, sha256: digest },
       ],
       [
+        "repeat element not canonicalizable",
+        {
+          recipe: { document: { keys: [] }, repeat: repeat({ element: { v: 1.5 } }) },
+          sha256: digest,
+        },
+      ],
+      [
         "repeat element not an object",
         { recipe: { document: { keys: [] }, repeat: repeat({ element: [] }) }, sha256: digest },
       ],
@@ -500,4 +618,11 @@ describe("recipes", () => {
       'vectors.json: vector "at the bounds": regenerated octets do not match the recorded SHA-256',
     ]);
   });
+});
+
+// Last test of the file: the directories of every earlier test are gone.
+test("every temporary directory of the earlier tests has been removed", () => {
+  expect(everCreated.length).toBeGreaterThan(0);
+  expect(removed).toEqual(everCreated);
+  for (const directory of removed) expect(existsSync(directory), directory).toBeFalse();
 });

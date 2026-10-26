@@ -15,11 +15,15 @@
     },
     {
       "path": "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.json",
-      "sha256": "6d4ba44301680b6ff5fca7a6b0daf4d14c0446610c3d1fc25fd8f6c772d15f10"
+      "sha256": "c217441aa80921a316ff908f2bed46495bbd1a3ff3b04893e218fded08d49650"
     },
     {
       "path": "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-2.json",
-      "sha256": "8ce153c13d3381f24f34fe357864b99b7002838b1b6ffef0f854e828ff31d415"
+      "sha256": "1fc5a8909286c4de4b4536d5a75a27418dd18508d299756a72ea7809465745de"
+    },
+    {
+      "path": "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-3.json",
+      "sha256": "f0efb6ba3bec94321cd5c88f478a521efcd479e02497313daa65bd6060c2dd11"
     }
   ],
   "testMaterialWarning": "Synthetic policies, origins, digests and test keys derived from public labels. Never use outside tests.",

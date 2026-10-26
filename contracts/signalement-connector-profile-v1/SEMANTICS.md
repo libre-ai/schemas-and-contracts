@@ -88,6 +88,12 @@ value.
   because Atlassian documents no strongly consistent read after write.
 - `limits` set to `null` means unknown; the limit is fixed at qualification and a consumer
   MUST NOT assume a value.
+- The integers of `limits` are the profile's only numbers. A limit is any JSON number whose
+  value is an integer in range: `1048576`, `1048576.0` and `1.048576e6` are the same profile
+  value. The lexical form of a number is not normative, and a profile is not required to be in
+  RFC 8785 (JCS) form; a consumer MUST compare parsed values, never the text. This contract
+  defines no digest of a profile; a digest that a consumer computes MUST be the SHA-256 of the
+  JCS form of the parsed document, where `1048576.0` is written `1048576`.
 - `conflictPolicy` states who wins when the dossier and the tracker disagree on one part of
   an item. It names an owner per part and carries no conflict-resolution algorithm.
 

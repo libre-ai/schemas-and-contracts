@@ -19,20 +19,27 @@ creation itself is still to be given before merge.
 
 `signalement` v1.0 projects a Dossier to external ticket systems (GitHub Issues,
 GitLab Issues, Jira Cloud, self-hosted Plane), routed by an organization policy. The
-control plane, the extension and the CLI exchange five documents that this authority
-does not carry:
+control plane, the extension and the CLI exchange four documents that this authority
+does not carry, and evaluate and sign them through one component interface:
 
 - the routing and disclosure policy of an organization (D6, D10, D12);
 - the delivery envelope the extension hands to the control plane, carrying the
   observed origin of the capture (D8, D10);
-- the signed projection receipt (D7);
+- the signed projection receipt (D7), with its signing key set;
 - the connector profile that makes a target system's behavior a published, testable
   document (D3);
-- the signed policy receipt that binds an evaluation to the exact policy version.
+- the WIT world of the L2 component, `libre-ai:signalement-policy-receipt@1.0.0`
+  (`signalement-policy-receipt-v1`): a pure interface of four functions over JSON
+  octets, `evaluate` (the routing policy), `canonicalize` (RFC 8785), `sign-receipt`
+  and `verify-receipt` (the projection receipt), whose outputs every implementation
+  reproduces octet for octet (`signalement` roadmap registry, section 4.1). It is not
+  a document and defines no receipt of its own: the receipt it signs and verifies is
+  the projection receipt.
 
-Policy and receipt name internal systems of a tenant; the envelope carries the observed
-origin of a person; the profile is published. The classification and the required
-reviews below follow from that.
+Policy and receipt name internal systems of a tenant, and so do the world's golden
+vectors, which carry policies and receipts; the envelope carries the observed origin of
+a person; the profile is published. The classification and the required reviews below
+follow from that.
 
 ## Alternatives
 
@@ -62,11 +69,17 @@ Add five contracts as `candidate` entries, appended after the registered additio
 | `signalement-connector-profile-v1` | public | architecture, security |
 | `signalement-policy-receipt-v1` | tenant-private | architecture, security, cryptography |
 
-Semantics: `contracts/<name>/SEMANTICS.md`. Vectors and schema fixtures:
-`contracts/fixtures/<name>/`. The schema-fixture inventory of the family is
-`tools/quality/signalement-v1-fixture-inventory.ts`; it grows by one directory with
-each admitted contract, and a missing or malformed fixture document is a named
-failure of the contracts gate, never an exception.
+Semantics: `contracts/<name>/SEMANTICS.md` for the four JSON Schema contracts, and
+`contracts/wit/signalement-policy-receipt-v1/SEMANTICS.md` beside its `world.wit` for
+the world. Vectors: `contracts/fixtures/<name>/`; the four JSON Schema contracts also
+carry a schema fixture there, the world carries golden vectors and no schema fixture.
+The schema-fixture inventory of the family is
+`tools/quality/signalement-v1-fixture-inventory.ts`: it lists the directory of each
+admitted JSON Schema contract, and a missing or malformed fixture document is a named
+failure of the contracts gate, never an exception. The same file holds every fixture
+file of those directories, of the world's golden vectors and of the locked local
+export, and the catalog itself, to the 65,536-code-point budget of signalement's
+public-boundary scanner, since signalement vendors them.
 
 Digests: the envelope `exportSha256` and the receipt `exportDigest` are SHA-256 of the
 exact bytes of the ZIP (DL6), verifiable without parsing it.

@@ -196,6 +196,21 @@ describe("routingPolicyDigest", () => {
     );
   });
 
+  test("a port is compared by value: 8080.0 and 8.08e3 are the policy of 8080, with its digest", () => {
+    // SEMANTICS "Evaluation" step 6: the lexical form of a number is not normative.
+    const withPort = vectors.valid.find((vector) =>
+      vector.document.routingRules.some((rule) => "port" in rule.match && rule.match.port === 8080),
+    )?.document;
+    if (withPort === undefined) throw new Error("no valid policy with port 8080");
+    const text = canonicalJson(withPort);
+    expect(text.split('"port":8080').length).toBe(2);
+    for (const written of ["8080.0", "8.08e3"]) {
+      const variant = text.replace('"port":8080', `"port":${written}`);
+      expect(rawRoutingPolicyFailures(encoder.encode(variant)), written).toEqual([]);
+      expect(routingPolicyDigest(JSON.parse(variant)), written).toBe(routingPolicyDigest(withPort));
+    }
+  });
+
   test("any change of a member changes the digest; whitespace of the source does not", () => {
     const before = routingPolicyDigest(valid);
     expect(routingPolicyDigest(policy((draft) => Object.assign(draft, { version: "2" })))).not.toBe(

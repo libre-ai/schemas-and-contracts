@@ -99,6 +99,18 @@ describe("vector files", () => {
 });
 
 describe("rawConnectorProfileFailures", () => {
+  test("a limit is compared by value: 65536.0 and 6.5536e4 are the profile of 65536", () => {
+    // SEMANTICS "Members": the lexical form of a number is not normative.
+    const limited = vectorFile.valid.find((vector) => vector.name === "limits set");
+    if (limited === undefined) throw new Error("no valid vector named limits set");
+    const text = JSON.stringify(limited.document);
+    expect(text.split('"maxBodyBytes":65536,').length).toBe(2);
+    for (const written of ["65536.0", "6.5536e4"]) {
+      const variant = text.replace('"maxBodyBytes":65536,', `"maxBodyBytes":${written},`);
+      expect(rawConnectorProfileFailures(encoder.encode(variant)), written).toEqual([]);
+    }
+  });
+
   for (const vector of vectorFile.valid as Vector[]) {
     test(`accepts ${vector.name}`, () =>
       expect(rawConnectorProfileFailures(bytesOf(vector))).toEqual([]));

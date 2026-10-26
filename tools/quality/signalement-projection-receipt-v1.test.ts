@@ -613,14 +613,18 @@ const REQUIRED_SIGNATURE_VECTORS = [
   "key-outside-validity",
   "key-identity",
   ...[1, 2, 3, 4, 5, 6, 7].map((index) => `key-mixed-order-${index}`),
+  "key-non-canonical-identity",
   "r-identity",
   ...[1, 2, 3, 4, 5, 6, 7].map((index) => `r-torsion-${index}`),
+  ...[1, 2, 3, 4, 5, 6, 7].map((index) => `r-mixed-order-${index}`),
+  "r-non-canonical-identity",
   "s-non-canonical",
   "body-byte-modified",
   "transmitted-digest-modified",
   "rendered-digest-modified",
   "revision-modified",
   "signed-over-non-jcs",
+  "wrong-domain",
   "document-whitespace",
   "document-key-order",
   "document-duplicate-member",
@@ -630,7 +634,11 @@ const REQUIRED_SIGNATURE_VECTORS = [
   "keyset-other-organization",
 ];
 
-const POINT_FORGERY = /^(key-identity|key-mixed-order-|r-identity|r-torsion-)/;
+const POINT_FORGERY =
+  /^(key-identity|key-mixed-order-|key-non-canonical-|r-identity|r-torsion-|r-mixed-order-|r-non-canonical-)/;
+
+/** The build brief v2 acceptance statement domain: same construction, another family. */
+const OTHER_FAMILY_DOMAIN = "libre-ai.build-brief-acceptance-statement.v2";
 
 describe("verifyProjectionReceiptSignature against the signature corpus", () => {
   test("the corpus declares its version, its warning and the signing domain", () => {
@@ -656,12 +664,12 @@ describe("verifyProjectionReceiptSignature against the signature corpus", () => 
     const ids = corpus.vectors.map((vector) => vector.id);
     expect(new Set(ids).size).toBe(ids.length);
     expect([...ids].sort()).toEqual([...REQUIRED_SIGNATURE_VECTORS].sort());
-    expect(ids.length).toBe(33);
+    expect(ids.length).toBe(43);
   });
 
   test("every point forgery is accepted by a permissive verifier, so it discriminates", () => {
     const forgeries = byPrefix(POINT_FORGERY);
-    expect(forgeries.length).toBe(16);
+    expect(forgeries.length).toBe(25);
     for (const vector of forgeries)
       expect(
         ed25519.verify(sigOf(vector), messageOf(vector), keyOf(vector), { zip215: true }),
@@ -672,18 +680,70 @@ describe("verifyProjectionReceiptSignature against the signature corpus", () => 
     expect(ed25519.Point.Fn.ORDER).toBe(GROUP_ORDER);
   });
 
-  test("noble's strict mode alone accepts the mixed-order key and torsion R forgeries", () => {
-    // Measured on @noble/curves: zip215 false rejects only a small-order A and checks the
-    // cofactored equation, so only the admissibility steps refuse these 15 forgeries.
-    for (const vector of byPrefix(/^(key-mixed-order-|r-identity|r-torsion-)/))
+  test("noble's strict mode alone accepts the mixed-order key, torsion R and mixed-order R forgeries", () => {
+    // Measured on @noble/curves: zip215 false rejects only a small-order A and an encoding with
+    // y >= p, and checks the cofactored equation, so only the admissibility steps refuse these
+    // 22 forgeries.
+    const strictlyAccepted = byPrefix(/^(key-mixed-order-|r-identity|r-torsion-|r-mixed-order-)/);
+    expect(strictlyAccepted.length).toBe(22);
+    for (const vector of strictlyAccepted)
       expect(
         ed25519.verify(sigOf(vector), messageOf(vector), keyOf(vector), { zip215: false }),
         vector.id,
       ).toBeTrue();
-    const identity = byId("key-identity");
+    for (const id of ["key-identity", "key-non-canonical-identity", "r-non-canonical-identity"]) {
+      const vector = byId(id);
+      expect(
+        ed25519.verify(sigOf(vector), messageOf(vector), keyOf(vector), { zip215: false }),
+        id,
+      ).toBeFalse();
+    }
+  });
+
+  test("a mixed-order R is neither small-order nor in the prime-order subgroup", () => {
+    // The half of step 6 that a small-order check alone misses: R' = rB + T_i.
+    const mixed = byPrefix(/^r-mixed-order-/);
+    expect(mixed.length).toBe(7);
+    for (const vector of mixed) {
+      const r = ed25519.Point.fromBytes(sigOf(vector).subarray(0, 32), false);
+      expect({ id: vector.id, small: r.isSmallOrder(), torsionFree: r.isTorsionFree() }).toEqual({
+        id: vector.id,
+        small: false,
+        torsionFree: false,
+      });
+    }
+  });
+
+  test("the non-canonical encodings write y >= p, and decode to the identity only permissively", () => {
+    const fieldPrime = 2n ** 255n - 19n;
+    const encodings: [string, Uint8Array][] = [
+      ["key-non-canonical-identity", keyOf(byId("key-non-canonical-identity"))],
+      ["r-non-canonical-identity", sigOf(byId("r-non-canonical-identity")).subarray(0, 32)],
+    ];
+    for (const [id, bytes] of encodings) {
+      // y is the 255 low bits, little-endian; the sign bit of x is clear.
+      expect(littleEndian(bytes), id).toBe(fieldPrime + 1n);
+      expect(() => ed25519.Point.fromBytes(bytes, false), id).toThrow();
+      expect(ed25519.Point.fromBytes(bytes, true).is0(), id).toBeTrue();
+    }
+  });
+
+  test("wrong-domain is a valid signature over the same digest under another family's domain", () => {
+    const vector = byId("wrong-domain");
+    const { signature: _, ...unsigned } = documentOf(vector);
+    const digest = createHash("sha256").update(jcs(unsigned)).digest();
+    const otherMessage = new Uint8Array(
+      Buffer.concat([Buffer.from(OTHER_FAMILY_DOMAIN), Buffer.of(0), digest]),
+    );
+    // A verifier that ignored or confused the domain would accept it.
     expect(
-      ed25519.verify(sigOf(identity), messageOf(identity), keyOf(identity), { zip215: false }),
-    ).toBeFalse();
+      ed25519.verify(sigOf(vector), otherMessage, keyOf(vector), { zip215: false }),
+    ).toBeTrue();
+    expect(ed25519.verify(sigOf(vector), messageOf(vector), keyOf(vector))).toBeFalse();
+    // Same receipt and key as valid-active: only the domain differs.
+    const { signature: _active, ...activeUnsigned } = documentOf(byId("valid-active"));
+    expect(unsigned).toEqual(activeUnsigned);
+    expect(vector.keySet).toEqual(byId("valid-active").keySet);
   });
 
   test("the generator reproduces the committed corpus byte for byte, every file", async () => {

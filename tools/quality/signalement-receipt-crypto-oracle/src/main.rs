@@ -140,7 +140,10 @@ fn signing_message(unsigned: &Value) -> Result<Vec<u8>, &'static str> {
 /// serializes to fewer octets, so it fails the canonical comparison like any non-JCS text.
 /// A number outside `integers_only` is `unreadable` too, as SEMANTICS "Canonical form"
 /// prescribes: a float is `receipt.non_canonical` or `receipt.schema`, an integer above
-/// 2^53 - 1 is `receipt.schema`. Only non-ASCII text, which no rule decides here, stops the run.
+/// 2^53 - 1 is `receipt.schema`. The `jcs-premise` stop is checked last: it is reached only by
+/// a receipt that parses, serializes back to its exact octets and holds safe integers only, and
+/// then only when those octets are not ASCII. Non-ASCII text that fails the round trip or holds
+/// another number is `unreadable` before the premise is checked, as any non-JCS text is.
 fn read_receipt(signed: &[u8]) -> Result<Option<Receipt>, &'static str> {
     let Ok(value) = serde_json::from_slice::<Value>(signed) else {
         return Ok(None);
@@ -431,7 +434,9 @@ fn run_path(entry_path: &Path) -> Result<Summary, &'static str> {
     for listed in fs::read_dir(directory).map_err(|_| "directory")? {
         let listed = listed.map_err(|_| "directory")?.file_name();
         let name = listed.to_string_lossy();
+        // An orphan is an undeclared `<stem>*.json` file (SEMANTICS "Vector files").
         if name.starts_with(STEM)
+            && name.ends_with(".json")
             && name != ENTRY_NAME
             && !declared.iter().any(|part| *part == name)
         {
@@ -498,6 +503,19 @@ mod tests {
         parse_file(&fs::read(corpus_file(name)).expect("corpus file")).expect("corpus parses")
     }
 
+    /// The names the committed entry declares, in declaration order.
+    fn declared_names() -> Vec<String> {
+        declared_parts(&corpus_members(ENTRY_NAME)).expect("committed parts declaration")
+    }
+
+    /// Every part the committed entry declares, parsed, in declaration order.
+    fn corpus_parts() -> Vec<Map<String, Value>> {
+        declared_names()
+            .iter()
+            .map(|name| corpus_members(name))
+            .collect()
+    }
+
     /// A fresh directory under the system temporary directory, removed when dropped.
     struct Scratch(PathBuf);
 
@@ -514,6 +532,14 @@ mod tests {
 
         fn copy(&self, name: &str, as_name: &str) {
             fs::copy(corpus_file(name), self.0.join(as_name)).expect("copy corpus file");
+        }
+
+        /// The entry and every part it declares, under their own names.
+        fn copy_corpus(&self) {
+            self.copy(ENTRY_NAME, ENTRY_NAME);
+            for name in declared_names() {
+                self.copy(&name, &name);
+            }
         }
     }
 
@@ -549,85 +575,165 @@ mod tests {
     #[test]
     fn refuses_an_orphan_part() {
         let scratch = Scratch::new("orphan-part");
-        scratch.copy(ENTRY_NAME, ENTRY_NAME);
-        scratch.copy(
-            "signature-vectors.v1.part-2.json",
-            "signature-vectors.v1.part-2.json",
-        );
-        scratch.copy(
-            "signature-vectors.v1.part-2.json",
-            "signature-vectors.v1.part-3.json",
-        );
+        scratch.copy_corpus();
+        scratch.copy(ENTRY_NAME, "signature-vectors.v1.part-99.json");
         assert_eq!(run_path(&scratch.0.join(ENTRY_NAME)), Err("orphan-part"));
+    }
+
+    #[test]
+    fn a_file_of_the_stem_that_is_not_json_is_not_an_orphan() {
+        // SEMANTICS "Vector files": an orphan is an undeclared `<stem>*.json` file; a file of the
+        // same stem with another suffix belongs to no vector set.
+        let scratch = Scratch::new("stem-not-json");
+        scratch.copy_corpus();
+        fs::write(scratch.0.join("signature-vectors.v1.notes.txt"), "notes\n").expect("write");
+        fs::write(scratch.0.join("signature-vectors.v1.json.bak"), "{}\n").expect("write");
+        assert!(run_path(&scratch.0.join(ENTRY_NAME)).is_ok());
     }
 
     #[test]
     fn verifies_the_committed_corpus_across_its_parts() {
         let summary = run_path(&corpus_file(ENTRY_NAME)).expect("corpus verifies");
         let entry = corpus_members(ENTRY_NAME);
-        let part = corpus_members("signature-vectors.v1.part-2.json");
+        let parts = corpus_parts();
         let count =
             |file: &Map<String, Value>, name: &str| file[name].as_array().map_or(0, Vec::len);
+        assert!(!parts.is_empty(), "the entry declares parts");
         assert_eq!(
             summary.vectors,
-            count(&entry, "vectors") + count(&part, "vectors")
+            count(&entry, "vectors")
+                + parts
+                    .iter()
+                    .map(|part| count(part, "vectors"))
+                    .sum::<usize>()
         );
         assert_eq!(summary.sign_cases, count(&entry, "signCases"));
-        assert!(count(&part, "vectors") > 0, "the part contributes vectors");
+        for part in &parts {
+            assert!(count(part, "vectors") > 0, "every part contributes vectors");
+        }
     }
 
     #[test]
     fn refuses_a_part_that_carries_more_than_its_vectors() {
         let entry = corpus_members(ENTRY_NAME);
-        let mut part = corpus_members("signature-vectors.v1.part-2.json");
-        part.insert("signCases".to_owned(), entry["signCases"].clone());
-        assert_eq!(verify_corpus(&entry, &[part]), Err("part-members"));
+        let mut parts = corpus_parts();
+        parts[0].insert("signCases".to_owned(), entry["signCases"].clone());
+        assert_eq!(verify_corpus(&entry, &parts), Err("part-members"));
     }
 
     #[test]
     fn refuses_a_forgery_expected_valid_and_a_valid_receipt_expected_invalid() {
         let entry = corpus_members(ENTRY_NAME);
-        let part = corpus_members("signature-vectors.v1.part-2.json");
-        assert!(verify_corpus(&entry, std::slice::from_ref(&part)).is_ok());
+        let parts = corpus_parts();
+        assert!(verify_corpus(&entry, &parts).is_ok());
         for (id, class) in [
             ("key-mixed-order-1", "valid"),
+            ("key-non-canonical-identity", "valid"),
             ("r-torsion-1", "valid"),
+            ("r-mixed-order-1", "valid"),
+            ("r-non-canonical-identity", "valid"),
+            ("wrong-domain", "valid"),
             ("valid-active", "invalid"),
         ] {
-            let mut entry = entry.clone();
-            let mut part = part.clone();
-            let target = if entry["vectors"]
-                .as_array()
-                .is_some_and(|vectors| vectors.iter().any(|vector| vector["id"] == id))
-            {
-                vector_mut(&mut entry, id)
-            } else {
-                vector_mut(&mut part, id)
-            };
-            target["expected"]["signature"] = Value::from(class);
+            let mut files: Vec<Map<String, Value>> =
+                std::iter::once(entry.clone()).chain(parts.clone()).collect();
+            let holder = files
+                .iter_mut()
+                .find(|file| {
+                    file["vectors"]
+                        .as_array()
+                        .is_some_and(|vectors| vectors.iter().any(|vector| vector["id"] == id))
+                })
+                .expect("vector in the corpus");
+            vector_mut(holder, id)["expected"]["signature"] = Value::from(class);
             assert_eq!(
-                verify_corpus(&entry, &[part]),
+                verify_corpus(&files[0], &files[1..]),
                 Err("signature-verdict"),
                 "{id}"
             );
         }
     }
 
+    /// dalek `verify_strict` alone over a readable vector: the oracle's own point checks skipped.
+    fn bare_verify_strict(vector: &Value) -> &'static str {
+        let receipt = read_receipt(&field(vector, "signed").expect("signed"))
+            .expect("premise")
+            .expect("readable receipt");
+        let key_set = read_key_set(&vector["keySet"]).expect("readable key set");
+        let key = key_set
+            .keys
+            .iter()
+            .find(|key| key.key_id == receipt.key_id)
+            .expect("key present");
+        let Ok(verifying_key) = VerifyingKey::from_bytes(&key.public_key) else {
+            return "refused by VerifyingKey::from_bytes";
+        };
+        let message = signing_message(&receipt.unsigned).expect("message");
+        let signature = Signature::from_bytes(&receipt.signature);
+        if verifying_key.verify_strict(&message, &signature).is_ok() {
+            "accepted"
+        } else {
+            "refused"
+        }
+    }
+
+    #[test]
+    fn classifies_the_mixed_order_r_non_canonical_and_wrong_domain_vectors_invalid() {
+        let files: Vec<Map<String, Value>> = std::iter::once(corpus_members(ENTRY_NAME))
+            .chain(corpus_parts())
+            .collect();
+        let vectors: Vec<&Value> = files
+            .iter()
+            .flat_map(|file| file["vectors"].as_array().expect("vectors").iter())
+            .collect();
+        let point_forgeries: Vec<String> = (1..=7)
+            .map(|index| format!("r-mixed-order-{index}"))
+            .chain(["r-non-canonical-identity".to_owned()])
+            .collect();
+        for id in point_forgeries
+            .iter()
+            .map(String::as_str)
+            .chain(["key-non-canonical-identity", "wrong-domain"])
+        {
+            let vector = vectors
+                .iter()
+                .find(|vector| vector["id"] == id)
+                .expect("vector present");
+            let receipt = read_receipt(&field(vector, "signed").expect("signed"))
+                .expect("premise")
+                .expect("readable receipt");
+            let key_set = read_key_set(&vector["keySet"]).expect("readable key set");
+            let public_key = key_set.keys[0].public_key;
+            let admissible_a = admissible(&public_key);
+            let admissible_r = admissible(&receipt.signature[..32]);
+            let class = classify(vector);
+            let strict = bare_verify_strict(vector);
+            eprintln!(
+                "{id}: oracle class {class:?}; admissible A {admissible_a}, admissible R {admissible_r}; verify_strict alone {strict}"
+            );
+            assert_eq!(class, Ok("invalid"), "{id}");
+            assert_eq!(expected_class(vector), Ok("invalid"), "{id}");
+            match id {
+                "key-non-canonical-identity" => assert!(!admissible_a, "{id}"),
+                "wrong-domain" => assert!(admissible_a && admissible_r, "{id}"),
+                _ => assert!(admissible_a && !admissible_r, "{id}"),
+            }
+        }
+    }
+
     #[test]
     fn refuses_a_sign_case_whose_signed_octets_differ() {
         let mut entry = corpus_members(ENTRY_NAME);
-        let part = corpus_members("signature-vectors.v1.part-2.json");
         let case = &mut entry["signCases"][0];
         case["unsigned"]["revision"] = Value::from(2);
-        assert_eq!(verify_corpus(&entry, &[part]), Err("sign-case"));
+        assert_eq!(verify_corpus(&entry, &corpus_parts()), Err("sign-case"));
     }
 
     #[test]
     fn refuses_a_domain_other_than_the_signing_domain() {
         let mut entry = corpus_members(ENTRY_NAME);
-        let part = corpus_members("signature-vectors.v1.part-2.json");
         entry.insert("domain".to_owned(), Value::from("libre-ai.other.v1"));
-        assert_eq!(verify_corpus(&entry, &[part]), Err("domain"));
+        assert_eq!(verify_corpus(&entry, &corpus_parts()), Err("domain"));
     }
 
     #[test]

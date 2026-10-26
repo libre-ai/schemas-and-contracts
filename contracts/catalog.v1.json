@@ -1547,7 +1547,8 @@
         "contracts/fixtures/signalement-policy-receipt-v1/golden-vectors.v1.part-2.json",
         "contracts/fixtures/signalement-policy-receipt-v1/golden-vectors.v1.part-3.json",
         "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.json",
-        "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-2.json"
+        "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-2.json",
+        "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-3.json"
       ]
     }
   ]

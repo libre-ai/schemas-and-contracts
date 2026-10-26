@@ -35,7 +35,7 @@ All five members are required; the document is closed (no other member).
 | `deliveryId` | string | UUID **version 4**, lowercase, as produced by `crypto.randomUUID()`: `^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$` |
 | `exportSha256` | string | SHA-256 of the **exact ZIP bytes**, 64 lowercase hexadecimal characters |
 | `exportByteLength` | integer | length in octets of those ZIP bytes, from 1 to 269500416 inclusive |
-| `observedOrigin` | string or `null` | an origin as serialized by `new URL(x).origin`, or `null` when the sender observed none |
+| `observedOrigin` | string or `null` | a canonical origin (below), or `null` when the sender observed none |
 
 - `exportByteLength` is any JSON number whose value is an integer in range: `2048`, `2048.0`
   and `2.048e3` are the same envelope value. The lexical form of a number is not normative,
@@ -54,10 +54,15 @@ All five members are required; the document is closed (no other member).
   or fragment. The string `"null"`, an empty string, and any other scheme are refused. The
   schema pattern is
   `^https?://(?:[a-z0-9-]+(?:\.[a-z0-9-]+)*|\[[0-9a-f:.]+\])(?::[1-9][0-9]{0,4})?$` with at most
-  267 characters. The pattern alone admits values that the URL serializer rewrites
+  267 characters. The pattern alone admits values that are not canonical
   (`https://app.example.com:443`, a port above 65535); the verifier therefore also requires
-  `new URL(observedOrigin).origin === observedOrigin`, and a value for which `new URL` throws
-  fails the same check.
+  `observedOrigin` to be its own canonical origin.
+- The **canonical origin** of a string is defined by the WHATWG URL Standard: the
+  serialization of the origin of the URL record that the URL parser of that standard returns
+  for the string (the value of the `origin` getter of the `URL` interface). A string the parser
+  refuses has no canonical origin and fails the check. The reference implementation computes it
+  as `new URL(observedOrigin).origin` and compares it with `observedOrigin`; an implementation in
+  another language MUST give the same result for every string.
 
 ## Bounds
 
@@ -84,7 +89,7 @@ in this order, and `[]` for an accepted one. Codes contain no data from the enve
 3. `envelope.schema` — the document does not satisfy the schema (missing, unknown or
    malformed member, bound exceeded, root that is not an object).
 4. `envelope.origin_non_canonical` — the schema is satisfied, `observedOrigin` is not `null`,
-   and it is not identical to the origin the URL serializer produces for itself.
+   and it is not identical to its own canonical origin (WHATWG URL Standard, above).
 
 A receiver MUST refuse the delivery on any code. It MUST NOT repair an envelope (lowercase a
 host, drop a default port) and then accept it.

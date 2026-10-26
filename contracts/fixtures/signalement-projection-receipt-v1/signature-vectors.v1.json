@@ -2,7 +2,7 @@
   "schemaVersion": "libre-ai.signalement-projection-receipt-signature-vectors.v1",
   "testMaterialWarning": "Synthetic keys derived from public labels. Never use outside tests.",
   "domain": "libre-ai.signalement-projection-receipt.v1",
-  "parts": ["signature-vectors.v1.part-2.json"],
+  "parts": ["signature-vectors.v1.part-2.json", "signature-vectors.v1.part-3.json"],
   "vectors": [
     {
       "id": "valid-active",
@@ -389,6 +389,38 @@
       }
     },
     {
+      "id": "key-non-canonical-identity",
+      "description": "Public key A is the identity written with y = p + 1 (not canonical), R the identity, S = 0.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "7v_______________________________________38",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
       "id": "r-identity",
       "description": "R is the identity point, S = k a.",
       "keySet": {
@@ -509,38 +541,6 @@
         ]
       },
       "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiSnVpVmo4S3lKN0JGd19TSjh1LVk4TlhmckFYVHhqTTVzVGdDaUcxVF9BWHFWTTUwbV9GZkMzMGNCUWJ5SGgwMlV3QU91Wm1YMGI5UXc0X2lNYU9CRGcifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
-      "expected": {
-        "signature": "invalid",
-        "keyId": "test-key-1",
-        "keyStatus": "active",
-        "reason": "signature.r_not_admissible"
-      }
-    },
-    {
-      "id": "r-torsion-4",
-      "description": "R is torsion-4 (small order), S = k a.",
-      "keySet": {
-        "organization": "example-org",
-        "keys": [
-          {
-            "keyId": "test-key-1",
-            "algorithm": "ed25519",
-            "publicKey": "C7Zrttb76iDrhfHPDgZByL3D3dzke4TjR4Zv6yx-5Mg",
-            "status": "active",
-            "notBefore": "2026-09-01T00:00:00Z",
-            "notAfter": null
-          },
-          {
-            "keyId": "test-key-2",
-            "algorithm": "ed25519",
-            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
-            "status": "retired",
-            "notBefore": "2026-01-01T00:00:00Z",
-            "notAfter": "2026-09-01T00:00:00Z"
-          }
-        ]
-      },
-      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiN1BfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18zXzh0dUhtSEVoYWVxdFktako1QmlsSExtMXUyZl8tWlFnLXZDOF9wZWY1Q3cifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
       "expected": {
         "signature": "invalid",
         "keyId": "test-key-1",

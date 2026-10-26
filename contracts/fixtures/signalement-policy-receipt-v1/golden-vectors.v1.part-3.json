@@ -484,6 +484,16 @@
       "rationale": "World SEMANTICS, sign-receipt step 1: a seed of 31 octets is not an Ed25519 seed of 32 octets."
     },
     {
+      "id": "sign-fractional-revision",
+      "operation": "sign-receipt",
+      "args": {
+        "unsignedBytes": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEuNSwic2NoZW1hVmVyc2lvbiI6ImxpYnJlLWFpLnNpZ25hbGVtZW50LXByb2plY3Rpb24tcmVjZWlwdC52MSIsInRyYW5zbWl0dGVkIjpbeyJwYXRoIjoiUkVBRE1FLm1kIiwic2hhMjU2IjoiYjMzNTYzMDU1MTY4MmMxOWE3ODFhZmViY2Y0ZDA3YmY5NzhmYjFmOGFjMDRjNmJmODc0MjhlZDUxMDY4NzBmNSIsInZpYSI6ImJvZHkifSx7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTEucG5nIiwic2hhMjU2IjoiYTQ1OGQyYTBjYjFlOTE5OTJkMDIwODEyYzAwYTgxMDY2MGU5MWJjYjYzYjc1YjQ3NTZkZjNkNjZkZjI0ZjA2ZSIsInZpYSI6ImF0dGFjaG1lbnQifSx7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwic2hhMjU2IjoiMGMwMTIzZWM0YmJjMGJkY2JlZDQ0NThjMGU2MTM3Mzg3OTAxOWRiMTAzZGJhNWJlNTk1NDFiZWM5NmM5Mjk1MiIsInZpYSI6ImxpbmsifV0sIndpdGhoZWxkIjpbeyJwYXRoIjoibWVkaWEvc2NyZWVuc2hvdC0yLnBuZyIsInJlYXNvbiI6InB1YmxpYy1kZXN0aW5hdGlvbiJ9XX0",
+        "secretKey": "I7SmBwUfx4RZSUlDzYTHbVwOpVhK_tZGWyQUJDhyGmE"
+      },
+      "expected": { "error": { "code": "receipt.invalid" } },
+      "rationale": "World SEMANTICS, sign-receipt step 3: the unsigned receipt of sign-valid-active in JCS form with revision written 1.5, a number that is not a safe integer, is refused before any canonicalization or signing (never internal.error)."
+    },
+    {
       "id": "verify-valid",
       "operation": "verify-receipt",
       "args": {

@@ -117,12 +117,14 @@ union below decides.
   stands for an origin without an explicit port;
 - `{ "absent": true }` — the sender observed no origin.
 
-The observed origin is in the canonical form of the URL serializer (delivery envelope
-semantics): lowercase, no default port, IPv4 in dotted decimal, IPv6 compressed. A rule that
-could never match such an origin is dead, and under the union a dead rule silently drops its
-`denied` list and its restrictive `override`: it is a fail-open. Therefore a rule `origin`
-MUST be canonical, `new URL(origin).origin === origin` (a value for which `new URL` throws is
-not canonical); refused. A host-pattern rule MUST NOT carry the default port of its own
+The observed origin is a canonical origin (delivery envelope semantics: the serialization of
+the origin of the URL record that the URL parser of the WHATWG URL Standard returns): lowercase,
+no default port, IPv4 in dotted decimal, IPv6 compressed. A rule that could never match such an
+origin is dead, and under the union a dead rule silently drops its `denied` list and its
+restrictive `override`: it is a fail-open. Therefore a rule `origin` MUST be its own canonical
+origin (a string the WHATWG URL parser refuses has none); refused. The reference
+implementation compares `new URL(origin).origin` with `origin`; an implementation in another
+language MUST give the same result. A host-pattern rule MUST NOT carry the default port of its own
 `scheme` (443 for `https`, 80 for `http`; the other scheme's default is an ordinary port);
 refused. Examples refused: `https://app.example.com:443`, `http://example.com:80`,
 `https://example.com:99999`, `http://127.1`, `http://0x7f.0.0.1`, `http://[0:0:0:0:0:0:0:1]`,
@@ -235,6 +237,13 @@ WithholdReason = "default-withhold" | "public-destination" | "residency"
    the SHA-256, lowercase hexadecimal, of the RFC 8785 (JCS) form of the document. The verdict
    is serialized in JCS form.
 
+   The document's only numbers are the `port` members of host-pattern matches. A `port` is any
+   JSON number whose value is an integer in range: `8443`, `8443.0` and `8.443e3` are the same
+   policy value. The lexical form of a number is not normative, and the policy is not required
+   to be in JCS form; a consumer MUST compare parsed values, never the text. `policyDigest` is
+   computed on the JCS form of the parsed document, where `8443.0` is written `8443`, so two
+   policies that differ only in the lexical form of a number have the same digest.
+
 `evaluate` never produces `attachment-unsupported` (a profile capability) nor `user-withheld`
 (a person's selection): both are set later, when the delivery plan is built from the verdict.
 
@@ -282,8 +291,9 @@ to `^[a-z][a-z0-9-]*$`.
    `discovered` one, a host pattern on a top-level domain, an override other than `allowed`
    or `denied`, a duplicate entry inside one list, bound exceeded, root that is not an object).
 4. `policy.origin_non_canonical:<ruleId>` — routing rule `<ruleId>` can never match a canonical
-   observed origin: its `origin` differs from `new URL(origin).origin` (or `new URL` throws),
-   or its host pattern carries the default port of its own scheme.
+   observed origin: its `origin` is not its own canonical origin (WHATWG URL Standard, see
+   `match`; a string the parser refuses included), or its host pattern carries the default port
+   of its own scheme.
 5. `policy.duplicate_id:<id>` — two of the destinations, routing rules and disclosure rules
    carry `<id>` (scanned destinations first, then routing rules, then disclosure rules).
 6. `policy.unknown_destination:<ruleId>` — routing rule `<ruleId>` names an id that is not a
@@ -333,9 +343,10 @@ distinct bare file names in the same directory, each beginning with the entry na
 with the entry's `schemaVersion` and no `parts`. The vectors are the entry followed by each part
 in declaration order: every member of a part is appended to the entry at the same member path
 (an array to the array, an object member by member, an absent member added); any other meeting
-of two members is an error. A declared part that is absent or unreadable is an error. A file of
-the directory named `<stem>*.json` that the entry does not declare is an error (orphan). Any
-such error refuses the whole set of vectors. Vector order is the order so obtained.
+of two members is an error. A declared part that is absent or unreadable is an error, and so is
+an entry or a part above 1,048,576 octets, refused without being read whole. A file of the
+directory named `<stem>*.json` that the entry does not declare is an error (orphan). Any such
+error refuses the whole set of vectors. Vector order is the order so obtained.
 `vectors.json` declares `vectors.part-2.json`, `vectors.part-3.json` then `vectors.part-4.json`.
 No vector of this contract is a generation recipe: each stores its `document` or `raw` octets,
 and a vector that carries a `recipe` member is an error that refuses the whole set of vectors.

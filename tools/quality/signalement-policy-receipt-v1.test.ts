@@ -120,6 +120,7 @@ const EXPECTED_REQUIRED = [
   "sign-valid-retired",
   "sign-with-signature-member",
   "sign-short-seed",
+  "sign-fractional-revision",
   "verify-valid",
   "verify-unknown-key",
   "verify-mismatch",
@@ -168,7 +169,7 @@ describe("committed golden document", () => {
     expect(Object.fromEntries(counts)).toEqual({
       evaluate: { ok: 22, error: 5 },
       canonicalize: { ok: 7, error: 7 },
-      "sign-receipt": { ok: 2, error: 2 },
+      "sign-receipt": { ok: 2, error: 3 },
       "verify-receipt": { ok: 5, error: 1 },
     });
   });
@@ -279,6 +280,24 @@ describe("expected values against independent sources", () => {
     const short = caseById(doc, "sign-short-seed").args.secretKey as string;
     expect(fromBase64url(short).byteLength).toBe(31);
     expect(caseById(doc, "sign-with-signature-member").args.unsigned).toHaveProperty("signature");
+  });
+
+  test("sign-fractional-revision gives the unsigned receipt of valid-active with revision 1.5 as octets", async () => {
+    // A JSON argument of the golden document holds safe integers only, so 1.5 travels as octets.
+    const { signCases } = await corpus();
+    const source = signCases.find((s) => s.id === "valid-active");
+    if (source === undefined) throw new Error("no sign case valid-active");
+    const golden = caseById(await mergedGolden(), "sign-fractional-revision");
+    expect(Object.keys(golden.args).sort()).toEqual(["secretKey", "unsignedBytes"]);
+    expect(golden.args.secretKey).toBe(source.seed);
+    const canonical = canonicalJson(source.unsigned);
+    expect(canonical.split('"revision":1,').length).toBe(2);
+    const expectedText = canonical.replace('"revision":1,', '"revision":1.5,');
+    expect(new TextDecoder().decode(fromBase64url(golden.args.unsignedBytes as string))).toBe(
+      expectedText,
+    );
+    // World SEMANTICS sign-receipt step 3: a number that is not a safe integer.
+    expect(golden.expected).toEqual({ error: { code: "receipt.invalid" } });
   });
 
   test("verify-receipt cases take corpus octets and keep the corpus verdicts", async () => {
@@ -434,6 +453,31 @@ describe("failure codes", () => {
       (doc) => {
         delete caseById(doc, "canonicalize-sort-ascii").args.jsonBytes;
       },
+    ],
+    [
+      "sign-receipt with unsigned and unsignedBytes",
+      (doc) =>
+        Object.assign(caseById(doc, "sign-fractional-revision").args, {
+          unsigned: caseById(doc, "sign-short-seed").args.unsigned,
+        }),
+    ],
+    [
+      "sign-receipt with neither unsigned nor unsignedBytes",
+      (doc) => {
+        delete caseById(doc, "sign-fractional-revision").args.unsignedBytes;
+      },
+    ],
+    [
+      "sign-receipt unsignedBytes not canonical base64url",
+      (doc) =>
+        Object.assign(caseById(doc, "sign-fractional-revision").args, { unsignedBytes: "AB" }),
+    ],
+    [
+      "unsignedBytes on another operation",
+      (doc) =>
+        Object.assign(caseById(doc, "verify-valid").args, {
+          unsignedBytes: caseById(doc, "sign-fractional-revision").args.unsignedBytes,
+        }),
     ],
     [
       "non-canonical base64url",
@@ -596,7 +640,7 @@ describe("failure codes", () => {
       }),
     ).toEqual([
       "golden.contract_file:contracts/schemas/signalement-routing-policy.v1.schema.json",
-      "golden.contract_file:contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-2.json",
+      "golden.contract_file:contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-3.json",
       `golden.case_duplicate:${EXPECTED_REQUIRED[3]}`,
       "golden.case_missing:canonicalize-nested",
       "golden.case_missing:verify-mismatch",
@@ -765,6 +809,19 @@ describe("continuation files", () => {
     ).toEqual(["golden.size_limit:golden-vectors.v1.part-3.json"]);
   });
 
+  test("a file above 1 MiB and up to 8 MiB is a reading error of the continuation rule", async () => {
+    // World SEMANTICS, verifier failure codes: the rule reads each file up to 1048576 octets.
+    expect(
+      await withCopy(async (dir) => {
+        const path = join(dir, "golden-vectors.v1.part-3.json");
+        const text = await Bun.file(path).text();
+        const padded = new Uint8Array(1_048_577).fill(0x20);
+        padded.set(new TextEncoder().encode(text));
+        await writeFile(path, padded);
+      }),
+    ).toEqual(["golden.parts:golden-vectors.v1.part-3.json: above 1048576 octets, not read"]);
+  });
+
   test("a case dropped from a part is missing from the merged document", async () => {
     expect(
       await withCopy(async (dir) => {
@@ -850,6 +907,7 @@ describe("world and semantics", () => {
       "contracts/schemas/signalement-projection-receipt.v1.schema.json",
       "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.json",
       "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-2.json",
+      "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-3.json",
     ]);
     for (const file of doc.contractFiles) {
       const bytes = await Bun.file(`${import.meta.dir}/../../${file.path}`).bytes();

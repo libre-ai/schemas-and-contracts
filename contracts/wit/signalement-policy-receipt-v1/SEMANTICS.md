@@ -96,8 +96,12 @@ Steps, in this order; the first that fails gives the error:
 4. `input.origin_invalid` — `observedOrigin` is a string that is not a serialized origin: it
    does not match the origin pattern of the delivery envelope
    (`^https?://(?:[a-z0-9-]+(?:\.[a-z0-9-]+)*|\[[0-9a-f:.]+\])(?::[1-9][0-9]{0,4})?$`, at most
-   267 characters), or the URL serializer rewrites it (`new URL(o).origin !== o`, a value for
-   which `new URL` throws included). Refused, never normalized: `https://Example.test`,
+   267 characters), or it is not its own canonical origin. The canonical origin of a string is
+   defined by the WHATWG URL Standard: the serialization of the origin of the URL record that
+   the URL parser of that standard returns for the string (the value of the `origin` getter of
+   the `URL` interface); a string the parser refuses has no canonical origin. The reference
+   implementation computes it as `new URL(o).origin` and compares it with `o`; an
+   implementation in another language MUST give the same result. Refused, never normalized: `https://Example.test`,
    `https://example.test:443`, `https://example.test.`, `https://example.test/`,
    `https://example.test/path`.
 5. Otherwise the verdict. Its JCS octets are the output.
@@ -140,16 +144,21 @@ included) and returns the JCS octets of the signed receipt (DL5). Steps, in this
 1. `key.invalid` — `secret-key` is not exactly 32 octets. The 32 octets are an Ed25519 seed
    (RFC 8032 section 5.1.5), never an expanded key.
 2. `receipt.invalid` — `unsigned` is above 65536 octets.
-3. `receipt.invalid` — `unsigned` is not strict JSON with depth at most 8, is not an object, or
-   carries a member `signature`.
+3. `receipt.invalid` — `unsigned` is not strict JSON with depth at most 8, is not an object,
+   carries a member `signature`, or holds a number that is not a safe integer: a number whose
+   IEEE-754 binary64 value (rounded half to even) is not integral or has a magnitude above
+   2^53 − 1, the rule of `canonicalize` step 4 (`1.5`, `9007199254740992`; `1.0` and `-0` are the
+   integers 1 and 0). This check precedes step 4, so an implementation whose JCS writes safe
+   integers only never meets such a number there: the code is `receipt.invalid`, never
+   `internal.error`.
 4. The signature is the RFC 8032 Ed25519 signature (deterministic) by that seed of
    `receiptSigningMessage(unsigned)`: the UTF-8 domain `libre-ai.signalement-projection-receipt.v1`,
    one octet `0x00`, then the 32 raw octets of SHA-256 over the JCS form of `unsigned`. The
    signed receipt is `unsigned` plus the member `signature: { "algorithm": "ed25519", "value":
    <base64url of the 64 octets, no padding> }`; its JCS form is the candidate output.
 5. `receipt.invalid` — the projection-receipt verifier refuses the candidate output
-   (`rawProjectionReceiptFailures` is not empty: schema, paths, media links, timestamps, a
-   number that is not a safe integer). Nothing is returned but the error.
+   (`rawProjectionReceiptFailures` is not empty: schema, paths, media links, timestamps).
+   Nothing is returned but the error.
 
 The `keyId` of the output is the one read in `unsigned.keyId`. `sign-receipt` does not check
 that the seed is the key `keyId` names: it holds no key set. A key set that does not hold the
@@ -197,7 +206,7 @@ the parts it declares (below):
 | `engineVersion` | `1.0.0` |
 | `canonicalization` | `RFC 8785` |
 | `digestAlgorithm` | `SHA-256` |
-| `contractFiles` | 1 to 128 distinct `{ path, sha256 }`: the files the cases depend on (the routing-policy and receipt schemas, both files of the receipt signature corpus), each path relative to the authority root |
+| `contractFiles` | 1 to 128 distinct `{ path, sha256 }`: the files the cases depend on (the routing-policy and receipt schemas, every file of the receipt signature corpus: its entry and each part it declares), each path relative to the authority root |
 | `testMaterialWarning` | a printable ASCII string of 1 to 1000 characters |
 | `cases` | 1 to 4096 cases |
 
@@ -208,9 +217,12 @@ A case is `{ id, operation, args, expected, rationale }` and nothing else:
 - `args` holds exactly the arguments of the operation. A JSON argument is a JSON value whose
   octets are its serialization: `policy` and `input` (`evaluate`), `json` (`canonicalize`),
   `unsigned` (`sign-receipt`), `publicKeys` (`verify-receipt`). An argument whose octets matter
-  as written is base64url without padding, in canonical form: `jsonBytes` (`canonicalize`,
-  instead of `json`), `secretKey` (`sign-receipt`), `signed` (`verify-receipt`). `canonicalize`
-  takes exactly one of `json` and `jsonBytes`;
+  as written, or that the document cannot hold as a JSON value (a number that is not a safe
+  integer), is base64url without padding, in canonical form: `jsonBytes` (`canonicalize`,
+  instead of `json`), `unsignedBytes` (`sign-receipt`, instead of `unsigned`), `secretKey`
+  (`sign-receipt`), `signed` (`verify-receipt`). `canonicalize` takes exactly one of `json` and
+  `jsonBytes`; `sign-receipt` takes `secretKey` and exactly one of `unsigned` and
+  `unsignedBytes`;
 - `expected` is `{ "ok": <JSON value> }` or `{ "error": { "code": <code> } }`, the code one of
   its operation's codes (never `internal.error`). The expected success octets are the JCS form
   of `ok`. A conformance harness MUST compute that form with a canonicalizer other than the
@@ -255,8 +267,12 @@ followed by the parts it was merged with.
 
 `policyReceiptGoldenFailures(directory)` reads the directory: a file `golden-vectors.v1*.json`
 above 8 MiB is `golden.size_limit:<file>`, a reading error of the continuation rule is
-`golden.parts:<description>` (file names only), and a declared part with other members than
-`schemaVersion` and a `cases` array is `golden.part_members:<file>`; otherwise it returns
+`golden.parts:<description>` (file names only; the rule reads each file up to 1,048,576 octets,
+so a file above that and up to 8 MiB is a reading error), and a declared part with other members than
+`schemaVersion` and a `cases` array is `golden.part_members:<file>`. A part whose `cases` is
+present but not an array is refused earlier, by the reading of the continuation rule (its
+`cases` cannot be appended to the entry's array), so it is `golden.parts:<description>`, not
+`golden.part_members:<file>`; either way the whole document is refused. Otherwise it returns
 `rawPolicyReceiptFailures` of the merged document. `rawPolicyReceiptFailures(bytes)` reads one
 merged golden document; it does not import the `engine-golden-vectors.v1` schema. Codes, in
 this order:
@@ -307,7 +323,9 @@ committed document, so that none can be dropped without a named failure.
   `canonicalize-duplicate-member`, `canonicalize-byte-order-mark`,
   `canonicalize-lone-surrogate`, `canonicalize-depth-65`.
 - `sign-receipt`, successes: `sign-valid-active`, `sign-valid-retired`; errors:
-  `sign-with-signature-member`, `sign-short-seed`.
+  `sign-with-signature-member`, `sign-short-seed`, `sign-fractional-revision` (the unsigned
+  receipt of `sign-valid-active` with `revision` written `1.5`, given as `unsignedBytes`:
+  `receipt.invalid` by step 3).
 - `verify-receipt`, successes: `verify-valid`, `verify-unknown-key`, `verify-mismatch`,
   `verify-unreadable`, `verify-other-organization`; error: `verify-keys-invalid`.
 

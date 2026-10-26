@@ -23,6 +23,8 @@ export const SIGNATURE_CORPUS_DIRECTORY = `${import.meta.dir}/../../contracts/fi
 const POINTS_FILE = `${import.meta.dir}/../../contracts/fixtures/build-brief-v2/strict-ed25519-vectors.json`;
 
 const SCHEMA_VERSION = "libre-ai.signalement-projection-receipt-signature-vectors.v1";
+/** Domain of another family signed the same way (build-brief-v2 SEMANTICS, acceptance statement). */
+const OTHER_FAMILY_DOMAIN = "libre-ai.build-brief-acceptance-statement.v2";
 const TEST_MATERIAL_WARNING = "Synthetic keys derived from public labels. Never use outside tests.";
 
 export interface GeneratedFile {
@@ -275,6 +277,16 @@ async function buildCorpus(): Promise<Corpus> {
       keysWithFirstPublicKey(mixed),
     );
   }
+  // A written with y = p + 1: the identity, in an encoding that is not canonical (y >= p).
+  // R is the identity and S = 0, so a verifier that decodes y modulo p and admits a small-order
+  // A accepts it.
+  add(
+    "key-non-canonical-identity",
+    "Public key A is the identity written with y = p + 1 (not canonical), R the identity, S = 0.",
+    canonicalJson(withSignature(active, concat(identity, littleEndian32(0n)))),
+    verdict("invalid", "test-key-1", "active", "key.not_admissible"),
+    keysWithFirstPublicKey(pointBytes("noncanonical-identity")),
+  );
   // R = T_i: small order. S = k a, so R + kA - SB = T_i, cleared by the cofactor.
   for (let index = 0; index <= 7; index += 1) {
     const id = index === 0 ? "r-identity" : `r-torsion-${index}`;
@@ -285,6 +297,33 @@ async function buildCorpus(): Promise<Corpus> {
       index === 0
         ? "R is the identity point, S = k a."
         : `R is torsion-${index} (small order), S = k a.`,
+      canonicalJson(withSignature(active, concat(r, littleEndian32(s)))),
+      verdict("invalid", "test-key-1", "active", "signature.r_not_admissible"),
+    );
+  }
+  // R' = rB + T_i: mixed order, so neither small-order nor in the prime-order subgroup.
+  // k' = H(R' || A || M), S = r + k' a: R' + k'A - SB = T_i, cleared by the cofactor. A verifier
+  // that refuses only a small-order R accepts a second encoding of a signature.
+  for (let index = 1; index <= 7; index += 1) {
+    const id = `r-mixed-order-${index}`;
+    const torsion = Point.fromBytes(pointBytes(`torsion-${index}`), false);
+    const nonce = forgeryNonce(id);
+    const r = Point.BASE.multiply(nonce).add(torsion).toBytes();
+    const s = Fn.create(nonce + challenge(r, key1.pointBytes, message) * key1.scalar);
+    add(
+      id,
+      `R is rB + torsion-${index} (mixed order), S = r + k a over that R.`,
+      canonicalJson(withSignature(active, concat(r, littleEndian32(s)))),
+      verdict("invalid", "test-key-1", "active", "signature.r_not_admissible"),
+    );
+  }
+  // R written with y = p + 1: the identity, not canonical. S = k a, as for r-identity.
+  {
+    const r = pointBytes("noncanonical-identity");
+    const s = Fn.create(challenge(r, key1.pointBytes, message) * key1.scalar);
+    add(
+      "r-non-canonical-identity",
+      "R is the identity written with y = p + 1 (not canonical), S = k a.",
       canonicalJson(withSignature(active, concat(r, littleEndian32(s)))),
       verdict("invalid", "test-key-1", "active", "signature.r_not_admissible"),
     );
@@ -358,6 +397,19 @@ async function buildCorpus(): Promise<Corpus> {
     "signed-over-non-jcs",
     "Signed over the domain, 0x00 and SHA-256 of JSON.stringify(unsigned, null, 2), not of JCS.",
     canonicalJson(withSignature(active, ed25519.sign(prettyMessage, seed1))),
+    verdict("invalid", "test-key-1", "active", "signature.mismatch"),
+  );
+  // Domain separation: the same SHA-256(JCS(unsigned)), signed under the domain of the build
+  // brief v2 acceptance statement, which builds its message the same way.
+  const otherDomainMessage = concat(
+    new TextEncoder().encode(OTHER_FAMILY_DOMAIN),
+    Uint8Array.of(0),
+    new Uint8Array(createHash("sha256").update(canonicalJson(active)).digest()),
+  );
+  add(
+    "wrong-domain",
+    `Signed by test key 1 over ${OTHER_FAMILY_DOMAIN}, 0x00 and SHA-256 of the JCS unsigned receipt.`,
+    canonicalJson(withSignature(active, ed25519.sign(otherDomainMessage, seed1))),
     verdict("invalid", "test-key-1", "active", "signature.mismatch"),
   );
 

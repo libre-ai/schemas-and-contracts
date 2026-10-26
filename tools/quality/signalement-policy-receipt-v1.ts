@@ -95,6 +95,7 @@ export const REQUIRED_GOLDEN_CASES: readonly string[] = [
   "sign-valid-retired",
   "sign-with-signature-member",
   "sign-short-seed",
+  "sign-fractional-revision",
   "verify-valid",
   "verify-unknown-key",
   "verify-mismatch",
@@ -125,12 +126,18 @@ const VERDICT_MEMBERS = [
 const DESTINATION_MEMBERS = ["destinationId", "files", "media", "profileId", "routing"];
 const FILE_MEMBERS = ["decision", "path", "reason"];
 
-/** Arguments of each operation: JSON values and base64url strings, by member name. */
-const ARGUMENTS: Readonly<Record<Operation, { json: string[]; octets: string[] }>> = {
-  evaluate: { json: ["input", "policy"], octets: [] },
-  canonicalize: { json: ["json"], octets: ["jsonBytes"] },
-  "sign-receipt": { json: ["unsigned"], octets: ["secretKey"] },
-  "verify-receipt": { json: ["publicKeys"], octets: ["signed"] },
+/**
+ * Arguments of each operation, by member name: JSON values and base64url strings, then the
+ * arguments given either as a JSON value or as base64url octets (exactly one of the two).
+ * The octet form carries what the document cannot hold as JSON (its numbers are safe integers).
+ */
+const ARGUMENTS: Readonly<
+  Record<Operation, { json: string[]; octets: string[]; either: [string, string][] }>
+> = {
+  evaluate: { json: ["input", "policy"], octets: [], either: [] },
+  canonicalize: { json: [], octets: [], either: [["json", "jsonBytes"]] },
+  "sign-receipt": { json: [], octets: ["secretKey"], either: [["unsigned", "unsignedBytes"]] },
+  "verify-receipt": { json: ["publicKeys"], octets: ["signed"], either: [] },
 };
 
 type JsonObject = Record<string, unknown>;
@@ -189,15 +196,17 @@ function isContractFile(value: unknown): boolean {
 
 function hasOperationArguments(operation: Operation, args: unknown): boolean {
   if (!isRecord(args)) return false;
-  const { json, octets } = ARGUMENTS[operation];
-  if (operation === "canonicalize") {
-    const keys = Object.keys(args);
-    if (keys.length !== 1) return false;
-    return keys[0] === "json" || (keys[0] === "jsonBytes" && isCanonicalBase64url(args.jsonBytes));
-  }
+  const { json, octets, either } = ARGUMENTS[operation];
+  // The JSON form when present, else the octet form; `hasExactly` then refuses both and neither.
+  const chosenOctets = either
+    .filter(([asJson]) => !Object.hasOwn(args, asJson))
+    .map(([, asOctets]) => asOctets);
+  const chosenJson = either
+    .filter(([asJson]) => Object.hasOwn(args, asJson))
+    .map(([asJson]) => asJson);
   return (
-    hasExactly(args, [...json, ...octets]) &&
-    octets.every((member) => isCanonicalBase64url(args[member]))
+    hasExactly(args, [...json, ...octets, ...chosenJson, ...chosenOctets]) &&
+    [...octets, ...chosenOctets].every((member) => isCanonicalBase64url(args[member]))
   );
 }
 

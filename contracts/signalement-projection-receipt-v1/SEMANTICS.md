@@ -300,7 +300,7 @@ MUST reproduce both the order and the outcome.
 | 3 bis | a key of the set has the receipt's `keyId` | `unknown-key`, `keyStatus: null`, `key.unknown` |
 | 4 | `issuedAt` lies in `[notBefore, notAfter)` of that key (`notAfter: null`: no end; lexical comparison of the fixed-width timestamps) | `invalid`, `key.outside_validity` |
 | 5 | A, the 32 octets of `publicKey`, is admissible | `invalid`, `key.not_admissible` |
-| 6 | R, the first 32 octets of the signature, is admissible | `invalid`, `signature.r_not_admissible` |
+| 6 | R, the first 32 octets of the signature, is admissible: both halves of the rule below hold, so an R of small order and an R of mixed order (rB + T, T a torsion point) are both refused | `invalid`, `signature.r_not_admissible` |
 | 7 | S, the last 32 octets read little-endian, is below L = 2^252 + 27742317777372353535851937790883648493 | `invalid`, `signature.s_non_canonical` |
 | 8 | Ed25519 verification of the signature over `receiptSigningMessage(unsigned)` with A, strict decoding (`zip215: false` in `@noble/curves`) | `invalid`, `signature.mismatch` |
 
@@ -315,12 +315,13 @@ depend on that file.
 
 Why steps 5 to 7 are not left to the Ed25519 library: the verification equation is cofactored
 (`[8][S]B = [8]R + [8][k]A`). Measured on the pinned `@noble/curves`: its strict mode rejects a
-small-order A, but accepts a mixed-order A (A + T with T a torsion point) and a small-order R,
-because the cofactor clears the torsion component. Each such forgery verifies for a message
-nobody signed with that key, or gives one signature several encodings. Steps 5 and 6 refuse
-them; step 7 refuses S + L, a second encoding of the same signature. With steps 5 to 7 in
-place, strict and permissive decoding at step 8 give the same verdict on every input; strict
-decoding is kept as a second line.
+small-order A and an encoding with y ≥ p, but accepts a mixed-order A (A + T with T a torsion
+point), a small-order R and a mixed-order R (rB + T), because the cofactor clears the torsion
+component. Each such forgery verifies for a message nobody signed with that key, or gives one
+signature several encodings. Steps 5 and 6 refuse them; a check that refuses only a small-order
+R misses the mixed-order one, which is not of small order. Step 7 refuses S + L, a second
+encoding of the same signature. With steps 5 to 7 in place, strict and permissive decoding at
+step 8 give the same verdict on every input; strict decoding is kept as a second line.
 
 The verifier never repairs: a document that is not its JCS octets, a duplicate member, or an
 aliased `signature.value` is `unreadable`, never re-encoded and verified.
@@ -363,10 +364,14 @@ the 64-octet digest is read as a little-endian integer before the reduction (RFC
 | `key-outside-validity` | signed by key 2, issued exactly at its `notAfter` | `invalid`, `retired`, `key.outside_validity` |
 | `key-identity` | A = R = identity, S = 0 | `invalid`, `key.not_admissible` |
 | `key-mixed-order-1` … `-7` | A′ = A + T_i in the key set, R = rB, S = r + k·a with k over A′ | `invalid`, `key.not_admissible` |
+| `key-non-canonical-identity` | A in the key set is the identity written with y = p + 1 (the `noncanonical-identity` point of the same file: y ≥ p), R = T_0, S = 0 | `invalid`, `key.not_admissible` (a key set code never: the structure does not decide points) |
 | `r-identity`, `r-torsion-1` … `-7` | R = T_i, S = k·a | `invalid`, `signature.r_not_admissible` |
+| `r-mixed-order-1` … `-7` | R′ = rB + T_i, S = r + k′·a with k′ over R′ | `invalid`, `signature.r_not_admissible` |
+| `r-non-canonical-identity` | R is the identity written with y = p + 1 (`noncanonical-identity`), S = k·a | `invalid`, `signature.r_not_admissible` |
 | `s-non-canonical` | the valid signature with S + L | `invalid`, `signature.s_non_canonical` |
 | `body-byte-modified`, `transmitted-digest-modified`, `rendered-digest-modified`, `revision-modified` | `remote.url`, `transmitted[0].sha256`, `rendered.bodyDigest`, `revision` changed after signing | `invalid`, `signature.mismatch` |
 | `signed-over-non-jcs` | signed over the digest of `JSON.stringify(unsigned, null, 2)` | `invalid`, `signature.mismatch` |
+| `wrong-domain` | signed by key 1 over UTF-8 `libre-ai.build-brief-acceptance-statement.v2` ‖ `0x00` ‖ SHA-256(JCS(unsigned)): the same digest under the domain of another family built the same way | `invalid`, `signature.mismatch` |
 | `document-whitespace`, `document-key-order` | valid document, not its JCS octets | `unreadable`, `receipt.non_canonical` |
 | `document-duplicate-member` | `signature` repeated | `unreadable`, `receipt.raw_json` |
 | `document-fractional-revision-whitespace` | `revision` 1.5 after a space (rule 3 of "Canonical form") | `unreadable`, `receipt.schema` |
@@ -374,9 +379,17 @@ the 64-octet digest is read as a little-endian integer before the reduction (RFC
 | `keyset-duplicate-key-id` | two keys with `keyId` `test-key-1` | `refused`, `keys.duplicate_key_id` |
 | `keyset-other-organization` | valid signature, key set of `other-org` | `invalid`, `keyStatus: null`, `key.organization_mismatch` |
 
-The 16 point forgeries (`key-identity`, `key-mixed-order-*`, `r-identity`, `r-torsion-*`) are
-accepted by a permissive (ZIP-215) verifier, and `s-non-canonical` verifies once S is reduced:
-a test asserts both, so each vector discriminates a missing check rather than carrying noise.
+The 25 point forgeries (`key-identity`, `key-mixed-order-*`, `key-non-canonical-identity`,
+`r-identity`, `r-torsion-*`, `r-mixed-order-*`, `r-non-canonical-identity`) are accepted by a
+permissive (ZIP-215) verifier, and `s-non-canonical` verifies once S is reduced: a test asserts
+both, so each vector discriminates a missing check rather than carrying noise. A test also
+asserts that the pinned `@noble/curves` with `zip215: false` accepts 22 of them
+(`key-mixed-order-*`, `r-identity`, `r-torsion-*`, `r-mixed-order-*`), so only steps 5 and 6
+refuse those, and that `wrong-domain` verifies over its other-domain message, so only the
+domain refuses it. No encoding with y ≥ p decodes to a point of the prime-order subgroup other
+than the identity (y mod p is below 19), so a non-canonical vector is always refused by more
+than one half of the admissibility rule; it discriminates a verifier that decodes y modulo p
+and also admits small-order points.
 `signCases` (`valid-active`, `valid-retired`) give `seed`, `unsigned` and `signed`: Ed25519 is
 deterministic, so `signed` is the exact output a signer MUST produce for that seed and receipt.
 
@@ -385,8 +398,8 @@ fixture runner that shares no code with the TypeScript verifier: ed25519-dalek `
 and curve25519-dalek point checks, at the exact crate versions of `build-brief-crypto-oracle`.
 It reads the entry and each part it declares, in order, under the rules of "Vector files"
 below (each file at most 1 MiB, same `schemaVersion`, a part carrying only `schemaVersion` and
-`vectors`, a declared part absent or unreadable and an undeclared `signature-vectors.v1*` file
-both refused), and requires `domain` to equal the signing domain it states itself. It is not a
+`vectors`, a declared part absent or unreadable and an undeclared `signature-vectors.v1*.json`
+file both refused; a file of that stem with another suffix is not a vector file), and requires `domain` to equal the signing domain it states itself. It is not a
 schema validator: it reads only the members verification needs (`organization`, `keyId`,
 `issuedAt`, `signature`, and each key's `keyId`, `algorithm`, `publicKey`, `status`,
 `notBefore`, `notAfter`), so a receipt that is canonical but outside the schema in any other
@@ -396,7 +409,9 @@ octets and every number is an integer of magnitude at most 2^53 − 1; this equa
 comparison of "Canonical form" for an ASCII receipt, and a number outside rule 2 is
 `unreadable`, as rule 3 prescribes (`serde_json` would rewrite `9007199254740993` unchanged,
 where JCS writes the binary64 value `9007199254740992`). Non-ASCII text, where key order by
-octet and by UTF-16 unit may differ, stops the oracle with `jcs-premise`. It then runs the steps of
+octet and by UTF-16 unit may differ, stops the oracle with `jcs-premise`, but only in a receipt
+that is otherwise readable by the rule above; one that fails the round trip or holds a number
+outside rule 2 is `unreadable` first, whatever its text. It then runs the steps of
 "Signature verification" (organization, key, window, admissible A and R, then `verify_strict`,
 which also refuses S ≥ L) and compares the **class** of each outcome (`valid`, `invalid`,
 `unknown-key`, `unreadable`, `refused`) with the class of `expected`, never the reason; each
@@ -428,11 +443,12 @@ distinct bare file names in the same directory, each beginning with the entry na
 with the entry's `schemaVersion` and no `parts`. The vectors are the entry followed by each part
 in declaration order: every member of a part is appended to the entry at the same member path
 (an array to the array, an object member by member, an absent member added); any other meeting
-of two members is an error. A declared part that is absent or unreadable is an error. A file of
-the directory named `<stem>*.json` that the entry does not declare is an error (orphan). Vector
+of two members is an error. A declared part that is absent or unreadable is an error, and so is
+an entry or a part above 1,048,576 octets, refused without being read whole. A file of the
+directory named `<stem>*.json` that the entry does not declare is an error (orphan). Vector
 order is the order so obtained. `vectors.json` declares `vectors.part-2.json` then
-`vectors.part-3.json`. `signature-vectors.v1.json` declares `signature-vectors.v1.part-2.json`;
-its parts carry only `schemaVersion` and `vectors` (`testMaterialWarning`, `domain` and
+`vectors.part-3.json`. `signature-vectors.v1.json` declares `signature-vectors.v1.part-2.json`
+then `signature-vectors.v1.part-3.json`; its parts carry only `schemaVersion` and `vectors` (`testMaterialWarning`, `domain` and
 `signCases` are in the entry alone), and the generator fills each file up to the budget. The
 signature corpus holds no recipe.
 
@@ -451,7 +467,12 @@ generates. The recipe vocabulary is closed; any other member, value or type is a
 The generated octets are the UTF-8 JCS form (RFC 8785) of `document` after `repeat`, followed by
 octets 0x20 up to `padWithSpacesTo` when present; a `padWithSpacesTo` below the length of the JCS
 form is an error. The generated octets never exceed 1,048,576, padded or not: a JCS form longer
-than that is an error even without `padWithSpacesTo`. Regenerated octets whose SHA-256 differs from `sha256` are an error, and a
+than that is an error even without `padWithSpacesTo`. A reader SHOULD measure a `repeat` before
+building it: the JCS length is that of `document` with `member` set to an empty array, plus, for
+each copy, that of `element` with `indexMember` set to `indexPrefix` and the digits of its index,
+plus one comma between two copies; that sum is exact, so the bound is decided without
+materializing the copies. An element of a vector list that carries `recipe` without a string
+`name` is an error. Regenerated octets whose SHA-256 differs from `sha256` are an error, and a
 reader MUST NOT run a verifier on them. Otherwise the vector stands for those octets exactly as
 a `raw` vector would. Any error of this section refuses the whole set of vectors, never only the
 vector or file at fault. Three vectors are recipes, with
