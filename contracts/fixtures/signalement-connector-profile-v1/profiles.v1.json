@@ -1,0 +1,177 @@
+{
+  "schemaVersion": "libre-ai.signalement-connector-profiles.v1",
+  "profiles": [
+    {
+      "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+      "profileId": "github-issues/github.com/rest-2022-11-28",
+      "family": "github-issues",
+      "edition": "github.com",
+      "api": {
+        "style": "rest",
+        "version": "2022-11-28"
+      },
+      "providerVersion": null,
+      "auth": {
+        "mode": "fine-grained-token",
+        "scopes": ["issues:write", "metadata:read"]
+      },
+      "bodyFormat": "markdown-gfm",
+      "capabilities": {
+        "discovery": "unproven",
+        "mappingValidation": "unproven",
+        "idempotentCreate": "unproven",
+        "attachExisting": "unproven",
+        "attachmentUpload": "unsupported",
+        "comment": "unproven",
+        "cursorRead": "unproven",
+        "visibility": "discovered",
+        "consistentLookup": {
+          "method": "issue-list",
+          "status": "unproven"
+        }
+      },
+      "limits": {
+        "maxBodyBytes": null,
+        "maxAttachmentBytes": null,
+        "maxAttachmentsPerItem": null
+      },
+      "conflictPolicy": {
+        "title": "dossier-owned",
+        "body": "dossier-owned",
+        "attachments": "dossier-owned",
+        "comments": "dossier-owned",
+        "status": "provider-owned",
+        "closure": "provider-owned"
+      }
+    },
+    {
+      "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+      "profileId": "gitlab-issues/gitlab.com/rest-v4",
+      "family": "gitlab-issues",
+      "edition": "gitlab.com",
+      "api": {
+        "style": "rest",
+        "version": "v4"
+      },
+      "providerVersion": null,
+      "auth": {
+        "mode": "personal-access-token",
+        "scopes": ["api"]
+      },
+      "bodyFormat": "markdown-glfm",
+      "capabilities": {
+        "discovery": "unproven",
+        "mappingValidation": "unproven",
+        "idempotentCreate": "unproven",
+        "attachExisting": "unproven",
+        "attachmentUpload": "supported",
+        "comment": "unproven",
+        "cursorRead": "unproven",
+        "visibility": "discovered",
+        "consistentLookup": {
+          "method": "filtered-list",
+          "status": "unproven"
+        }
+      },
+      "limits": {
+        "maxBodyBytes": null,
+        "maxAttachmentBytes": null,
+        "maxAttachmentsPerItem": null
+      },
+      "conflictPolicy": {
+        "title": "dossier-owned",
+        "body": "dossier-owned",
+        "attachments": "dossier-owned",
+        "comments": "dossier-owned",
+        "status": "provider-owned",
+        "closure": "provider-owned"
+      }
+    },
+    {
+      "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+      "profileId": "jira-cloud/cloud/rest-v3",
+      "family": "jira-cloud",
+      "edition": "cloud",
+      "api": {
+        "style": "rest",
+        "version": "v3"
+      },
+      "providerVersion": null,
+      "auth": {
+        "mode": "api-token",
+        "scopes": []
+      },
+      "bodyFormat": "adf",
+      "capabilities": {
+        "discovery": "unproven",
+        "mappingValidation": "unproven",
+        "idempotentCreate": "unproven",
+        "attachExisting": "unproven",
+        "attachmentUpload": "supported",
+        "comment": "unproven",
+        "cursorRead": "unproven",
+        "visibility": "declared",
+        "consistentLookup": {
+          "method": "jql",
+          "status": "unsupported"
+        }
+      },
+      "limits": {
+        "maxBodyBytes": null,
+        "maxAttachmentBytes": null,
+        "maxAttachmentsPerItem": null
+      },
+      "conflictPolicy": {
+        "title": "dossier-owned",
+        "body": "dossier-owned",
+        "attachments": "dossier-owned",
+        "comments": "dossier-owned",
+        "status": "provider-owned",
+        "closure": "provider-owned"
+      }
+    },
+    {
+      "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+      "profileId": "plane/self-hosted/rest-v1",
+      "family": "plane",
+      "edition": "self-hosted",
+      "api": {
+        "style": "rest",
+        "version": "v1"
+      },
+      "providerVersion": null,
+      "auth": {
+        "mode": "api-key",
+        "scopes": []
+      },
+      "bodyFormat": "html",
+      "capabilities": {
+        "discovery": "unproven",
+        "mappingValidation": "unproven",
+        "idempotentCreate": "unproven",
+        "attachExisting": "unproven",
+        "attachmentUpload": "unproven",
+        "comment": "unproven",
+        "cursorRead": "unproven",
+        "visibility": "declared",
+        "consistentLookup": {
+          "method": "external-id",
+          "status": "unproven"
+        }
+      },
+      "limits": {
+        "maxBodyBytes": null,
+        "maxAttachmentBytes": null,
+        "maxAttachmentsPerItem": null
+      },
+      "conflictPolicy": {
+        "title": "dossier-owned",
+        "body": "dossier-owned",
+        "attachments": "dossier-owned",
+        "comments": "dossier-owned",
+        "status": "provider-owned",
+        "closure": "provider-owned"
+      }
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "signalement-projection-receipt.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.signalement-projection-receipt.v1",
+        "organization": "example-org",
+        "keyId": "test-key-1",
+        "issuedAt": "2026-10-24T10:00:05Z",
+        "deliveredAt": "2026-10-24T10:00:03Z",
+        "exportDigest": "d46aee08cc49f6d1eb41800c1d6bab4506c960c700cff0efffe490d7cb1de5e3",
+        "projectionId": "1b250ea199bec73d392caad39d1167d6edc43c81f20edead86eea52c52b94fc1",
+        "mappingVersion": "1.0.0",
+        "operation": "create",
+        "revision": 1,
+        "destinationId": "team-tracker",
+        "profileId": "gitlab-issues/gitlab.com/rest-v4",
+        "remote": {
+          "id": "1042",
+          "url": "https://gitlab.com/example-group/example-project/-/issues/42"
+        },
+        "transmitted": [
+          {
+            "path": "README.md",
+            "sha256": "b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5",
+            "via": "body"
+          },
+          {
+            "path": "media/screenshot-1.png",
+            "sha256": "a458d2a0cb1e91992d020812c00a810660e91bcb63b75b4756df3d66df24f06e",
+            "via": "attachment"
+          },
+          {
+            "path": "media/recording-1.webm",
+            "sha256": "0c0123ec4bbc0bdcbed4458c0e61373879019db103dba5be59541bec96c92952",
+            "via": "link"
+          }
+        ],
+        "withheld": [
+          {
+            "path": "media/screenshot-2.png",
+            "reason": "public-destination"
+          }
+        ],
+        "rendered": {
+          "rendererVersion": "1.0.0",
+          "bodyDigest": "daeeaa7ac9b77a3ea4b7562d25b48899d1c312b5213757d58d74a90f160dfc29",
+          "mediaLinks": [
+            {
+              "path": "media/recording-1.webm",
+              "url": "https://media.example.com/signalement/recording-1.webm"
+            }
+          ]
+        },
+        "requestBodyDigests": [
+          "19f1064b619d49d35392eac7261cd7266c720671fc594f4b226f32bf0bee74ba",
+          "6fc63565247226593c49a36e9da488e6e1c33a9a1fcd8a76f55573483136b880"
+        ],
+        "policy": {
+          "version": "3",
+          "digest": "0afac0742c18deb3ff92bd0c20e97bb2a6c3035edde872d25ad5f57e96fe453e"
+        },
+        "approval": {
+          "reference": "approval-7"
+        },
+        "signature": {
+          "algorithm": "ed25519",
+          "value": "y_5t9orH7ixDnPrphhdLPyXVJ8arsGUBhcQ7kmxW9ASMPy4JqIv7hAc8HoZsbHccJzCBakp-uJz7iB4aT4iQ2g"
+        }
+      },
+      "invalidMutations": [
+        {
+          "name": "schemaVersion differs",
+          "path": "/schemaVersion",
+          "value": "libre-ai.signalement-projection-receipt.v2"
+        },
+        { "name": "schemaVersion absent", "path": "/schemaVersion", "remove": true },
+        { "name": "unknown root member", "path": "/receiptId", "value": "r-1" },
+        { "name": "organization uppercase", "path": "/organization", "value": "Example-Org" },
+        { "name": "organization absent", "path": "/organization", "remove": true },
+        { "name": "keyId starting with a hyphen", "path": "/keyId", "value": "-key" },
+        {
+          "name": "keyId of 65 characters",
+          "path": "/keyId",
+          "value": "k1234567890123456789012345678901234567890123456789012345678901234"
+        },
+        { "name": "keyId absent", "path": "/keyId", "remove": true },
+        {
+          "name": "issuedAt with fractional seconds",
+          "path": "/issuedAt",
+          "value": "2026-10-24T10:00:05.123Z"
+        },
+        {
+          "name": "issuedAt with an offset",
+          "path": "/issuedAt",
+          "value": "2026-10-24T12:00:05+02:00"
+        },
+        { "name": "issuedAt with month 13", "path": "/issuedAt", "value": "2026-13-24T10:00:05Z" },
+        { "name": "deliveredAt absent", "path": "/deliveredAt", "remove": true },
+        {
+          "name": "exportDigest uppercase",
+          "path": "/exportDigest",
+          "value": "D46AEE08CC49F6D1EB41800C1D6BAB4506C960C700CFF0EFFFE490D7CB1DE5E3"
+        },
+        { "name": "projectionId too short", "path": "/projectionId", "value": "1b250ea1" },
+        { "name": "mappingVersion with two components", "path": "/mappingVersion", "value": "1.0" },
+        { "name": "operation update", "path": "/operation", "value": "update" },
+        { "name": "revision zero", "path": "/revision", "value": 0 },
+        { "name": "revision above 2147483647", "path": "/revision", "value": 2147483648 },
+        { "name": "revision fractional", "path": "/revision", "value": 1.5 },
+        { "name": "revision as a string", "path": "/revision", "value": "1" },
+        { "name": "revision absent", "path": "/revision", "remove": true },
+        { "name": "destinationId uppercase", "path": "/destinationId", "value": "Team-Tracker" },
+        {
+          "name": "profileId with two segments",
+          "path": "/profileId",
+          "value": "gitlab-issues/rest-v4"
+        },
+        { "name": "remote id is a number", "path": "/remote/id", "value": 1042 },
+        { "name": "remote id with a space", "path": "/remote/id", "value": "10 42" },
+        { "name": "remote id empty", "path": "/remote/id", "value": "" },
+        {
+          "name": "remote url over http",
+          "path": "/remote/url",
+          "value": "http://gitlab.com/example-group/example-project/-/issues/42"
+        },
+        { "name": "remote url absent", "path": "/remote/url", "remove": true },
+        { "name": "unknown remote member", "path": "/remote/title", "value": "x" },
+        { "name": "transmitted via email", "path": "/transmitted/0/via", "value": "email" },
+        {
+          "name": "transmitted path outside the export",
+          "path": "/transmitted/0/path",
+          "value": "../README.md"
+        },
+        {
+          "name": "transmitted path with a reserved device name",
+          "path": "/transmitted/1/path",
+          "value": "media/con.png"
+        },
+        { "name": "transmitted digest absent", "path": "/transmitted/0/sha256", "remove": true },
+        {
+          "name": "unknown transmitted member",
+          "path": "/transmitted/0/role",
+          "value": "document"
+        },
+        {
+          "name": "withheld reason user-choice",
+          "path": "/withheld/0/reason",
+          "value": "user-choice"
+        },
+        { "name": "withheld reason absent", "path": "/withheld/0/reason", "remove": true },
+        {
+          "name": "rendererVersion with a leading zero",
+          "path": "/rendered/rendererVersion",
+          "value": "01.0.0"
+        },
+        {
+          "name": "rendererVersion with a pre-release",
+          "path": "/rendered/rendererVersion",
+          "value": "1.0.0-rc.1"
+        },
+        { "name": "rendered bodyDigest absent", "path": "/rendered/bodyDigest", "remove": true },
+        { "name": "rendered mediaLinks absent", "path": "/rendered/mediaLinks", "remove": true },
+        {
+          "name": "media link over http",
+          "path": "/rendered/mediaLinks/0/url",
+          "value": "http://media.example.com/signalement/recording-1.webm"
+        },
+        {
+          "name": "media link url of 1025 characters",
+          "path": "/rendered/mediaLinks/0/url",
+          "value": "https://media.example.com/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "name": "media link url with a double quote",
+          "path": "/rendered/mediaLinks/0/url",
+          "value": "https://media.example.com/signalement/\"recording-1.webm"
+        },
+        {
+          "name": "media link url with a backslash",
+          "path": "/rendered/mediaLinks/0/url",
+          "value": "https://media.example.com/signalement\\recording-1.webm"
+        },
+        { "name": "requestBodyDigests empty", "path": "/requestBodyDigests", "value": [] },
+        {
+          "name": "requestBodyDigests item not a digest",
+          "path": "/requestBodyDigests/0",
+          "value": "request-1"
+        },
+        { "name": "policy version zero", "path": "/policy/version", "value": "0" },
+        { "name": "policy digest absent", "path": "/policy/digest", "remove": true },
+        { "name": "approval reference absent", "path": "/approval/reference", "remove": true },
+        { "name": "signature algorithm ecdsa", "path": "/signature/algorithm", "value": "ecdsa" },
+        {
+          "name": "signature value of 85 characters",
+          "path": "/signature/value",
+          "value": "y_5t9orH7ixDnPrphhdLPyXVJ8arsGUBhcQ7kmxW9ASMPy4JqIv7hAc8HoZsbHccJzCBakp-uJz7iB4aT4iQ2"
+        },
+        {
+          "name": "signature value with base64 padding",
+          "path": "/signature/value",
+          "value": "y_5t9orH7ixDnPrphhdLPyXVJ8arsGUBhcQ7kmxW9ASMPy4JqIv7hAc8HoZsbHccJzCBakp-uJz7iB4aT4iQ=="
+        },
+        { "name": "signature absent", "path": "/signature", "remove": true }
+      ]
+    }
+  ]
+}

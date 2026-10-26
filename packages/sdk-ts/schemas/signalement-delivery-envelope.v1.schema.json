@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.libre-ai.fr/schemas/signalement-delivery-envelope.v1.schema.json",
+  "title": "Libre AI Signalement Delivery Envelope v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "deliveryId", "exportSha256", "exportByteLength", "observedOrigin"],
+  "properties": {
+    "schemaVersion": { "const": "libre-ai.signalement-delivery-envelope.v1" },
+    "deliveryId": { "$ref": "#/$defs/deliveryId" },
+    "exportSha256": { "$ref": "#/$defs/digest" },
+    "exportByteLength": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 269500416
+    },
+    "observedOrigin": {
+      "anyOf": [{ "$ref": "#/$defs/origin" }, { "type": "null" }]
+    }
+  },
+  "$defs": {
+    "deliveryId": {
+      "type": "string",
+      "minLength": 36,
+      "maxLength": 36,
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "digest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "origin": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 267,
+      "pattern": "^https?://(?:[a-z0-9-]+(?:\\.[a-z0-9-]+)*|\\[[0-9a-f:.]+\\])(?::[1-9][0-9]{0,4})?$"
+    }
+  }
+}

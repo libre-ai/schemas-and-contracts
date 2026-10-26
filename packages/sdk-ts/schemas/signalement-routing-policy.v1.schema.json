@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.libre-ai.fr/schemas/signalement-routing-policy.v1.schema.json",
+  "title": "Libre AI Signalement Routing Policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "organization",
+    "policyId",
+    "version",
+    "destinations",
+    "routingRules",
+    "disclosureRules"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "libre-ai.signalement-routing-policy.v1" },
+    "organization": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+    },
+    "policyId": { "$ref": "#/$defs/id" },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10,
+      "pattern": "^[1-9][0-9]{0,9}$"
+    },
+    "destinations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": { "$ref": "#/$defs/destination" }
+    },
+    "routingRules": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 256,
+      "items": { "$ref": "#/$defs/routingRule" }
+    },
+    "disclosureRules": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 256,
+      "items": { "$ref": "#/$defs/disclosureRule" }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "destinationList": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/id" }
+    },
+    "destination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "profileId", "target", "residency", "visibilitySource"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "profileId": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 106,
+          "pattern": "^[a-z0-9-]+/[a-z0-9.-]+/[a-z0-9.-]+$"
+        },
+        "target": { "$ref": "#/$defs/target" },
+        "residency": { "enum": ["eu", "non-eu"] },
+        "visibilitySource": { "enum": ["discovered", "declared"] },
+        "declaredVisibility": { "enum": ["public", "private"] },
+        "mediaFallback": { "enum": ["link", "withhold"] }
+      },
+      "if": {
+        "type": "object",
+        "required": ["visibilitySource"],
+        "properties": { "visibilitySource": { "const": "declared" } }
+      },
+      "then": {
+        "type": "object",
+        "required": ["declaredVisibility"],
+        "properties": { "declaredVisibility": { "enum": ["public", "private"] } }
+      },
+      "else": {
+        "type": "object",
+        "not": {
+          "type": "object",
+          "required": ["declaredVisibility"],
+          "properties": { "declaredVisibility": { "enum": ["public", "private"] } }
+        }
+      }
+    },
+    "target": {
+      "oneOf": [
+        { "$ref": "#/$defs/githubRepository" },
+        { "$ref": "#/$defs/gitlabProject" },
+        { "$ref": "#/$defs/jiraProject" },
+        { "$ref": "#/$defs/planeProject" }
+      ]
+    },
+    "githubRepository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "owner", "repository"],
+      "properties": {
+        "kind": { "const": "github-repository" },
+        "owner": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 39,
+          "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$"
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "pattern": "^(?!\\.\\.?$)[A-Za-z0-9._-]{1,100}$"
+        }
+      }
+    },
+    "gitlabProject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "projectPath"],
+      "properties": {
+        "kind": { "const": "gitlab-project" },
+        "projectPath": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 255,
+          "pattern": "^[A-Za-z0-9_][A-Za-z0-9_.-]*(?:/[A-Za-z0-9_][A-Za-z0-9_.-]*)+$"
+        }
+      }
+    },
+    "jiraProject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "siteUrl", "projectKey"],
+      "properties": {
+        "kind": { "const": "jira-project" },
+        "siteUrl": {
+          "type": "string",
+          "minLength": 23,
+          "maxLength": 85,
+          "pattern": "^https://[a-z0-9-]+\\.atlassian\\.net$"
+        },
+        "projectKey": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 10,
+          "pattern": "^[A-Z][A-Z0-9_]{1,9}$"
+        }
+      }
+    },
+    "planeProject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "baseUrl", "workspaceSlug", "projectId"],
+      "properties": {
+        "kind": { "const": "plane-project" },
+        "baseUrl": {
+          "type": "string",
+          "minLength": 9,
+          "maxLength": 267,
+          "pattern": "^https://(?:[a-z0-9-]+(?:\\.[a-z0-9-]+)*|\\[[0-9a-f:.]+\\])(?::[1-9][0-9]{0,4})?$"
+        },
+        "workspaceSlug": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 48,
+          "pattern": "^[a-z0-9][a-z0-9_-]{0,47}$"
+        },
+        "projectId": {
+          "type": "string",
+          "minLength": 36,
+          "maxLength": 36,
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        }
+      }
+    },
+    "routingRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "match", "imposed", "optional", "selectable", "denied"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "match": { "$ref": "#/$defs/match" },
+        "imposed": { "$ref": "#/$defs/destinationList" },
+        "optional": { "$ref": "#/$defs/destinationList" },
+        "selectable": { "$ref": "#/$defs/destinationList" },
+        "denied": { "$ref": "#/$defs/destinationList" },
+        "override": { "enum": ["allowed", "denied"] }
+      }
+    },
+    "match": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["origin"],
+          "properties": {
+            "origin": {
+              "type": "string",
+              "minLength": 8,
+              "maxLength": 267,
+              "pattern": "^https?://(?:[a-z0-9-]+(?:\\.[a-z0-9-]+)*|\\[[0-9a-f:.]+\\])(?::[1-9][0-9]{0,4})?$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scheme", "hostPattern", "port"],
+          "properties": {
+            "scheme": { "enum": ["https", "http"] },
+            "hostPattern": {
+              "type": "string",
+              "minLength": 6,
+              "maxLength": 255,
+              "pattern": "^\\*\\.(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$"
+            },
+            "port": {
+              "anyOf": [{ "type": "integer", "minimum": 1, "maximum": 65535 }, { "type": "null" }]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["absent"],
+          "properties": { "absent": { "const": true } }
+        }
+      ]
+    },
+    "disclosureRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "roles", "when", "decision"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["document", "screenshot", "video"] }
+        },
+        "when": { "$ref": "#/$defs/when" },
+        "decision": { "enum": ["transmit", "withhold"] }
+      }
+    },
+    "when": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["always"],
+          "properties": { "always": { "const": true } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["visibility"],
+          "properties": { "visibility": { "enum": ["public", "private"] } }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["residency"],
+          "properties": { "residency": { "enum": ["eu", "non-eu"] } }
+        }
+      ]
+    }
+  }
+}

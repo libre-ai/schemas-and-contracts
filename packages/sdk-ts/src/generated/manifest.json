@@ -462,9 +462,29 @@
 			"declaration": "session-export.v1.d.ts"
 		},
 		{
+			"schema": "signalement-connector-profile.v1.schema.json",
+			"schemaSha256": "25613fe8f2d282271e3cedc4c9f04e05cb7bf9205b169be6e6b486137d34826f",
+			"declaration": "signalement-connector-profile.v1.d.ts"
+		},
+		{
+			"schema": "signalement-delivery-envelope.v1.schema.json",
+			"schemaSha256": "e09809c4901c8863376d3a2a45a8669eac2d1a3d884e2a8e56d3b042182eae85",
+			"declaration": "signalement-delivery-envelope.v1.d.ts"
+		},
+		{
 			"schema": "signalement-local-export.v1.schema.json",
 			"schemaSha256": "ddb63e43cfa76253079df8b10cb31ee4575927cfc22226d4a7942e4c51d83d0e",
 			"declaration": "signalement-local-export.v1.d.ts"
+		},
+		{
+			"schema": "signalement-projection-receipt.v1.schema.json",
+			"schemaSha256": "c00a3c89e50dc2fc82d0233e3714ac5ea5acba53eaaa34471b3a9e494ed66e3f",
+			"declaration": "signalement-projection-receipt.v1.d.ts"
+		},
+		{
+			"schema": "signalement-routing-policy.v1.schema.json",
+			"schemaSha256": "378190b4668402fce0ad7567e5cf726ff7327a170bbd15ca16d8216ae1fd1992",
+			"declaration": "signalement-routing-policy.v1.d.ts"
 		},
 		{
 			"schema": "spec-package.v1.schema.json",

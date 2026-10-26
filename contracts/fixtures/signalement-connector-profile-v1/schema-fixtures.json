@@ -1,0 +1,342 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "signalement-connector-profile.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/rest-2022-11-28",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "rest",
+          "version": "2022-11-28"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "invalidMutations": [
+        {
+          "name": "schemaVersion differs",
+          "path": "/schemaVersion",
+          "value": "libre-ai.signalement-connector-profile.v2"
+        },
+        {
+          "name": "schemaVersion absent",
+          "path": "/schemaVersion",
+          "remove": true
+        },
+        {
+          "name": "profileId absent",
+          "path": "/profileId",
+          "remove": true
+        },
+        {
+          "name": "profileId upper-case",
+          "path": "/profileId",
+          "value": "GitHub-Issues/github.com/rest-2022-11-28"
+        },
+        {
+          "name": "profileId without api separator",
+          "path": "/profileId",
+          "value": "github-issues/github.com/2022-11-28"
+        },
+        {
+          "name": "profileId with unknown api style",
+          "path": "/profileId",
+          "value": "github-issues/github.com/soap-2022-11-28"
+        },
+        {
+          "name": "profileId has two segments",
+          "path": "/profileId",
+          "value": "github-issues/rest-2022-11-28"
+        },
+        {
+          "name": "family absent",
+          "path": "/family",
+          "remove": true
+        },
+        {
+          "name": "family upper-case",
+          "path": "/family",
+          "value": "GitHub"
+        },
+        {
+          "name": "family 33 characters",
+          "path": "/family",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "name": "edition empty",
+          "path": "/edition",
+          "value": ""
+        },
+        {
+          "name": "edition with slash",
+          "path": "/edition",
+          "value": "github/com"
+        },
+        {
+          "name": "api absent",
+          "path": "/api",
+          "remove": true
+        },
+        {
+          "name": "api.style unknown",
+          "path": "/api/style",
+          "value": "soap"
+        },
+        {
+          "name": "api.version upper-case",
+          "path": "/api/version",
+          "value": "V4"
+        },
+        {
+          "name": "api carries an extra member",
+          "path": "/api/note",
+          "value": "x"
+        },
+        {
+          "name": "providerVersion absent",
+          "path": "/providerVersion",
+          "remove": true
+        },
+        {
+          "name": "providerVersion 65 characters",
+          "path": "/providerVersion",
+          "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "name": "providerVersion empty",
+          "path": "/providerVersion",
+          "value": ""
+        },
+        {
+          "name": "providerVersion is a number",
+          "path": "/providerVersion",
+          "value": 5
+        },
+        {
+          "name": "auth absent",
+          "path": "/auth",
+          "remove": true
+        },
+        {
+          "name": "auth.mode unknown",
+          "path": "/auth/mode",
+          "value": "oauth-app"
+        },
+        {
+          "name": "auth.scopes absent",
+          "path": "/auth/scopes",
+          "remove": true
+        },
+        {
+          "name": "auth.scopes has a duplicate",
+          "path": "/auth/scopes",
+          "value": ["issues:write", "issues:write"]
+        },
+        {
+          "name": "auth.scopes has 33 entries",
+          "path": "/auth/scopes",
+          "value": [
+            "scope-0",
+            "scope-1",
+            "scope-2",
+            "scope-3",
+            "scope-4",
+            "scope-5",
+            "scope-6",
+            "scope-7",
+            "scope-8",
+            "scope-9",
+            "scope-10",
+            "scope-11",
+            "scope-12",
+            "scope-13",
+            "scope-14",
+            "scope-15",
+            "scope-16",
+            "scope-17",
+            "scope-18",
+            "scope-19",
+            "scope-20",
+            "scope-21",
+            "scope-22",
+            "scope-23",
+            "scope-24",
+            "scope-25",
+            "scope-26",
+            "scope-27",
+            "scope-28",
+            "scope-29",
+            "scope-30",
+            "scope-31",
+            "scope-32"
+          ]
+        },
+        {
+          "name": "auth.scope 65 characters",
+          "path": "/auth/scopes",
+          "value": ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]
+        },
+        {
+          "name": "auth.scope empty",
+          "path": "/auth/scopes",
+          "value": [""]
+        },
+        {
+          "name": "auth carries an extra member",
+          "path": "/auth/token",
+          "value": "x"
+        },
+        {
+          "name": "bodyFormat unknown",
+          "path": "/bodyFormat",
+          "value": "plain-text"
+        },
+        {
+          "name": "bodyFormat absent",
+          "path": "/bodyFormat",
+          "remove": true
+        },
+        {
+          "name": "capability partial",
+          "path": "/capabilities/comment",
+          "value": "partial"
+        },
+        {
+          "name": "capability upper-case",
+          "path": "/capabilities/discovery",
+          "value": "Supported"
+        },
+        {
+          "name": "capability is a boolean",
+          "path": "/capabilities/cursorRead",
+          "value": true
+        },
+        {
+          "name": "capability absent",
+          "path": "/capabilities/attachExisting",
+          "remove": true
+        },
+        {
+          "name": "visibility unknown",
+          "path": "/capabilities/visibility",
+          "value": "inferred"
+        },
+        {
+          "name": "consistentLookup.method unknown",
+          "path": "/capabilities/consistentLookup/method",
+          "value": "graph-walk"
+        },
+        {
+          "name": "consistentLookup.status partial",
+          "path": "/capabilities/consistentLookup/status",
+          "value": "partial"
+        },
+        {
+          "name": "consistentLookup.status absent",
+          "path": "/capabilities/consistentLookup/status",
+          "remove": true
+        },
+        {
+          "name": "capabilities carries an extra member",
+          "path": "/capabilities/qualification",
+          "value": "qualified"
+        },
+        {
+          "name": "qualification at the root",
+          "path": "/qualification",
+          "value": "qualified"
+        },
+        {
+          "name": "limits absent",
+          "path": "/limits",
+          "remove": true
+        },
+        {
+          "name": "limits.maxBodyBytes zero",
+          "path": "/limits/maxBodyBytes",
+          "value": 0
+        },
+        {
+          "name": "limits.maxAttachmentBytes fractional",
+          "path": "/limits/maxAttachmentBytes",
+          "value": 1.5
+        },
+        {
+          "name": "limits.maxAttachmentBytes above the safe integer range",
+          "path": "/limits/maxAttachmentBytes",
+          "value": 9007199254740992
+        },
+        {
+          "name": "limits.maxAttachmentsPerItem negative",
+          "path": "/limits/maxAttachmentsPerItem",
+          "value": -1
+        },
+        {
+          "name": "limits.maxBodyBytes is a string",
+          "path": "/limits/maxBodyBytes",
+          "value": "65536"
+        },
+        {
+          "name": "limits member absent",
+          "path": "/limits/maxAttachmentsPerItem",
+          "remove": true
+        },
+        {
+          "name": "conflictPolicy absent",
+          "path": "/conflictPolicy",
+          "remove": true
+        },
+        {
+          "name": "conflictPolicy.title unknown",
+          "path": "/conflictPolicy/title",
+          "value": "last-writer-wins"
+        },
+        {
+          "name": "conflictPolicy.closure absent",
+          "path": "/conflictPolicy/closure",
+          "remove": true
+        },
+        {
+          "name": "conflictPolicy carries an extra member",
+          "path": "/conflictPolicy/labels",
+          "value": "dossier-owned"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+[test]
+coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "coverage/signalement-routing-policy-v1"
+coverageThreshold = 0.9
+coverageSkipTestFiles = true
+# The canonicalizer, strict JSON parser and vector file loader retain their dedicated
+# full suites; this gate covers only the routing policy verifier.
+coveragePathIgnorePatterns = [
+  "**/authorized-execution.ts",
+  "**/policy-core-raw-inputs.ts",
+  "**/signalement-v1-vector-loader.ts",
+]

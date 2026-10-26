@@ -1,0 +1,902 @@
+{
+  "schemaVersion": "libre-ai.signalement-connector-profile-vectors.v1",
+  "valid": [
+    {
+      "name": "profile github-issues/github.com/rest-2022-11-28",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/rest-2022-11-28",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "rest",
+          "version": "2022-11-28"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      }
+    },
+    {
+      "name": "profile gitlab-issues/gitlab.com/rest-v4",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "gitlab-issues/gitlab.com/rest-v4",
+        "family": "gitlab-issues",
+        "edition": "gitlab.com",
+        "api": {
+          "style": "rest",
+          "version": "v4"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "personal-access-token",
+          "scopes": ["api"]
+        },
+        "bodyFormat": "markdown-glfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "supported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "filtered-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      }
+    },
+    {
+      "name": "profile jira-cloud/cloud/rest-v3",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "jira-cloud/cloud/rest-v3",
+        "family": "jira-cloud",
+        "edition": "cloud",
+        "api": {
+          "style": "rest",
+          "version": "v3"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "api-token",
+          "scopes": []
+        },
+        "bodyFormat": "adf",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "supported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "declared",
+          "consistentLookup": {
+            "method": "jql",
+            "status": "unsupported"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      }
+    },
+    {
+      "name": "profile plane/self-hosted/rest-v1",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "plane/self-hosted/rest-v1",
+        "family": "plane",
+        "edition": "self-hosted",
+        "api": {
+          "style": "rest",
+          "version": "v1"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "api-key",
+          "scopes": []
+        },
+        "bodyFormat": "html",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unproven",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "declared",
+          "consistentLookup": {
+            "method": "external-id",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      }
+    },
+    {
+      "name": "gitlab project access token is schema-valid (policy refuses it in the published profile, not the schema)",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "gitlab-issues/gitlab.com/rest-v4",
+        "family": "gitlab-issues",
+        "edition": "gitlab.com",
+        "api": {
+          "style": "rest",
+          "version": "v4"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "project-access-token",
+          "scopes": ["api"]
+        },
+        "bodyFormat": "markdown-glfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "supported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "filtered-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      }
+    },
+    {
+      "name": "no consistent lookup declared as unsupported",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "jira-cloud/cloud/rest-v3",
+        "family": "jira-cloud",
+        "edition": "cloud",
+        "api": {
+          "style": "rest",
+          "version": "v3"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "api-token",
+          "scopes": []
+        },
+        "bodyFormat": "adf",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "supported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "declared",
+          "consistentLookup": {
+            "method": "none",
+            "status": "unsupported"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      }
+    },
+    {
+      "name": "known provider version",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "plane/self-hosted/rest-v1",
+        "family": "plane",
+        "edition": "self-hosted",
+        "api": {
+          "style": "rest",
+          "version": "v1"
+        },
+        "providerVersion": "1.2.3",
+        "auth": {
+          "mode": "api-key",
+          "scopes": []
+        },
+        "bodyFormat": "html",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unproven",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "declared",
+          "consistentLookup": {
+            "method": "external-id",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      }
+    },
+    {
+      "name": "graphql api style",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/graphql-v4",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "graphql",
+          "version": "v4"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      }
+    },
+    {
+      "name": "limits set",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/rest-2022-11-28",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "rest",
+          "version": "2022-11-28"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": 65536,
+          "maxAttachmentBytes": 10485760,
+          "maxAttachmentsPerItem": 0
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "profileId differs from family, edition and api",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/rest-2022-11-29",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "rest",
+          "version": "2022-11-28"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "failures": ["profile.id_mismatch"]
+    },
+    {
+      "name": "profileId names another family",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "gitlab-issues/gitlab.com/rest-v3",
+        "family": "gitlab-issues",
+        "edition": "gitlab.com",
+        "api": {
+          "style": "rest",
+          "version": "v4"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "personal-access-token",
+          "scopes": ["api"]
+        },
+        "bodyFormat": "markdown-glfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "supported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "filtered-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "failures": ["profile.id_mismatch"]
+    },
+    {
+      "name": "api style differs from the id",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/rest-2022-11-28",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "graphql",
+          "version": "2022-11-28"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "failures": ["profile.id_mismatch"]
+    },
+    {
+      "name": "lookup method none with status supported",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "jira-cloud/cloud/rest-v3",
+        "family": "jira-cloud",
+        "edition": "cloud",
+        "api": {
+          "style": "rest",
+          "version": "v3"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "api-token",
+          "scopes": []
+        },
+        "bodyFormat": "adf",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "supported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "declared",
+          "consistentLookup": {
+            "method": "none",
+            "status": "supported"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "failures": ["profile.lookup_inconsistent"]
+    },
+    {
+      "name": "lookup method none with status unproven",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "jira-cloud/cloud/rest-v3",
+        "family": "jira-cloud",
+        "edition": "cloud",
+        "api": {
+          "style": "rest",
+          "version": "v3"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "api-token",
+          "scopes": []
+        },
+        "bodyFormat": "adf",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "supported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "declared",
+          "consistentLookup": {
+            "method": "none",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "failures": ["profile.lookup_inconsistent"]
+    },
+    {
+      "name": "capability value partial",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/rest-2022-11-28",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "rest",
+          "version": "2022-11-28"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "partial",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "failures": ["profile.schema"]
+    },
+    {
+      "name": "qualification member at the root",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/rest-2022-11-28",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "rest",
+          "version": "2022-11-28"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        },
+        "qualification": "qualified"
+      },
+      "failures": ["profile.schema"]
+    },
+    {
+      "name": "profileId with an unknown style is a schema failure",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/soap-2022-11-28",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "rest",
+          "version": "2022-11-28"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "failures": ["profile.schema"]
+    },
+    {
+      "name": "schema failure wins over id mismatch",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "github-issues/github.com/rest-2022-11-29",
+        "family": "github-issues",
+        "edition": "github.com",
+        "api": {
+          "style": "rest",
+          "version": "2022-11-28"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "fine-grained-token",
+          "scopes": ["issues:write", "metadata:read"]
+        },
+        "bodyFormat": "markdown-gfm",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "unsupported",
+          "comment": "partial",
+          "cursorRead": "unproven",
+          "visibility": "discovered",
+          "consistentLookup": {
+            "method": "issue-list",
+            "status": "unproven"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "failures": ["profile.schema"]
+    },
+    {
+      "name": "id mismatch wins over lookup inconsistency",
+      "document": {
+        "schemaVersion": "libre-ai.signalement-connector-profile.v1",
+        "profileId": "jira-cloud/cloud/rest-v4",
+        "family": "jira-cloud",
+        "edition": "cloud",
+        "api": {
+          "style": "rest",
+          "version": "v3"
+        },
+        "providerVersion": null,
+        "auth": {
+          "mode": "api-token",
+          "scopes": []
+        },
+        "bodyFormat": "adf",
+        "capabilities": {
+          "discovery": "unproven",
+          "mappingValidation": "unproven",
+          "idempotentCreate": "unproven",
+          "attachExisting": "unproven",
+          "attachmentUpload": "supported",
+          "comment": "unproven",
+          "cursorRead": "unproven",
+          "visibility": "declared",
+          "consistentLookup": {
+            "method": "none",
+            "status": "supported"
+          }
+        },
+        "limits": {
+          "maxBodyBytes": null,
+          "maxAttachmentBytes": null,
+          "maxAttachmentsPerItem": null
+        },
+        "conflictPolicy": {
+          "title": "dossier-owned",
+          "body": "dossier-owned",
+          "attachments": "dossier-owned",
+          "comments": "dossier-owned",
+          "status": "provider-owned",
+          "closure": "provider-owned"
+        }
+      },
+      "failures": ["profile.id_mismatch"]
+    },
+    {
+      "name": "duplicate member",
+      "raw": "eyJmYW1pbHkiOiJnaXRodWItaXNzdWVzIiwic2NoZW1hVmVyc2lvbiI6ImxpYnJlLWFpLnNpZ25hbGVtZW50LWNvbm5lY3Rvci1wcm9maWxlLnYxIiwicHJvZmlsZUlkIjoiZ2l0aHViLWlzc3Vlcy9naXRodWIuY29tL3Jlc3QtMjAyMi0xMS0yOCIsImZhbWlseSI6ImdpdGh1Yi1pc3N1ZXMiLCJlZGl0aW9uIjoiZ2l0aHViLmNvbSIsImFwaSI6eyJzdHlsZSI6InJlc3QiLCJ2ZXJzaW9uIjoiMjAyMi0xMS0yOCJ9LCJwcm92aWRlclZlcnNpb24iOm51bGwsImF1dGgiOnsibW9kZSI6ImZpbmUtZ3JhaW5lZC10b2tlbiIsInNjb3BlcyI6WyJpc3N1ZXM6d3JpdGUiLCJtZXRhZGF0YTpyZWFkIl19LCJib2R5Rm9ybWF0IjoibWFya2Rvd24tZ2ZtIiwiY2FwYWJpbGl0aWVzIjp7ImRpc2NvdmVyeSI6InVucHJvdmVuIiwibWFwcGluZ1ZhbGlkYXRpb24iOiJ1bnByb3ZlbiIsImlkZW1wb3RlbnRDcmVhdGUiOiJ1bnByb3ZlbiIsImF0dGFjaEV4aXN0aW5nIjoidW5wcm92ZW4iLCJhdHRhY2htZW50VXBsb2FkIjoidW5zdXBwb3J0ZWQiLCJjb21tZW50IjoidW5wcm92ZW4iLCJjdXJzb3JSZWFkIjoidW5wcm92ZW4iLCJ2aXNpYmlsaXR5IjoiZGlzY292ZXJlZCIsImNvbnNpc3RlbnRMb29rdXAiOnsibWV0aG9kIjoiaXNzdWUtbGlzdCIsInN0YXR1cyI6InVucHJvdmVuIn19LCJsaW1pdHMiOnsibWF4Qm9keUJ5dGVzIjpudWxsLCJtYXhBdHRhY2htZW50Qnl0ZXMiOm51bGwsIm1heEF0dGFjaG1lbnRzUGVySXRlbSI6bnVsbH0sImNvbmZsaWN0UG9saWN5Ijp7InRpdGxlIjoiZG9zc2llci1vd25lZCIsImJvZHkiOiJkb3NzaWVyLW93bmVkIiwiYXR0YWNobWVudHMiOiJkb3NzaWVyLW93bmVkIiwiY29tbWVudHMiOiJkb3NzaWVyLW93bmVkIiwic3RhdHVzIjoicHJvdmlkZXItb3duZWQiLCJjbG9zdXJlIjoicHJvdmlkZXItb3duZWQifX0",
+      "failures": ["profile.raw_json"]
+    },
+    {
+      "name": "truncated json",
+      "raw": "eyJzY2hlbWFWZXJzaW9uIjo",
+      "failures": ["profile.raw_json"]
+    }
+  ]
+}

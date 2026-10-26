@@ -1,0 +1,14 @@
+[test]
+coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "coverage/signalement-projection-receipt-v1"
+coverageThreshold = 0.9
+coverageSkipTestFiles = true
+# The canonicalizer, strict JSON parser, vector file loader and fixture inventory retain their
+# dedicated full suites; this gate covers the projection receipt verifier and its corpus generator.
+coveragePathIgnorePatterns = [
+  "**/authorized-execution.ts",
+  "**/policy-core-raw-inputs.ts",
+  "**/signalement-v1-vector-loader.ts",
+  "**/signalement-v1-fixture-inventory.ts",
+]

@@ -1,0 +1,423 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "signalement-routing-policy.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.signalement-routing-policy.v1",
+        "organization": "example-org",
+        "policyId": "default-routing",
+        "version": "1",
+        "destinations": [
+          {
+            "id": "d-gh",
+            "profileId": "github-issues/github.com/rest-2022-11-28",
+            "target": {
+              "kind": "github-repository",
+              "owner": "example-org",
+              "repository": "widgets"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "discovered",
+            "mediaFallback": "link"
+          },
+          {
+            "id": "d-gl",
+            "profileId": "gitlab-issues/gitlab.com/rest-v4",
+            "target": {
+              "kind": "gitlab-project",
+              "projectPath": "example-group/widgets"
+            },
+            "residency": "eu",
+            "visibilitySource": "discovered"
+          },
+          {
+            "id": "d-jira",
+            "profileId": "jira-cloud/cloud/rest-v3",
+            "target": {
+              "kind": "jira-project",
+              "siteUrl": "https://example.atlassian.net",
+              "projectKey": "WID"
+            },
+            "residency": "non-eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private",
+            "mediaFallback": "withhold"
+          },
+          {
+            "id": "d-plane",
+            "profileId": "plane/self-hosted/rest-v1",
+            "target": {
+              "kind": "plane-project",
+              "baseUrl": "https://plane.example.org",
+              "workspaceSlug": "example",
+              "projectId": "3f1c2a9e-5b7d-4c1e-9a2b-6d8e0f1a2b3c"
+            },
+            "residency": "eu",
+            "visibilitySource": "declared",
+            "declaredVisibility": "private"
+          }
+        ],
+        "routingRules": [
+          {
+            "id": "r-app",
+            "match": {
+              "origin": "https://app.example.com"
+            },
+            "imposed": ["d-plane"],
+            "optional": ["d-gl"],
+            "selectable": ["d-gh"],
+            "denied": ["d-jira"],
+            "override": "allowed"
+          },
+          {
+            "id": "r-subdomains",
+            "match": {
+              "scheme": "https",
+              "hostPattern": "*.example.com",
+              "port": null
+            },
+            "imposed": ["d-gl"],
+            "optional": [],
+            "selectable": [],
+            "denied": []
+          },
+          {
+            "id": "r-absent",
+            "match": {
+              "absent": true
+            },
+            "imposed": ["d-plane"],
+            "optional": [],
+            "selectable": [],
+            "denied": ["d-gh"],
+            "override": "denied"
+          }
+        ],
+        "disclosureRules": [
+          {
+            "id": "x-public-media",
+            "roles": ["screenshot", "video"],
+            "when": {
+              "visibility": "public"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-non-eu-video",
+            "roles": ["video"],
+            "when": {
+              "residency": "non-eu"
+            },
+            "decision": "withhold"
+          },
+          {
+            "id": "x-default",
+            "roles": ["document", "screenshot", "video"],
+            "when": {
+              "always": true
+            },
+            "decision": "transmit"
+          }
+        ]
+      },
+      "invalidMutations": [
+        {
+          "name": "schemaVersion differs",
+          "path": "/schemaVersion",
+          "value": "libre-ai.signalement-routing-policy.v2"
+        },
+        {
+          "name": "schemaVersion absent",
+          "path": "/schemaVersion",
+          "remove": true
+        },
+        {
+          "name": "organization absent",
+          "path": "/organization",
+          "remove": true
+        },
+        {
+          "name": "organization uppercase",
+          "path": "/organization",
+          "value": "Example-Org"
+        },
+        {
+          "name": "organization longer than 64",
+          "path": "/organization",
+          "value": "o12345678901234567890123456789012345678901234567890123456789012345"
+        },
+        {
+          "name": "policyId absent",
+          "path": "/policyId",
+          "remove": true
+        },
+        {
+          "name": "policyId starting with a digit",
+          "path": "/policyId",
+          "value": "1-routing"
+        },
+        {
+          "name": "version zero",
+          "path": "/version",
+          "value": "0"
+        },
+        {
+          "name": "version of eleven digits",
+          "path": "/version",
+          "value": "10000000000"
+        },
+        {
+          "name": "version as a number",
+          "path": "/version",
+          "value": 1
+        },
+        {
+          "name": "destinations empty",
+          "path": "/destinations",
+          "value": []
+        },
+        {
+          "name": "routingRules absent",
+          "path": "/routingRules",
+          "remove": true
+        },
+        {
+          "name": "disclosureRules absent",
+          "path": "/disclosureRules",
+          "remove": true
+        },
+        {
+          "name": "unknown root member",
+          "path": "/state",
+          "value": "approved"
+        },
+        {
+          "name": "destination unknown member",
+          "path": "/destinations/0/extra",
+          "value": true
+        },
+        {
+          "name": "destination id absent",
+          "path": "/destinations/0/id",
+          "remove": true
+        },
+        {
+          "name": "profileId uppercase",
+          "path": "/destinations/0/profileId",
+          "value": "GitHub-Issues/github.com/rest-2022-11-28"
+        },
+        {
+          "name": "profileId with two segments",
+          "path": "/destinations/0/profileId",
+          "value": "github-issues/github.com"
+        },
+        {
+          "name": "target kind unknown",
+          "path": "/destinations/0/target/kind",
+          "value": "bitbucket-repository"
+        },
+        {
+          "name": "github owner starting with a hyphen",
+          "path": "/destinations/0/target/owner",
+          "value": "-example"
+        },
+        {
+          "name": "github repository dot-dot",
+          "path": "/destinations/0/target/repository",
+          "value": ".."
+        },
+        {
+          "name": "target unknown member",
+          "path": "/destinations/0/target/token",
+          "value": "x"
+        },
+        {
+          "name": "gitlab project path with one segment",
+          "path": "/destinations/1/target/projectPath",
+          "value": "widgets"
+        },
+        {
+          "name": "jira site outside atlassian.net",
+          "path": "/destinations/2/target/siteUrl",
+          "value": "https://jira.example.com"
+        },
+        {
+          "name": "jira project key lowercase",
+          "path": "/destinations/2/target/projectKey",
+          "value": "wid"
+        },
+        {
+          "name": "plane base URL over http",
+          "path": "/destinations/3/target/baseUrl",
+          "value": "http://plane.example.org"
+        },
+        {
+          "name": "plane project id uppercase",
+          "path": "/destinations/3/target/projectId",
+          "value": "3F1C2A9E-5B7D-4C1E-9A2B-6D8E0F1A2B3C"
+        },
+        {
+          "name": "residency us",
+          "path": "/destinations/0/residency",
+          "value": "us"
+        },
+        {
+          "name": "visibilitySource guessed",
+          "path": "/destinations/0/visibilitySource",
+          "value": "guessed"
+        },
+        {
+          "name": "declaredVisibility on a discovered destination",
+          "path": "/destinations/0/declaredVisibility",
+          "value": "public"
+        },
+        {
+          "name": "declaredVisibility absent on a declared destination",
+          "path": "/destinations/2/declaredVisibility",
+          "remove": true
+        },
+        {
+          "name": "declaredVisibility internal",
+          "path": "/destinations/2/declaredVisibility",
+          "value": "internal"
+        },
+        {
+          "name": "mediaFallback inline",
+          "path": "/destinations/0/mediaFallback",
+          "value": "inline"
+        },
+        {
+          "name": "routing rule unknown member",
+          "path": "/routingRules/0/priority",
+          "value": 1
+        },
+        {
+          "name": "match empty",
+          "path": "/routingRules/0/match",
+          "value": {}
+        },
+        {
+          "name": "origin with a path",
+          "path": "/routingRules/0/match/origin",
+          "value": "https://app.example.com/report"
+        },
+        {
+          "name": "origin with an ftp scheme",
+          "path": "/routingRules/0/match/origin",
+          "value": "ftp://app.example.com"
+        },
+        {
+          "name": "origin and absent together",
+          "path": "/routingRules/0/match/absent",
+          "value": true
+        },
+        {
+          "name": "host pattern on a top-level domain",
+          "path": "/routingRules/1/match/hostPattern",
+          "value": "*.com"
+        },
+        {
+          "name": "host pattern naming an apex",
+          "path": "/routingRules/1/match/hostPattern",
+          "value": "example.com"
+        },
+        {
+          "name": "host pattern uppercase",
+          "path": "/routingRules/1/match/hostPattern",
+          "value": "*.Example.com"
+        },
+        {
+          "name": "scheme ftp",
+          "path": "/routingRules/1/match/scheme",
+          "value": "ftp"
+        },
+        {
+          "name": "port zero",
+          "path": "/routingRules/1/match/port",
+          "value": 0
+        },
+        {
+          "name": "port above 65535",
+          "path": "/routingRules/1/match/port",
+          "value": 65536
+        },
+        {
+          "name": "port absent",
+          "path": "/routingRules/1/match/port",
+          "remove": true
+        },
+        {
+          "name": "absent false",
+          "path": "/routingRules/2/match/absent",
+          "value": false
+        },
+        {
+          "name": "imposed absent",
+          "path": "/routingRules/0/imposed",
+          "remove": true
+        },
+        {
+          "name": "imposed with a duplicate entry",
+          "path": "/routingRules/0/imposed",
+          "value": ["d-plane", "d-plane"]
+        },
+        {
+          "name": "denied entry not an id",
+          "path": "/routingRules/0/denied",
+          "value": ["D-JIRA"]
+        },
+        {
+          "name": "override maybe",
+          "path": "/routingRules/0/override",
+          "value": "maybe"
+        },
+        {
+          "name": "disclosure rule unknown member",
+          "path": "/disclosureRules/0/priority",
+          "value": 1
+        },
+        {
+          "name": "roles empty",
+          "path": "/disclosureRules/0/roles",
+          "value": []
+        },
+        {
+          "name": "roles with a duplicate",
+          "path": "/disclosureRules/0/roles",
+          "value": ["video", "video"]
+        },
+        {
+          "name": "role log",
+          "path": "/disclosureRules/0/roles",
+          "value": ["log"]
+        },
+        {
+          "name": "condition empty",
+          "path": "/disclosureRules/2/when",
+          "value": {}
+        },
+        {
+          "name": "condition with two members",
+          "path": "/disclosureRules/2/when",
+          "value": {
+            "always": true,
+            "residency": "eu"
+          }
+        },
+        {
+          "name": "always false",
+          "path": "/disclosureRules/2/when",
+          "value": {
+            "always": false
+          }
+        },
+        {
+          "name": "decision allow",
+          "path": "/disclosureRules/2/decision",
+          "value": "allow"
+        }
+      ]
+    }
+  ]
+}

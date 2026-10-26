@@ -1,0 +1,137 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "signalement-delivery-envelope.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.signalement-delivery-envelope.v1",
+        "deliveryId": "3f2b8c1e-5a47-4d9b-8e21-7c6d0a9f4b13",
+        "exportSha256": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "exportByteLength": 2048,
+        "observedOrigin": "https://app.example.com"
+      },
+      "invalidMutations": [
+        {
+          "name": "schemaVersion differs",
+          "path": "/schemaVersion",
+          "value": "libre-ai.signalement-delivery-envelope.v2"
+        },
+        {
+          "name": "schemaVersion absent",
+          "path": "/schemaVersion",
+          "remove": true
+        },
+        {
+          "name": "deliveryId absent",
+          "path": "/deliveryId",
+          "remove": true
+        },
+        {
+          "name": "deliveryId not a UUID",
+          "path": "/deliveryId",
+          "value": "delivery-1"
+        },
+        {
+          "name": "deliveryId is version 1",
+          "path": "/deliveryId",
+          "value": "3f2b8c1e-5a47-1d9b-8e21-7c6d0a9f4b13"
+        },
+        {
+          "name": "deliveryId has a wrong variant",
+          "path": "/deliveryId",
+          "value": "3f2b8c1e-5a47-4d9b-ce21-7c6d0a9f4b13"
+        },
+        {
+          "name": "deliveryId upper-case",
+          "path": "/deliveryId",
+          "value": "3F2B8C1E-5A47-4D9B-8E21-7C6D0A9F4B13"
+        },
+        {
+          "name": "exportSha256 absent",
+          "path": "/exportSha256",
+          "remove": true
+        },
+        {
+          "name": "exportSha256 upper-case",
+          "path": "/exportSha256",
+          "value": "9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08"
+        },
+        {
+          "name": "exportSha256 63 characters",
+          "path": "/exportSha256",
+          "value": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a0"
+        },
+        {
+          "name": "exportSha256 65 characters",
+          "path": "/exportSha256",
+          "value": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a080"
+        },
+        {
+          "name": "exportByteLength absent",
+          "path": "/exportByteLength",
+          "remove": true
+        },
+        {
+          "name": "exportByteLength zero",
+          "path": "/exportByteLength",
+          "value": 0
+        },
+        {
+          "name": "exportByteLength above the cap",
+          "path": "/exportByteLength",
+          "value": 269500417
+        },
+        {
+          "name": "exportByteLength fractional",
+          "path": "/exportByteLength",
+          "value": 1.5
+        },
+        {
+          "name": "exportByteLength a string",
+          "path": "/exportByteLength",
+          "value": "2048"
+        },
+        {
+          "name": "observedOrigin absent",
+          "path": "/observedOrigin",
+          "remove": true
+        },
+        {
+          "name": "observedOrigin the string null",
+          "path": "/observedOrigin",
+          "value": "null"
+        },
+        {
+          "name": "observedOrigin with a path",
+          "path": "/observedOrigin",
+          "value": "https://app.example.com/report"
+        },
+        {
+          "name": "observedOrigin file scheme",
+          "path": "/observedOrigin",
+          "value": "file:///etc/hosts"
+        },
+        {
+          "name": "observedOrigin upper-case host",
+          "path": "/observedOrigin",
+          "value": "https://App.Example.com"
+        },
+        {
+          "name": "observedOrigin zero port",
+          "path": "/observedOrigin",
+          "value": "https://app.example.com:0"
+        },
+        {
+          "name": "observedOrigin 268 characters",
+          "path": "/observedOrigin",
+          "value": "https://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "name": "unknown member",
+          "path": "/unexpected",
+          "value": true
+        }
+      ]
+    }
+  ]
+}

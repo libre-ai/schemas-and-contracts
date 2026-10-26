@@ -1,0 +1,688 @@
+{
+  "schemaVersion": "libre-ai.signalement-projection-receipt-signature-vectors.v1",
+  "testMaterialWarning": "Synthetic keys derived from public labels. Never use outside tests.",
+  "domain": "libre-ai.signalement-projection-receipt.v1",
+  "parts": ["signature-vectors.v1.part-2.json", "signature-vectors.v1.part-3.json"],
+  "vectors": [
+    {
+      "id": "valid-active",
+      "description": "Signed by the active test key 1 inside its window.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "C7Zrttb76iDrhfHPDgZByL3D3dzke4TjR4Zv6yx-5Mg",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiWG9JSWZid291ZVBHY0MtV043WEczNHNiN0RoeVRYN2JSa3NPYkI3bWpiZnVCVTVGbTdEcUhOQTBhaWF4SUUydm91dXo1OUplNW9yU2ZYMHpWblFtRGcifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "valid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": null
+      }
+    },
+    {
+      "id": "valid-retired",
+      "description": "Signed by the retired test key 2, issued inside its window.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "C7Zrttb76iDrhfHPDgZByL3D3dzke4TjR4Zv6yx-5Mg",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0wOC0xNVQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0wOC0xNVQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTIiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiTzhsTy1zd0dZYm1xVXpmZkxYRi1raWFpNGVtcGdvMEgtVV9zVkZLM2VnZV96RWVHdzBGRkZDcmpsbS1yZVo1aWhrMWJ4aVRlaDZncTBQMHRKSUVFREEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "valid",
+        "keyId": "test-key-2",
+        "keyStatus": "retired",
+        "reason": null
+      }
+    },
+    {
+      "id": "key-unknown",
+      "description": "Signed by test key 3, absent from the key set.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "C7Zrttb76iDrhfHPDgZByL3D3dzke4TjR4Zv6yx-5Mg",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTMiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoicTU5RjdoUEE0SWdReW1YMU1WTm0xTGVFOEFzY1hqV3BkRGluWVNGRFZkS1d1amlFZlowLWhsM2pWM01sdURhdkk5ekptNExhTlU3R3BBMUl6OWI5QncifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "unknown-key",
+        "keyId": "test-key-3",
+        "keyStatus": null,
+        "reason": "key.unknown"
+      }
+    },
+    {
+      "id": "key-outside-validity",
+      "description": "Signed by test key 2, issued exactly at its notAfter (excluded).",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "C7Zrttb76iDrhfHPDgZByL3D3dzke4TjR4Zv6yx-5Mg",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0wOC0zMVQyMzo1OTo1OFoiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0wOS0wMVQwMDowMDowMFoiLCJrZXlJZCI6InRlc3Qta2V5LTIiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiQk85a0FDVXU0MXloN0lPVnl1d0FVa0FYOGV1bkNfLU96RGNIYlhRUmhjR2Y1U0NoMDEwTHFLdmxtaWZCVnROUkZJQ1FkTENMbzZpMXpaQWRZX3JqQlEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-2",
+        "keyStatus": "retired",
+        "reason": "key.outside_validity"
+      }
+    },
+    {
+      "id": "key-identity",
+      "description": "Public key A and R are the identity point, S = 0.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
+      "id": "key-mixed-order-1",
+      "description": "Public key A + torsion-1 (mixed order), S = r + k a over that key.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "zLGesmzjbRrnHRN8tcoJoKz1QBZkop5qWMZ9QiGKDVI",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiX2lwQk9tU3h5VHlWSzlCeS1KMy1icTBmS25zNUpacHByb0d2bG00dE1RMUQtY0xRRVN5MmFwZHd5aTBCRmF2d3B3bVJfeEtCVE52T21oN1VWdnloQlEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
+      "id": "key-mixed-order-2",
+      "description": "Public key A + torsion-2 (mixed order), S = r + k a over that key.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "1NPjnLNPH786j4x7lSK8a4Iav97uosNBt-7wQFTTWX8",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoic2NMd29Ya1Ffbko1ckxUd1ZTU0s3V0lNRW5GYzV4Z01PQjlFYjhHWVZiaVREQUI0dU55UExFWE1OYjhhT29TRFNLRnJLVzJKZXViRXRPcko4NklSQ2cifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
+      "id": "key-mixed-order-3",
+      "description": "Public key A + torsion-3 (mixed order), S = r + k a over that key.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "ozQ6KH4diLUbJ0lZ6zvs0fofdx67agvH8idcGELhWOk",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiOVZFSEN1ZEhzMFllOU1tdFFtazk0cmc3dEdCZjFXdHBXaXBKVkt1SHo4Ukx5eDE3amV5TWljNzFiMUNuVUxuZi0tRU5iSEJaRUdCWnVqaHBhUkxhRHcifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
+      "id": "key-mixed-order-4",
+      "description": "Public key A + torsion-4 (mixed order), S = r + k a over that key.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "4kmUSSkEFd8Ueg4w8fm-N0I8IiMbhHscuHmQFNOBGzc",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoibTVCTy15NFZZLUFUZ1RXZWNqMnFnMTBFTF9VcTJaeXJpOW00dzlpQWh4akhsYVJrWXI2TWY0dTFMNGgyUEVTQ1JPNTNycUNETFh3T3pWSDJCTnZVQ0EifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
+      "id": "key-mixed-order-5",
+      "description": "Public key A + torsion-5 (mixed order), S = r + k a over that key.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "IU5hTZMckuUY4uyDSjX2X1MKv-mbXWGVpzmCvd518q0",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiTHNjR3R1LTNUODRQR3BacUdPV1RxMHRoTzBFY090SU9NeWU0S3VBbmNjTEVIeVJ3bnh2UUp2TENvcVpHVzZXUUZvLWtNNE1qS1NpaW0weXV4X2laQVEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
+      "id": "key-mixed-order-6",
+      "description": "Public key A + torsion-6 (mixed order), S = r + k a over that key.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "GSwcY0yw4EDFcHOEat1DlH3lQCERXTy-SBEPv6sspoA",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoieEZBcWR2bHNBbVQ4a25JLWlWYWhYVFBnaFBFd2Q0QmVxOUtOM1FhYWFlc1pseDJkRExjNThBQnBwS3NTZ05qY0w3WnY2bTZFOVdfbUo3M1RRNTZpQ0EifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
+      "id": "key-mixed-order-7",
+      "description": "Public key A + torsion-7 (mixed order), S = r + k a over that key.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "SsvF14Hid0rk2LamFMQTLgXgiOFElfQ4Ddij570epxY",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiUnpNSUZCemlRNzJ5MUY3SmY1bjYxN2xjaXBmM1BRMDRIUGwzMVRQUE80blExaDRrdi1LbDJTVWhCZVI4SXJ3cGFIXzN2OXpINl90ZHBFZTNjLS11Q3cifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
+      "id": "key-non-canonical-identity",
+      "description": "Public key A is the identity written with y = p + 1 (not canonical), R the identity, S = 0.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "7v_______________________________________38",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "key.not_admissible"
+      }
+    },
+    {
+      "id": "r-identity",
+      "description": "R is the identity point, S = k a.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "C7Zrttb76iDrhfHPDgZByL3D3dzke4TjR4Zv6yx-5Mg",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiQVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQW1OOHJ4WlRjcUs4bkE2VkR4Y0NOc1NWWEhnWkV1NVRzQzRteWRQTW1GQVEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "signature.r_not_admissible"
+      }
+    },
+    {
+      "id": "r-torsion-1",
+      "description": "R is torsion-1 (small order), S = k a.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "C7Zrttb76iDrhfHPDgZByL3D3dzke4TjR4Zv6yx-5Mg",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoieHhkcWNEMU4yRS02UEF0MkRSQm5EeW9nVV9vc09jekdUc2Y5ZDVLc0EzcjJsdkwyOThDWGo4dHJiVk84ejZ3SjNEZ3BaeTJ5UVpIZFd2ekMzZDZEQUEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "signature.r_not_admissible"
+      }
+    },
+    {
+      "id": "r-torsion-2",
+      "description": "R is torsion-2 (small order), S = k a.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "C7Zrttb76iDrhfHPDgZByL3D3dzke4TjR4Zv6yx-5Mg",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFJRE9yWGlZa1RiYkZjTXgwTUM1ekxjQ3RKWUp5aGU0eEdiUmVJSlNEdk1fQ2cifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "signature.r_not_admissible"
+      }
+    },
+    {
+      "id": "r-torsion-3",
+      "description": "R is torsion-3 (small order), S = k a.",
+      "keySet": {
+        "organization": "example-org",
+        "keys": [
+          {
+            "keyId": "test-key-1",
+            "algorithm": "ed25519",
+            "publicKey": "C7Zrttb76iDrhfHPDgZByL3D3dzke4TjR4Zv6yx-5Mg",
+            "status": "active",
+            "notBefore": "2026-09-01T00:00:00Z",
+            "notAfter": null
+          },
+          {
+            "keyId": "test-key-2",
+            "algorithm": "ed25519",
+            "publicKey": "AMeKWbZIBqapaclfoyb0W7iqPu3CuUWlZKU3qup_k10",
+            "status": "retired",
+            "notBefore": "2026-01-01T00:00:00Z",
+            "notAfter": "2026-09-01T00:00:00Z"
+          }
+        ]
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiSnVpVmo4S3lKN0JGd19TSjh1LVk4TlhmckFYVHhqTTVzVGdDaUcxVF9BWHFWTTUwbV9GZkMzMGNCUWJ5SGgwMlV3QU91Wm1YMGI5UXc0X2lNYU9CRGcifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ",
+      "expected": {
+        "signature": "invalid",
+        "keyId": "test-key-1",
+        "keyStatus": "active",
+        "reason": "signature.r_not_admissible"
+      }
+    }
+  ],
+  "signCases": [
+    {
+      "id": "valid-active",
+      "seed": "I7SmBwUfx4RZSUlDzYTHbVwOpVhK_tZGWyQUJDhyGmE",
+      "unsigned": {
+        "schemaVersion": "libre-ai.signalement-projection-receipt.v1",
+        "organization": "example-org",
+        "keyId": "test-key-1",
+        "issuedAt": "2026-10-24T10:00:05Z",
+        "deliveredAt": "2026-10-24T10:00:03Z",
+        "exportDigest": "d46aee08cc49f6d1eb41800c1d6bab4506c960c700cff0efffe490d7cb1de5e3",
+        "projectionId": "1b250ea199bec73d392caad39d1167d6edc43c81f20edead86eea52c52b94fc1",
+        "mappingVersion": "1.0.0",
+        "operation": "create",
+        "revision": 1,
+        "destinationId": "team-tracker",
+        "profileId": "gitlab-issues/gitlab.com/rest-v4",
+        "remote": {
+          "id": "1042",
+          "url": "https://tracker.example.com/example-project/issues/42"
+        },
+        "transmitted": [
+          {
+            "path": "README.md",
+            "sha256": "b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5",
+            "via": "body"
+          },
+          {
+            "path": "media/screenshot-1.png",
+            "sha256": "a458d2a0cb1e91992d020812c00a810660e91bcb63b75b4756df3d66df24f06e",
+            "via": "attachment"
+          },
+          {
+            "path": "media/recording-1.webm",
+            "sha256": "0c0123ec4bbc0bdcbed4458c0e61373879019db103dba5be59541bec96c92952",
+            "via": "link"
+          }
+        ],
+        "withheld": [
+          {
+            "path": "media/screenshot-2.png",
+            "reason": "public-destination"
+          }
+        ],
+        "rendered": {
+          "rendererVersion": "1.0.0",
+          "bodyDigest": "daeeaa7ac9b77a3ea4b7562d25b48899d1c312b5213757d58d74a90f160dfc29",
+          "mediaLinks": [
+            {
+              "path": "media/recording-1.webm",
+              "url": "https://media.example.com/signalement/recording-1.webm"
+            }
+          ]
+        },
+        "requestBodyDigests": [
+          "19f1064b619d49d35392eac7261cd7266c720671fc594f4b226f32bf0bee74ba",
+          "6fc63565247226593c49a36e9da488e6e1c33a9a1fcd8a76f55573483136b880"
+        ],
+        "policy": {
+          "version": "3",
+          "digest": "0afac0742c18deb3ff92bd0c20e97bb2a6c3035edde872d25ad5f57e96fe453e"
+        },
+        "approval": {
+          "reference": "approval-7"
+        }
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0xMC0yNFQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTEiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiWG9JSWZid291ZVBHY0MtV043WEczNHNiN0RoeVRYN2JSa3NPYkI3bWpiZnVCVTVGbTdEcUhOQTBhaWF4SUUydm91dXo1OUplNW9yU2ZYMHpWblFtRGcifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ"
+    },
+    {
+      "id": "valid-retired",
+      "seed": "issIdN-xS66ETsBmaVhXs6mERBZReo_Y2CjW8Pa2TwI",
+      "unsigned": {
+        "schemaVersion": "libre-ai.signalement-projection-receipt.v1",
+        "organization": "example-org",
+        "keyId": "test-key-2",
+        "issuedAt": "2026-08-15T10:00:05Z",
+        "deliveredAt": "2026-08-15T10:00:03Z",
+        "exportDigest": "d46aee08cc49f6d1eb41800c1d6bab4506c960c700cff0efffe490d7cb1de5e3",
+        "projectionId": "1b250ea199bec73d392caad39d1167d6edc43c81f20edead86eea52c52b94fc1",
+        "mappingVersion": "1.0.0",
+        "operation": "create",
+        "revision": 1,
+        "destinationId": "team-tracker",
+        "profileId": "gitlab-issues/gitlab.com/rest-v4",
+        "remote": {
+          "id": "1042",
+          "url": "https://tracker.example.com/example-project/issues/42"
+        },
+        "transmitted": [
+          {
+            "path": "README.md",
+            "sha256": "b335630551682c19a781afebcf4d07bf978fb1f8ac04c6bf87428ed5106870f5",
+            "via": "body"
+          },
+          {
+            "path": "media/screenshot-1.png",
+            "sha256": "a458d2a0cb1e91992d020812c00a810660e91bcb63b75b4756df3d66df24f06e",
+            "via": "attachment"
+          },
+          {
+            "path": "media/recording-1.webm",
+            "sha256": "0c0123ec4bbc0bdcbed4458c0e61373879019db103dba5be59541bec96c92952",
+            "via": "link"
+          }
+        ],
+        "withheld": [
+          {
+            "path": "media/screenshot-2.png",
+            "reason": "public-destination"
+          }
+        ],
+        "rendered": {
+          "rendererVersion": "1.0.0",
+          "bodyDigest": "daeeaa7ac9b77a3ea4b7562d25b48899d1c312b5213757d58d74a90f160dfc29",
+          "mediaLinks": [
+            {
+              "path": "media/recording-1.webm",
+              "url": "https://media.example.com/signalement/recording-1.webm"
+            }
+          ]
+        },
+        "requestBodyDigests": [
+          "19f1064b619d49d35392eac7261cd7266c720671fc594f4b226f32bf0bee74ba",
+          "6fc63565247226593c49a36e9da488e6e1c33a9a1fcd8a76f55573483136b880"
+        ],
+        "policy": {
+          "version": "3",
+          "digest": "0afac0742c18deb3ff92bd0c20e97bb2a6c3035edde872d25ad5f57e96fe453e"
+        },
+        "approval": {
+          "reference": "approval-7"
+        }
+      },
+      "signed": "eyJhcHByb3ZhbCI6eyJyZWZlcmVuY2UiOiJhcHByb3ZhbC03In0sImRlbGl2ZXJlZEF0IjoiMjAyNi0wOC0xNVQxMDowMDowM1oiLCJkZXN0aW5hdGlvbklkIjoidGVhbS10cmFja2VyIiwiZXhwb3J0RGlnZXN0IjoiZDQ2YWVlMDhjYzQ5ZjZkMWViNDE4MDBjMWQ2YmFiNDUwNmM5NjBjNzAwY2ZmMGVmZmZlNDkwZDdjYjFkZTVlMyIsImlzc3VlZEF0IjoiMjAyNi0wOC0xNVQxMDowMDowNVoiLCJrZXlJZCI6InRlc3Qta2V5LTIiLCJtYXBwaW5nVmVyc2lvbiI6IjEuMC4wIiwib3BlcmF0aW9uIjoiY3JlYXRlIiwib3JnYW5pemF0aW9uIjoiZXhhbXBsZS1vcmciLCJwb2xpY3kiOnsiZGlnZXN0IjoiMGFmYWMwNzQyYzE4ZGViM2ZmOTJiZDBjMjBlOTdiYjJhNmMzMDM1ZWRkZTg3MmQyNWFkNWY1N2U5NmZlNDUzZSIsInZlcnNpb24iOiIzIn0sInByb2ZpbGVJZCI6ImdpdGxhYi1pc3N1ZXMvZ2l0bGFiLmNvbS9yZXN0LXY0IiwicHJvamVjdGlvbklkIjoiMWIyNTBlYTE5OWJlYzczZDM5MmNhYWQzOWQxMTY3ZDZlZGM0M2M4MWYyMGVkZWFkODZlZWE1MmM1MmI5NGZjMSIsInJlbW90ZSI6eyJpZCI6IjEwNDIiLCJ1cmwiOiJodHRwczovL3RyYWNrZXIuZXhhbXBsZS5jb20vZXhhbXBsZS1wcm9qZWN0L2lzc3Vlcy80MiJ9LCJyZW5kZXJlZCI6eyJib2R5RGlnZXN0IjoiZGFlZWFhN2FjOWI3N2EzZWE0Yjc1NjJkMjViNDg4OTlkMWMzMTJiNTIxMzc1N2Q1OGQ3NGE5MGYxNjBkZmMyOSIsIm1lZGlhTGlua3MiOlt7InBhdGgiOiJtZWRpYS9yZWNvcmRpbmctMS53ZWJtIiwidXJsIjoiaHR0cHM6Ly9tZWRpYS5leGFtcGxlLmNvbS9zaWduYWxlbWVudC9yZWNvcmRpbmctMS53ZWJtIn1dLCJyZW5kZXJlclZlcnNpb24iOiIxLjAuMCJ9LCJyZXF1ZXN0Qm9keURpZ2VzdHMiOlsiMTlmMTA2NGI2MTlkNDlkMzUzOTJlYWM3MjYxY2Q3MjY2YzcyMDY3MWZjNTk0ZjRiMjI2ZjMyYmYwYmVlNzRiYSIsIjZmYzYzNTY1MjQ3MjI2NTkzYzQ5YTM2ZTlkYTQ4OGU2ZTFjMzNhOWExZmNkOGE3NmY1NTU3MzQ4MzEzNmI4ODAiXSwicmV2aXNpb24iOjEsInNjaGVtYVZlcnNpb24iOiJsaWJyZS1haS5zaWduYWxlbWVudC1wcm9qZWN0aW9uLXJlY2VpcHQudjEiLCJzaWduYXR1cmUiOnsiYWxnb3JpdGhtIjoiZWQyNTUxOSIsInZhbHVlIjoiTzhsTy1zd0dZYm1xVXpmZkxYRi1raWFpNGVtcGdvMEgtVV9zVkZLM2VnZV96RWVHdzBGRkZDcmpsbS1yZVo1aWhrMWJ4aVRlaDZncTBQMHRKSUVFREEifSwidHJhbnNtaXR0ZWQiOlt7InBhdGgiOiJSRUFETUUubWQiLCJzaGEyNTYiOiJiMzM1NjMwNTUxNjgyYzE5YTc4MWFmZWJjZjRkMDdiZjk3OGZiMWY4YWMwNGM2YmY4NzQyOGVkNTEwNjg3MGY1IiwidmlhIjoiYm9keSJ9LHsicGF0aCI6Im1lZGlhL3NjcmVlbnNob3QtMS5wbmciLCJzaGEyNTYiOiJhNDU4ZDJhMGNiMWU5MTk5MmQwMjA4MTJjMDBhODEwNjYwZTkxYmNiNjNiNzViNDc1NmRmM2Q2NmRmMjRmMDZlIiwidmlhIjoiYXR0YWNobWVudCJ9LHsicGF0aCI6Im1lZGlhL3JlY29yZGluZy0xLndlYm0iLCJzaGEyNTYiOiIwYzAxMjNlYzRiYmMwYmRjYmVkNDQ1OGMwZTYxMzczODc5MDE5ZGIxMDNkYmE1YmU1OTU0MWJlYzk2YzkyOTUyIiwidmlhIjoibGluayJ9XSwid2l0aGhlbGQiOlt7InBhdGgiOiJtZWRpYS9zY3JlZW5zaG90LTIucG5nIiwicmVhc29uIjoicHVibGljLWRlc3RpbmF0aW9uIn1dfQ"
+    }
+  ]
+}
