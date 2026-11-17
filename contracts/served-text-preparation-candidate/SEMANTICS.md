@@ -59,8 +59,9 @@ inclusive ranges, written as literals in `removedRanges`:
 
 The table is a literal, not a property lookup: an implementation on another Unicode
 version must still remove exactly these ranges. `unicodeVersion` names the version the
-table was derived from, and the reference test refuses to run its property comparison
-on any other.
+table was derived from. The reference test compares the table with that version's
+Unicode Character Database files, vendored with pinned digests under
+`third_party/unicode-ucd-17.0.0/`, never with the tables of the runtime it runs on.
 
 White space is not removed: TAB, LF, U+0020, U+00A0 and the other `Zs` spaces stay.
 `keptNeighbours` lists the 55 code points that sit on the outer edge of a range; each

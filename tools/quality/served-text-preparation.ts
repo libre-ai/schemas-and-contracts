@@ -9,7 +9,7 @@
 // Why the tables are literals: a table derived at run time from the Unicode
 // data of the runtime would follow the runtime, and two implementations on two
 // Unicode versions would silently disagree. The test compares these literals
-// with the runtime's Unicode 17.0 properties; the literals are the contract.
+// with the vendored Unicode 17.0 character database; the literals are the contract.
 
 import { createHash } from "node:crypto";
 
