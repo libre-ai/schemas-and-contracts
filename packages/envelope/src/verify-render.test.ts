@@ -2,11 +2,13 @@ import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
 import {
   HeaderPatternError,
+  type HeaderPatterns,
   headerPatternsFromCommonSchema,
   RENDER_GRAMMAR,
   RENDER_VIOLATION_CODES,
   type RenderBlockKind,
   type RenderBounds,
+  RenderConfigurationError,
   type RenderCounts,
   type RenderHeaderField,
   type RenderViolationCode,
@@ -196,8 +198,15 @@ const CASES: Readonly<Record<RenderViolationCode, Case>> = {
     ],
   },
   content_too_long: { lines: NOMINAL, bounds: withExcerptBound(12) },
+  // A forged open line (foreign nonce) in a content; under the render's own
+  // nonce the same line also means the block was not closed.
   delimiter_in_content: {
-    lines: edit(NOMINAL, 11, 0, openLine("excerpt", itemFields("itm-three", "src-one"))),
+    lines: edit(
+      NOMINAL,
+      11,
+      0,
+      openLine("excerpt", itemFields("itm-three", "src-one"), OTHER_NONCE),
+    ),
   },
   discarded_count_mismatch: { lines: NOMINAL, counts: { ...NOMINAL_COUNTS, discarded: 2 } },
   final_line_missing: {
@@ -528,6 +537,23 @@ describe("cases list A leaves open (choices of L003, see commit)", () => {
     expect(verify(edit(NOMINAL, 10, 3))).toEqual(["block_order"]);
   });
 
+  test("an open line bearing the render's nonce inside a block: the block is unclosed", () => {
+    // The end line of the itm-one excerpt is missing: the next open lines are
+    // content, and the excerpt block is never closed by its own end line.
+    const got = verify(edit(NOMINAL, 12, 1));
+    expect(got).toContain("unclosed_block");
+    expect(got).toContain("delimiter_in_content");
+    // The same open line under a foreign nonce is forged content only.
+    expect(
+      verify(edit(NOMINAL, 11, 0, openLine("excerpt", itemFields("itm-one", "src-one")))),
+    ).toEqual(["delimiter_in_content", "unclosed_block"]);
+    expect(
+      verify(
+        edit(NOMINAL, 11, 0, openLine("excerpt", itemFields("itm-one", "src-one"), OTHER_NONCE)),
+      ),
+    ).toEqual(["delimiter_in_content"]);
+  });
+
   test("source blocks out of order of first reference: block_order", () => {
     const swapped = [
       NOMINAL[0] ?? "",
@@ -538,6 +564,174 @@ describe("cases list A leaves open (choices of L003, see commit)", () => {
     ];
     expect(verify(swapped)).toEqual(["block_order"]);
   });
+});
+
+describe("corrections after review", () => {
+  test("requested given: an item hidden with its source is an item count mismatch", () => {
+    // itm-two and its source block removed, counters made consistent.
+    const hidden = [
+      ...NOMINAL.slice(0, 7),
+      ...NOMINAL.slice(10, 19),
+      finalLine({ items: 1, omitted: 0, uncovered: 1, discarded: 1 }),
+    ];
+    expect(verify(hidden)).toEqual(["item_count_mismatch"]);
+    expect(verify(hidden, {}, { ...NOMINAL_COUNTS, requested: 1 })).toEqual([]);
+    const { requested: _requested, ...withoutRequested } = NOMINAL_COUNTS;
+    expect(verify(hidden, {}, withoutRequested)).toEqual([]);
+  });
+
+  test("an unpaired surrogate in a content is a forbidden code point, whatever the ranges", () => {
+    for (const content of ["a\u{D800}b", "a\u{DC00}b", "ab\u{DBFF}", "\u{DFFF}\u{D800}"]) {
+      const lines = edit(NOMINAL, 11, 1, content);
+      expect({ content, got: verify(lines) }).toEqual({ content, got: ["forbidden_codepoint"] });
+      expect({ content, got: verify(lines, { forbiddenRanges: [] }) }).toEqual({
+        content,
+        got: ["forbidden_codepoint"],
+      });
+    }
+    // A paired surrogate is one code point, allowed when outside the ranges.
+    expect(verify(edit(NOMINAL, 11, 1, "a\u{1F600}b"))).toEqual([]);
+  });
+
+  test("an item block without its item field still counts as an item", () => {
+    const anonymous = edit(NOMINAL, 19, 1, openLine("excerpt", [["source", "src-two"]]));
+    expect(verify(anonymous)).toEqual(["header_invalid"]);
+  });
+
+  test("the nonce outside its slot: in a content, in a header value, in a counter", () => {
+    expect(verify(edit(NOMINAL, 11, 1, `quoted ${NONCE} here`))).toEqual(["delimiter_in_content"]);
+    const digest = NONCE.repeat(4);
+    expect(PATTERNS.digest.test(digest)).toBe(true);
+    expect(
+      verify(edit(NOMINAL, 7, 1, openLine("source", sourceFields("src-two", digest)))),
+    ).toEqual(["header_invalid"]);
+    const item = `itm-${NONCE}`;
+    expect(PATTERNS.item.test(item)).toBe(true);
+    expect(verify(edit(NOMINAL, 19, 1, openLine("excerpt", itemFields(item, "src-two"))))).toEqual([
+      "header_invalid",
+    ]);
+    // A nonce of digits only fits in a counter.
+    const digits = "1234567890123456";
+    const renamed = NOMINAL.map((line) => line.replaceAll(NONCE, digits));
+    const counted = edit(
+      renamed,
+      22,
+      1,
+      finalLine({ items: 2, omitted: 0, uncovered: digits, discarded: 1 }, digits),
+    );
+    expect(verify(counted, {}, { ...NOMINAL_COUNTS, uncovered: Number(digits) })).toEqual([
+      "final_line_missing",
+    ]);
+  });
+
+  test("a counter beyond the safe integers is out of the final line form", () => {
+    const unsafe = "9007199254740993";
+    const lines = edit(
+      NOMINAL,
+      22,
+      1,
+      finalLine({ items: 2, omitted: 0, uncovered: unsafe, discarded: 1 }),
+    );
+    expect(verify(lines, {}, { requested: 2, discarded: 1 })).toEqual(["final_line_missing"]);
+    const largest = String(Number.MAX_SAFE_INTEGER);
+    const fits = edit(
+      NOMINAL,
+      22,
+      1,
+      finalLine({ items: 2, omitted: 0, uncovered: largest, discarded: 1 }),
+    );
+    expect(verify(fits, {}, { ...NOMINAL_COUNTS, uncovered: Number.MAX_SAFE_INTEGER })).toEqual([]);
+  });
+
+  test("invalid bounds, counts or patterns throw a named error instead of disabling a rule", () => {
+    const kinds = { ...NOMINAL_BOUNDS.maxContentCodePoints };
+    const { excerpt: _excerpt, ...withoutExcerpt } = kinds;
+    const badBounds: unknown[] = [
+      { maxItems: Number.NaN },
+      { maxItems: -1 },
+      { maxItems: 1.5 },
+      { maxItems: Number.POSITIVE_INFINITY },
+      { maxItems: 2 ** 53 },
+      { maxDiscardedListed: Number.NaN },
+      { maxDiscardedListed: -1 },
+      { maxContentCodePoints: {} },
+      { maxContentCodePoints: withoutExcerpt },
+      { maxContentCodePoints: { ...kinds, source: Number.NaN } },
+      { maxContentCodePoints: null },
+      { forbiddenRanges: [[0x20, 0x10]] },
+      { forbiddenRanges: [[-1, 0x10]] },
+      { forbiddenRanges: [[0x10, 0x110000]] },
+      { forbiddenRanges: [[0x10, 32.5]] },
+      { forbiddenRanges: [[0x10]] },
+      { forbiddenRanges: null },
+    ];
+    for (const bad of badBounds) {
+      const bounds = { ...NOMINAL_BOUNDS, ...(bad as object) } as RenderBounds;
+      expect(() => verifyRender(text(NOMINAL), bounds, PATTERNS, NOMINAL_COUNTS)).toThrow(
+        RenderConfigurationError,
+      );
+    }
+    for (const bad of [{ requested: Number.NaN }, { uncovered: -1 }, { discarded: 0.5 }]) {
+      const counts = { ...NOMINAL_COUNTS, ...bad };
+      expect(() => verifyRender(text(NOMINAL), NOMINAL_BOUNDS, PATTERNS, counts)).toThrow(
+        RenderConfigurationError,
+      );
+    }
+    const { item: _item, ...withoutItem } = PATTERNS;
+    for (const patterns of [
+      withoutItem,
+      { ...PATTERNS, item: "^[a-z]+$" },
+      { ...PATTERNS, item: new RegExp(PATTERNS.item.source, "gu") },
+      { ...PATTERNS, item: new RegExp(PATTERNS.item.source, "yu") },
+    ])
+      expect(() =>
+        verifyRender(text(NOMINAL), NOMINAL_BOUNDS, patterns as HeaderPatterns, NOMINAL_COUNTS),
+      ).toThrow(RenderConfigurationError);
+    // A single-point range and the extreme code points are valid bounds.
+    expect(
+      verify(NOMINAL, {
+        forbiddenRanges: [
+          [0, 0],
+          [0x10ffff, 0x10ffff],
+        ],
+      }),
+    ).toEqual([]);
+  });
+
+  test("analysis time grows linearly with the number of items", () => {
+    // n items, each citing its own source: a quadratic scan of the referenced
+    // sources multiplies the time by about 64 when n is multiplied by 8, a
+    // linear one by about 8. The ratio of two sizes, not an absolute duration,
+    // keeps the test independent of the machine.
+    const wide = (count: number): string => {
+      const ids = Array.from({ length: count }, (_, index) => index + 1);
+      return text([
+        preambleLine(),
+        ...ids.flatMap((id) => block("source", sourceFields(`src-${id}`, DIGEST_ONE), ["s"])),
+        ...ids.flatMap((id) => block("excerpt", itemFields(`itm-${id}`, `src-${id}`), ["e"])),
+        finalLine({ items: count, omitted: 0, uncovered: 0, discarded: 0 }),
+      ]);
+    };
+    const fastest = (rendered: string, maxItems: number): number => {
+      let best = Number.POSITIVE_INFINITY;
+      for (let run = 0; run < 3; run += 1) {
+        const started = performance.now();
+        const got = verifyRender(rendered, { ...NOMINAL_BOUNDS, maxItems }, PATTERNS, {});
+        best = Math.min(best, performance.now() - started);
+        expect(got).toEqual([]);
+      }
+      return best;
+    };
+    const small = 5_000;
+    const large = 8 * small;
+    const smallTime = fastest(wide(small), small);
+    const largeTime = fastest(wide(large), large);
+    const ratio = largeTime / Math.max(smallTime, 0.001);
+    console.info(
+      `verifyRender timing: ${small} items ${smallTime.toFixed(1)} ms, ${large} items ${largeTime.toFixed(1)} ms, ratio ${ratio.toFixed(1)} (limit 24)`,
+    );
+    expect(ratio).toBeLessThan(24);
+  }, 60_000);
 });
 
 describe("totality and output", () => {

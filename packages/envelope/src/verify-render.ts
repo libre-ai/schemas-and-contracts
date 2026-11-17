@@ -155,6 +155,18 @@ export class HeaderPatternError extends Error {
   }
 }
 
+/**
+ * The caller's bounds, counts or patterns are not usable. Thrown, never
+ * reported as a code: a bound that is not a number would silently disable the
+ * rule it feeds, and the rendered text is not at fault.
+ */
+export class RenderConfigurationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "RenderConfigurationError";
+  }
+}
+
 function isRecord(value: unknown): value is Readonly<Record<string, unknown>> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -213,14 +225,18 @@ function blockKindOf(name: string | undefined): RenderBlockKind | null {
   return BLOCK_KINDS.find((kind) => kind === name) ?? null;
 }
 
-/** count = "0" / (%x31-39 *DIGIT) */
+/**
+ * count = "0" / (%x31-39 *DIGIT), and a safe integer: above 2 ** 53 - 1 a
+ * number no longer tells a count from its successor.
+ */
 function countOf(text: string): number | null {
   if (text.length === 0 || (text.length > 1 && text.startsWith("0"))) return null;
   for (let index = 0; index < text.length; index += 1) {
     const unit = text.charCodeAt(index);
     if (unit < 0x30 || unit > 0x39) return null;
   }
-  return Number(text);
+  const value = Number(text);
+  return Number.isSafeInteger(value) ? value : null;
 }
 
 interface Preamble {
@@ -278,6 +294,22 @@ function parseOpenLine(line: string, patterns: HeaderPatterns): OpenLine | null 
   return { kind, nonce, values, headerValid };
 }
 
+/**
+ * Whether a line has the shape of an open line under this nonce: "[", a kind,
+ * " nonce=", the nonce, then "]" or a field, and a final "]". Prefix tests
+ * only, since the line is block content: no header pattern runs on it.
+ */
+function isOpenLineShape(line: string, nonce: string): boolean {
+  if (!line.endsWith(CLOSE_DELIMITER)) return false;
+  for (const kind of BLOCK_KINDS) {
+    const prefix = OPEN_DELIMITER + kind + TOKEN_SEPARATOR + NONCE_PREFIX + nonce;
+    if (!line.startsWith(prefix)) continue;
+    const rest = line.slice(prefix.length);
+    if (rest === CLOSE_DELIMITER || rest.startsWith(TOKEN_SEPARATOR)) return true;
+  }
+  return false;
+}
+
 interface EndLine {
   readonly kind: RenderBlockKind;
   readonly nonce: string;
@@ -308,7 +340,10 @@ function parseFinalLine(line: string): FinalLine | null {
   if (nonce === null) return null;
   const read = (counter: FinalLineCounter, token: string | undefined): number | null => {
     const prefix = counter + ASSIGNMENT;
-    return token?.startsWith(prefix) === true ? countOf(token.slice(prefix.length)) : null;
+    if (token?.startsWith(prefix) !== true) return null;
+    const value = token.slice(prefix.length);
+    // The nonce appears in its slot only: a counter holding it is off the form.
+    return value.includes(nonce) ? null : countOf(value);
   };
   const items = read("items", tokens[2]);
   const omitted = read("omitted", tokens[3]);
@@ -345,12 +380,71 @@ function scanContentLine(
         width = 2;
       }
     }
+    // An unpaired surrogate is no Unicode scalar value: no prepared content
+    // carries one, whatever the caller's ranges say.
+    if (width === 1 && unit >= 0xd800 && unit <= 0xdfff) found.add("forbidden_codepoint");
     codePoints += 1;
     if (codePoint === OPEN_CODE || codePoint === CLOSE_CODE) found.add("delimiter_in_content");
     if (isForbidden(codePoint, bounds.forbiddenRanges)) found.add("forbidden_codepoint");
     index += width;
   }
   return codePoints;
+}
+
+// ---------------------------------------------------------------------------
+// Configuration: the caller's bounds, counts and patterns, checked before any
+// line is read. An unusable one throws RenderConfigurationError (fail closed).
+
+const MAX_CODE_POINT = 0x10ffff;
+
+function isCount(value: unknown): value is number {
+  return typeof value === "number" && Number.isSafeInteger(value) && value >= 0;
+}
+
+function assertConfiguration(bounds: unknown, patterns: unknown, counts: unknown): void {
+  if (!isRecord(bounds)) throw new RenderConfigurationError("bounds must be an object");
+  for (const name of ["maxItems", "maxDiscardedListed"] as const)
+    if (!isCount(bounds[name]))
+      throw new RenderConfigurationError(`bounds.${name} must be a safe integer >= 0`);
+  const perKind = bounds.maxContentCodePoints;
+  if (!isRecord(perKind))
+    throw new RenderConfigurationError("bounds.maxContentCodePoints must be an object");
+  for (const kind of BLOCK_KINDS)
+    if (!isCount(perKind[kind]))
+      throw new RenderConfigurationError(
+        `bounds.maxContentCodePoints.${kind} must be a safe integer >= 0`,
+      );
+  const ranges = bounds.forbiddenRanges;
+  if (!Array.isArray(ranges))
+    throw new RenderConfigurationError("bounds.forbiddenRanges must be an array");
+  for (const range of ranges as readonly unknown[]) {
+    const pair = Array.isArray(range) ? (range as readonly unknown[]) : [];
+    const [first, last] = pair;
+    if (
+      pair.length !== 2 ||
+      !isCount(first) ||
+      !isCount(last) ||
+      first > last ||
+      last > MAX_CODE_POINT
+    )
+      throw new RenderConfigurationError(
+        "bounds.forbiddenRanges holds a range that is not [first, last] within 0..0x10FFFF",
+      );
+  }
+  if (!isRecord(counts)) throw new RenderConfigurationError("counts must be an object");
+  for (const name of ["requested", "uncovered", "discarded"] as const)
+    if (counts[name] !== undefined && !isCount(counts[name]))
+      throw new RenderConfigurationError(`counts.${name} must be absent or a safe integer >= 0`);
+  if (!isRecord(patterns)) throw new RenderConfigurationError("patterns must be an object");
+  for (const field of HEADER_FIELDS) {
+    const pattern = patterns[field];
+    // A global or sticky expression keeps lastIndex between calls: test() would
+    // depend on the value checked before.
+    if (!(pattern instanceof RegExp) || pattern.global || pattern.sticky)
+      throw new RenderConfigurationError(
+        `patterns.${field} must be a RegExp without the g or y flag`,
+      );
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -372,8 +466,10 @@ interface OpenBlock {
 /**
  * Lists the rules a rendered response breaks, sorted in RENDER_VIOLATION_CODES
  * order and without duplicate; an empty list means a conforming render. Pure
- * and total: it reads no file, never throws on any string, and returns codes
- * only, never a fragment of the text.
+ * and total on the text: it reads no file, never throws on any string, and
+ * returns codes only, never a fragment of the text. It throws
+ * RenderConfigurationError when the caller's bounds, counts or patterns are
+ * unusable, so that no rule is silently disabled.
  */
 export function verifyRender(
   rendered: string,
@@ -381,6 +477,7 @@ export function verifyRender(
   patterns: HeaderPatterns,
   counts: RenderCounts = {},
 ): readonly RenderViolationCode[] {
+  assertConfiguration(bounds, patterns, counts);
   const found = new Set<RenderViolationCode>();
 
   const terminated = rendered.endsWith(LINE_SEPARATOR);
@@ -404,7 +501,10 @@ export function verifyRender(
   let highestClass = 0;
   let discardedListed = 0;
   const sourceBlocks: string[] = [];
+  // Order of first reference, and the same sources as a set: a membership
+  // test on the array alone made the analysis quadratic in the item count.
   const referencedSources: string[] = [];
+  const referenced = new Set<string>();
   const itemSources = new Map<string, string | null>();
   let anonymousItems = 0;
   let currentItem: { readonly id: string | null; lastRank: number } | null = null;
@@ -418,7 +518,10 @@ export function verifyRender(
     const id = opened.values.get(ITEM_IDENTIFIER_FIELD) ?? null;
     const source = opened.values.get(ITEM_SOURCE_FIELD) ?? null;
     const rank = (ITEM_BLOCK_KINDS as readonly RenderBlockKind[]).indexOf(opened.kind);
-    if (source !== null && !referencedSources.includes(source)) referencedSources.push(source);
+    if (source !== null && !referenced.has(source)) {
+      referenced.add(source);
+      referencedSources.push(source);
+    }
 
     if (currentItem !== null && id !== null && currentItem.id === id) {
       // Same item: excerpt, then paraphrase, then evidence, each at most once.
@@ -450,7 +553,14 @@ export function verifyRender(
         open = null;
         continue;
       }
-      // Anything else inside a block is content, an open line included.
+      // Anything else inside a block is content, an open line included. One
+      // bearing the render's nonce is a structural line: the block it lands in
+      // missed its end line. Under another nonce it is forged content only.
+      if (referenceNonce !== null && isOpenLineShape(line, referenceNonce))
+        found.add("unclosed_block");
+      // The nonce appears in its slot only, never in a content.
+      if (referenceNonce !== null && line.includes(referenceNonce))
+        found.add("delimiter_in_content");
       if (open.lines > 0) open.codePoints += 1; // the LF joining content lines
       open.codePoints += scanContentLine(line, bounds, found);
       open.lines += 1;
@@ -467,6 +577,9 @@ export function verifyRender(
     }
     bindNonce(opened.nonce);
     if (!opened.headerValid) found.add("header_invalid");
+    // The nonce appears in its slot only, never in a header value.
+    for (const value of opened.values.values())
+      if (referenceNonce !== null && value.includes(referenceNonce)) found.add("header_invalid");
     const rank = classRank(opened.kind);
     if (rank < highestClass) found.add("block_order");
     highestClass = Math.max(highestClass, rank);
@@ -490,7 +603,6 @@ export function verifyRender(
     sourceBlockCounts.set(source, (sourceBlockCounts.get(source) ?? 0) + 1);
   for (const source of referencedSources)
     if (sourceBlockCounts.get(source) !== 1) found.add("source_block_mismatch");
-  const referenced = new Set(referencedSources);
   for (const source of sourceBlockCounts.keys())
     if (!referenced.has(source)) found.add("source_block_mismatch");
   const blockOrder = [...sourceBlockCounts.keys()].filter((source) => referenced.has(source));
@@ -503,6 +615,13 @@ export function verifyRender(
     const { items, omitted, uncovered, discarded } = finalLine.counters;
     const observedItems = itemSources.size + anonymousItems;
     if (observedItems !== items || observedItems > bounds.maxItems)
+      found.add("item_count_mismatch");
+    // With the requested count known, the render holds exactly the items it
+    // could: an item hidden together with its source block shows here.
+    if (
+      counts.requested !== undefined &&
+      observedItems !== Math.min(counts.requested, bounds.maxItems)
+    )
       found.add("item_count_mismatch");
     if (
       counts.requested !== undefined &&
