@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.libre-ai.fr/schemas/rule-common.v1.schema.json",
+  "title": "Libre AI rule common forms v1",
+  "description": "Shared forms of the rule context (rule identifier, excerpt digest, slug, edition, overlay reference, level, trigger type), read by consumers from $defs and never copied. The root is a specimen record holding one value of each form so that the fixture gate exercises every form; it is not a wire message. Semantics: contracts/rule-common-v1/SEMANTICS.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "ruleId",
+    "excerptDigest",
+    "slug",
+    "edition",
+    "overlayReference",
+    "level",
+    "triggerType"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "libre-ai.rule-common.v1" },
+    "ruleId": { "$ref": "#/$defs/ruleId" },
+    "excerptDigest": { "$ref": "#/$defs/excerptDigest" },
+    "slug": { "$ref": "#/$defs/slug" },
+    "edition": { "$ref": "#/$defs/edition" },
+    "overlayReference": { "$ref": "#/$defs/overlayReference" },
+    "level": { "$ref": "#/$defs/level" },
+    "triggerType": { "$ref": "#/$defs/triggerType" }
+  },
+  "$defs": {
+    "ruleId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?:[a-z0-9](?:[a-z0-9._-]{0,126}[a-z0-9])?#(?:%2E)?(?:[A-Za-z0-9_~-]|%(?:2[0-9A-C]|3[A-F]|40|5[BDE]|60|7[B-D]))(?:[A-Za-z0-9._~-]|%(?:2[0-9A-C]|3[A-F]|40|5[BDE]|60|7[B-D]))*$"
+    },
+    "excerptDigest": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 64,
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "slug": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$"
+    },
+    "edition": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 29,
+      "pattern": "^(?:0|[1-9][0-9]{0,8})(?:\\.(?:0|[1-9][0-9]{0,8})){0,2}$"
+    },
+    "overlayReference": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 146,
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?/[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?@[1-9][0-9]{0,15}$"
+    },
+    "level": {
+      "enum": ["MUST", "MUST_NOT", "SHOULD", "SHOULD_NOT", "MAY"]
+    },
+    "triggerType": {
+      "enum": ["glob", "keyword", "type"]
+    }
+  }
+}

@@ -457,6 +457,11 @@
 			"declaration": "retention-policy.v4.d.ts"
 		},
 		{
+			"schema": "rule-common.v1.schema.json",
+			"schemaSha256": "27c4d11e87628a3be021b6477779a2cb6f0d79c4d495f7aa528a97462a65d495",
+			"declaration": "rule-common.v1.d.ts"
+		},
+		{
 			"schema": "session-event.v1.schema.json",
 			"schemaSha256": "d38224424fb531e922662ac0b150fa8087a1e363192b45c3a0e3af872b49ea24",
 			"declaration": "session-event.v1.d.ts"
