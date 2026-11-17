@@ -149,6 +149,10 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/signing-keys-v1/schema-fixtures.json"
     ))
     .expect("signing keys v1 fixture document");
+    let rule_common_v1_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/rule-common-v1/schema-fixtures.json"
+    ))
+    .expect("rule common v1 fixture document");
     let cases = fixtures["cases"]
         .as_array()
         .expect("fixture cases")
@@ -253,6 +257,11 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
             signing_keys_v1_fixtures["cases"]
                 .as_array()
                 .expect("signing keys v1 fixture cases"),
+        )
+        .chain(
+            rule_common_v1_fixtures["cases"]
+                .as_array()
+                .expect("rule common v1 fixture cases"),
         )
         .collect::<Vec<_>>();
     assert_eq!(schema_count, cases.len() + 1);

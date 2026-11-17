@@ -1584,6 +1584,23 @@
         "required": ["architecture", "security", "cryptography", "privacy"],
         "dossier": "docs/reviews/artifact-manifest-signatures-v1-review.md"
       }
+    },
+    {
+      "id": "rule-common-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/rule-common.v1.schema.json",
+      "owners": ["harness"],
+      "consumers": ["harness", "quality"],
+      "compatibility": "major-versioned",
+      "classification": "public",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security"],
+        "dossier": "docs/reviews/rule-common-v1-review.md"
+      }
     }
   ]
 }

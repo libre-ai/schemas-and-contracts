@@ -1,0 +1,115 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "rule-common.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.rule-common.v1",
+        "ruleId": "example-source:handbook#a0123456789ab.2",
+        "excerptDigest": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+        "slug": "example-source",
+        "edition": "2.1",
+        "overlayReference": "example-publisher/reading-notes@3",
+        "level": "SHOULD_NOT",
+        "triggerType": "keyword"
+      },
+      "invalidMutations": [
+        {
+          "name": "rule identifier without locator separator",
+          "path": "/ruleId",
+          "value": "example-source:handbook"
+        },
+        {
+          "name": "rule identifier percent-encoding an unreserved character",
+          "path": "/ruleId",
+          "value": "example-source:handbook#R%41"
+        },
+        {
+          "name": "rule identifier locator with a literal leading dot",
+          "path": "/ruleId",
+          "value": "example-source:handbook#.hidden"
+        },
+        {
+          "name": "rule identifier with lowercase percent-encoding",
+          "path": "/ruleId",
+          "value": "example-source:handbook#%2ehidden"
+        },
+        {
+          "name": "rule identifier with an uppercase source",
+          "path": "/ruleId",
+          "value": "Example-source:handbook#R1"
+        },
+        {
+          "name": "excerpt digest in uppercase hex",
+          "path": "/excerptDigest",
+          "value": "9F86D081884C7D659A2FEAA0C55AD015A3BF4F1B2B0B822CD15D6C15B0F00A08"
+        },
+        {
+          "name": "excerpt digest of 63 characters",
+          "path": "/excerptDigest",
+          "value": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a0"
+        },
+        {
+          "name": "slug ending with a hyphen",
+          "path": "/slug",
+          "value": "example-"
+        },
+        {
+          "name": "slug with an uppercase letter",
+          "path": "/slug",
+          "value": "Example"
+        },
+        {
+          "name": "edition component of 10 digits",
+          "path": "/edition",
+          "value": "1234567890"
+        },
+        {
+          "name": "edition component with a leading zero",
+          "path": "/edition",
+          "value": "2.01"
+        },
+        {
+          "name": "edition of four components",
+          "path": "/edition",
+          "value": "1.2.3.4"
+        },
+        {
+          "name": "overlay reference without version",
+          "path": "/overlayReference",
+          "value": "example-publisher/reading-notes"
+        },
+        {
+          "name": "overlay reference at version 0",
+          "path": "/overlayReference",
+          "value": "example-publisher/reading-notes@0"
+        },
+        {
+          "name": "level with a space",
+          "path": "/level",
+          "value": "MUST NOT"
+        },
+        {
+          "name": "level in lowercase",
+          "path": "/level",
+          "value": "must"
+        },
+        {
+          "name": "trigger type outside the closed list",
+          "path": "/triggerType",
+          "value": "path"
+        },
+        {
+          "name": "other schema version",
+          "path": "/schemaVersion",
+          "value": "libre-ai.rule-common.v2"
+        },
+        {
+          "name": "specimen without level",
+          "path": "/level",
+          "remove": true
+        }
+      ]
+    }
+  ]
+}
