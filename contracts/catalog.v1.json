@@ -1575,7 +1575,7 @@
       "owners": ["security"],
       "consumers": ["artifacts", "proof"],
       "compatibility": "major-versioned",
-      "classification": "internal",
+      "classification": "public",
       "status": "candidate",
       "review": {
         "state": "pending-independent-agent-review",

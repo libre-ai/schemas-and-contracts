@@ -42,10 +42,15 @@ in `contracts/catalog-post-lock-additions.v1.json` (pinned digest in
 | Contract | Schema | Classification | Required independent reviews |
 | --- | --- | --- | --- |
 | `artifact-manifest-signatures-v1` | `contracts/schemas/artifact-manifest-signatures.v1.schema.json` | internal | architecture, security, cryptography |
-| `signing-keys-v1` | `contracts/schemas/signing-keys.v1.schema.json` | internal | architecture, security, cryptography, privacy |
+| `signing-keys-v1` | `contracts/schemas/signing-keys.v1.schema.json` | public | architecture, security, cryptography, privacy |
 
-Semantics: `contracts/artifact-manifest-signatures-v1/SEMANTICS.md` (rules K1 to K5
-for the registry, S1 to S10 for verification). Vectors:
+`signing-keys-v1` was first classified internal; the privacy pass of 2026-11-17 had
+`signatory` restricted to a role identifier and every personal data member excluded
+(rule K7), after which the registry holds public keys and role names only and is
+classified public.
+
+Semantics: `contracts/artifact-manifest-signatures-v1/SEMANTICS.md` (rules K0 to K7
+for the registry, S0 to S10 for verification). Vectors:
 `contracts/fixtures/artifact-manifest-signatures-v1/vectors.json`, written by
 `tools/quality/artifact-manifest-signatures-vectors.ts` and replayed by
 `tools/quality/artifact-manifest-signatures-v1.test.ts`. Schema fixtures:
@@ -54,8 +59,25 @@ for the registry, S1 to S10 for verification). Vectors:
 The signed message reuses the fleet convention
 (`UTF8(schemaVersion) || 0x00 || raw SHA-256 of the RFC 8785 form`), the strict profile
 and signature encoding of build-brief-v2, and the key identifier rule
-`lowercase_hex(SHA-256(raw public key))`. Deviations from the runbook are listed in the
-semantics, section "Deviations from the runbook".
+`"ed25519-" || lowercase_hex(SHA-256(raw public key))`, a `common.v1` `identifier` like
+every other `signingKeyId` of this authority. Deviations from the runbook are listed in
+the semantics, section "Deviations from the runbook".
+
+Two deliberate deviations from sibling contracts, decided after the review passes of
+2026-11-17 and stated in the semantics, section "Deviations from sibling contracts":
+
+- keys are judged at the verification time `now`, taken from a trusted clock, not at a
+  signed time as build-brief-v2 judges them at `acceptedAt`: a manifest's only date is
+  the producer-asserted `createdAt`, and judging at it would let a compromised key sign
+  new manifests dated before its revocation;
+- a signature whose key is absent from the registry is ignored and counted, where
+  agent-orchestration refuses it: rotation overlaps need a record signed by an old and
+  a new key to verify; at least one registry key must still verify, and every registry
+  key named must pass.
+
+Key lifecycle, decided on 2026-11-17 after the passes: rotation removes the retired entry
+after the manifests that must keep verifying are re-signed; `revokedAt` is reserved for
+compromise and dated at or before its discovery.
 
 ## Consequences
 
@@ -67,4 +89,6 @@ semantics, section "Deviations from the runbook".
   are regenerated because the repository's drift gates require every cataloged schema
   to be projected.
 - The runbook in `libre-ai/project-governance` still describes the old identifier and
-  member names; aligning it is that repository's change, after review.
+  member names, an e-mail `signatory`, a rotation that sets `revokedAt`, and a
+  revocation example dated after its discovery (K6); aligning it is that repository's
+  change, after review.
