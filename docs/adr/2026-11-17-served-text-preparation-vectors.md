@@ -34,8 +34,10 @@ The precedent for a semantic vector set with a reference oracle and no catalog e
 3. **Tables as literals, tied to Unicode 17.0.** The removed ranges are the union of
    `Default_Ignorable_Code_Point`, `Cc`, `Cf`, `Zl` and `Zp`, minus TAB and LF. They are
    written out, not looked up, so that two implementations on two Unicode versions
-   cannot diverge silently. The reference test fails when the runtime does not report
-   Unicode 17.0, and otherwise proves the literals equal the runtime's property classes.
+   cannot diverge silently. The reference test proves the literals equal those classes
+   as published in the Unicode Character Database 17.0.0, vendored byte for byte with
+   pinned digests under `third_party/unicode-ucd-17.0.0/`; the runtime's own classes are
+   compared too, and the gap is printed, not asserted.
 4. **No catalog entry, no schema, no package export.** A catalog entry would change
    `contracts/catalog-post-lock-additions.v1.json`, whose digest is pinned by the
    specification lock. The oracle stays under `tools/quality`; it is the checker of the
@@ -63,7 +65,10 @@ The precedent for a semantic vector set with a reference oracle and no catalog e
    on the model of the MLS sender-authentication set? The other route is a cataloged
    candidate entry, which changes the post-lock additions register and the digest pinned
    in `tools/quality/specification-lock.ts`.
-2. If the Bun revision pinned by `toolchains/bun.json` reports a Unicode version other
-   than 17.0 (`bun -e 'console.log(process.versions.unicode)'`), is the pin raised before
-   this set merges, or is the table restricted to the pinned version? The second option
-   makes the table differ from the one an implementation on Unicode 17.0 computes.
+2. Answered by measurement on 2026-11-17: the pinned Bun revision reports Unicode 17.0
+   (ICU 78.1) on darwin-arm64 and Unicode 15.1 (ICU 75.1) on linux-x64
+   (`bun -e 'console.log(process.versions.unicode, process.versions.icu)'`), so raising
+   the pin would not fix the version, and restricting the table to 15.1 would change the
+   `unicodeVersion` the vectors declare. The test reads the vendored 17.0 database
+   instead; on both platforms the runtime's classes were measured equal to the table
+   (0 difference), which the test prints on each run.

@@ -1,4 +1,5 @@
 import { describe, expect, test } from "bun:test";
+import { createHash } from "node:crypto";
 
 import {
   delimiterReplacements,
@@ -62,6 +63,66 @@ function isSurrogate(codePoint: number): boolean {
 }
 
 const delimiterForms = /[[\]<>]/;
+
+// The Unicode Character Database files the table is checked against, vendored
+// byte for byte from https://www.unicode.org/Public/17.0.0/ucd/ (see
+// third_party/unicode-ucd-17.0.0/README.md). The digests pin those bytes: the
+// expected classes never come from the runtime, whose ICU varies by platform.
+const ucdFiles = {
+  coreProperties: {
+    path: "third_party/unicode-ucd-17.0.0/DerivedCoreProperties.txt",
+    header: "# DerivedCoreProperties-17.0.0.txt",
+    sha256: "24c7fed1195c482faaefd5c1e7eb821c5ee1fb6de07ecdbaa64b56a99da22c08",
+  },
+  generalCategory: {
+    path: "third_party/unicode-ucd-17.0.0/DerivedGeneralCategory.txt",
+    header: "# DerivedGeneralCategory-17.0.0.txt",
+    sha256: "d62e5bab70ca74f099343f71224fa051cb1fdd61a1ab45c0488c44cfc0b6102e",
+  },
+} as const;
+
+interface UcdFile {
+  readonly path: string;
+  readonly header: string;
+  readonly sha256: string;
+}
+
+interface UcdEntry {
+  readonly first: number;
+  readonly last: number;
+  readonly value: string;
+}
+
+// The value field keeps everything up to the comment: DerivedCoreProperties also
+// carries enumerated properties written "InCB; Linker", which never equal a name below.
+const ucdLine = /^([0-9A-F]{4,6})(?:\.\.([0-9A-F]{4,6}))?\s*;\s*([^#]*[^#\s])\s*(?:#.*)?$/;
+
+// Reads a vendored UCD file after checking its digest and version header; every
+// non-comment line must parse, so a malformed or substituted file fails.
+async function readUcdEntries(file: UcdFile): Promise<UcdEntry[]> {
+  const bytes = await Bun.file(file.path).bytes();
+  expect(createHash("sha256").update(bytes).digest("hex")).toBe(file.sha256);
+  const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+  const lines = text.split("\n");
+  expect(lines[0]).toBe(file.header);
+  const entries: UcdEntry[] = [];
+  for (const line of lines) {
+    const content = line.trim();
+    if (content === "" || content.startsWith("#")) continue;
+    const match = ucdLine.exec(content);
+    if (match === null) throw new Error(`${file.path}: unparsed line ${JSON.stringify(content)}`);
+    const [, first, last, value] = match;
+    if (first === undefined || value === undefined)
+      throw new Error(`${file.path}: incomplete line ${JSON.stringify(content)}`);
+    const firstCodePoint = Number.parseInt(first, 16);
+    entries.push({
+      first: firstCodePoint,
+      last: last === undefined ? firstCodePoint : Number.parseInt(last, 16),
+      value,
+    });
+  }
+  return entries;
+}
 
 describe("served-text preparation vectors", () => {
   test("the document is closed and every vector replays", async () => {
@@ -147,29 +208,69 @@ describe("served-text preparation vectors", () => {
     console.info(`Served-text preparation neighbours: ${document.keptNeighbours.length} kept`);
   });
 
-  test("the table equals the Unicode 17.0 property classes of the runtime", () => {
-    const unicodeVersion = process.versions.unicode;
-    if (unicodeVersion !== "17.0")
-      throw new Error(`the runtime reports Unicode ${unicodeVersion}, the table is Unicode 17.0`);
-    const classes = /[\p{Default_Ignorable_Code_Point}\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u;
+  test("the table equals the Unicode 17.0 property classes of the vendored character database", async () => {
+    const document = await readDocument();
+    expect(document.unicodeVersion).toBe("17.0");
+    const classes = new Set<number>();
+    const sources = [
+      { file: ucdFiles.coreProperties, values: ["Default_Ignorable_Code_Point"] },
+      { file: ucdFiles.generalCategory, values: ["Cc", "Cf", "Zl", "Zp"] },
+    ];
+    const parsed: string[] = [];
+    for (const { file, values } of sources) {
+      const entries = await readUcdEntries(file);
+      let matching = 0;
+      for (const entry of entries) {
+        if (!values.includes(entry.value)) continue;
+        matching += 1;
+        for (let codePoint = entry.first; codePoint <= entry.last; codePoint += 1)
+          classes.add(codePoint);
+      }
+      // A file that parses to no matching line is a failure, never an empty class.
+      expect(matching).toBeGreaterThan(0);
+      parsed.push(`${file.path}: ${entries.length} entries, ${matching} in ${values.join("/")}`);
+    }
+    classes.delete(0x09);
+    classes.delete(0x0a);
     const differences: string[] = [];
     let swept = 0;
-    let inTable = 0;
     for (let codePoint = 0; codePoint <= 0x10ffff; codePoint += 1) {
       if (isSurrogate(codePoint)) continue;
       swept += 1;
-      const expected =
-        codePoint !== 0x09 && codePoint !== 0x0a && classes.test(String.fromCodePoint(codePoint));
-      if (expected) inTable += 1;
-      if (isForbiddenCodePoint(codePoint) !== expected)
+      if (isForbiddenCodePoint(codePoint) !== classes.has(codePoint))
         differences.push(`U+${codePoint.toString(16)}`);
     }
     expect(differences).toEqual([]);
     expect(swept).toBe(0x110000 - 0x800);
-    expect(inTable).toBe(4271);
+    expect(classes.size).toBe(4271);
     console.info(
-      `Served-text preparation classes: ${swept} code points swept under Unicode ` +
-        `${unicodeVersion}, ${inTable} in the table, 0 difference`,
+      `Served-text preparation classes: Unicode ${document.unicodeVersion} database ` +
+        `(${parsed.join("; ")}), ${swept} code points swept, ${classes.size} in the table, ` +
+        `${differences.length} difference`,
+    );
+  });
+
+  // Informational: the runtime's own tables follow its ICU build, not the Bun pin
+  // (the pinned revision reports Unicode 17.0 on darwin-arm64 and 15.1 on
+  // linux-x64). The oracle is the vendored database above; this gap is printed and
+  // counted so that a runtime that diverges from the table is visible, not masked.
+  test("the runtime's property classes are compared to the table, and the gap is printed", () => {
+    const classes = /[\p{Default_Ignorable_Code_Point}\p{Cc}\p{Cf}\p{Zl}\p{Zp}]/u;
+    const differences: string[] = [];
+    let swept = 0;
+    for (let codePoint = 0; codePoint <= 0x10ffff; codePoint += 1) {
+      if (isSurrogate(codePoint)) continue;
+      swept += 1;
+      const inRuntime =
+        codePoint !== 0x09 && codePoint !== 0x0a && classes.test(String.fromCodePoint(codePoint));
+      if (isForbiddenCodePoint(codePoint) !== inRuntime)
+        differences.push(`U+${codePoint.toString(16)}`);
+    }
+    expect(swept).toBe(0x110000 - 0x800);
+    console.info(
+      `Served-text preparation runtime comparison: runtime Unicode ${process.versions.unicode}, ` +
+        `${swept} code points swept, ${differences.length} differ from the table` +
+        (differences.length > 0 ? ` (${differences.slice(0, 20).join(" ")})` : ""),
     );
   });
 
