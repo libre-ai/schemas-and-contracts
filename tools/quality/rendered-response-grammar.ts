@@ -257,9 +257,12 @@ export interface RenderInput {
 /** Characters a header value may never hold, whatever its pattern says. */
 const headerValueStoppers = [" ", "=", "[", "]", "\n"];
 
+// Why safe integers only: String() writes 1e21 and above in exponent form,
+// which the `count` rule refuses, and above 2 ** 53 a number no longer tells
+// an integer from its successor.
 function assertCount(value: number, name: string, minimum = 0): void {
-  if (!Number.isInteger(value) || value < minimum)
-    throw new RenderRefusedError("bound_invalid", `${name} must be an integer >= ${minimum}`);
+  if (!Number.isSafeInteger(value) || value < minimum)
+    throw new RenderRefusedError("bound_invalid", `${name} must be a safe integer >= ${minimum}`);
 }
 
 function headerValue(
@@ -371,14 +374,20 @@ export function renderResponse(input: RenderInput, patterns: HeaderPatterns): st
     }
   }
 
-  lines.push(
-    finalLine(nonce, {
-      items: rendered.length,
-      omitted: input.items.length - rendered.length,
-      uncovered: input.uncovered,
-      discarded: input.discarded.length,
-    }),
-  );
+  const counters: Record<FinalLineCounter, number> = {
+    items: rendered.length,
+    omitted: input.items.length - rendered.length,
+    uncovered: input.uncovered,
+    discarded: input.discarded.length,
+  };
+  // The nonce appears on the final line in its slot only, never in a counter.
+  for (const counter of finalLineCounters)
+    if (String(counters[counter]).includes(nonce))
+      throw new RenderRefusedError(
+        "nonce_in_content",
+        `the nonce appears in the ${counter} counter`,
+      );
+  lines.push(finalLine(nonce, counters));
   return lines.join(lineSeparator) + lineSeparator;
 }
 

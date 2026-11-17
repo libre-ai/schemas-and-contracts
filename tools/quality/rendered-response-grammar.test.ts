@@ -373,6 +373,59 @@ describe("the reference renderer", () => {
     );
   });
 
+  test("a count or bound beyond the safe integers is refused, never written in exponent form", async () => {
+    const document = await readDocument();
+    const patterns = await readPatterns();
+    const base = inputOf(vector(document, "single-item-without-requested"));
+    // String(1e21) is "1e+21", which the `count` rule refuses; 2 ** 53 is the
+    // first integer a JS number cannot tell from its successor.
+    for (const unsafe of [1e21, 2 ** 53, Number.MAX_VALUE, Number.POSITIVE_INFINITY]) {
+      expect(() => renderResponse({ ...base, uncovered: unsafe }, patterns)).toThrow(
+        "bound_invalid",
+      );
+      expect(() =>
+        renderResponse({ ...base, bounds: { ...base.bounds, maxItems: unsafe } }, patterns),
+      ).toThrow("bound_invalid");
+      expect(() =>
+        renderResponse(
+          { ...base, bounds: { ...base.bounds, maxDiscardedListed: unsafe } },
+          patterns,
+        ),
+      ).toThrow("bound_invalid");
+      expect(() =>
+        renderResponse(
+          {
+            ...base,
+            bounds: {
+              ...base.bounds,
+              maxContentCodePoints: { ...base.bounds.maxContentCodePoints, source: unsafe },
+            },
+          },
+          patterns,
+        ),
+      ).toThrow("bound_invalid");
+    }
+    // The largest safe integer is still a count, written in decimal.
+    const largest = renderedLines(
+      renderResponse({ ...base, uncovered: Number.MAX_SAFE_INTEGER }, patterns),
+    );
+    expect(largest.at(-1)).toContain(` uncovered=${Number.MAX_SAFE_INTEGER} `);
+  });
+
+  test("a counter whose decimal form holds the nonce is refused", async () => {
+    const document = await readDocument();
+    const patterns = await readPatterns();
+    const base = inputOf(vector(document, "single-item-without-requested"));
+    // A nonce made of digits only is a valid nonce, and a valid count.
+    // Within the safe integers, only a 16-digit counter can hold it.
+    const nonce = "1234567890123456";
+    expect(() => renderResponse({ ...base, nonce, uncovered: 1234567890123456 }, patterns)).toThrow(
+      "nonce_in_content",
+    );
+    // The same counter under another nonce renders.
+    expect(() => renderResponse({ ...base, uncovered: 1234567890123456 }, patterns)).not.toThrow();
+  });
+
   test("an ill-formed content is refused, not repaired", async () => {
     const document = await readDocument();
     const patterns = await readPatterns();
