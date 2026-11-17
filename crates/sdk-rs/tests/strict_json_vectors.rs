@@ -167,6 +167,89 @@ enum Golden {
     Refused(StrictJsonDefect),
 }
 
+/// Byte length of the JSON string that opens `text`, closing quote included.
+fn raw_string_length(text: &[u8]) -> usize {
+    let mut index = 1;
+    while text[index] != b'"' {
+        index += if text[index] == b'\\' { 2 } else { 1 };
+    }
+    index + 1
+}
+
+/// Byte length of the JSON value that opens `text`, scanned on the source text so
+/// that member order and string spelling are kept as the golden author wrote them.
+fn raw_value_length(text: &[u8]) -> usize {
+    match text[0] {
+        b'"' => raw_string_length(text),
+        b'{' | b'[' => {
+            let mut depth = 0usize;
+            let mut index = 0;
+            loop {
+                match text[index] {
+                    b'"' => {
+                        index += raw_string_length(&text[index..]);
+                        continue;
+                    }
+                    b'{' | b'[' => depth += 1,
+                    b'}' | b']' => {
+                        depth -= 1;
+                        if depth == 0 {
+                            return index + 1;
+                        }
+                    }
+                    _ => {}
+                }
+                index += 1;
+            }
+        }
+        _ => text
+            .iter()
+            .position(|byte| matches!(byte, b',' | b'}' | b']' | b' ' | b'\n' | b'\r' | b'\t'))
+            .unwrap_or(text.len()),
+    }
+}
+
+/// The golden `expected.ok` of case `id`, as written in the source text with the
+/// whitespace between tokens removed. It never goes through a `Value`, whose map
+/// would re-sort the members and hide a wrong order.
+fn golden_ok_octets(source: &str, id: &str) -> Vec<u8> {
+    let anchor = format!("\"id\": \"{id}\"");
+    assert_eq!(
+        source.matches(&anchor).count(),
+        1,
+        "{id}: anchor not unique"
+    );
+    let case_start = source.find(&anchor).expect("anchor present");
+    let expected_at = case_start
+        + source[case_start..]
+            .find("\"expected\"")
+            .unwrap_or_else(|| panic!("{id}: no expected"));
+    let ok_at = expected_at
+        + source[expected_at..]
+            .find("\"ok\":")
+            .unwrap_or_else(|| panic!("{id}: no expected.ok"));
+    let rest = source[ok_at + "\"ok\":".len()..].trim_start().as_bytes();
+    let raw = &rest[..raw_value_length(rest)];
+
+    let mut octets = Vec::with_capacity(raw.len());
+    let mut index = 0;
+    while index < raw.len() {
+        match raw[index] {
+            b'"' => {
+                let length = raw_string_length(&raw[index..]);
+                octets.extend_from_slice(&raw[index..index + length]);
+                index += length;
+            }
+            b' ' | b'\n' | b'\r' | b'\t' => index += 1,
+            other => {
+                octets.push(other);
+                index += 1;
+            }
+        }
+    }
+    octets
+}
+
 fn golden_canonicalize_expectations() -> BTreeMap<&'static str, Golden> {
     BTreeMap::from([
         ("canonicalize-sort-ascii", Golden::Canonical),
@@ -215,10 +298,18 @@ fn golden_canonicalize_expectations() -> BTreeMap<&'static str, Golden> {
 #[test]
 fn signalement_golden_canonicalize_cases_follow_the_declared_split() {
     let root = fixtures().join("signalement-policy-receipt-v1");
-    let entry = read_json(&root.join("golden-vectors.v1.json"));
+    let read_source = |name: &str| -> (String, Value) {
+        let path = root.join(name);
+        let text =
+            fs::read_to_string(&path).unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+        let value = serde_json::from_str(&text)
+            .unwrap_or_else(|error| panic!("{}: {error}", path.display()));
+        (text, value)
+    };
+    let entry = read_source("golden-vectors.v1.json");
     let mut documents = Vec::new();
-    for part in entry["parts"].as_array().expect("declared parts") {
-        documents.push(read_json(&root.join(part.as_str().expect("part name"))));
+    for part in entry.1["parts"].as_array().expect("declared parts") {
+        documents.push(read_source(part.as_str().expect("part name")));
     }
     documents.insert(0, entry);
 
@@ -228,7 +319,7 @@ fn signalement_golden_canonicalize_cases_follow_the_declared_split() {
     let mut canonical = 0;
     let mut refused = 0;
 
-    for document in &documents {
+    for (source, document) in &documents {
         for case in document["cases"].as_array().expect("golden cases") {
             if case["operation"] != "canonicalize" {
                 continue;
@@ -247,7 +338,19 @@ fn signalement_golden_canonicalize_cases_follow_the_declared_split() {
                         .unwrap_or_else(|| panic!("{id}: no expected.ok"));
                     let value = assert_accepted(id, &bytes);
                     assert_eq!(&value, expected, "{id}: value");
-                    assert_eq!(canonicalize(&value), canonicalize(expected), "{id}: octets");
+                    let written = golden_ok_octets(source, id);
+                    // The extraction landed on `expected.ok` and nothing else.
+                    assert_eq!(
+                        &serde_json::from_slice::<Value>(&written)
+                            .unwrap_or_else(|error| panic!("{id}: extracted text, {error}")),
+                        expected,
+                        "{id}: extracted text"
+                    );
+                    assert_eq!(
+                        canonicalize(&value).map(String::from_utf8),
+                        Ok(String::from_utf8(written)),
+                        "{id}: octets"
+                    );
                     canonical += 1;
                 }
                 Golden::Refused(defect) => {
