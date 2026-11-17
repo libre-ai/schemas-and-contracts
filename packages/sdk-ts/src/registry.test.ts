@@ -174,6 +174,14 @@ const signalementProjectionReceiptV1FixtureDocument = (await Bun.file(
   "../../contracts/fixtures/signalement-projection-receipt-v1/schema-fixtures.json",
 ).json()) as { cases: Fixture[] };
 fixtureDocument.cases.push(...signalementProjectionReceiptV1FixtureDocument.cases);
+const artifactManifestSignaturesV1FixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/artifact-manifest-signatures-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...artifactManifestSignaturesV1FixtureDocument.cases);
+const signingKeysV1FixtureDocument = (await Bun.file(
+  "../../contracts/fixtures/signing-keys-v1/schema-fixtures.json",
+).json()) as { cases: Fixture[] };
+fixtureDocument.cases.push(...signingKeysV1FixtureDocument.cases);
 const authorityCatalog = (await Bun.file("../../contracts/catalog.v1.json").json()) as {
   contracts: CatalogEntry[];
 };

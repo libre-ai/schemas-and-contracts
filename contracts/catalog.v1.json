@@ -1550,6 +1550,40 @@
         "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-2.json",
         "contracts/fixtures/signalement-projection-receipt-v1/signature-vectors.v1.part-3.json"
       ]
+    },
+    {
+      "id": "artifact-manifest-signatures-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/artifact-manifest-signatures.v1.schema.json",
+      "owners": ["artifact"],
+      "consumers": ["artifacts", "release"],
+      "compatibility": "major-versioned",
+      "classification": "internal",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography"],
+        "dossier": "docs/reviews/artifact-manifest-signatures-v1-review.md"
+      }
+    },
+    {
+      "id": "signing-keys-v1",
+      "kind": "json-schema",
+      "path": "contracts/schemas/signing-keys.v1.schema.json",
+      "owners": ["security"],
+      "consumers": ["artifacts", "proof"],
+      "compatibility": "major-versioned",
+      "classification": "internal",
+      "status": "candidate",
+      "review": {
+        "state": "pending-independent-agent-review",
+        "reviewerKind": "agent",
+        "separation": "role-scoped-review-pass",
+        "required": ["architecture", "security", "cryptography", "privacy"],
+        "dossier": "docs/reviews/artifact-manifest-signatures-v1-review.md"
+      }
     }
   ]
 }
