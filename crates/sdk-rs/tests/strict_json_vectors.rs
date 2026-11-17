@@ -570,23 +570,130 @@ fn error_text_carries_no_octet_of_the_input() {
     assert_eq!(text, "duplicate-member at byte offset 19");
 }
 
+/// The brief's criterion: `git grep -n 'unwrap()\|expect(\|panic!\|unsafe'` on the module.
+/// The same brief imposes the label `unsafe-integer`, which matches `unsafe`: the one line
+/// admitted is the arm that maps `UnsafeInteger` to that label, compared whole once trimmed.
+/// The label anywhere else, another label, or anything after the arm stays refused.
+const ABORT_PATTERNS: [&str; 4] = ["unwrap()", "expect(", "panic!", "unsafe"];
+
+/// What the abort-path scan saw in one source text.
+#[derive(Debug, Eq, PartialEq)]
+struct AbortScan {
+    lines: usize,
+    /// 1-based numbers of the lines matching the criterion that are not admitted.
+    refused: Vec<usize>,
+    /// Lines matching the criterion only because they carry the imposed label.
+    admitted: usize,
+}
+
+fn scan_abort_paths(source: &str) -> AbortScan {
+    let label_arm = format!(
+        "Self::UnsafeInteger => \"{}\",",
+        StrictJsonDefect::UnsafeInteger.as_str()
+    );
+    let mut scan = AbortScan {
+        lines: 0,
+        refused: Vec::new(),
+        admitted: 0,
+    };
+    for (index, line) in source.lines().enumerate() {
+        scan.lines += 1;
+        if !ABORT_PATTERNS.iter().any(|pattern| line.contains(pattern)) {
+            continue;
+        }
+        if line.trim() == label_arm {
+            scan.admitted += 1;
+        } else {
+            scan.refused.push(index + 1);
+        }
+    }
+    scan
+}
+
+#[test]
+fn abort_path_scan_admits_the_label_arm_and_nothing_else() {
+    let arm = "            Self::UnsafeInteger => \"unsafe-integer\",";
+    let cases: [(&str, String, Vec<usize>, usize); 10] = [
+        (
+            "label arm alone",
+            format!("fn a() {{}}\n{arm}\n"),
+            vec![],
+            1,
+        ),
+        (
+            "label outside its arm",
+            "let bypass = \"unsafe-integer\";".to_owned(),
+            vec![1],
+            0,
+        ),
+        (
+            "label arm in a doc comment",
+            format!("/// {}", arm.trim()),
+            vec![1],
+            0,
+        ),
+        (
+            "label arm followed by a comment",
+            format!("{arm} // unsafe"),
+            vec![1],
+            0,
+        ),
+        (
+            "label inside an unsafe block",
+            "unsafe { \"unsafe-integer\" }".to_owned(),
+            vec![1],
+            0,
+        ),
+        (
+            "another label on the arm",
+            "Self::UnsafeInteger => \"unsafe-number\",".to_owned(),
+            vec![1],
+            0,
+        ),
+        (
+            "label prefix of another label",
+            "Self::UnsafeInteger => \"unsafe-integer-x\",".to_owned(),
+            vec![1],
+            0,
+        ),
+        (
+            "label arm on another variant",
+            "Self::InvalidJson => \"unsafe-integer\",".to_owned(),
+            vec![1],
+            0,
+        ),
+        ("unwrap", "x.unwrap();\nlet y = 1;".to_owned(), vec![1], 0),
+        (
+            "label arm twice",
+            format!("{arm}\n{arm}\nx.expect(\"e\");\npanic!(\"p\");"),
+            vec![3, 4],
+            2,
+        ),
+    ];
+    for (name, source, refused, admitted) in cases {
+        let scan = scan_abort_paths(&source);
+        assert_eq!(scan.refused, refused, "{name}");
+        assert_eq!(scan.admitted, admitted, "{name}");
+    }
+}
+
 #[test]
 fn module_source_has_no_abort_path() {
     let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("src/strict_json.rs");
     let source = fs::read_to_string(&path).unwrap_or_else(|error| panic!("{error}"));
-    let mut lines = 0;
-    for (index, line) in source.lines().enumerate() {
-        lines += 1;
-        // The label of `UnsafeInteger` is the one admitted occurrence of the word.
-        let scanned = line.replace("\"unsafe-integer\"", "");
-        for forbidden in ["unwrap()", "expect(", "panic!", "unsafe"] {
-            assert!(
-                !scanned.contains(forbidden),
-                "line {}: {forbidden}",
-                index + 1
-            );
-        }
-    }
-    assert_ne!(lines, 0, "module source is empty");
-    println!("strict_json.rs: {lines} line(s) scanned");
+    let scan = scan_abort_paths(&source);
+    assert_ne!(scan.lines, 0, "module source is empty");
+    assert_eq!(
+        scan.refused,
+        Vec::<usize>::new(),
+        "lines matching the criterion"
+    );
+    // The brief imposes the label once, in the closed list of defects.
+    assert_eq!(scan.admitted, 1, "admitted label arms");
+    println!(
+        "strict_json.rs: {} line(s) scanned, {} refused, {} admitted label arm(s)",
+        scan.lines,
+        scan.refused.len(),
+        scan.admitted
+    );
 }
