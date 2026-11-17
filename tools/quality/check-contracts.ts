@@ -649,6 +649,20 @@ fixtureCases.push(...p02Inventory.cases);
 const signalementInventory = await loadSignalementV1FixtureCases();
 failures.push(...signalementInventory.failures);
 fixtureCases.push(...signalementInventory.cases);
+// Artifact manifest signatures and signing keys (candidate, ADR 2026-11-17): same shape.
+for (const directory of ["artifact-manifest-signatures-v1", "signing-keys-v1"]) {
+  const separateFixtures = await Bun.file(
+    `contracts/fixtures/${directory}/schema-fixtures.json`,
+  ).json();
+  if (
+    !isRecord(separateFixtures) ||
+    separateFixtures.schemaVersion !== "libre-ai.schema-fixtures.v1" ||
+    !Array.isArray(separateFixtures.cases) ||
+    separateFixtures.cases.length !== 1
+  ) {
+    failures.push(`${directory}: invalid separate schema fixture inventory`);
+  } else fixtureCases.push(...(separateFixtures.cases as FixtureCase[]));
+}
 
 if (fixtureCases.length === 0)
   failures.push("contracts/fixtures/schema-fixtures.v1.json: no fixtures");

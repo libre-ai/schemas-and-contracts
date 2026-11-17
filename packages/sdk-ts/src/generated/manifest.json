@@ -47,6 +47,11 @@
 			"declaration": "agent-review.v1.d.ts"
 		},
 		{
+			"schema": "artifact-manifest-signatures.v1.schema.json",
+			"schemaSha256": "2af87f9d856ba8b832fe7d042cb2620479092a982225b4ebf40a0f7cdca212f4",
+			"declaration": "artifact-manifest-signatures.v1.d.ts"
+		},
+		{
 			"schema": "artifact-manifest.v1.schema.json",
 			"schemaSha256": "cb663e4a8093022b750474430a6e9f1fa05aa85c773b167975309cf390dc533c",
 			"declaration": "artifact-manifest.v1.d.ts"
@@ -485,6 +490,11 @@
 			"schema": "signalement-routing-policy.v1.schema.json",
 			"schemaSha256": "378190b4668402fce0ad7567e5cf726ff7327a170bbd15ca16d8216ae1fd1992",
 			"declaration": "signalement-routing-policy.v1.d.ts"
+		},
+		{
+			"schema": "signing-keys.v1.schema.json",
+			"schemaSha256": "1ab8656bd367eefbd5c2d06b57cabc596da4cb4cd28ae1417c4d49a3ae7089f8",
+			"declaration": "signing-keys.v1.d.ts"
 		},
 		{
 			"schema": "spec-package.v1.schema.json",
