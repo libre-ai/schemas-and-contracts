@@ -395,6 +395,27 @@
           "dossier": "docs/reviews/artifact-manifest-signatures-v1-review.md"
         }
       }
+    },
+    {
+      "decision": "docs/adr/2026-11-17-rule-common-v1.md",
+      "ownerArbitration": "2026-11-17",
+      "entry": {
+        "id": "rule-common-v1",
+        "kind": "json-schema",
+        "path": "contracts/schemas/rule-common.v1.schema.json",
+        "owners": ["harness"],
+        "consumers": ["harness", "quality"],
+        "compatibility": "major-versioned",
+        "classification": "public",
+        "status": "candidate",
+        "review": {
+          "state": "pending-independent-agent-review",
+          "reviewerKind": "agent",
+          "separation": "role-scoped-review-pass",
+          "required": ["architecture", "security"],
+          "dossier": "docs/reviews/rule-common-v1-review.md"
+        }
+      }
     }
   ]
 }

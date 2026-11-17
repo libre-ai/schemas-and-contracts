@@ -649,8 +649,9 @@ fixtureCases.push(...p02Inventory.cases);
 const signalementInventory = await loadSignalementV1FixtureCases();
 failures.push(...signalementInventory.failures);
 fixtureCases.push(...signalementInventory.cases);
-// Artifact manifest signatures and signing keys (candidate, ADR 2026-11-17): same shape.
-for (const directory of ["artifact-manifest-signatures-v1", "signing-keys-v1"]) {
+// Artifact manifest signatures, signing keys and rule common forms (candidates, ADRs
+// 2026-11-17): same shape.
+for (const directory of ["artifact-manifest-signatures-v1", "signing-keys-v1", "rule-common-v1"]) {
   const separateFixtures = await Bun.file(
     `contracts/fixtures/${directory}/schema-fixtures.json`,
   ).json();

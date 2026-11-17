@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 23 |
-| total | 139 |
+| candidate | 24 |
+| total | 140 |
 
 ## Counts by family
 
@@ -27,7 +27,7 @@ they disagree with this page, this page states the current catalog.
 | biscuit-authority | 2 | 2 | 0 |
 | biscuit-policy | 5 | 5 | 0 |
 | data-policy | 4 | 3 | 1 |
-| json-schema | 105 | 84 | 21 |
+| json-schema | 106 | 84 | 22 |
 | openapi | 13 | 13 | 0 |
 | wit | 10 | 9 | 1 |
 
@@ -59,7 +59,7 @@ they disagree with this page, this page states the current catalog.
 | `retention-policy-v3` | candidate | pending-independent-agent-review | `contracts/data/retention.v3.json` |
 | `retention-policy-v4` | locked | none | `contracts/data/retention.v4.json` |
 
-### json-schema (105)
+### json-schema (106)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -154,6 +154,7 @@ they disagree with this page, this page states the current catalog.
 | `retention-policy-schema-v2` | locked | none | `contracts/schemas/retention-policy.v2.schema.json` |
 | `retention-policy-schema-v3` | candidate | pending-independent-agent-review | `contracts/schemas/retention-policy.v3.schema.json` |
 | `retention-policy-schema-v4` | locked | none | `contracts/schemas/retention-policy.v4.schema.json` |
+| `rule-common-v1` | candidate | pending-independent-agent-review | `contracts/schemas/rule-common.v1.schema.json` |
 | `session-event-v1` | locked | none | `contracts/schemas/session-event.v1.schema.json` |
 | `session-export-v1` | locked | none | `contracts/schemas/session-export.v1.schema.json` |
 | `signalement-connector-profile-v1` | candidate | pending-independent-agent-review | `contracts/schemas/signalement-connector-profile.v1.schema.json` |
