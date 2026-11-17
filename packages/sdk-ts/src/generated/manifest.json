@@ -458,7 +458,7 @@
 		},
 		{
 			"schema": "rule-common.v1.schema.json",
-			"schemaSha256": "8dc87d6422682dc4c02a52fac1031959d2688920c386f8727a1ce33daba291b8",
+			"schemaSha256": "27c4d11e87628a3be021b6477779a2cb6f0d79c4d495f7aa528a97462a65d495",
 			"declaration": "rule-common.v1.d.ts"
 		},
 		{

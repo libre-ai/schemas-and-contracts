@@ -35,6 +35,71 @@
           "value": "example-source:handbook#%2ehidden"
         },
         {
+          "name": "rule identifier locator encoding a control octet",
+          "path": "/ruleId",
+          "value": "example-source:handbook#R%00x"
+        },
+        {
+          "name": "rule identifier locator encoding a line feed",
+          "path": "/ruleId",
+          "value": "example-source:handbook#R%0A"
+        },
+        {
+          "name": "rule identifier locator encoding DEL",
+          "path": "/ruleId",
+          "value": "example-source:handbook#R%7F"
+        },
+        {
+          "name": "rule identifier locator encoding a slash",
+          "path": "/ruleId",
+          "value": "example-source:handbook#a%2Fb"
+        },
+        {
+          "name": "rule identifier locator encoding a backslash",
+          "path": "/ruleId",
+          "value": "example-source:handbook#a%5Cb"
+        },
+        {
+          "name": "rule identifier locator decoding to a dot",
+          "path": "/ruleId",
+          "value": "example-source:handbook#%2E"
+        },
+        {
+          "name": "rule identifier locator decoding to two dots",
+          "path": "/ruleId",
+          "value": "example-source:handbook#%2E."
+        },
+        {
+          "name": "rule identifier locator decoding to a leading two dots",
+          "path": "/ruleId",
+          "value": "example-source:handbook#%2E.x"
+        },
+        {
+          "name": "rule identifier locator encoding a UTF-8 octet",
+          "path": "/ruleId",
+          "value": "example-source:handbook#%C3%A9"
+        },
+        {
+          "name": "rule identifier locator encoding a no-break space",
+          "path": "/ruleId",
+          "value": "example-source:handbook#a%C2%A0b"
+        },
+        {
+          "name": "rule identifier locator encoding a byte order mark",
+          "path": "/ruleId",
+          "value": "example-source:handbook#%EF%BB%BFa"
+        },
+        {
+          "name": "rule identifier locator encoding a bidirectional override",
+          "path": "/ruleId",
+          "value": "example-source:handbook#a%E2%80%AEb"
+        },
+        {
+          "name": "rule identifier with a trailing line feed",
+          "path": "/ruleId",
+          "value": "example-source:handbook#R1\n"
+        },
+        {
           "name": "rule identifier with an uppercase source",
           "path": "/ruleId",
           "value": "Example-source:handbook#R1"
@@ -48,6 +113,11 @@
           "name": "excerpt digest of 63 characters",
           "path": "/excerptDigest",
           "value": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a0"
+        },
+        {
+          "name": "excerpt digest with a trailing line feed",
+          "path": "/excerptDigest",
+          "value": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08\n"
         },
         {
           "name": "slug ending with a hyphen",
@@ -83,6 +153,21 @@
           "name": "overlay reference at version 0",
           "path": "/overlayReference",
           "value": "example-publisher/reading-notes@0"
+        },
+        {
+          "name": "overlay reference version of 17 digits",
+          "path": "/overlayReference",
+          "value": "example-publisher/reading-notes@10000000000000000"
+        },
+        {
+          "name": "edition transcribed with a hyphen",
+          "path": "/edition",
+          "value": "2021-03"
+        },
+        {
+          "name": "level in lowercase, not on the closed list",
+          "path": "/level",
+          "value": "may"
         },
         {
           "name": "level with a space",
