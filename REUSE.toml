@@ -84,6 +84,23 @@ precedence = "override"
 SPDX-FileCopyrightText = "2026 Libre AI contributors"
 SPDX-License-Identifier = "Apache-2.0"
 
+# Vendored Unicode Character Database files, byte for byte, under the Unicode
+# License v3; their first-party README documents source, digests and update rule.
+[[annotations]]
+path = [
+  "third_party/unicode-ucd-17.0.0/DerivedCoreProperties.txt",
+  "third_party/unicode-ucd-17.0.0/DerivedGeneralCategory.txt",
+]
+precedence = "override"
+SPDX-FileCopyrightText = "2025 Unicode, Inc."
+SPDX-License-Identifier = "Unicode-3.0"
+
+[[annotations]]
+path = "third_party/unicode-ucd-17.0.0/README.md"
+precedence = "override"
+SPDX-FileCopyrightText = "2026 Libre AI contributors"
+SPDX-License-Identifier = "Apache-2.0"
+
 # Vendored RustCrypto sources retain their upstream dual licence. Libre AI's
 # local patch is distributed on the same terms.
 [[annotations]]

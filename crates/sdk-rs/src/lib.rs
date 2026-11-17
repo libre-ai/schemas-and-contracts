@@ -2,6 +2,7 @@
 
 pub mod event_chain;
 pub mod quorum;
+pub mod strict_json;
 
 use jsonschema::{Draft, Registry, Validator};
 use serde_json::Value;
