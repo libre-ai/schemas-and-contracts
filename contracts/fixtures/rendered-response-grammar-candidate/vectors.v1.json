@@ -624,7 +624,7 @@
       "edit": {
         "at": 11,
         "delete": 0,
-        "insert": ["[excerpt nonce=0123456789abcdef item=itm-three source=src-one]"]
+        "insert": ["[excerpt nonce=fedcba9876543210 item=itm-three source=src-one]"]
       },
       "expected": {
         "codes": ["delimiter_in_content"]

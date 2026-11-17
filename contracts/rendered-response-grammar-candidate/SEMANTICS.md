@@ -66,6 +66,12 @@ tolerates it, as it does any empty line outside a block.
 The first line is the preamble and the last line is the final line, by position: the
 final line is never content, and a block still open when it is reached is unclosed.
 
+Inside a block, every line but the end line of that block is content. A line there that has
+the shape of an open line and bears the render's nonce is a structural line out of place:
+the block it lands in missed its end line, and a verifier reports `unclosed_block` as well
+as `delimiter_in_content`. Under any other nonce it is forged content, reported as
+`delimiter_in_content` alone; in neither case does it open a block.
+
 ## Nonce
 
 The nonce is 16 characters of `0123456789abcdef` (64 bits). A production renderer draws it
@@ -73,7 +79,10 @@ from a cryptographic source for each render. It appears exactly once on every st
 line (preamble, open line, end line, final line), in the `nonce=` slot, and nowhere else:
 not in a content, not in a header value, not in a counter. A renderer that finds it in a
 prepared content, a header value or the decimal form of a counter draws another nonce; the
-reference renderer, which takes the nonce as input, refuses with `nonce_in_content`.
+reference renderer, which takes the nonce as input, refuses with `nonce_in_content`. A
+verifier reports the render's nonce found in a content as `delimiter_in_content`, in a
+header value as `header_invalid`, and in a counter as `final_line_missing` (the line is off
+the final-line form).
 
 A counter is a safe integer (at most 2^53 - 1) written in decimal: the reference renderer
 refuses a count or a bound beyond it with `bound_invalid`, since a larger number would be
