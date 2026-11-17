@@ -25,7 +25,8 @@
     "bun": ">=1.4.0"
   },
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./verify-render": "./src/verify-render.ts"
   },
   "scripts": {
     "check:bun:runtime": "bun node_modules/@libre-ai/governance/tools/quality/check-bun-minimum.ts",
