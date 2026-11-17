@@ -29,8 +29,10 @@
 //                the expectation carries `errors`
 //   blocked      the case could not be judged; the detail names the cause (unreadable file,
 //                file above the cap, invalid vector, id differing from the path, near-miss name,
-//                unknown dependency, dependency not pass, dependency cycle, data path defect,
-//                unreadable data, exit code, non-JSON output, output above the cap, timeout)
+//                id colliding with another discovered entry, unknown dependency, dependency not
+//                pass, dependency cycle, data path defect, unreadable data, exit code, non-JSON
+//                output, output above the cap, timeout, private directory not created or not
+//                removed, implementation not launched)
 //
 // Dependencies run first. A vector is `blocked` without launching the implementation when one
 // of its dependencies is not `pass`, is unknown (which includes: outside the filter), or when it
@@ -286,8 +288,19 @@ export async function runConformance(
     return result;
   };
 
+  // `a.vector.vector.json` has the id `a.vector`, which is also the path of an entry named
+  // `a.vector`: such a vector is blocked, so no id is ever resolved to one of two entries.
+  const otherPaths = new Set(
+    found.filter((entry) => entry.kind !== "vector").map((entry) => entry.path),
+  );
   for (const entry of found) {
-    if (entry.kind === "near-miss")
+    if (entry.kind === "vector" && otherPaths.has(entry.path.slice(0, -VECTOR_SUFFIX.length)))
+      settle(
+        entry.path.slice(0, -VECTOR_SUFFIX.length),
+        "blocked",
+        "id collides with another discovered entry",
+      );
+    else if (entry.kind === "near-miss")
       results.push({ id: entry.path, state: "blocked", detail: "near-miss vector file name" });
     else if (entry.kind === "unreadable-directory")
       results.push({ id: entry.path, state: "blocked", detail: "unreadable directory" });

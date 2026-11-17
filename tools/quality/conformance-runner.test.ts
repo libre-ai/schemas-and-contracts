@@ -2,7 +2,7 @@
 // directory: this repository never drives an SDK or a product through it (AGENTS.md).
 
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
-import { mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile } from "node:fs/promises";
+import { chmod, mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import {
@@ -152,6 +152,20 @@ describe("discovery", () => {
     }
     expect(outcome.state("good")).toBe("pass");
     expect(outcome.code).toBe(2);
+  });
+
+  test("a vector whose id collides with another discovered entry is blocked, with its dependents", async () => {
+    const root = await tree([vector("a.vector"), vector("b", { dependsOn: ["a.vector"] })], {
+      "a.vector": "a near-miss file whose path is the vector id",
+    });
+    const outcome = await run(root, ACCEPT);
+    expect(outcome.discovered).toBe(3);
+    const lines = outcome.results.filter((result) => result.id === "a.vector");
+    expect(lines.map((result) => [result.state, result.detail]).sort()).toEqual([
+      ["blocked", "id collides with another discovered entry"],
+      ["blocked", "near-miss vector file name"],
+    ]);
+    expect(outcome.detail("b")).toBe("dependency a.vector is blocked");
   });
 
   test("a vector whose id differs from its path is blocked", async () => {
@@ -441,6 +455,96 @@ describe("isolation", () => {
     const dir = (await readFile(witness, "utf8")).trim();
     expect(dir.length).toBeGreaterThan(0);
     expect(await exists(dir)).toBe(false);
+  });
+
+  test("a private directory the implementation locked is still removed", async () => {
+    const root = await tree([], {});
+    const witness = join(root, "cwd.txt");
+    const outcome = await runCase(
+      `pwd > '${witness}'; mkdir -p d/e; touch d/f d/e/g; chmod 000 d/e d; ${ACCEPT}`,
+      root,
+      "kind",
+      null,
+      [],
+      10_000,
+    );
+    expect(outcome).toEqual({ kind: "response", response: { outcome: "accept" } });
+    const dir = (await readFile(witness, "utf8")).trim();
+    expect(dir.length).toBeGreaterThan(0);
+    expect(await exists(dir)).toBe(false);
+  });
+
+  test("a locked private directory is restored without following a symbolic link out of it", async () => {
+    const root = await tree([], { "outside/kept.txt": "kept" });
+    const outside = join(root, "outside");
+    await chmod(outside, 0o500);
+    try {
+      const outcome = await runCase(
+        `ln -s '${outside}' link; mkdir d; ln -s '${outside}' d/link; chmod 000 d; ${ACCEPT}`,
+        root,
+        "kind",
+        null,
+        [],
+        10_000,
+      );
+      expect(outcome.kind).toBe("response");
+      expect((await stat(outside)).mode & 0o777).toBe(0o500);
+      expect(await readFile(join(outside, "kept.txt"), "utf8")).toBe("kept");
+    } finally {
+      await chmod(outside, 0o700);
+    }
+  });
+
+  // An unremovable entry needs the user immutable flag, which only BSD `chflags` lets an
+  // unprivileged user set; elsewhere bun:test counts and prints this test as skipped.
+  test.skipIf(process.platform !== "darwin")(
+    "a private directory that cannot be removed blocks the case, never throws",
+    async () => {
+      const root = await tree([], {});
+      const witness = join(root, "cwd.txt");
+      const outcome = await runCase(
+        `pwd > '${witness}'; touch pinned; chflags uchg pinned; ${ACCEPT}`,
+        root,
+        "kind",
+        null,
+        [],
+        10_000,
+      );
+      const dir = (await readFile(witness, "utf8")).trim();
+      try {
+        expect(outcome).toEqual({ kind: "blocked", cause: "private directory not removed" });
+      } finally {
+        await Bun.spawn(["chflags", "-R", "nouchg", dir]).exited;
+        await rm(dir, { recursive: true, force: true });
+      }
+    },
+  );
+
+  test("the whole process group is killed at the time limit and on oversized output", async () => {
+    const root = await tree([], {});
+    const late = join(root, "late.txt");
+    const timed = await runCase(
+      `sh -c "sleep 1; touch '${late}'" & wait`,
+      root,
+      "kind",
+      null,
+      [],
+      200,
+    );
+    expect(timed).toEqual({ kind: "blocked", cause: "timeout: exceeded 200 ms" });
+    const loud = join(root, "loud.txt");
+    const oversized = await runCase(
+      `sh -c "sleep 1; touch '${loud}'" & head -c 1048577 /dev/zero; wait`,
+      root,
+      "kind",
+      null,
+      [],
+      10_000,
+    );
+    expect(oversized).toEqual({ kind: "blocked", cause: "output above 1048576 octets" });
+    await Bun.sleep(1_500);
+    expect(await exists(late)).toBe(false);
+    expect(await exists(loud)).toBe(false);
   });
 
   test("the child environment holds PATH alone", async () => {
