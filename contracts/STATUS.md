@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 21 |
-| total | 137 |
+| candidate | 23 |
+| total | 139 |
 
 ## Counts by family
 
@@ -27,7 +27,7 @@ they disagree with this page, this page states the current catalog.
 | biscuit-authority | 2 | 2 | 0 |
 | biscuit-policy | 5 | 5 | 0 |
 | data-policy | 4 | 3 | 1 |
-| json-schema | 103 | 84 | 19 |
+| json-schema | 105 | 84 | 21 |
 | openapi | 13 | 13 | 0 |
 | wit | 10 | 9 | 1 |
 
@@ -59,7 +59,7 @@ they disagree with this page, this page states the current catalog.
 | `retention-policy-v3` | candidate | pending-independent-agent-review | `contracts/data/retention.v3.json` |
 | `retention-policy-v4` | locked | none | `contracts/data/retention.v4.json` |
 
-### json-schema (103)
+### json-schema (105)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -72,6 +72,7 @@ they disagree with this page, this page states the current catalog.
 | `agent-review-quorum-view-v1` | locked | none | `contracts/schemas/agent-review-quorum-view.v1.schema.json` |
 | `agent-review-session-attestation-v1` | locked | none | `contracts/schemas/agent-review-session-attestation.v1.schema.json` |
 | `agent-review-v1` | locked | none | `contracts/schemas/agent-review.v1.schema.json` |
+| `artifact-manifest-signatures-v1` | candidate | pending-independent-agent-review | `contracts/schemas/artifact-manifest-signatures.v1.schema.json` |
 | `artifact-manifest-v1` | locked | none | `contracts/schemas/artifact-manifest.v1.schema.json` |
 | `boussole-method-v1` | locked | none | `contracts/schemas/boussole-method.v1.schema.json` |
 | `boussole-method-v2` | locked | none | `contracts/schemas/boussole-method.v2.schema.json` |
@@ -160,6 +161,7 @@ they disagree with this page, this page states the current catalog.
 | `signalement-local-export-v1` | locked | none | `contracts/schemas/signalement-local-export.v1.schema.json` |
 | `signalement-projection-receipt-v1` | candidate | pending-independent-agent-review | `contracts/schemas/signalement-projection-receipt.v1.schema.json` |
 | `signalement-routing-policy-v1` | candidate | pending-independent-agent-review | `contracts/schemas/signalement-routing-policy.v1.schema.json` |
+| `signing-keys-v1` | candidate | pending-independent-agent-review | `contracts/schemas/signing-keys.v1.schema.json` |
 | `spec-package-v1` | locked | none | `contracts/schemas/spec-package.v1.schema.json` |
 | `spec-package-v2` | locked | none | `contracts/schemas/spec-package.v2.schema.json` |
 | `step-invocation-v1` | locked | none | `contracts/schemas/step-invocation.v1.schema.json` |

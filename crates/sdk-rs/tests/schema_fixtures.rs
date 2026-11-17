@@ -141,6 +141,14 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
         "../../../contracts/fixtures/signalement-projection-receipt-v1/schema-fixtures.json"
     ))
     .expect("signalement projection receipt v1 fixture document");
+    let artifact_manifest_signatures_v1_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/artifact-manifest-signatures-v1/schema-fixtures.json"
+    ))
+    .expect("artifact manifest signatures v1 fixture document");
+    let signing_keys_v1_fixtures: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/signing-keys-v1/schema-fixtures.json"
+    ))
+    .expect("signing keys v1 fixture document");
     let cases = fixtures["cases"]
         .as_array()
         .expect("fixture cases")
@@ -235,6 +243,16 @@ fn every_schema_compiles_and_every_fixture_matches_in_both_directions() {
             signalement_projection_receipt_v1_fixtures["cases"]
                 .as_array()
                 .expect("signalement projection receipt v1 fixture cases"),
+        )
+        .chain(
+            artifact_manifest_signatures_v1_fixtures["cases"]
+                .as_array()
+                .expect("artifact manifest signatures v1 fixture cases"),
+        )
+        .chain(
+            signing_keys_v1_fixtures["cases"]
+                .as_array()
+                .expect("signing keys v1 fixture cases"),
         )
         .collect::<Vec<_>>();
     assert_eq!(schema_count, cases.len() + 1);

@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "artifact-manifest-signatures.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "invalidMutations": [
+        {
+          "name": "no signature",
+          "path": "/signatures",
+          "value": []
+        },
+        {
+          "name": "unknown record member",
+          "path": "/manifestDigest",
+          "value": "0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "unknown signature member",
+          "path": "/signatures/0/algorithm",
+          "value": "Ed25519"
+        },
+        {
+          "name": "identifier in uppercase hex",
+          "path": "/signatures/0/signingKeyId",
+          "value": "DC7593CC40555F5FACA182D043E4617D4D69BB087F8CC4401EE38FBA5BD34B6C"
+        },
+        {
+          "name": "signature of 85 characters",
+          "path": "/signatures/0/signature",
+          "value": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFD"
+        },
+        {
+          "name": "signature with padding",
+          "path": "/signatures/0/signature",
+          "value": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw=="
+        },
+        {
+          "name": "signature with a standard Base64 character",
+          "path": "/signatures/0/signature",
+          "value": "+6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+        },
+        {
+          "name": "signature without its identifier",
+          "path": "/signatures/0/signingKeyId",
+          "remove": true
+        }
+      ]
+    }
+  ]
+}

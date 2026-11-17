@@ -1,0 +1,84 @@
+{
+  "schemaVersion": "libre-ai.schema-fixtures.v1",
+  "cases": [
+    {
+      "schema": "signing-keys.v1.schema.json",
+      "valid": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "invalidMutations": [
+        {
+          "name": "registry without keys",
+          "path": "/keys",
+          "value": []
+        },
+        {
+          "name": "unknown key member",
+          "path": "/keys/0/status",
+          "value": "active"
+        },
+        {
+          "name": "algorithm other than Ed25519",
+          "path": "/keys/0/algorithm",
+          "value": "Ed448"
+        },
+        {
+          "name": "identifier in uppercase hex",
+          "path": "/keys/0/signingKeyId",
+          "value": "DC7593CC40555F5FACA182D043E4617D4D69BB087F8CC4401EE38FBA5BD34B6C"
+        },
+        {
+          "name": "PEM followed by a newline",
+          "path": "/keys/0/publicKey",
+          "value": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----\n"
+        },
+        {
+          "name": "artifact type repeated",
+          "path": "/keys/0/artifactTypes",
+          "value": ["release", "release"]
+        },
+        {
+          "name": "artifact type outside artifact-manifest.v1",
+          "path": "/keys/0/artifactTypes",
+          "value": ["image"]
+        },
+        {
+          "name": "activatedAt without fractional digits",
+          "path": "/keys/0/activatedAt",
+          "value": "2026-01-01T00:00:00Z"
+        },
+        {
+          "name": "revokedAt omitted instead of null",
+          "path": "/keys/0/revokedAt",
+          "remove": true
+        },
+        {
+          "name": "revocation reason on a key in force",
+          "path": "/keys/0/revocationReason",
+          "value": "Scheduled rotation (test)"
+        },
+        {
+          "name": "witness without signatory",
+          "path": "/keys/0/witness/signatory",
+          "remove": true
+        }
+      ]
+    }
+  ]
+}

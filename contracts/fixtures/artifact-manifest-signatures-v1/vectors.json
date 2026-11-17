@@ -1,0 +1,4436 @@
+{
+  "schemaVersion": "libre-ai.artifact-manifest-signatures-vectors.v1",
+  "testMaterialWarning": "Synthetic keys derived from public labels; their seeds are published. Never trust outside tests.",
+  "domain": "libre-ai.artifact-manifest.v1",
+  "testKeys": [
+    {
+      "name": "key-1",
+      "seed": "Ku5DfVr51Tvy7Cdt5NP0SWB9rh6ENlWrtR6RBqxYS6o",
+      "publicKey": "hamztDTfbxrKnWku_l8y6nWLZ_T0P6SO8wZaR98-OOw",
+      "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c"
+    },
+    {
+      "name": "key-2",
+      "seed": "zqV2og5A9EYAO-QahkZjKWMmBlEuGdff_rNdR7tmtL8",
+      "publicKey": "Ii_RuXnlhfnwPd7cdK5XobxLk67DhvvwKmz3qbKGknU",
+      "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e"
+    },
+    {
+      "name": "key-3",
+      "seed": "EfZR0BZXLFcZOH79Kd9Jrl_UohqctAq_AvqBViplhd4",
+      "publicKey": "1cUoJmtBDDxRyilqC1D6rdYAa8nOIn_e1NaloUk5VKw",
+      "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23"
+    },
+    {
+      "name": "key-4",
+      "seed": "JID5gWJLrAsj3oJWUcMTEW0WXAZqInECRXu2fI10R4E",
+      "publicKey": "w5PWsxG5S8BKU94hUqC077122uNdUqKGgm5qgjGMzdA",
+      "signingKeyId": "ff59f3c3ac706effc881ea218901e199831ecea1f229cd6d31e92a329b43d660"
+    },
+    {
+      "name": "key-5",
+      "seed": "cZ8o2SqWK2EGoK5Ut8UCieDFRrzS0OHpeKTCMSQDy1o",
+      "publicKey": "3JUf6lJouTlffbSlp3wB-x6Z0MrSpe9HU-xeD43fP3M",
+      "signingKeyId": "7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c"
+    },
+    {
+      "name": "key-6",
+      "seed": "ik-jQEzpnzmqE-aobVBGjh3CIwaGjn7zMN-EoGrvlpQ",
+      "publicKey": "3tRDEJFRO5c9Di6NwFhNQlgjRNfgatdA3hpCrmYD1nU",
+      "signingKeyId": "765df56f4c65783893fb11fb8815e3089f96c38aa15d0da66cba638b673a4705"
+    }
+  ],
+  "manifests": {
+    "release": {
+      "schemaVersion": "libre-ai.artifact-manifest.v1",
+      "id": "urn:libre-ai:artifact:release-1",
+      "artifactType": "release",
+      "createdAt": "2026-07-16T00:00:00Z",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "files": [
+        {
+          "path": "dist/index.html",
+          "size": 42,
+          "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mediaType": "text/html"
+        }
+      ],
+      "evidenceReport": {
+        "id": "urn:libre-ai:evidence:report-1",
+        "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "mediaType": "application/json"
+      }
+    },
+    "dataset": {
+      "schemaVersion": "libre-ai.artifact-manifest.v1",
+      "id": "urn:libre-ai:artifact:dataset-1",
+      "artifactType": "dataset",
+      "createdAt": "2026-07-16T00:00:00Z",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "files": [
+        {
+          "path": "dist/index.html",
+          "size": 42,
+          "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mediaType": "text/html"
+        }
+      ],
+      "evidenceReport": {
+        "id": "urn:libre-ai:evidence:report-1",
+        "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "mediaType": "application/json"
+      }
+    },
+    "release-path-traversal": {
+      "schemaVersion": "libre-ai.artifact-manifest.v1",
+      "id": "urn:libre-ai:artifact:release-1",
+      "artifactType": "release",
+      "createdAt": "2026-07-16T00:00:00Z",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "files": [
+        {
+          "path": "../secret",
+          "size": 42,
+          "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mediaType": "text/html"
+        }
+      ],
+      "evidenceReport": {
+        "id": "urn:libre-ai:evidence:report-1",
+        "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "mediaType": "application/json"
+      }
+    },
+    "release-file-digest-changed": {
+      "schemaVersion": "libre-ai.artifact-manifest.v1",
+      "id": "urn:libre-ai:artifact:release-1",
+      "artifactType": "release",
+      "createdAt": "2026-07-16T00:00:00Z",
+      "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "files": [
+        {
+          "path": "dist/index.html",
+          "size": 42,
+          "digest": "0bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "mediaType": "text/html"
+        }
+      ],
+      "evidenceReport": {
+        "id": "urn:libre-ai:evidence:report-1",
+        "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "mediaType": "application/json"
+      }
+    }
+  },
+  "messages": {
+    "release": "bGlicmUtYWkuYXJ0aWZhY3QtbWFuaWZlc3QudjEA_0OZ89O9tDzLEcKY8NXIJ-SFGt2iJ_37KxIOOXtzjXo",
+    "dataset": "bGlicmUtYWkuYXJ0aWZhY3QtbWFuaWZlc3QudjEArJWV_sO9bntItCGXee9AK4eXqRAfQTTWEnJrhYzOcm4"
+  },
+  "registries": {
+    "main": {
+      "schemaVersion": "libre-ai.signing-keys.v1",
+      "keys": [
+        {
+          "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["build", "release"],
+          "activatedAt": "2026-01-01T00:00:00.000Z",
+          "revokedAt": null,
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2026-01-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          }
+        },
+        {
+          "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAIi/RuXnlhfnwPd7cdK5XobxLk67DhvvwKmz3qbKGknU=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["build", "release"],
+          "activatedAt": "2026-10-01T00:00:00.000Z",
+          "revokedAt": null,
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2026-10-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          }
+        },
+        {
+          "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA1cUoJmtBDDxRyilqC1D6rdYAa8nOIn/e1NaloUk5VKw=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["release"],
+          "activatedAt": "2026-01-01T00:00:00.000Z",
+          "revokedAt": "2026-09-01T00:00:00.000Z",
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2026-01-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          },
+          "revocationReason": "Scheduled rotation (test)",
+          "revocationWitness": {
+            "signatory": "key-custodian",
+            "discoveredAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "signingKeyId": "ff59f3c3ac706effc881ea218901e199831ecea1f229cd6d31e92a329b43d660",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAw5PWsxG5S8BKU94hUqC077122uNdUqKGgm5qgjGMzdA=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["release"],
+          "activatedAt": "2027-01-01T00:00:00.000Z",
+          "revokedAt": null,
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2027-01-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          }
+        },
+        {
+          "signingKeyId": "7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3JUf6lJouTlffbSlp3wB+x6Z0MrSpe9HU+xeD43fP3M=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["dataset"],
+          "activatedAt": "2026-01-01T00:00:00.000Z",
+          "revokedAt": null,
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2026-01-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          }
+        }
+      ]
+    },
+    "main-reversed": {
+      "schemaVersion": "libre-ai.signing-keys.v1",
+      "keys": [
+        {
+          "signingKeyId": "7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3JUf6lJouTlffbSlp3wB+x6Z0MrSpe9HU+xeD43fP3M=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["dataset"],
+          "activatedAt": "2026-01-01T00:00:00.000Z",
+          "revokedAt": null,
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2026-01-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          }
+        },
+        {
+          "signingKeyId": "ff59f3c3ac706effc881ea218901e199831ecea1f229cd6d31e92a329b43d660",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAw5PWsxG5S8BKU94hUqC077122uNdUqKGgm5qgjGMzdA=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["release"],
+          "activatedAt": "2027-01-01T00:00:00.000Z",
+          "revokedAt": null,
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2027-01-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          }
+        },
+        {
+          "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA1cUoJmtBDDxRyilqC1D6rdYAa8nOIn/e1NaloUk5VKw=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["release"],
+          "activatedAt": "2026-01-01T00:00:00.000Z",
+          "revokedAt": "2026-09-01T00:00:00.000Z",
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2026-01-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          },
+          "revocationReason": "Scheduled rotation (test)",
+          "revocationWitness": {
+            "signatory": "key-custodian",
+            "discoveredAt": "2026-09-01T00:00:00.000Z"
+          }
+        },
+        {
+          "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAIi/RuXnlhfnwPd7cdK5XobxLk67DhvvwKmz3qbKGknU=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["build", "release"],
+          "activatedAt": "2026-10-01T00:00:00.000Z",
+          "revokedAt": null,
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2026-10-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          }
+        },
+        {
+          "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+          "algorithm": "Ed25519",
+          "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+          "purpose": "Test key: artifact manifest signatures",
+          "artifactTypes": ["build", "release"],
+          "activatedAt": "2026-01-01T00:00:00.000Z",
+          "revokedAt": null,
+          "witness": {
+            "signatory": "key-custodian",
+            "attestedAt": "2026-01-01T00:00:00.000Z",
+            "comment": "Synthetic test key; its seed is published."
+          }
+        }
+      ]
+    }
+  },
+  "registryVectors": [
+    {
+      "id": "registry-main",
+      "rule": null,
+      "description": "Keys 1 to 5 of the signature vectors.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAIi/RuXnlhfnwPd7cdK5XobxLk67DhvvwKmz3qbKGknU=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-10-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-10-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA1cUoJmtBDDxRyilqC1D6rdYAa8nOIn/e1NaloUk5VKw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": "2026-09-01T00:00:00.000Z",
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            },
+            "revocationReason": "Scheduled rotation (test)",
+            "revocationWitness": {
+              "signatory": "key-custodian",
+              "discoveredAt": "2026-09-01T00:00:00.000Z"
+            }
+          },
+          {
+            "signingKeyId": "ff59f3c3ac706effc881ea218901e199831ecea1f229cd6d31e92a329b43d660",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAw5PWsxG5S8BKU94hUqC077122uNdUqKGgm5qgjGMzdA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2027-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2027-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3JUf6lJouTlffbSlp3wB+x6Z0MrSpe9HU+xeD43fP3M=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["dataset"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "admitted"
+      }
+    },
+    {
+      "id": "registry-single-revoked",
+      "rule": null,
+      "description": "One revoked key with its revocation reason and witness.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA1cUoJmtBDDxRyilqC1D6rdYAa8nOIn/e1NaloUk5VKw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": "2026-09-01T00:00:00.000Z",
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            },
+            "revocationReason": "Scheduled rotation (test)",
+            "revocationWitness": {
+              "signatory": "key-custodian",
+              "discoveredAt": "2026-09-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "admitted"
+      }
+    },
+    {
+      "id": "registry-empty-artifact-types",
+      "rule": null,
+      "description": "Key 1 authorizing no artifact type: admitted, signs no manifest (S7).",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": [],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "admitted"
+      }
+    },
+    {
+      "id": "registry-64-keys",
+      "rule": null,
+      "description": "64 keys, the upper bound.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAIi/RuXnlhfnwPd7cdK5XobxLk67DhvvwKmz3qbKGknU=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA1cUoJmtBDDxRyilqC1D6rdYAa8nOIn/e1NaloUk5VKw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "ff59f3c3ac706effc881ea218901e199831ecea1f229cd6d31e92a329b43d660",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAw5PWsxG5S8BKU94hUqC077122uNdUqKGgm5qgjGMzdA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3JUf6lJouTlffbSlp3wB+x6Z0MrSpe9HU+xeD43fP3M=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "765df56f4c65783893fb11fb8815e3089f96c38aa15d0da66cba638b673a4705",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3tRDEJFRO5c9Di6NwFhNQlgjRNfgatdA3hpCrmYD1nU=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "7fbd51a71eb3f20577fc01ab8eb150605b7d4ef37e2f392097377064747922ad",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAgtItl9q0JuG2ZK68J1vTRRa/Johhnge2uWBIQnSkrmw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "1b4f820c9ba10159e7ab3e638a3b07c47ad0799a9ee880c5a4e3a3fe494fdfe0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAgeXiTZG4hVvh/xCOGFjePHTYfghZJxJ376fFACq0l7g=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "7ace7e7b5e974c387770f71eecc7bf0d4ce349fa2dde27e60c5cb693754eb2a1",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAVCLpIgLiJN4xAO5InuBIGSWF/BS51zgn3brztw3+EFY=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "4f6d4d20f9a61fe86827cee13486145b289554d64b21af0d9567eb5dfbbe3170",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAwzgOaAPrXgQOdrhHQJkjq1NCX9TSbJMZ53RAA3TW2B4=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "ec1367dba25d5a05988a8d113b4f3fdae914c6339997b223ee167554b0ce2248",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAduGmySOvXZ0oiXMTSl34gzYyQNDpK4+9wHvpPSW6hUI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8fdc81bb097cb3139bd169d35128fe825656b60c3ed771d69afeaf1ddd957b1e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA+mmcMH50V7BX0fbV0QevKRjNbTqLdni4nYcX/WnR0ks=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "5cc627d5ec68788b6527c34064fd2b2f93a824b722d89335eef22263599f89ac",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAjbAdgvlzpN7NWFjY5UacFRSpcfLAU9t1QVKYFf2Iu9c=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "d432ab1ad4936e6f3b3ff65f65084567594c7f8f40be63fbb79bee685efe45da",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA+PoAu6h3bL9VGS5cY8UNcbPMVivTArs2Bmrf34XQsCM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "c524d8bf2d0cde92b19709a8a1325e209c82cfe80f4b0bf7038423de9532f6c7",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEASdmqgTHHZfLJs/h2tY02CIGidLqpxqJkmuID/lVA+ts=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "5bb3dd422af9afd107ea018fa1d07868a6a64d9d953ae238cd6fb5efaf9a2ed7",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAP8ovgYpBeXPpZTnR5fT1UtEgnRnWgCCmrbb5jGEl3zk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a92962aec93ed9ffefc398775860431d0d0e1944da3cfe788c9c0d0cf7acc9ec",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEU4araMORWOlXm+Sir+XK+mcHJLrrgOy9NA2b+qPcSk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "578d0b7052ddeb3703b7de4ea1d066eade46158cfc0abb33f690704c6f3aeaca",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAG5YW3yc7y2QrlZUPjbv1zIaEWMwC8NO2KmKGW18NoIM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "e5e580aa94fd1ee7cf2224ef349b9133fc6cc6bd971273728fbbce904675ab54",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAZ4bSzJpz0j/XrNUzOqwbCg5eiUnGwgsD04d2CRHgKF8=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8ffb07b3abf28aab387576e71aeac7c659978e41ccc250acbd1f5bde201c512d",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAHZ1f67oLT72fPAOOlKL9t5/l2JjNrhZbRvSpsE0cl+Y=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "2683d6b5667668f733a32d5422a41d0b7b547e03465b263df89b4dbe0b3c17d6",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAOpmF9tVFxsdbtr7jWKmONFvXK10XL82h66zsTv/C5nc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "b73e8f1bfc462f72b24c4d67d10afd72702e97070451721d0d68b46b563eb3f0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3z0SqGh97IWxMiIKp0GX1fp6Ffr0zKF+fZ9aXrNrw+E=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "ef5aeb9fb087c194d8034c0b17fbf8463b6bab7e194a61c362c8c44f308e37f0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAu1yVmEGJhjq0ZmZPrh51OY4TUDqjAF/cGCybddQABWE=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "9435601b04fafbebcb5e1855de1615d7d29e8b4fa402549b05bc91686351c567",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAtMB2QLI2ZPQKkEm5PUU+mgFjwQ3lV06Qsmm2kMxzYKE=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8f1e982e54fa36b57312b3d056f603c88f1e6f99c9116bdeabea6af34a98e405",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAAZ1Ph0BUTVcotXM7QHLGQphAVnZyRQfD2pC6AOR+nlc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "fd4f5b3a9532dd7b1b9d04dcc90e492a697be77962ca5201d7190cb7df32c2a2",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAvFltCOJnTkg/aNx1CSHVO+mPgor6BZqIy4c1KwaL4Og=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "651520f9efcb1cfdf2eb6da8faa10c8237396530a13b057410b40f97d5f41e46",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0hZkEFeqhSajHuSfozm7hoRrhRO4Xgl5IdfhrL9WzsU=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a11934a06685c4473fac1dbf23186ea1e474396209599cc95647a7028e0e02f3",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAr8RJHxnZY2Uv/dMcRiS6Jvk4YZm+t2UvU1yn+pFExKU=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "074a8d025db0559c665404102a45ad1e6d91aa58a5a3d907ac7063479b76336d",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEASY/JjvglaM0tNEmdG30v276iioP+V0n3MobvabhNGsA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "38723a5ad9dd2d7e4076ef9d32409e4c9b72912f7aca058dff242b7275dd2f74",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA/mlTdke3YibNUdYSSALtr2+pwoevRIeht9o7L03b0/Y=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "714ccc9d09b6023046896eb8db5321f44bc795f6e21a222b66c9cf66f606234a",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAJvea/Pd2AC5/QCFifFDtxrNO8W0TPPwh+GXwyEchsak=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "144b0de64662977e56150a35dd931c1956e803ca6b607665554aa6bdc4bf5a15",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEALO4Rpgjfl4GJpKJistFvZt+1jyczn7ZFDzh/h1Rz/C4=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "b7e8959415704d53ce197592ccb477d6f103c3a7b609842fb8f05113266bf5e0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAI6NGxKRMkIecOwvBAU1sT8JxhkiNusH2ccnv+Y6f0cI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "4cbe2404d65e66d8e7b48623621d92e4a4957112967ca32f26cf8fd83007326c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAPzOisEBG9oOE8hdGDsWcQbtd2Um3DFJ+RRjJUv+aMM0=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a00f61df4c8cff372075be25d714b0d664cc0747d0fafcb6a9b05fdcd003bf92",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA2NN7mT7Y1izYjqpsqIN2OzDTyRVCPSfTdTCD59fQP5A=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "bda4811b045ade0eae3f6e2c90de7008b969eca1481ecacbf20c92df307270b8",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAS+mORR271rV22+jDnbqjx30M1wCYCs6y/YemkvjBta0=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "d000ffefcd983bd575cd42a5fd4c0f20f961d21dd52513aed63b887983fbf165",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAlBjnhtAFUhQliA/ulTOVPOVYMdzKXHQQjcLYgw2cPfk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "1b24320f9f6ce4e7e96220ba4ad47ff2697562807ceec79c5a0baa98c6f18d3e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAHFsVtutwX1yDGsXCchzwRqI0qXmCPXwbi8PqT59xtIk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "5d87784ab34df7975e08dc31919ea1d0aaf25c4ca6054e647901254ebe812619",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAAnnJgUoOV2jhlEKhRTfpQl4qea2h/mHPKqk2BXFl7Ds=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8205af3652ad820048e3fbf0f140f01c3bac4277853ff17191a4b8f96a04462b",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAcoqp3ZmHmpL73HdIsVjhsD3kccDakw1Ji2K+3056eOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "c4027068eb788408af2a79e06d9ad7c61c9a8c97f7a0264121c11c60eefef305",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAkAwjFiXt75tUk7dE/aPP6lwhc+wPOj6pvaCzCtDmVyA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "59ac6c5007fea36879377bb1770583c6d24279bd64e575cd9f6f30b39ca2b495",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyh/zWMHXa964Wo/l/07WhQRQ6xU+CHPBJMLdkZGphGo=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "3d6bacb8540d149fb98b03bf1f0db9bd0e41e40ed2bd2e8dfb6b3f1bd5c1b04a",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAVX8NsJeJGaYkEXQ3v/2nMSY4bG1krO6ZHH8MLb2W5p4=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "f33dfd7ad4286311b4645164f1d16480b285474ec2680f43522c9f202c06960e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAfdDx8Cj0lJtiAw1oAQEz7aI16Hm1cLMkVYLKJT7DEWk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "db496b0da1d04bc19cf74f65114a957be8671ed073b4db65dc17d766f4f1679b",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEASxiJHUcsBKHM5vTcxXxnedPXOjZQ/D8KHnHB/jaM5kc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "5341391f62b2af72e214f9138073ee02a4dfb037c13abf59ca90e7fa4fbc4299",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3rXbj12yfAcXWsVPjgci4rX82RSMtXJbqO0lSqe+WsM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "d8e341fda5fbc709746386760120eb0570f6d18cfa852c3737f5ed1b082c57cb",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA2GrRYlTelfqciqUASn+dRic5pjEt7FNsuK3oul5QvHI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "1eae214585190eca1c1aa34ec19a94e6a40bfcb4938ea6630b5fd56a44a1a87a",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAY1QfyPVSzArtRTbZeSkfk93b9IvzHn2vlzLnFOhHNCY=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "d6b3166920c1c24bd1e25bcd3d643321e2c198a20026beee68eb78e3d2cf87f0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAeBeBlb66b/n5AIAi+FUmQuw0g+aaKOVRnKTgQQYLSJI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "115cd1ef2e601425aafca9e756955e014db4e2d077bd57bfff4075ff443af740",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAYykqCsUgsSV/mboErsV045eWusJfwVzryFsG/w/wiJA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "53367d11597085fa972bc6de8e93a1a3185cc30b6a141730e129d5371824e3ee",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARFwF3c6rfjSpte9HKY2W5Lj0Vp0n4+r8drtQ9sbOvkM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a036a7c5b99636a41bda7d289e6df91984e2d9c5a5f225d341dbe307eec71031",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEADgQwS0q/bKYOgTlgmP21iS/L/GMvLQL4w9naGLpRDjc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "e814f1c1ef3f863e194f9ba953063e4146cf6ecc4666f0e4f4903741f3bf2baa",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAg4HeJIX2d1QZ8G9mIAxbK8pCpgdI7L78BmNJ82fLMpc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "096e0df4ab547714728354ff693d735f7660f74991157b5afdfa133acc0d5c6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAxxpHGUBzRe2U0hlcd0cDbmh2jjul+fAvqJGeUQgu1lM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "427638d3b51f07ef6ec3eb692b61606913ead9a1b40efe3adc80c027782f6273",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAG0fYDmIVcav6v9Hp6FdbM+TDmJEYSmo5nzmEs6YtG10=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "6e2e57e6c02cd4abb06cabde6d3c37b6d7392f68d037689ab7505bcf1debe3bf",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAdM5Q/BZf2dXxxY3j5abDu3TDCxe7bRx8j8BSFgV779I=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "962edf2535dfbdab812207477ec30ee3063c8367960114a5a7ae12e956817944",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4V9qhfiO0qrFPFZdPqjLILke1epPmtbcjvTBJxNb6k=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "e3272077d2bd24e28c01490c3cfe8a54ade3bc8476266e4ad8b0a41e130523b0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAx4JlPaM31JIhfNyOEmcAerHAB/L0gJ8cyrNkP4LVFEI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8a4b2bfa29e3272b1f0d3c968c889b2a3d73eb78f1c31e4c8f20d9b434df5f03",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAL7MDLgW29w1uDt0Q9uUlsHzXMSZvsYtpRbjHQHemrw0=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a951af82b8d187203bd72691ec2da916278c09efe5988a180934e8b1b008c890",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAq2ipdOJbLLNXaW2u//cDPb2PQ2zqzdrNJu/8kDBf1ao=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "11e5b5aa3f0be26f1fb1b5830aff4ef81e074cfd5435705c032fc1a8a0041ea8",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAVON7KSXFxb2uiefKSv42ZDqwUsUxbsI0n+YeWzZjvR4=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "41c232bd1fda24b5430f896b28e7131eb5f2eb58695c9c34d7b130ebae65d3c2",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAmYDN1usqU9xDucN+TjO452YRqiBPbS1Y7HZotD/+65U=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "6e07ca6a12b2d9d5c31340756381a971c23b07abee91fe0c3fb5ceb0dbe64ce9",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAl+gk44YKvxGBRtr0DqtmUXVcNcA6sypWrnhChRQ0Byo=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a15a1b95043222f22e1e4fa9ceb628f5f0ae287f09696db12317583bf1597d81",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzVyP2WrdRz8S4GU9RyW9L8fSeRXSNkD33L54TAuYNhs=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "admitted"
+      }
+    },
+    {
+      "id": "registry-no-keys",
+      "rule": "K1",
+      "description": "Empty key list.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": []
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-65-keys",
+      "rule": "K1",
+      "description": "65 keys, one above the bound.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAIi/RuXnlhfnwPd7cdK5XobxLk67DhvvwKmz3qbKGknU=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA1cUoJmtBDDxRyilqC1D6rdYAa8nOIn/e1NaloUk5VKw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "ff59f3c3ac706effc881ea218901e199831ecea1f229cd6d31e92a329b43d660",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAw5PWsxG5S8BKU94hUqC077122uNdUqKGgm5qgjGMzdA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3JUf6lJouTlffbSlp3wB+x6Z0MrSpe9HU+xeD43fP3M=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "765df56f4c65783893fb11fb8815e3089f96c38aa15d0da66cba638b673a4705",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3tRDEJFRO5c9Di6NwFhNQlgjRNfgatdA3hpCrmYD1nU=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "7fbd51a71eb3f20577fc01ab8eb150605b7d4ef37e2f392097377064747922ad",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAgtItl9q0JuG2ZK68J1vTRRa/Johhnge2uWBIQnSkrmw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "1b4f820c9ba10159e7ab3e638a3b07c47ad0799a9ee880c5a4e3a3fe494fdfe0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAgeXiTZG4hVvh/xCOGFjePHTYfghZJxJ376fFACq0l7g=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "7ace7e7b5e974c387770f71eecc7bf0d4ce349fa2dde27e60c5cb693754eb2a1",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAVCLpIgLiJN4xAO5InuBIGSWF/BS51zgn3brztw3+EFY=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "4f6d4d20f9a61fe86827cee13486145b289554d64b21af0d9567eb5dfbbe3170",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAwzgOaAPrXgQOdrhHQJkjq1NCX9TSbJMZ53RAA3TW2B4=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "ec1367dba25d5a05988a8d113b4f3fdae914c6339997b223ee167554b0ce2248",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAduGmySOvXZ0oiXMTSl34gzYyQNDpK4+9wHvpPSW6hUI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8fdc81bb097cb3139bd169d35128fe825656b60c3ed771d69afeaf1ddd957b1e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA+mmcMH50V7BX0fbV0QevKRjNbTqLdni4nYcX/WnR0ks=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "5cc627d5ec68788b6527c34064fd2b2f93a824b722d89335eef22263599f89ac",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAjbAdgvlzpN7NWFjY5UacFRSpcfLAU9t1QVKYFf2Iu9c=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "d432ab1ad4936e6f3b3ff65f65084567594c7f8f40be63fbb79bee685efe45da",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA+PoAu6h3bL9VGS5cY8UNcbPMVivTArs2Bmrf34XQsCM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "c524d8bf2d0cde92b19709a8a1325e209c82cfe80f4b0bf7038423de9532f6c7",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEASdmqgTHHZfLJs/h2tY02CIGidLqpxqJkmuID/lVA+ts=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "5bb3dd422af9afd107ea018fa1d07868a6a64d9d953ae238cd6fb5efaf9a2ed7",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAP8ovgYpBeXPpZTnR5fT1UtEgnRnWgCCmrbb5jGEl3zk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a92962aec93ed9ffefc398775860431d0d0e1944da3cfe788c9c0d0cf7acc9ec",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAEU4araMORWOlXm+Sir+XK+mcHJLrrgOy9NA2b+qPcSk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "578d0b7052ddeb3703b7de4ea1d066eade46158cfc0abb33f690704c6f3aeaca",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAG5YW3yc7y2QrlZUPjbv1zIaEWMwC8NO2KmKGW18NoIM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "e5e580aa94fd1ee7cf2224ef349b9133fc6cc6bd971273728fbbce904675ab54",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAZ4bSzJpz0j/XrNUzOqwbCg5eiUnGwgsD04d2CRHgKF8=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8ffb07b3abf28aab387576e71aeac7c659978e41ccc250acbd1f5bde201c512d",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAHZ1f67oLT72fPAOOlKL9t5/l2JjNrhZbRvSpsE0cl+Y=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "2683d6b5667668f733a32d5422a41d0b7b547e03465b263df89b4dbe0b3c17d6",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAOpmF9tVFxsdbtr7jWKmONFvXK10XL82h66zsTv/C5nc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "b73e8f1bfc462f72b24c4d67d10afd72702e97070451721d0d68b46b563eb3f0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3z0SqGh97IWxMiIKp0GX1fp6Ffr0zKF+fZ9aXrNrw+E=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "ef5aeb9fb087c194d8034c0b17fbf8463b6bab7e194a61c362c8c44f308e37f0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAu1yVmEGJhjq0ZmZPrh51OY4TUDqjAF/cGCybddQABWE=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "9435601b04fafbebcb5e1855de1615d7d29e8b4fa402549b05bc91686351c567",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAtMB2QLI2ZPQKkEm5PUU+mgFjwQ3lV06Qsmm2kMxzYKE=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8f1e982e54fa36b57312b3d056f603c88f1e6f99c9116bdeabea6af34a98e405",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAAZ1Ph0BUTVcotXM7QHLGQphAVnZyRQfD2pC6AOR+nlc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "fd4f5b3a9532dd7b1b9d04dcc90e492a697be77962ca5201d7190cb7df32c2a2",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAvFltCOJnTkg/aNx1CSHVO+mPgor6BZqIy4c1KwaL4Og=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "651520f9efcb1cfdf2eb6da8faa10c8237396530a13b057410b40f97d5f41e46",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA0hZkEFeqhSajHuSfozm7hoRrhRO4Xgl5IdfhrL9WzsU=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a11934a06685c4473fac1dbf23186ea1e474396209599cc95647a7028e0e02f3",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAr8RJHxnZY2Uv/dMcRiS6Jvk4YZm+t2UvU1yn+pFExKU=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "074a8d025db0559c665404102a45ad1e6d91aa58a5a3d907ac7063479b76336d",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEASY/JjvglaM0tNEmdG30v276iioP+V0n3MobvabhNGsA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "38723a5ad9dd2d7e4076ef9d32409e4c9b72912f7aca058dff242b7275dd2f74",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA/mlTdke3YibNUdYSSALtr2+pwoevRIeht9o7L03b0/Y=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "714ccc9d09b6023046896eb8db5321f44bc795f6e21a222b66c9cf66f606234a",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAJvea/Pd2AC5/QCFifFDtxrNO8W0TPPwh+GXwyEchsak=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "144b0de64662977e56150a35dd931c1956e803ca6b607665554aa6bdc4bf5a15",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEALO4Rpgjfl4GJpKJistFvZt+1jyczn7ZFDzh/h1Rz/C4=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "b7e8959415704d53ce197592ccb477d6f103c3a7b609842fb8f05113266bf5e0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAI6NGxKRMkIecOwvBAU1sT8JxhkiNusH2ccnv+Y6f0cI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "4cbe2404d65e66d8e7b48623621d92e4a4957112967ca32f26cf8fd83007326c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAPzOisEBG9oOE8hdGDsWcQbtd2Um3DFJ+RRjJUv+aMM0=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a00f61df4c8cff372075be25d714b0d664cc0747d0fafcb6a9b05fdcd003bf92",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA2NN7mT7Y1izYjqpsqIN2OzDTyRVCPSfTdTCD59fQP5A=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "bda4811b045ade0eae3f6e2c90de7008b969eca1481ecacbf20c92df307270b8",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAS+mORR271rV22+jDnbqjx30M1wCYCs6y/YemkvjBta0=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "d000ffefcd983bd575cd42a5fd4c0f20f961d21dd52513aed63b887983fbf165",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAlBjnhtAFUhQliA/ulTOVPOVYMdzKXHQQjcLYgw2cPfk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "1b24320f9f6ce4e7e96220ba4ad47ff2697562807ceec79c5a0baa98c6f18d3e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAHFsVtutwX1yDGsXCchzwRqI0qXmCPXwbi8PqT59xtIk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "5d87784ab34df7975e08dc31919ea1d0aaf25c4ca6054e647901254ebe812619",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAAnnJgUoOV2jhlEKhRTfpQl4qea2h/mHPKqk2BXFl7Ds=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8205af3652ad820048e3fbf0f140f01c3bac4277853ff17191a4b8f96a04462b",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAcoqp3ZmHmpL73HdIsVjhsD3kccDakw1Ji2K+3056eOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "c4027068eb788408af2a79e06d9ad7c61c9a8c97f7a0264121c11c60eefef305",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAkAwjFiXt75tUk7dE/aPP6lwhc+wPOj6pvaCzCtDmVyA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "59ac6c5007fea36879377bb1770583c6d24279bd64e575cd9f6f30b39ca2b495",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAyh/zWMHXa964Wo/l/07WhQRQ6xU+CHPBJMLdkZGphGo=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "3d6bacb8540d149fb98b03bf1f0db9bd0e41e40ed2bd2e8dfb6b3f1bd5c1b04a",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAVX8NsJeJGaYkEXQ3v/2nMSY4bG1krO6ZHH8MLb2W5p4=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "f33dfd7ad4286311b4645164f1d16480b285474ec2680f43522c9f202c06960e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAfdDx8Cj0lJtiAw1oAQEz7aI16Hm1cLMkVYLKJT7DEWk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "db496b0da1d04bc19cf74f65114a957be8671ed073b4db65dc17d766f4f1679b",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEASxiJHUcsBKHM5vTcxXxnedPXOjZQ/D8KHnHB/jaM5kc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "5341391f62b2af72e214f9138073ee02a4dfb037c13abf59ca90e7fa4fbc4299",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA3rXbj12yfAcXWsVPjgci4rX82RSMtXJbqO0lSqe+WsM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "d8e341fda5fbc709746386760120eb0570f6d18cfa852c3737f5ed1b082c57cb",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA2GrRYlTelfqciqUASn+dRic5pjEt7FNsuK3oul5QvHI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "1eae214585190eca1c1aa34ec19a94e6a40bfcb4938ea6630b5fd56a44a1a87a",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAY1QfyPVSzArtRTbZeSkfk93b9IvzHn2vlzLnFOhHNCY=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "d6b3166920c1c24bd1e25bcd3d643321e2c198a20026beee68eb78e3d2cf87f0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAeBeBlb66b/n5AIAi+FUmQuw0g+aaKOVRnKTgQQYLSJI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "115cd1ef2e601425aafca9e756955e014db4e2d077bd57bfff4075ff443af740",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAYykqCsUgsSV/mboErsV045eWusJfwVzryFsG/w/wiJA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "53367d11597085fa972bc6de8e93a1a3185cc30b6a141730e129d5371824e3ee",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEARFwF3c6rfjSpte9HKY2W5Lj0Vp0n4+r8drtQ9sbOvkM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a036a7c5b99636a41bda7d289e6df91984e2d9c5a5f225d341dbe307eec71031",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEADgQwS0q/bKYOgTlgmP21iS/L/GMvLQL4w9naGLpRDjc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "e814f1c1ef3f863e194f9ba953063e4146cf6ecc4666f0e4f4903741f3bf2baa",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAg4HeJIX2d1QZ8G9mIAxbK8pCpgdI7L78BmNJ82fLMpc=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "096e0df4ab547714728354ff693d735f7660f74991157b5afdfa133acc0d5c6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAxxpHGUBzRe2U0hlcd0cDbmh2jjul+fAvqJGeUQgu1lM=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "427638d3b51f07ef6ec3eb692b61606913ead9a1b40efe3adc80c027782f6273",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAG0fYDmIVcav6v9Hp6FdbM+TDmJEYSmo5nzmEs6YtG10=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "6e2e57e6c02cd4abb06cabde6d3c37b6d7392f68d037689ab7505bcf1debe3bf",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAdM5Q/BZf2dXxxY3j5abDu3TDCxe7bRx8j8BSFgV779I=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "962edf2535dfbdab812207477ec30ee3063c8367960114a5a7ae12e956817944",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAA4V9qhfiO0qrFPFZdPqjLILke1epPmtbcjvTBJxNb6k=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "e3272077d2bd24e28c01490c3cfe8a54ade3bc8476266e4ad8b0a41e130523b0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAx4JlPaM31JIhfNyOEmcAerHAB/L0gJ8cyrNkP4LVFEI=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "8a4b2bfa29e3272b1f0d3c968c889b2a3d73eb78f1c31e4c8f20d9b434df5f03",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAL7MDLgW29w1uDt0Q9uUlsHzXMSZvsYtpRbjHQHemrw0=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a951af82b8d187203bd72691ec2da916278c09efe5988a180934e8b1b008c890",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAq2ipdOJbLLNXaW2u//cDPb2PQ2zqzdrNJu/8kDBf1ao=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "11e5b5aa3f0be26f1fb1b5830aff4ef81e074cfd5435705c032fc1a8a0041ea8",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAVON7KSXFxb2uiefKSv42ZDqwUsUxbsI0n+YeWzZjvR4=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "41c232bd1fda24b5430f896b28e7131eb5f2eb58695c9c34d7b130ebae65d3c2",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAmYDN1usqU9xDucN+TjO452YRqiBPbS1Y7HZotD/+65U=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "6e07ca6a12b2d9d5c31340756381a971c23b07abee91fe0c3fb5ceb0dbe64ce9",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAl+gk44YKvxGBRtr0DqtmUXVcNcA6sypWrnhChRQ0Byo=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "a15a1b95043222f22e1e4fa9ceb628f5f0ae287f09696db12317583bf1597d81",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAzVyP2WrdRz8S4GU9RyW9L8fSeRXSNkD33L54TAuYNhs=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "9b7ba3e67bf8a1c553a5547c56ae08b423aafb3d6fceffa12cc8ac70caaa22a0",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEApxWBPStb3lyoprM92v59AEHEn14taPhhA9azwHmo+KA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-unknown-key-member",
+      "rule": "K1",
+      "description": "Key 1 with an extra member.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            },
+            "status": "active"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-algorithm-other",
+      "rule": "K1",
+      "description": "algorithm Ed448.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed448",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-pem-x25519",
+      "rule": "K1",
+      "description": "Key 1 octets under the X25519 SPKI prefix (OID 1.3.101.110), DER of 44 octets.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VuAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-pem-trailing-newline",
+      "rule": "K1",
+      "description": "Key 1 PEM followed by a newline.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----\n",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-pem-noncanonical-final-character",
+      "rule": "K1",
+      "description": "Key 1 PEM whose last Base64 character has a non-zero unused bit (same octets).",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOx=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-instant-without-milliseconds",
+      "rule": "K1",
+      "description": "activatedAt without its three fractional digits.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-instant-offset",
+      "rule": "K1",
+      "description": "activatedAt with +00:00 instead of Z.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000+00:00",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-instant-impossible-date",
+      "rule": "K1",
+      "description": "activatedAt on February 30.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-02-30T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-artifact-type-repeated",
+      "rule": "K1",
+      "description": "artifactTypes lists release twice.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-artifact-type-unknown",
+      "rule": "K1",
+      "description": "artifactTypes lists a value outside artifact-manifest.v1.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["image"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-revocation-reason-on-key-in-force",
+      "rule": "K1",
+      "description": "revocationReason on a key whose revokedAt is null.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            },
+            "revocationReason": "Scheduled rotation (test)"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-revocation-witness-on-key-in-force",
+      "rule": "K1",
+      "description": "revocationWitness on a key whose revokedAt is null.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            },
+            "revocationWitness": {
+              "signatory": "key-custodian",
+              "discoveredAt": "2026-02-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-revoked-at-omitted",
+      "rule": "K1",
+      "description": "revokedAt omitted instead of null.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-identifier-uppercase",
+      "rule": "K1",
+      "description": "signingKeyId of key 1 in uppercase hex.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "DC7593CC40555F5FACA182D043E4617D4D69BB087F8CC4401EE38FBA5BD34B6C",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-witness-missing",
+      "rule": "K1",
+      "description": "Key 1 without witness.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-key-torsion-0",
+      "rule": "K2",
+      "description": "Public key is the torsion-0 point of the build-brief-v2 strict vectors; identifier derived from it.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "01d0fabd251fcbbe2b93b4b927b26ad2a1a99077152e45ded1e678afa45dbec5",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-key-torsion-1",
+      "rule": "K2",
+      "description": "Public key is the torsion-1 point of the build-brief-v2 strict vectors; identifier derived from it.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "1381231a2021f331f1b9b69d2f5ff04a2cc77582d08b909ffc0ace9530351722",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAxxdqcD1N2E+6PAt2DRBnDyogU/osOczGTsf9d5KsA3o=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-key-mixed-order-1",
+      "rule": "K2",
+      "description": "Public key is the mixed-order-1 point of the build-brief-v2 strict vectors; identifier derived from it.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "45ee2224f548a3fb2aec2e36a0d501cb9710013acf6b37170bfd1beee75b4562",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAmFGerfNbmVIztRtc0j6cxaKLY5taSvDskDy5YNgbeBk=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-key-noncanonical-identity",
+      "rule": "K2",
+      "description": "Public key is the noncanonical-identity point of the build-brief-v2 strict vectors; identifier derived from it.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "ebcaabd64b0947b64d68135119c54f2d3466bd7ed11257b3a3059689ae2dbd91",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA7v///////////////////////////////////////38=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-key-noncanonical-y-p",
+      "rule": "K2",
+      "description": "Public key is the noncanonical-y-p point of the build-brief-v2 strict vectors; identifier derived from it.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "bd6174a7c16e1af07272966a9c071c8a3cf16b2726c50d672a09f60636b08901",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA7f///////////////////////////////////////38=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-key-negative-zero-identity",
+      "rule": "K2",
+      "description": "Public key is the negative-zero-identity point of the build-brief-v2 strict vectors; identifier derived from it.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "05e33a7a25dc39ab258dacfea5a955d0d3742731d8f1c42c427bf98ca9c75ccc",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-key-invalid-point",
+      "rule": "K2",
+      "description": "Public key is the invalid-point point of the build-brief-v2 strict vectors; identifier derived from it.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "5778f985db754c6628691f56fadae50c65fddbe8eb2e93039633fefa05d45e31",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-identifier-of-another-key",
+      "rule": "K3",
+      "description": "Key 1 entry carrying the identifier of key 2.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-identifier-of-pem-text",
+      "rule": "K3",
+      "description": "Key 1 entry whose identifier is SHA-256 of its PEM text, not of the raw key.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "87fb485946f0b717309d1f602226fe5bad7d6102b9eb34cd5c43aa414fe1492e",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-duplicate-entry",
+      "rule": "K4",
+      "description": "Key 1 listed twice.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          },
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAhamztDTfbxrKnWku/l8y6nWLZ/T0P6SO8wZaR98+OOw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["build", "release"],
+            "activatedAt": "2026-01-01T00:00:00.000Z",
+            "revokedAt": null,
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-01-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-revoked-at-activation",
+      "rule": "K5",
+      "description": "revokedAt equal to activatedAt.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA1cUoJmtBDDxRyilqC1D6rdYAa8nOIn/e1NaloUk5VKw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-09-01T00:00:00.000Z",
+            "revokedAt": "2026-09-01T00:00:00.000Z",
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-09-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            },
+            "revocationReason": "Scheduled rotation (test)",
+            "revocationWitness": {
+              "signatory": "key-custodian",
+              "discoveredAt": "2026-09-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    },
+    {
+      "id": "registry-revoked-before-activation",
+      "rule": "K5",
+      "description": "revokedAt one millisecond before activatedAt.",
+      "registry": {
+        "schemaVersion": "libre-ai.signing-keys.v1",
+        "keys": [
+          {
+            "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+            "algorithm": "Ed25519",
+            "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEA1cUoJmtBDDxRyilqC1D6rdYAa8nOIn/e1NaloUk5VKw=\n-----END PUBLIC KEY-----",
+            "purpose": "Test key: artifact manifest signatures",
+            "artifactTypes": ["release"],
+            "activatedAt": "2026-09-01T00:00:00.000Z",
+            "revokedAt": "2026-08-31T23:59:59.999Z",
+            "witness": {
+              "signatory": "key-custodian",
+              "attestedAt": "2026-09-01T00:00:00.000Z",
+              "comment": "Synthetic test key; its seed is published."
+            },
+            "revocationReason": "Scheduled rotation (test)",
+            "revocationWitness": {
+              "signatory": "key-custodian",
+              "discoveredAt": "2026-08-31T23:59:59.999Z"
+            }
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "key-set-invalid"
+      }
+    }
+  ],
+  "signatureVectors": [
+    {
+      "id": "valid-single-key",
+      "rule": null,
+      "description": "Release signed by key 1.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "accepted",
+        "verifiedKeyIds": ["dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c"],
+        "ignoredUnknownKeyIds": 0
+      }
+    },
+    {
+      "id": "valid-two-keys",
+      "rule": null,
+      "description": "Release signed by keys 1 and 2.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          },
+          {
+            "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+            "signature": "a_5yPuNfVo3GqMd8wjsHAwPE6rALdsuzYk06fzQpLz6FxavYbNPrqyXOY0tROv5ig5Vih3Evt5tx77yx0UniAw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "accepted",
+        "verifiedKeyIds": [
+          "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+          "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c"
+        ],
+        "ignoredUnknownKeyIds": 0
+      }
+    },
+    {
+      "id": "valid-two-keys-reversed",
+      "rule": "S10",
+      "description": "valid-two-keys with its signatures in reverse order: same outcome.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+            "signature": "a_5yPuNfVo3GqMd8wjsHAwPE6rALdsuzYk06fzQpLz6FxavYbNPrqyXOY0tROv5ig5Vih3Evt5tx77yx0UniAw"
+          },
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "accepted",
+        "verifiedKeyIds": [
+          "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+          "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c"
+        ],
+        "ignoredUnknownKeyIds": 0
+      }
+    },
+    {
+      "id": "valid-registry-reversed",
+      "rule": "S10",
+      "description": "valid-two-keys against the main registry in reverse key order: same outcome.",
+      "manifest": "release",
+      "registry": "main-reversed",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          },
+          {
+            "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+            "signature": "a_5yPuNfVo3GqMd8wjsHAwPE6rALdsuzYk06fzQpLz6FxavYbNPrqyXOY0tROv5ig5Vih3Evt5tx77yx0UniAw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "accepted",
+        "verifiedKeyIds": [
+          "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+          "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c"
+        ],
+        "ignoredUnknownKeyIds": 0
+      }
+    },
+    {
+      "id": "valid-unknown-key-ignored",
+      "rule": "S5",
+      "description": "Keys 1 and 6; key 6 is absent from the registry, ignored and counted.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          },
+          {
+            "signingKeyId": "765df56f4c65783893fb11fb8815e3089f96c38aa15d0da66cba638b673a4705",
+            "signature": "W6uo-AgByFkrnXq80Efk0Fi-doxhYgmR0sGxzcGO5-057Tqmz5vjYsSiBLiXQhZhZ-JRojmzwR4O2RhUPjYPBg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "accepted",
+        "verifiedKeyIds": ["dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c"],
+        "ignoredUnknownKeyIds": 1
+      }
+    },
+    {
+      "id": "valid-sixteen-signatures",
+      "rule": "S1",
+      "description": "Key 1 and 15 unknown keys: 16 signatures, the upper bound.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          },
+          {
+            "signingKeyId": "765df56f4c65783893fb11fb8815e3089f96c38aa15d0da66cba638b673a4705",
+            "signature": "W6uo-AgByFkrnXq80Efk0Fi-doxhYgmR0sGxzcGO5-057Tqmz5vjYsSiBLiXQhZhZ-JRojmzwR4O2RhUPjYPBg"
+          },
+          {
+            "signingKeyId": "7fbd51a71eb3f20577fc01ab8eb150605b7d4ef37e2f392097377064747922ad",
+            "signature": "JbdXsT756Px7v2945r5Qf5sIOXDStChR7giTcWTcMKKsM_iWzM_-8gpNE9_ns48ztTp6JHWxDczu57N-VVoTBA"
+          },
+          {
+            "signingKeyId": "1b4f820c9ba10159e7ab3e638a3b07c47ad0799a9ee880c5a4e3a3fe494fdfe0",
+            "signature": "hSem496lklDb1hLblzJcx8U694BO4UBkZyJ_YrFsPaaksHHvz9HbK5mxdiHI3GJCfHUaDGNgY0zX7qBNwK6nAA"
+          },
+          {
+            "signingKeyId": "7ace7e7b5e974c387770f71eecc7bf0d4ce349fa2dde27e60c5cb693754eb2a1",
+            "signature": "DIi3JfBxICdcOOipf7EVRcoTdcbZXzFk5JSIbd5XzabaLHR47cViln0vX9U1KwOnZYzaBuuf82T4UllYg4BTAA"
+          },
+          {
+            "signingKeyId": "4f6d4d20f9a61fe86827cee13486145b289554d64b21af0d9567eb5dfbbe3170",
+            "signature": "ahreLS8wlAOsYxZgYNz5SMmHDi31UbiX-uH4xDNRwUpCgbv0-WDAD6NVPELPffJ5B5yX34-ob2If36Zqv3O9Dg"
+          },
+          {
+            "signingKeyId": "ec1367dba25d5a05988a8d113b4f3fdae914c6339997b223ee167554b0ce2248",
+            "signature": "UoF61cL4W94rtEZ2wsuZtxGMhfyQNLzMj9OIpuXTvOEHa7i7bmniiJ7ecKaYvV1iH89AHYYqQUKVhQU0OmM_Dg"
+          },
+          {
+            "signingKeyId": "8fdc81bb097cb3139bd169d35128fe825656b60c3ed771d69afeaf1ddd957b1e",
+            "signature": "sGOg_uyebUwS1EJwfiM6-3tzEXegsTA8kiW3kYNTmVdf3JmqUKCoGOzbSeB0tJsfeWmDXBVeZwHvP0bK7sBpCg"
+          },
+          {
+            "signingKeyId": "5cc627d5ec68788b6527c34064fd2b2f93a824b722d89335eef22263599f89ac",
+            "signature": "O8-JhGYsRlLYpp8w-VjAq-8wG_AhcBgfxodKxFfAtIMXdSVwkGBG7q4ZLBZAxXKQQpC9VswEIqEKD1mfKbhkCw"
+          },
+          {
+            "signingKeyId": "d432ab1ad4936e6f3b3ff65f65084567594c7f8f40be63fbb79bee685efe45da",
+            "signature": "-4eVBTuLXjADjzGOee2KJ6JS9neMbPCq-FvLRwtpR_Jy9OJrt4VyvG2-sU4v4LzHbKo0hyf2X68xkm8wemKjAw"
+          },
+          {
+            "signingKeyId": "c524d8bf2d0cde92b19709a8a1325e209c82cfe80f4b0bf7038423de9532f6c7",
+            "signature": "ELSXTewxmLhABVe75UIv02Q3JYaVY0BThyXqxsjuN-M7hsF9S28PfWKI0SCs3YR3yC5pMfdYZurrxymnCVJdBA"
+          },
+          {
+            "signingKeyId": "5bb3dd422af9afd107ea018fa1d07868a6a64d9d953ae238cd6fb5efaf9a2ed7",
+            "signature": "rwCqV5akiG2YLd8j4PbjSIz5YJqjKX9oNVXZVa3521_DAMxthGdlRdS9E5X3F7fF6kaQy2RKG0ZVTVHd5LJlDQ"
+          },
+          {
+            "signingKeyId": "a92962aec93ed9ffefc398775860431d0d0e1944da3cfe788c9c0d0cf7acc9ec",
+            "signature": "kIa1L_AML9W6vVFemetbq37ShH4dHQX4HTw-UNbyDpcF_vnUpv9IUxnPCXvSpTODtYZpYgY8qTTR9aXi05bSAQ"
+          },
+          {
+            "signingKeyId": "578d0b7052ddeb3703b7de4ea1d066eade46158cfc0abb33f690704c6f3aeaca",
+            "signature": "kjGV9mz3qqKdqgutrgZ4MZoM2RFQLqI1-NMfHW1KjfzmJwn_-02b0waVdq1G74hbpDANL9tv5DAH-jtv5hnuCQ"
+          },
+          {
+            "signingKeyId": "e5e580aa94fd1ee7cf2224ef349b9133fc6cc6bd971273728fbbce904675ab54",
+            "signature": "nsv35kQ5Z0eE1Wqfq3LySMIctlFD88wHNyVYjbqepxa5OZL7yheuAdg6LfLIQJQdFQOP9Sb6XGCYekQQKrRKBg"
+          },
+          {
+            "signingKeyId": "8ffb07b3abf28aab387576e71aeac7c659978e41ccc250acbd1f5bde201c512d",
+            "signature": "eeCUF9H45JnznH0Cw9P5OvvIqX-o09YAZ53LrrtXc1SS0rbLBxbHQgsWDjqRuXCcNSFZOZ14RFKpz9enMDq-Ag"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "accepted",
+        "verifiedKeyIds": ["dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c"],
+        "ignoredUnknownKeyIds": 15
+      }
+    },
+    {
+      "id": "valid-now-at-activation",
+      "rule": "S6",
+      "description": "Key 2 at now equal to its activatedAt (included).",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-01T00:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+            "signature": "a_5yPuNfVo3GqMd8wjsHAwPE6rALdsuzYk06fzQpLz6FxavYbNPrqyXOY0tROv5ig5Vih3Evt5tx77yx0UniAw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "accepted",
+        "verifiedKeyIds": ["b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e"],
+        "ignoredUnknownKeyIds": 0
+      }
+    },
+    {
+      "id": "valid-now-before-revocation",
+      "rule": "S6",
+      "description": "Revoked key 3 one millisecond before its revokedAt.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-08-31T23:59:59.999Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+            "signature": "rfdIfjsQVU1Vl30TBWfDJgNpEmuMrqgz4gheE1OgE-aQ5DOuY2JDLFz1VA11LZ0CHCH7cQlzdroSLkq7QLgTBg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "accepted",
+        "verifiedKeyIds": ["a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23"],
+        "ignoredUnknownKeyIds": 0
+      }
+    },
+    {
+      "id": "valid-dataset-key",
+      "rule": "S7",
+      "description": "Dataset manifest signed by key 5, authorized for dataset only.",
+      "manifest": "dataset",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c",
+            "signature": "vt3VFDAw4MKDrhJwSoQdcliRPu4UX_kuo_pGDPt6gH-Omc35aFcABVbH3kLF3AGt6xndD7XPG9lZOhN0bOjmAw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "accepted",
+        "verifiedKeyIds": ["7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c"],
+        "ignoredUnknownKeyIds": 0
+      }
+    },
+    {
+      "id": "empty-signatures",
+      "rule": "S1",
+      "description": "No signature.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": []
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-required"
+      }
+    },
+    {
+      "id": "seventeen-signatures",
+      "rule": "S1",
+      "description": "Key 1 and 16 unknown keys: 17 signatures.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          },
+          {
+            "signingKeyId": "765df56f4c65783893fb11fb8815e3089f96c38aa15d0da66cba638b673a4705",
+            "signature": "W6uo-AgByFkrnXq80Efk0Fi-doxhYgmR0sGxzcGO5-057Tqmz5vjYsSiBLiXQhZhZ-JRojmzwR4O2RhUPjYPBg"
+          },
+          {
+            "signingKeyId": "7fbd51a71eb3f20577fc01ab8eb150605b7d4ef37e2f392097377064747922ad",
+            "signature": "JbdXsT756Px7v2945r5Qf5sIOXDStChR7giTcWTcMKKsM_iWzM_-8gpNE9_ns48ztTp6JHWxDczu57N-VVoTBA"
+          },
+          {
+            "signingKeyId": "1b4f820c9ba10159e7ab3e638a3b07c47ad0799a9ee880c5a4e3a3fe494fdfe0",
+            "signature": "hSem496lklDb1hLblzJcx8U694BO4UBkZyJ_YrFsPaaksHHvz9HbK5mxdiHI3GJCfHUaDGNgY0zX7qBNwK6nAA"
+          },
+          {
+            "signingKeyId": "7ace7e7b5e974c387770f71eecc7bf0d4ce349fa2dde27e60c5cb693754eb2a1",
+            "signature": "DIi3JfBxICdcOOipf7EVRcoTdcbZXzFk5JSIbd5XzabaLHR47cViln0vX9U1KwOnZYzaBuuf82T4UllYg4BTAA"
+          },
+          {
+            "signingKeyId": "4f6d4d20f9a61fe86827cee13486145b289554d64b21af0d9567eb5dfbbe3170",
+            "signature": "ahreLS8wlAOsYxZgYNz5SMmHDi31UbiX-uH4xDNRwUpCgbv0-WDAD6NVPELPffJ5B5yX34-ob2If36Zqv3O9Dg"
+          },
+          {
+            "signingKeyId": "ec1367dba25d5a05988a8d113b4f3fdae914c6339997b223ee167554b0ce2248",
+            "signature": "UoF61cL4W94rtEZ2wsuZtxGMhfyQNLzMj9OIpuXTvOEHa7i7bmniiJ7ecKaYvV1iH89AHYYqQUKVhQU0OmM_Dg"
+          },
+          {
+            "signingKeyId": "8fdc81bb097cb3139bd169d35128fe825656b60c3ed771d69afeaf1ddd957b1e",
+            "signature": "sGOg_uyebUwS1EJwfiM6-3tzEXegsTA8kiW3kYNTmVdf3JmqUKCoGOzbSeB0tJsfeWmDXBVeZwHvP0bK7sBpCg"
+          },
+          {
+            "signingKeyId": "5cc627d5ec68788b6527c34064fd2b2f93a824b722d89335eef22263599f89ac",
+            "signature": "O8-JhGYsRlLYpp8w-VjAq-8wG_AhcBgfxodKxFfAtIMXdSVwkGBG7q4ZLBZAxXKQQpC9VswEIqEKD1mfKbhkCw"
+          },
+          {
+            "signingKeyId": "d432ab1ad4936e6f3b3ff65f65084567594c7f8f40be63fbb79bee685efe45da",
+            "signature": "-4eVBTuLXjADjzGOee2KJ6JS9neMbPCq-FvLRwtpR_Jy9OJrt4VyvG2-sU4v4LzHbKo0hyf2X68xkm8wemKjAw"
+          },
+          {
+            "signingKeyId": "c524d8bf2d0cde92b19709a8a1325e209c82cfe80f4b0bf7038423de9532f6c7",
+            "signature": "ELSXTewxmLhABVe75UIv02Q3JYaVY0BThyXqxsjuN-M7hsF9S28PfWKI0SCs3YR3yC5pMfdYZurrxymnCVJdBA"
+          },
+          {
+            "signingKeyId": "5bb3dd422af9afd107ea018fa1d07868a6a64d9d953ae238cd6fb5efaf9a2ed7",
+            "signature": "rwCqV5akiG2YLd8j4PbjSIz5YJqjKX9oNVXZVa3521_DAMxthGdlRdS9E5X3F7fF6kaQy2RKG0ZVTVHd5LJlDQ"
+          },
+          {
+            "signingKeyId": "a92962aec93ed9ffefc398775860431d0d0e1944da3cfe788c9c0d0cf7acc9ec",
+            "signature": "kIa1L_AML9W6vVFemetbq37ShH4dHQX4HTw-UNbyDpcF_vnUpv9IUxnPCXvSpTODtYZpYgY8qTTR9aXi05bSAQ"
+          },
+          {
+            "signingKeyId": "578d0b7052ddeb3703b7de4ea1d066eade46158cfc0abb33f690704c6f3aeaca",
+            "signature": "kjGV9mz3qqKdqgutrgZ4MZoM2RFQLqI1-NMfHW1KjfzmJwn_-02b0waVdq1G74hbpDANL9tv5DAH-jtv5hnuCQ"
+          },
+          {
+            "signingKeyId": "e5e580aa94fd1ee7cf2224ef349b9133fc6cc6bd971273728fbbce904675ab54",
+            "signature": "nsv35kQ5Z0eE1Wqfq3LySMIctlFD88wHNyVYjbqepxa5OZL7yheuAdg6LfLIQJQdFQOP9Sb6XGCYekQQKrRKBg"
+          },
+          {
+            "signingKeyId": "8ffb07b3abf28aab387576e71aeac7c659978e41ccc250acbd1f5bde201c512d",
+            "signature": "eeCUF9H45JnznH0Cw9P5OvvIqX-o09YAZ53LrrtXc1SS0rbLBxbHQgsWDjqRuXCcNSFZOZ14RFKpz9enMDq-Ag"
+          },
+          {
+            "signingKeyId": "2683d6b5667668f733a32d5422a41d0b7b547e03465b263df89b4dbe0b3c17d6",
+            "signature": "jjEV3okDmGJ1qmPZJ_Ty73XWIhR6dUev7ud8rKxAkQFxVfLvVyGS5FVXRjnciCEqvX0LUHykSFVv_sZybXcHBQ"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "signature-short",
+      "rule": "S1",
+      "description": "Key 1 signature without its last character (85 characters).",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFD"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "signature-padded",
+      "rule": "S1",
+      "description": "Key 1 signature followed by == padding.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw=="
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "signature-noncanonical-final-character",
+      "rule": "S1",
+      "description": "Key 1 signature whose last character has non-zero unused bits (same 64 octets).",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDx"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "signature-outside-base64url-alphabet",
+      "rule": "S1",
+      "description": "Key 1 signature whose first character is replaced by +, a standard Base64 character.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "+6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "key-identifier-uppercase",
+      "rule": "S1",
+      "description": "Key 1 signature labeled with its identifier in uppercase hex.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "DC7593CC40555F5FACA182D043E4617D4D69BB087F8CC4401EE38FBA5BD34B6C",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "signature-entry-unknown-member",
+      "rule": "S1",
+      "description": "Key 1 signature entry with an extra algorithm member.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw",
+            "algorithm": "Ed25519"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "record-unknown-member",
+      "rule": "S1",
+      "description": "Record with an extra manifestDigest member.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ],
+        "manifestDigest": "ff4399f3d3bdb43ccb11c298f0d5c827e4851adda227fdfb2b120e397b738d7a"
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "record-other-schema-version",
+      "rule": "S1",
+      "description": "Record whose schemaVersion names a v2.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v2",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "duplicate-key-identifier",
+      "rule": "S2",
+      "description": "Key 1 signature listed twice.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          },
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-malformed"
+      }
+    },
+    {
+      "id": "manifest-schema-invalid",
+      "rule": "S3",
+      "description": "Valid key 1 signature record, manifest file path rewritten to ../secret.",
+      "manifest": "release-path-traversal",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "manifest-schema-invalid"
+      }
+    },
+    {
+      "id": "signed-bare-jcs",
+      "rule": "S4",
+      "description": "Key 1 signature over the RFC 8785 octets of the manifest, without domain or digest.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "-9Apwo48SKS8-DY6-Olz_Sk1lVjKjxVJ7_YESJQZBy1MK_XF84Za2kM7cVZ8F4LSyjnt0Vikgl6jyVTeUIgiDg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "signed-bare-digest",
+      "rule": "S4",
+      "description": "Key 1 signature over the 32 raw octets of SHA-256(JCS(manifest)), without domain.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "iNtymeReSeuUstOS_Ph959UeTc9zZsd5i1NcblwSt4hWeGWzpiV-fqvqHAvTeE707xsIqWsNyo5qow2rOvoLBg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "signed-other-family-domain",
+      "rule": "S4",
+      "description": "Key 1 signature over libre-ai.build-brief-acceptance-statement.v2, 0x00 and the same digest.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "NIBZjI_rhq1GzK2LGmeC_EN3HnEgIsDjjeGAr7snamK4LbaM2qQ1hBbn4_oEWo1eo9U0ein5XaHX0ZNF3nKCBQ"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "signed-next-major-domain",
+      "rule": "S4",
+      "description": "Key 1 signature over libre-ai.artifact-manifest.v2, 0x00 and the same digest.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "9g2Kb-m94Z6Ut9JU6JBA7EvoX58b_KhE2ttI8Z2ZPASVXVIYPf4VXNctAIgfFGMIpj_8BWK7i9Krzc_jB_vHAg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "signed-non-jcs-digest",
+      "rule": "S4",
+      "description": "Key 1 signature over the domain, 0x00 and SHA-256 of JSON.stringify(manifest, null, 2).",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "jdiXc08UX876NiXJnM4m2LwhVkGXrGFpPOAwa6Qpg7O3YAD_O0xJrxMVGn4zfCGQ6pyFfM2BPTqjxBIUE6mNAQ"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "manifest-changed-after-signing",
+      "rule": "S4",
+      "description": "valid-single-key record; files[0].digest of the manifest changed after signing.",
+      "manifest": "release-file-digest-changed",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "unknown-key-only",
+      "rule": "S5",
+      "description": "Release signed by key 6 only, absent from the registry.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "765df56f4c65783893fb11fb8815e3089f96c38aa15d0da66cba638b673a4705",
+            "signature": "W6uo-AgByFkrnXq80Efk0Fi-doxhYgmR0sGxzcGO5-057Tqmz5vjYsSiBLiXQhZhZ-JRojmzwR4O2RhUPjYPBg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-unknown"
+      }
+    },
+    {
+      "id": "now-at-revocation",
+      "rule": "S6",
+      "description": "Key 3 at now equal to its revokedAt (excluded).",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-09-01T00:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+            "signature": "rfdIfjsQVU1Vl30TBWfDJgNpEmuMrqgz4gheE1OgE-aQ5DOuY2JDLFz1VA11LZ0CHCH7cQlzdroSLkq7QLgTBg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-active"
+      }
+    },
+    {
+      "id": "now-before-activation",
+      "rule": "S6",
+      "description": "Key 4, activated in 2027.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "ff59f3c3ac706effc881ea218901e199831ecea1f229cd6d31e92a329b43d660",
+            "signature": "L61P0RdIl6r-wEA17kamFibAxwpS0kOzTOlqGbshZ9T_Hko7FJa7qmmiGOC5ZJ-PbckLDhXWfA641JIpjQPgDA"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-active"
+      }
+    },
+    {
+      "id": "now-hour-24",
+      "rule": "S6",
+      "description": "Key 1 signature, now malformed (hour 24): no instant is established.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T24:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-active"
+      }
+    },
+    {
+      "id": "now-impossible-date",
+      "rule": "S6",
+      "description": "Key 1 signature, now malformed (February 30): no instant is established.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-02-30T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-active"
+      }
+    },
+    {
+      "id": "now-offset",
+      "rule": "S6",
+      "description": "Key 1 signature, now malformed (offset +00:00 instead of Z): no instant is established.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000+00:00",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-active"
+      }
+    },
+    {
+      "id": "now-without-milliseconds",
+      "rule": "S6",
+      "description": "Key 1 signature, now malformed (no fractional digits): no instant is established.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-active"
+      }
+    },
+    {
+      "id": "dataset-signed-by-release-key",
+      "rule": "S7",
+      "description": "Dataset manifest signed by key 1, authorized for build and release.",
+      "manifest": "dataset",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "CkDs0wnM1tn9hfn9ItbWPfgdEr9pNoqlqrKFs95pnBTeFG7fDkbUVEY8pGpPTyCN30hOBdWfx2ilQKQsHV9RAA"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-authorized"
+      }
+    },
+    {
+      "id": "release-signed-by-dataset-key",
+      "rule": "S7",
+      "description": "Release signed by key 5, authorized for dataset only.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c",
+            "signature": "_zOWXGw8Mr1e5tfcU7KgtGdzq_yW6tvovac7SmFKXs8vPzLvhGJkCJeWSLKG54K7L13Z6-4QMYPo3WbhWzYLDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-authorized"
+      }
+    },
+    {
+      "id": "s-not-reduced",
+      "rule": "S8",
+      "description": "Key 1 signature with S + L, which reduces to the same S.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNk48ZVBJQE6uCZDqRJUlYvyP9Fxmnf55FEEivqe9QYFHw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-identity",
+      "rule": "S8",
+      "description": "R is the identity, S = k a.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "AQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABjC_VPY0Ls95X-JlJhaGkbUI0iiugbmhaZ1JyPZ3lFCQ"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-torsion-1",
+      "rule": "S8",
+      "description": "R is torsion-1 (small order), S = k a.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "xxdqcD1N2E-6PAt2DRBnDyogU_osOczGTsf9d5KsA3rN6Oqj1BunqnqJ0DJPmJ43jKMvrglnguzkDGp_AWmpDw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-torsion-2",
+      "rule": "S8",
+      "description": "R is torsion-2 (small order), S = k a.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIDeQGdnneYz7itrBmY4X_eC07wPzBjCkm9iFjee1cVnCg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-torsion-3",
+      "rule": "S8",
+      "description": "R is torsion-3 (small order), S = k a.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "JuiVj8KyJ7BFw_SJ8u-Y8NXfrAXTxjM5sTgCiG1T_AUgwwM7GfKdQ3tj1vIhqacBSq4IsblXWqYAcadZklmbCg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-torsion-4",
+      "rule": "S8",
+      "description": "R is torsion-4 (small order), S = k a.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "7P_______________________________________3_LLRbbXqrEjQXcWNikDKCRPksiQt6IH-kFcsdCUhZbCA"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-torsion-5",
+      "rule": "S8",
+      "description": "R is torsion-5 (small order), S = k a.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "JuiVj8KyJ7BFw_SJ8u-Y8NXfrAXTxjM5sTgCiG1T_IWrfQXzFzbnhMXLKDS5vbXstgCdqsSfL_797Uv0JcOTDQ"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-torsion-6",
+      "rule": "S8",
+      "description": "R is torsion-6 (small order), S = k a.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0b3MjnxvrUGOzi0H8vOCEmkLG0lyWdAhAT4fv_6joAg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-torsion-7",
+      "rule": "S8",
+      "description": "R is torsion-7 (small order), S = k a.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "xxdqcD1N2E-6PAt2DRBnDyogU_osOczGTsf9d5KsA_qhE0Vb-rQV46TFs4KNUmwcfAgdh4d8sO6VuTpatKNGBg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-mixed-order-1",
+      "rule": "S8",
+      "description": "R is rB + torsion-1 (mixed order), S = r + k a over that R.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "uhNs7YijCq8M9iQQ2e9CW3ibFU0P8Qd4wyWczLG2uY5bl-yrdKCsbGjeEJXpZPDjeF6EXhaAJ4iSoRCthDoBDQ"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-mixed-order-2",
+      "rule": "S8",
+      "description": "R is rB + torsion-2 (mixed order), S = r + k a over that R.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "Fcabicx8rLkDlOBNngHMzeVsUhcsMst7OvBifrxWzF_KwVCbX5Wg3p0AJvz5naUd43XcogDd4vk0tRBZxjDmAg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-mixed-order-3",
+      "rule": "S8",
+      "description": "R is rB + torsion-3 (mixed order), S = r + k a over that R.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "jZZ1p-xqE0P4Zdjc2VXyATsXMxcznW9_Qw1YyQzp1qeTXaV_Fp6_5r5zx3SJcHxBLI9oe2ctipNb1RL57yVLDA"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-mixed-order-4",
+      "rule": "S8",
+      "description": "R is rB + torsion-4 (mixed order), S = r + k a over that R.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "1dwhPxjSyV278xojzIX_Rzkl4WJURHfj4BkMFVBpa57ih7CFKPiWRnMyMFcdRk9rP1kEWFWqaOzoLWWUwQ_DDA"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-mixed-order-5",
+      "rule": "S8",
+      "description": "R is rB + torsion-5 (mixed order), S = r + k a over that R.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "KI4G2EiH0MbObswkdLQEuVKJ27OzOqUNMRvrEzIg0GDJu4df55c5oee2SSpsTF8F60BDZ8Ie-PlyBCtwl_8mAg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-mixed-order-6",
+      "rule": "S8",
+      "description": "R is rB + torsion-6 (mixed order), S = r + k a over that R.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "q96NE8yOiERb-KT88C6XrsDQ1An1XBWj0u51dlmkelLKmstSkFYNUOTnvCq1J9tqtYN7WQxTF1v7NWu9Tm9wCw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-mixed-order-7",
+      "rule": "S8",
+      "description": "R is rB + torsion-7 (mixed order), S = r + k a over that R.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "s9soZ-cwyICgH73uXmwiUfNE5R90D4GnBPjM-N8HolMYddKbU6ewpXYP9WwSp5oX0YbqSBnLnJ35oB5elbvgCg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "r-noncanonical-identity",
+      "rule": "S8",
+      "description": "R is the identity written with y = p + 1 (not canonical), S = k a.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "7v_______________________________________3-fRj35S0QRgAPLJLtDnOrOlh5WV_l7bVqdmVhV1jqsAg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "signature-of-key-2-labeled-key-1",
+      "rule": "S8",
+      "description": "Key 2 signature of the release labeled with the identifier of key 1.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "a_5yPuNfVo3GqMd8wjsHAwPE6rALdsuzYk06fzQpLz6FxavYbNPrqyXOY0tROv5ig5Vih3Evt5tx77yx0UniAw"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "known-valid-and-known-invalid",
+      "rule": "S9",
+      "description": "Valid key 1 signature and key 2 signature over the dataset manifest.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          },
+          {
+            "signingKeyId": "b6544070cf85ad0e0f08fa36711be8267b325dbb776a3ced95dcdb009687f26e",
+            "signature": "xiLxFagfGGY2u3jjnGVMP8S1smmteeoxT4WO5F-XCVXuiZeYwpO3QdYJoKThsBwGsfOhgi1-JWaa708A2YWoCQ"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-invalid"
+      }
+    },
+    {
+      "id": "known-valid-and-known-revoked",
+      "rule": "S9",
+      "description": "Valid key 1 signature and valid key 3 signature, key 3 revoked at now.",
+      "manifest": "release",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "E6XAI5ArSjCYLMFGQ9tJx6P5v5YPSi-TNtr_2xhabNlLHaDkCp4nYFCmsW91m6zdP9Fxmnf55FEEivqe9QYFDw"
+          },
+          {
+            "signingKeyId": "a171c028cc0c9fd82b33bb1ae8de27900f5ae7fc40fc0d1fa185295caf3bcf23",
+            "signature": "rfdIfjsQVU1Vl30TBWfDJgNpEmuMrqgz4gheE1OgE-aQ5DOuY2JDLFz1VA11LZ0CHCH7cQlzdroSLkq7QLgTBg"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-active"
+      }
+    },
+    {
+      "id": "known-valid-and-known-unauthorized",
+      "rule": "S9",
+      "description": "Dataset manifest: valid key 5 signature and valid key 1 signature, key 1 not authorized.",
+      "manifest": "dataset",
+      "registry": "main",
+      "now": "2026-10-15T12:00:00.000Z",
+      "record": {
+        "schemaVersion": "libre-ai.artifact-manifest-signatures.v1",
+        "signatures": [
+          {
+            "signingKeyId": "7e978f68d0235a20439a290f42778c0daf2ee6f94638dfdb9fffaa42eb82967c",
+            "signature": "vt3VFDAw4MKDrhJwSoQdcliRPu4UX_kuo_pGDPt6gH-Omc35aFcABVbH3kLF3AGt6xndD7XPG9lZOhN0bOjmAw"
+          },
+          {
+            "signingKeyId": "dc7593cc40555f5faca182d043e4617d4d69bb087f8cc4401ee38fba5bd34b6c",
+            "signature": "CkDs0wnM1tn9hfn9ItbWPfgdEr9pNoqlqrKFs95pnBTeFG7fDkbUVEY8pGpPTyCN30hOBdWfx2ilQKQsHV9RAA"
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "refused",
+        "refusal": "signature-key-not-authorized"
+      }
+    }
+  ]
+}
