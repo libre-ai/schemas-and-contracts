@@ -48,7 +48,7 @@
 		},
 		{
 			"schema": "artifact-manifest-signatures.v1.schema.json",
-			"schemaSha256": "2af87f9d856ba8b832fe7d042cb2620479092a982225b4ebf40a0f7cdca212f4",
+			"schemaSha256": "111d9beb3cd49cc30ad3e856f93f4f3b850daf9610909a6b37d6d3e68800e67e",
 			"declaration": "artifact-manifest-signatures.v1.d.ts"
 		},
 		{
@@ -498,7 +498,7 @@
 		},
 		{
 			"schema": "signing-keys.v1.schema.json",
-			"schemaSha256": "1ab8656bd367eefbd5c2d06b57cabc596da4cb4cd28ae1417c4d49a3ae7089f8",
+			"schemaSha256": "693f852c6462b87aee4ef99c5f2e39b64ec58bce48af8ce707d0b9389144faa3",
 			"declaration": "signing-keys.v1.d.ts"
 		},
 		{

@@ -25,6 +25,8 @@ export type LibreAiSigningKeysV1 = {
 	}>;
 };
 
+export type Signingkeyid = string;
+
 export type Instant = string;
 
 export type Signatory = string;

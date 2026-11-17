@@ -5,7 +5,12 @@
 // The expected outcomes are written from the K and S rules of
 // contracts/artifact-manifest-signatures-v1/SEMANTICS.md, never by running the fixture
 // verifier: the corpus specifies the verifier, it does not record its output. The signed
-// message is built here on its own, without the verifier's helper.
+// message is built here with the repository's `canonicalJson`; the verifier has its own
+// RFC 8785 serializer, so the published messages compare two implementations.
+//
+// Every input a verifier receives is published as octets: `manifestOctets` for each manifest
+// name, and `registryOctets` / `recordOctets` on the vectors whose defect lives in the octets
+// (K0, S0). A vector without them is presented as the UTF-8 of `JSON.stringify` of its value.
 import { createHash } from "node:crypto";
 import { writeFile } from "node:fs/promises";
 import { ed25519 } from "@noble/curves/ed25519.js";
@@ -16,8 +21,14 @@ type ArtifactType = "build" | "dataset" | "export" | "release" | "evidence";
 type ManifestName =
   | "release"
   | "dataset"
+  | "release-unicode"
   | "release-path-traversal"
   | "release-file-digest-changed";
+type HostileManifestName =
+  | "release-duplicate-member"
+  | "release-escaped-lone-surrogate"
+  | "release-bom"
+  | "release-invalid-utf8";
 
 export const VECTORS_PATH = `${import.meta.dir}/../../contracts/fixtures/artifact-manifest-signatures-v1/vectors.json`;
 const SCHEMA_FIXTURES_PATH = `${import.meta.dir}/../../contracts/fixtures/schema-fixtures.v1.json`;
@@ -31,6 +42,7 @@ const RECORD_SCHEMA_VERSION = "libre-ai.artifact-manifest-signatures.v1";
 const REGISTRY_SCHEMA_VERSION = "libre-ai.signing-keys.v1";
 const TEST_MATERIAL_WARNING =
   "Synthetic keys derived from public labels; their seeds are published. Never trust outside tests.";
+const SIGNING_KEY_ID_PREFIX = "ed25519-";
 const SEED_LABEL = "libre-ai.artifact-manifest-signatures-test-key.";
 const NONCE_LABEL = "libre-ai.artifact-manifest-signatures-test-nonce.";
 const SPKI_PREFIX = Buffer.from("302a300506032b6570032100", "hex");
@@ -54,7 +66,8 @@ interface RegistryVector {
   id: string;
   rule: string | null;
   description: string;
-  registry: JsonObject;
+  registry: JsonObject | null;
+  registryOctets?: string;
   expected: RegistryExpected;
 }
 
@@ -65,7 +78,8 @@ interface SignatureVector {
   manifest: string;
   registry: string;
   now: string;
-  record: JsonObject;
+  record: JsonObject | null;
+  recordOctets?: string;
   expected: SignatureExpected;
 }
 
@@ -95,6 +109,23 @@ function littleEndian32(value: bigint): Uint8Array {
 
 function concat(...parts: Uint8Array[]): Uint8Array {
   return new Uint8Array(Buffer.concat(parts));
+}
+
+function utf8(text: string): Uint8Array {
+  return new TextEncoder().encode(text);
+}
+
+/** K3 identifier, written out here rather than imported from the verifier. */
+function keyIdOf(raw: Uint8Array): string {
+  return `${SIGNING_KEY_ID_PREFIX}${sha256(raw).toString("hex")}`;
+}
+
+/** Replace the one occurrence of `needle` in `text`; a miss is a generator defect. */
+function replaceOnce(text: string, needle: string, replacement: string): string {
+  const at = text.indexOf(needle);
+  if (at < 0 || text.indexOf(needle, at + 1) >= 0)
+    throw new Error(`expected exactly one ${needle} in the text`);
+  return `${text.slice(0, at)}${replacement}${text.slice(at + needle.length)}`;
 }
 
 /** Test seed n = SHA-256(UTF-8 label || n), as SEMANTICS "Vectors" states. */
@@ -150,7 +181,7 @@ function testKey(n: number): TestKey {
     raw: extended.pointBytes,
     scalar: extended.scalar,
     point: extended.point,
-    id: sha256(extended.pointBytes).toString("hex"),
+    id: keyIdOf(extended.pointBytes),
   };
 }
 
@@ -175,8 +206,10 @@ function keyEntry(
       comment: "Synthetic test key; its seed is published.",
     },
   };
+  // revokedAt is reserved for compromise (SEMANTICS "Key lifecycle"): a rotation removes the
+  // entry instead.
   if (revokedAt !== null) {
-    entry.revocationReason = "Scheduled rotation (test)";
+    entry.revocationReason = "Key compromise (test)";
     entry.revocationWitness = { signatory: "key-custodian", discoveredAt: revokedAt };
   }
   return entry;
@@ -192,6 +225,12 @@ function record(signatures: { signingKeyId: string; signature: string }[]): Json
 
 function sign(key: TestKey, message: Uint8Array) {
   return { signingKeyId: key.id, signature: base64url(ed25519.sign(message, key.seed)) };
+}
+
+function without(entry: JsonObject, member: string): JsonObject {
+  const copy = structuredClone(entry);
+  delete copy[member];
+  return copy;
 }
 
 function withEntry(base: JsonObject, patch: (entry: JsonObject) => void): JsonObject {
@@ -235,13 +274,26 @@ async function buildCorpus(): Promise<JsonObject> {
   };
   const releaseMessage = messageFor(DOMAIN, release);
   const datasetMessage = messageFor(DOMAIN, dataset);
-  const releaseFiles = structuredClone(release.files) as { path: string; digest: string }[];
+  const releaseFiles = structuredClone(release.files) as {
+    path: string;
+    digest: string;
+    mediaType: string;
+  }[];
   const firstFile = releaseFiles[0];
   if (firstFile === undefined) throw new Error("manifest has no file");
-  // Two release variants, each one change away from `release`.
+  // Every string escape class of RFC 8785 3.2.2.2 in one path: a non-ASCII letter written raw,
+  // a control written \u001f, a quotation mark written \", DEL written raw, and U+2028 written
+  // raw (JSON.stringify and RFC 8785 agree on it; a JavaScript-source serializer would not).
+  const unicode: JsonObject = {
+    ...structuredClone(release),
+    files: [{ ...firstFile, path: 'notes/\u{e9}\u001f"\u007f\u{2028}.txt' }],
+  };
+  const unicodeMessage = messageFor(DOMAIN, unicode);
+  // Variants, each one change away from `release`.
   const manifests: Record<ManifestName, JsonObject> = {
     release,
     dataset,
+    "release-unicode": unicode,
     "release-path-traversal": {
       ...structuredClone(release),
       files: [{ ...firstFile, path: "../secret" }],
@@ -257,6 +309,37 @@ async function buildCorpus(): Promise<JsonObject> {
     },
   };
 
+  // S0: received manifest octets that are not strict I-JSON. Each one, parsed leniently, is a
+  // document whose signatures would verify, so only the octet check refuses it.
+  const releaseText = JSON.stringify(release, null, 2);
+  // JSON.stringify writes a lone surrogate as the escape \ud800, so the text is ASCII and a
+  // lenient parser rebuilds the same lone surrogate.
+  const surrogateManifest: JsonObject = {
+    ...structuredClone(release),
+    files: [{ ...firstFile, mediaType: `${firstFile.mediaType}\u{d800}` }],
+  };
+  const surrogateMessage = messageFor(DOMAIN, surrogateManifest);
+  const [beforeMediaType, afterMediaType] = replaceOnce(releaseText, '"text/html"', '"\t"').split(
+    "\t",
+  );
+  const hostileManifestOctets: Record<HostileManifestName, Uint8Array> = {
+    // A last-wins parser reads `release`, a first-wins parser reads `dataset`.
+    "release-duplicate-member": utf8(`{"artifactType": "dataset",${releaseText.slice(1)}`),
+    "release-escaped-lone-surrogate": utf8(JSON.stringify(surrogateManifest, null, 2)),
+    "release-bom": concat(Uint8Array.of(0xef, 0xbb, 0xbf), utf8(releaseText)),
+    // mediaType holds C3 28: a two-octet lead followed by an ASCII octet, not UTF-8.
+    "release-invalid-utf8": concat(
+      utf8(beforeMediaType ?? ""),
+      Uint8Array.of(0xc3, 0x28),
+      utf8(afterMediaType ?? ""),
+    ),
+  };
+  const manifestOctets: Record<string, string> = {};
+  for (const [name, manifest] of Object.entries(manifests))
+    manifestOctets[name] = base64url(utf8(JSON.stringify(manifest, null, 2)));
+  for (const [name, octets] of Object.entries(hostileManifestOctets))
+    manifestOctets[name] = base64url(octets);
+
   const k1Entry = keyEntry(k1, ["build", "release"], "2026-01-01T00:00:00.000Z", null);
   const mainKeys = [
     k1Entry,
@@ -265,11 +348,20 @@ async function buildCorpus(): Promise<JsonObject> {
     keyEntry(k4, ["release"], "2027-01-01T00:00:00.000Z", null),
     keyEntry(k5, ["dataset"], "2026-01-01T00:00:00.000Z", null),
   ];
+  // Key 30 is outside the unknown-key range (6 to 21) of the signature vectors.
+  const k30 = key(30);
   const registries: Record<string, JsonObject> = {
     main: registry(mainKeys),
     "main-reversed": registry([...mainKeys].reverse()),
+    "main-with-key-authorizing-nothing": registry([
+      ...mainKeys,
+      keyEntry(k30, [], "2026-01-01T00:00:00.000Z", null),
+    ]),
+    // Rotation from key 1 to key 2 completed: key 1 retired by removal (SEMANTICS "Key lifecycle").
+    "after-rotation": registry(mainKeys.slice(1)),
   };
   const single = registry([k1Entry]);
+  const revokedEntry = mainKeys[2] as JsonObject;
 
   // Registry vectors: K rules.
   const registryVectors: RegistryVector[] = [];
@@ -311,7 +403,75 @@ async function buildCorpus(): Promise<JsonObject> {
     ),
   );
 
+  admitted(
+    "registry-revoked-before-discovery",
+    "Revoked key 3 whose revokedAt precedes discoveredAt: a compromise dated back (K6).",
+    registry([
+      {
+        ...revokedEntry,
+        revocationWitness: { signatory: "incident-responder", discoveredAt: NOW },
+      },
+    ]),
+  );
+
+  // K0: registry octets that are not strict I-JSON; each one, parsed leniently, is admissible.
+  const octetsRefused = (id: string, description: string, octets: Uint8Array) =>
+    registryVectors.push({
+      id,
+      rule: "K0",
+      description,
+      registry: null,
+      registryOctets: base64url(octets),
+      expected: { outcome: "refused", refusal: "key-set-invalid" },
+    });
+  {
+    const singleText = JSON.stringify(single);
+    octetsRefused(
+      "registry-duplicate-member",
+      "Key 1 entry naming signingKeyId twice, first the identifier of key 2, then its own.",
+      utf8(
+        replaceOnce(
+          singleText,
+          `"signingKeyId":"${k1.id}"`,
+          `"signingKeyId":"${k2.id}","signingKeyId":"${k1.id}"`,
+        ),
+      ),
+    );
+    octetsRefused(
+      "registry-escaped-lone-surrogate",
+      "Key 1 purpose ending with the escape \\ud800, an unpaired surrogate (not I-JSON).",
+      utf8(
+        replaceOnce(
+          singleText,
+          '"purpose":"Test key: artifact manifest signatures"',
+          '"purpose":"Test key\\ud800"',
+        ),
+      ),
+    );
+    octetsRefused(
+      "registry-bom",
+      "Single-key registry preceded by a UTF-8 byte order mark.",
+      concat(Uint8Array.of(0xef, 0xbb, 0xbf), utf8(singleText)),
+    );
+  }
+
   refused("registry-no-keys", "K1", "Empty key list.", registry([]));
+  refused(
+    "registry-signatory-email",
+    "K1",
+    "witness.signatory is an e-mail address, not a role identifier (personal data, K7).",
+    withEntry(single, (entry) => {
+      entry.witness = { ...(entry.witness as JsonObject), signatory: "custodian@example.org" };
+    }),
+  );
+  refused(
+    "registry-identifier-bare-hex",
+    "K1",
+    "signingKeyId of key 1 without its ed25519- prefix (64 hex characters).",
+    withEntry(single, (entry) => {
+      entry.signingKeyId = k1.id.slice(SIGNING_KEY_ID_PREFIX.length);
+    }),
+  );
   refused(
     "registry-65-keys",
     "K1",
@@ -465,12 +625,7 @@ async function buildCorpus(): Promise<JsonObject> {
       "K2",
       `Public key is the ${pointId} point of the build-brief-v2 strict vectors; identifier derived from it.`,
       registry([
-        keyEntry(
-          { raw, id: sha256(raw).toString("hex") },
-          ["release"],
-          "2026-01-01T00:00:00.000Z",
-          null,
-        ),
+        keyEntry({ raw, id: keyIdOf(raw) }, ["release"], "2026-01-01T00:00:00.000Z", null),
       ]),
     );
   }
@@ -487,7 +642,15 @@ async function buildCorpus(): Promise<JsonObject> {
     "K3",
     "Key 1 entry whose identifier is SHA-256 of its PEM text, not of the raw key.",
     withEntry(single, (entry) => {
-      entry.signingKeyId = sha256(String(entry.publicKey)).toString("hex");
+      entry.signingKeyId = `${SIGNING_KEY_ID_PREFIX}${sha256(String(entry.publicKey)).toString("hex")}`;
+    }),
+  );
+  refused(
+    "registry-identifier-of-identifier-text",
+    "K3",
+    "Key 1 entry whose identifier hashes the prefixed text ed25519-<hex>, not the raw key.",
+    withEntry(single, (entry) => {
+      entry.signingKeyId = `${SIGNING_KEY_ID_PREFIX}${sha256(k1.id).toString("hex")}`;
     }),
   );
   refused("registry-duplicate-entry", "K4", "Key 1 listed twice.", registry([k1Entry, k1Entry]));
@@ -503,6 +666,32 @@ async function buildCorpus(): Promise<JsonObject> {
     "revokedAt one millisecond before activatedAt.",
     registry([keyEntry(k3, ["release"], KEY_3_REVOKED_AT, "2026-08-31T23:59:59.999Z")]),
   );
+  refused(
+    "registry-revoked-without-reason",
+    "K6",
+    "Revoked key 3 without revocationReason.",
+    registry([without(revokedEntry, "revocationReason")]),
+  );
+  refused(
+    "registry-revoked-without-witness",
+    "K6",
+    "Revoked key 3 without revocationWitness.",
+    registry([without(revokedEntry, "revocationWitness")]),
+  );
+  refused(
+    "registry-revoked-after-discovery",
+    "K6",
+    "Revoked key 3 whose revokedAt is one millisecond after its revocationWitness.discoveredAt.",
+    registry([
+      {
+        ...revokedEntry,
+        revocationWitness: {
+          signatory: "incident-responder",
+          discoveredAt: "2026-08-31T23:59:59.999Z",
+        },
+      },
+    ]),
+  );
 
   // Signature vectors: S rules, against the main registry unless stated.
   const signatureVectors: SignatureVector[] = [];
@@ -510,9 +699,13 @@ async function buildCorpus(): Promise<JsonObject> {
     id: string,
     rule: string | null,
     description: string,
-    signed: JsonObject,
+    signed: JsonObject | Uint8Array,
     expected: SignatureExpected,
-    options: { manifest?: ManifestName; now?: string; registry?: string } = {},
+    options: {
+      manifest?: ManifestName | HostileManifestName;
+      now?: string;
+      registry?: string;
+    } = {},
   ) =>
     signatureVectors.push({
       id,
@@ -521,7 +714,9 @@ async function buildCorpus(): Promise<JsonObject> {
       manifest: options.manifest ?? "release",
       registry: options.registry ?? "main",
       now: options.now ?? NOW,
-      record: signed,
+      ...(signed instanceof Uint8Array
+        ? { record: null, recordOctets: base64url(signed) }
+        : { record: signed }),
       expected,
     });
   const accepted = (ids: string[], ignored: number): SignatureExpected => ({
@@ -597,6 +792,22 @@ async function buildCorpus(): Promise<JsonObject> {
     accepted([k5.id], 0),
     { manifest: "dataset" },
   );
+  add(
+    "valid-unicode-manifest",
+    "S4",
+    "Release whose file path holds e-acute, U+001F, a quotation mark, U+007F and U+2028.",
+    record([sign(k1, unicodeMessage)]),
+    accepted([k1.id], 0),
+    { manifest: "release-unicode" },
+  );
+  add(
+    "rotation-retired-key-ignored",
+    "S5",
+    "Rotation from key 1 to key 2 done: key 1 removed from the registry, its signature ignored.",
+    record([s1, s2]),
+    accepted([k2.id], 1),
+    { registry: "after-rotation" },
+  );
 
   add("empty-signatures", "S1", "No signature.", record([]), refusedWith("signature-required"));
   add(
@@ -649,6 +860,13 @@ async function buildCorpus(): Promise<JsonObject> {
     refusedWith("signature-malformed"),
   );
   add(
+    "key-identifier-bare-hex",
+    "S1",
+    "Key 1 signature labeled with its identifier without the ed25519- prefix.",
+    record([{ ...s1, signingKeyId: k1.id.slice(SIGNING_KEY_ID_PREFIX.length) }]),
+    refusedWith("signature-malformed"),
+  );
+  add(
     "signature-entry-unknown-member",
     "S1",
     "Key 1 signature entry with an extra algorithm member.",
@@ -684,6 +902,61 @@ async function buildCorpus(): Promise<JsonObject> {
     refusedWith("manifest-schema-invalid"),
     { manifest: "release-path-traversal" },
   );
+  add(
+    "manifest-duplicate-member",
+    "S0",
+    "Manifest octets naming artifactType twice (dataset, then release); key 1 signed release.",
+    record([s1]),
+    refusedWith("manifest-schema-invalid"),
+    { manifest: "release-duplicate-member" },
+  );
+  add(
+    "manifest-escaped-lone-surrogate",
+    "S0",
+    "Manifest octets whose mediaType ends with the escape \\ud800; key 1 signed that value.",
+    record([sign(k1, surrogateMessage)]),
+    refusedWith("manifest-schema-invalid"),
+    { manifest: "release-escaped-lone-surrogate" },
+  );
+  add(
+    "manifest-bom",
+    "S0",
+    "Release octets preceded by a UTF-8 byte order mark.",
+    record([s1]),
+    refusedWith("manifest-schema-invalid"),
+    { manifest: "release-bom" },
+  );
+  add(
+    "manifest-invalid-utf8",
+    "S0",
+    "Release octets whose mediaType is the two octets C3 28, not UTF-8.",
+    record([s1]),
+    refusedWith("manifest-schema-invalid"),
+    { manifest: "release-invalid-utf8" },
+  );
+  {
+    const recordText = JSON.stringify(record([s1]));
+    add(
+      "record-duplicate-member",
+      "S0",
+      "Record octets naming signingKeyId twice in one entry, key 6 then key 1.",
+      utf8(
+        replaceOnce(
+          recordText,
+          `"signingKeyId":"${k1.id}"`,
+          `"signingKeyId":"${k6.id}","signingKeyId":"${k1.id}"`,
+        ),
+      ),
+      refusedWith("signature-malformed"),
+    );
+    add(
+      "record-trailing-comma",
+      "S0",
+      "Record octets with a comma after the last signature entry.",
+      utf8(replaceOnce(recordText, "}]}", "},]}")),
+      refusedWith("signature-malformed"),
+    );
+  }
   add(
     "signed-bare-jcs",
     "S4",
@@ -761,6 +1034,14 @@ async function buildCorpus(): Promise<JsonObject> {
     refusedWith("signature-key-unknown"),
   );
   add(
+    "rotation-retired-key-only",
+    "S5",
+    "Release signed only by key 1, removed by rotation before the release was re-signed.",
+    record([s1]),
+    refusedWith("signature-key-unknown"),
+    { registry: "after-rotation" },
+  );
+  add(
     "now-at-revocation",
     "S6",
     "Key 3 at now equal to its revokedAt (excluded).",
@@ -803,6 +1084,22 @@ async function buildCorpus(): Promise<JsonObject> {
     "Release signed by key 5, authorized for dataset only.",
     record([sign(k5, releaseMessage)]),
     refusedWith("signature-key-not-authorized"),
+  );
+  add(
+    "key-authorizing-nothing-alone",
+    "S7",
+    "Release signed by key 30, admitted with artifactTypes [] (authorizes no manifest).",
+    record([sign(k30, releaseMessage)]),
+    refusedWith("signature-key-not-authorized"),
+    { registry: "main-with-key-authorizing-nothing" },
+  );
+  add(
+    "key-authorizing-nothing-cosigns",
+    "S7",
+    "Release signed by key 1 and by key 30, admitted with artifactTypes []: the cosignature refuses.",
+    record([s1, sign(k30, releaseMessage)]),
+    refusedWith("signature-key-not-authorized"),
+    { registry: "main-with-key-authorizing-nothing" },
   );
 
   // Strict profile (S8): the valid key 1 signature with S + L, then forged R points.
@@ -896,16 +1193,18 @@ async function buildCorpus(): Promise<JsonObject> {
     schemaVersion: VECTORS_SCHEMA_VERSION,
     testMaterialWarning: TEST_MATERIAL_WARNING,
     domain: DOMAIN,
-    testKeys: [k1, k2, k3, k4, k5, k6].map((k) => ({
+    testKeys: [k1, k2, k3, k4, k5, k6, k30].map((k) => ({
       name: `key-${k.n}`,
       seed: base64url(k.seed),
       publicKey: base64url(k.raw),
       signingKeyId: k.id,
     })),
     manifests,
+    manifestOctets,
     messages: {
       release: base64url(releaseMessage),
       dataset: base64url(datasetMessage),
+      "release-unicode": base64url(unicodeMessage),
     },
     registries,
     registryVectors,
