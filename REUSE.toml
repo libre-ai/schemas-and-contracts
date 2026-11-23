@@ -113,6 +113,18 @@ SPDX-FileCopyrightText = [
 ]
 SPDX-License-Identifier = "MIT OR Apache-2.0"
 
+# Non-normative trap values adapted from erkamyaman/rust-anything (commit
+# 4fbcdb1f62cc, src/app.rs:36-76 and src/risks.rs:290-303) keep their upstream
+# MIT licence; Libre AI's arrangement of them is distributed on the same terms.
+[[annotations]]
+path = "tools/quality/strict-json-differential-traps.json"
+precedence = "override"
+SPDX-FileCopyrightText = [
+  "2026 Erkam Yaman (erkamyaman)",
+  "2026 Libre AI contributors",
+]
+SPDX-License-Identifier = "MIT"
+
 # First-party checksum evidence accompanying the reviewed toolchain notice.
 [[annotations]]
 path = "toolchains/notices/bun/1.4.0-canary.1+57f349f63/SHA256SUMS"

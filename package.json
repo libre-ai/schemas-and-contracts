@@ -32,7 +32,7 @@
     "check:catalog-status": "bun run check:bun:runtime && bun tools/quality/catalog-status-page.ts --check",
     "check:secret-scan": "bun run check:bun:runtime && bun node_modules/@libre-ai/governance/tools/quality/check-secret-scan.ts",
     "check:personal-data": "bun run check:bun:runtime && bun node_modules/@libre-ai/governance/tools/quality/check-personal-data-boundary.ts",
-    "check:dependency-policy": "bun run check:bun:runtime && bun test tools/quality/check-dependency-policy.test.ts && bun tools/quality/check-dependency-policy.ts --manifest-path=crates/sdk-rs/Cargo.toml --manifest-path=tools/quality/build-brief-crypto-oracle/Cargo.toml --manifest-path=tools/quality/signalement-receipt-crypto-oracle/Cargo.toml",
+    "check:dependency-policy": "bun run check:bun:runtime && bun test tools/quality/check-dependency-policy.test.ts && bun tools/quality/check-dependency-policy.ts --manifest-path=crates/sdk-rs/Cargo.toml --manifest-path=tools/quality/build-brief-crypto-oracle/Cargo.toml --manifest-path=tools/quality/signalement-receipt-crypto-oracle/Cargo.toml --manifest-path=tools/quality/strict-json-oracle/Cargo.toml",
     "lint": "bun run check:bun:runtime && biome ci .",
     "typecheck": "bun run check:bun:runtime && tsc --noEmit -p tsconfig.json",
     "pretest": "bun run check:bun",
