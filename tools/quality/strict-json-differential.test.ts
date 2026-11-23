@@ -218,6 +218,24 @@ function isVerdict(value: unknown): value is Verdict {
   );
 }
 
+/**
+ * Runs one call on a child's stdin and drops its failure, whether thrown at once or rejected
+ * later. Once the oracle closed its stdin or exited unread, `write` and `end` fail with EPIPE in
+ * either form (both seen on Linux CI, in libre-ai/project-governance#308: a later rejection, an
+ * `end` that threw). Unhandled, the failure would end the test process; thrown or awaited, it
+ * would replace the oracle's own exit code and stderr in the error.
+ */
+function dropStdinFailure(call: () => unknown): Promise<void> {
+  try {
+    return Promise.resolve(call()).then(
+      () => undefined,
+      () => undefined,
+    );
+  } catch {
+    return Promise.resolve();
+  }
+}
+
 /** A Rust oracle that cannot be built, run or read is an error, never a skipped comparison. */
 async function rustVerdicts(documents: Document[], manifest = ORACLE_MANIFEST): Promise<Verdict[]> {
   const input = JSON.stringify({ documents: documents.map((document) => toHex(document.bytes)) });
@@ -233,11 +251,9 @@ async function rustVerdicts(documents: Document[], manifest = ORACLE_MANIFEST): 
   } catch (error) {
     throw new Error(`Rust oracle cannot be launched: ${String(error)}`);
   }
-  // Both calls can reject with EPIPE once the oracle closed its stdin or exited unread (seen on
-  // Linux). Unhandled, the write would end the test process; awaited, the end would replace the
-  // oracle's own exit code and stderr: those decide below, so both rejections are dropped.
-  void Promise.resolve(child.stdin.write(input)).catch(() => undefined);
-  await Promise.resolve(child.stdin.end()).catch(() => undefined);
+  // The oracle's exit code and stderr decide below, not the fate of the pipe.
+  void dropStdinFailure(() => child.stdin.write(input));
+  await dropStdinFailure(() => child.stdin.end());
   const [stdout, stderr, exitCode] = await Promise.all([
     new Response(child.stdout).text(),
     new Response(child.stderr).text(),
