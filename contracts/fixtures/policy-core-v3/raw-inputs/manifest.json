@@ -1,0 +1,127 @@
+{
+  "schemaVersion": "libre-ai.policy-core-raw-input-vectors.v2",
+  "description": "Byte-exact decoder refusals of policy-core-v3: a text that is not RFC 8259 JSON is invalid-json whatever semantic defect it also holds; semantic classes apply only to a grammatical text (contracts/wit/policy-core-v3/SEMANTICS.md, change C2). carriedFrom names the policy-core-v2 raw-input case whose bytes are reused unchanged.",
+  "cases": [
+    {
+      "id": "utf8-bom",
+      "file": "utf8-bom.bin",
+      "inputSha256": "aa25e978046d680ef8740d837e6de5bc1e2a2dc6089dbda1012544b538d53f65",
+      "byteLength": 5,
+      "defect": "bom",
+      "carriedFrom": "utf8-bom",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-utf8",
+      "file": "invalid-utf8.bin",
+      "inputSha256": "a452ad021237e7af393f6432d26969900a9e4047075b776dc8a4383e36ffaffd",
+      "byteLength": 14,
+      "defect": "invalid-utf8",
+      "carriedFrom": "invalid-utf8",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "duplicate-object-member",
+      "file": "duplicate-object-member.bin",
+      "inputSha256": "eef30767818f537ae9974973d0b89e7b5b995cc5d0cf01cc2e304513468a93b9",
+      "byteLength": 22,
+      "defect": "duplicate-member",
+      "carriedFrom": "duplicate-object-member",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "unpaired-high-surrogate",
+      "file": "unpaired-high-surrogate.bin",
+      "inputSha256": "c3c0f6e73919dc685c0a333f2160a12cbc94663790ff525abd109f1ceedcf00b",
+      "byteLength": 18,
+      "defect": "unpaired-surrogate",
+      "carriedFrom": "unpaired-high-surrogate",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "unpaired-low-surrogate",
+      "file": "unpaired-low-surrogate.bin",
+      "inputSha256": "c12f9aef893dd8f4ac8e3df305685220562af5c576b9c145eeac74be2fe53160",
+      "byteLength": 18,
+      "defect": "unpaired-surrogate",
+      "carriedFrom": "unpaired-low-surrogate",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-leading-zero",
+      "file": "invalid-json-leading-zero.bin",
+      "inputSha256": "cc7c115896e02faf43b57f3f5ee079206a25ae9a00ed0170ffb1e329d4e2416a",
+      "byteLength": 12,
+      "defect": "invalid-json",
+      "carriedFrom": "invalid-number-leading-zero",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-plus-sign",
+      "file": "invalid-json-plus-sign.bin",
+      "inputSha256": "2d13d8d574884095d46cdb8f6b401983fa350a3bfac079c314570ccfd1c95e57",
+      "byteLength": 12,
+      "defect": "invalid-json",
+      "carriedFrom": "invalid-number-plus-sign",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-nan",
+      "file": "invalid-json-nan.bin",
+      "inputSha256": "159f99e03ec6dfb7edcad87bac613ac97a235493ad8b79b33cfa4002fb4477f8",
+      "byteLength": 13,
+      "defect": "invalid-json",
+      "carriedFrom": "invalid-number-nan",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-trailing-decimal",
+      "file": "invalid-json-trailing-decimal.bin",
+      "inputSha256": "07860f78431ccaf010ed6a3ae44ad279807ea0eaff2bd2885ee4e0db21855409",
+      "byteLength": 12,
+      "defect": "invalid-json",
+      "carriedFrom": "invalid-number-trailing-decimal",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-letter-after-number",
+      "file": "invalid-json-letter-after-number.bin",
+      "inputSha256": "b8b2b83ebc9a49520be7c9e899b94db52df55a0c51d7085e9f1d5f664780415e",
+      "byteLength": 4,
+      "defect": "invalid-json",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-surrogate-bad-escape",
+      "file": "invalid-json-surrogate-bad-escape.bin",
+      "inputSha256": "02a673b2c38db4022ebd730c0cad500c331ab2df6379cde6043d4f5b6b33d800",
+      "byteLength": 14,
+      "defect": "invalid-json",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-surrogate-then-trailing-octet",
+      "file": "invalid-json-surrogate-then-trailing-octet.bin",
+      "inputSha256": "fd29ea612537c76477129ad3100303796229e21531eb6ee69405e783c4de0021",
+      "byteLength": 19,
+      "defect": "invalid-json",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-duplicate-then-trailing-comma",
+      "file": "invalid-json-duplicate-then-trailing-comma.bin",
+      "inputSha256": "4363c2084e3a35b1d6f08c047f9446d501d0a20f258e7dd77ed7219fb38a55dd",
+      "byteLength": 18,
+      "defect": "invalid-json",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-number-non-finite",
+      "file": "invalid-number-non-finite.bin",
+      "inputSha256": "c3481b4e0f5fa4a1c11f5d5f510a0a0da26a5b1bca5894159a6ce18f2c99331c",
+      "byteLength": 15,
+      "defect": "invalid-number",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    }
+  ]
+}

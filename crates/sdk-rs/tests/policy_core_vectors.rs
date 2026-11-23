@@ -518,11 +518,28 @@ fn policy_core_v2_golden_hashes_are_portable_and_enforce_approval_separation() {
         "../../../contracts/fixtures/policy-core-v2/golden.json"
     ))
     .expect("policy-core v2 golden vectors");
-    assert_eq!(
-        golden["schemaVersion"],
-        "libre-ai.policy-core-golden-vectors.v2"
-    );
-    assert_eq!(golden["engineVersion"], "2.0.0");
+    assert_v2_payload_golden(&golden, "libre-ai.policy-core-golden-vectors.v2", "2.0.0");
+}
+
+// policy-core-v3 keeps the v2 payloads and digest labels; only the engine version of its
+// evaluations differs (contracts/wit/policy-core-v3/SEMANTICS.md, change C1).
+#[test]
+fn policy_core_v3_golden_hashes_are_portable_and_enforce_approval_separation() {
+    let golden: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/policy-core-v3/golden.json"
+    ))
+    .expect("policy-core v3 golden vectors");
+    assert_v2_payload_golden(&golden, "libre-ai.policy-core-golden-vectors.v3", "3.0.0");
+    for case in golden["cases"].as_array().expect("golden cases") {
+        if let Some(evaluation) = case.get("expectedEvaluation") {
+            assert_eq!(evaluation["engineVersion"], "3.0.0", "{}", case["id"]);
+        }
+    }
+}
+
+fn assert_v2_payload_golden(golden: &Value, schema_version: &str, engine_version: &str) {
+    assert_eq!(golden["schemaVersion"], schema_version);
+    assert_eq!(golden["engineVersion"], engine_version);
 
     let cases = golden["cases"].as_array().expect("golden cases");
     assert_eq!(cases.len(), 20);
