@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "libre-ai.strict-json-differential-traps.v1",
+  "provenance": "Trap values adapted from https://github.com/erkamyaman/rust-anything, commit 4fbcdb1f62cc, src/app.rs:36-76 and src/risks.rs:290-303, MIT License, Copyright (c) 2026 Erkam Yaman (erkamyaman)",
+  "normative": false,
+  "note": "Non-normative test data. Values are the upstream Rust literals, verbatim; invisible and combining characters are written as JSON escapes so that a review can see them.",
+  "traps": {
+    "int": [
+      "-7",
+      "0",
+      "-1",
+      "2147483648",
+      "9007199254740993",
+      "9223372036854775807",
+      "-9223372036854775808",
+      "18446744073709551616"
+    ],
+    "float": [
+      "-0.0",
+      "0.1",
+      "0.30000000000000004",
+      "1e21",
+      "1e-7",
+      "5e-324",
+      "1.7976931348623157e308"
+    ],
+    "string": [
+      "héllo wörld",
+      "👍🏽 thumbs",
+      "日本語",
+      "",
+      "é",
+      "İstanbul",
+      "straße",
+      "ılık ırmak",
+      "👨‍👩‍👧 family",
+      "a b"
+    ],
+    "regex": [
+      "Iı İi",
+      "K K k",
+      "ſ s S",
+      "x‍y 👨‍👩‍👧",
+      "a b c　d",
+      "١٢٣ ٤٥",
+      "𝟘𝟙 ²³",
+      "snake_case foo-bar o'neil",
+      "ǅungla Ǆ",
+      "one\r\ntwo three\u0085four",
+      "café café",
+      "ΣΑΣ σας ς"
+    ],
+    "json": [
+      "{\"zebra\":1,\"apple\":2,\"10\":3,\"2\":4,\"é\":5,\"Apple\":6}",
+      "{\"n\":9007199254740993,\"f\":1e21,\"t\":0.1,\"neg\":-7}"
+    ]
+  }
+}
