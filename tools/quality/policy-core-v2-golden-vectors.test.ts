@@ -49,6 +49,36 @@ async function storedVector(caseId: string): Promise<Vector> {
   return parseStrictJson(await readFile(join(VECTOR_DIRECTORY, `${caseId}.vector.json`))) as Vector;
 }
 
+/** RFC 8785 §3.2.3: property names are ordered by their UTF-16 code units, compared one by one. */
+function byUtf16CodeUnits(left: string, right: string): number {
+  const shared = Math.min(left.length, right.length);
+  for (let index = 0; index < shared; index += 1) {
+    const difference = left.charCodeAt(index) - right.charCodeAt(index);
+    if (difference !== 0) return difference;
+  }
+  return left.length - right.length;
+}
+
+/**
+ * A second RFC 8785 serializer, written from the RFC and not from the generator's
+ * `canonicalJson`, for the values the golden evaluations hold: null, booleans, safe integers,
+ * strings, arrays and objects. Strings use the ECMAScript JSON escaping that RFC 8785 §3.2.2.2
+ * adopts; any other number is refused rather than approximated.
+ */
+function rfc8785(value: unknown): string {
+  if (value === null || typeof value === "boolean") return String(value);
+  if (typeof value === "number") {
+    if (!Number.isSafeInteger(value)) throw new Error(`not a safe integer: ${value}`);
+    return String(value);
+  }
+  if (typeof value === "string") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(rfc8785).join(",")}]`;
+  if (typeof value !== "object") throw new Error(`not a JSON value: ${typeof value}`);
+  const record = value as Record<string, unknown>;
+  const names = Object.keys(record).sort(byUtf16CodeUnits);
+  return `{${names.map((name) => `${JSON.stringify(name)}:${rfc8785(record[name])}`).join(",")}}`;
+}
+
 describe("policy-core-v2 golden vectors", () => {
   test("every golden case has exactly one vector, and the counters sum", async () => {
     const ids = source.cases.map((testCase) => testCase.id);
@@ -102,6 +132,41 @@ describe("policy-core-v2 golden vectors", () => {
     }
     console.log(`policy-core-v2 golden vectors: ${compared} vector(s) compared to their case`);
     expect(compared).toBe(source.cases.length);
+  });
+
+  test("the second serializer orders property names as RFC 8785 §3.2.3 does", () => {
+    // The RFC's own example: input order, then the order it states, by UTF-16 code units (the
+    // surrogate pair of U+1F600 sorts before U+FB33, unlike a code-point order).
+    const input = {
+      "€": "Euro Sign",
+      "\r": "Carriage Return",
+      דּ: "Hebrew Letter Dalet With Dagesh",
+      "1": "One",
+      "😀": "Emoji: Grinning Face",
+      "\u0080": "Control",
+      ö: "Latin Small Letter O With Diaeresis",
+    };
+    const order = ["\r", "1", "\u0080", "ö", "€", "😀", "דּ"];
+    const expected = `{${order
+      .map((name) => `${JSON.stringify(name)}:${JSON.stringify(input[name as keyof typeof input])}`)
+      .join(",")}}`;
+    expect(rfc8785(input)).toBe(expected);
+  });
+
+  test("each canonicalOutput equals an independent RFC 8785 serialization of its case", async () => {
+    // Parsing the text back (above) accepts any key order; this compares the bytes themselves,
+    // against a serializer that shares no code with the generator.
+    let compared = 0;
+    for (const testCase of source.cases) {
+      if (testCase.expectedEvaluation === undefined) continue;
+      const vector = await storedVector(testCase.id);
+      expect(vector.expected.canonicalOutput).toBe(rfc8785(testCase.expectedEvaluation));
+      compared += 1;
+    }
+    const accepted = source.cases.filter((testCase) => "expectedEvaluation" in testCase).length;
+    console.log(`policy-core-v2 golden vectors: ${compared} canonicalOutput text(s) compared`);
+    expect(compared).toBe(accepted);
+    expect(compared).toBeGreaterThan(0);
   });
 
   test("the runner loads every vector as valid", async () => {
