@@ -233,8 +233,11 @@ async function rustVerdicts(documents: Document[], manifest = ORACLE_MANIFEST): 
   } catch (error) {
     throw new Error(`Rust oracle cannot be launched: ${String(error)}`);
   }
-  child.stdin.write(input);
-  await child.stdin.end();
+  // Both calls can reject with EPIPE once the oracle closed its stdin or exited unread (seen on
+  // Linux). Unhandled, the write would end the test process; awaited, the end would replace the
+  // oracle's own exit code and stderr: those decide below, so both rejections are dropped.
+  void Promise.resolve(child.stdin.write(input)).catch(() => undefined);
+  await Promise.resolve(child.stdin.end()).catch(() => undefined);
   const [stdout, stderr, exitCode] = await Promise.all([
     new Response(child.stdout).text(),
     new Response(child.stderr).text(),
