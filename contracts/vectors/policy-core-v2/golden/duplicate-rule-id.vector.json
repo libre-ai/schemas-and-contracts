@@ -1,0 +1,103 @@
+{
+  "id": "policy-core-v2/golden/duplicate-rule-id",
+  "criteria": ["contracts/wit/policy-core-v2/SEMANTICS.md"],
+  "kind": "policy-core-v2.evaluate",
+  "description": "policy-core-v2 golden case duplicate-rule-id (contracts/fixtures/policy-core-v2/golden.json)",
+  "dependsOn": [],
+  "data": [],
+  "input": {
+    "policy": {
+      "schemaVersion": "libre-ai.policy-definition.v2",
+      "id": "urn:libre-ai:policy:duplicate-rule-id",
+      "tenantId": "ten_1234567890abcdef",
+      "version": 1,
+      "status": "approved",
+      "proposedBy": "svc_policyagent00001",
+      "rules": [
+        {
+          "id": "duplicate_rule",
+          "fact": "model.score",
+          "operator": "at-least",
+          "value": 1,
+          "unknown": "indeterminate",
+          "source": {
+            "uri": "https://example.org/policy/method",
+            "retrievedAt": "2026-01-01T00:00:00Z",
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "licence": "CC-BY-4.0"
+          }
+        },
+        {
+          "id": "duplicate_rule",
+          "fact": "model.licence",
+          "operator": "equals",
+          "value": "MIT",
+          "unknown": "indeterminate",
+          "source": {
+            "uri": "https://example.org/policy/method",
+            "retrievedAt": "2026-01-01T00:00:00Z",
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "3f66a9ccf53ac08f01e66fcbbe307cb80a477ceadea7fc8a5e814e78b0194cee",
+      "approvedAt": "2026-01-02T00:00:00Z",
+      "approval": {
+        "role": "policy-approver",
+        "actorKind": "human",
+        "approverId": "usr_policyapprover001",
+        "approvedAt": "2026-01-02T00:00:00Z",
+        "reference": "urn:libre-ai:approval:duplicate-rule-id",
+        "subjectDigest": "3f66a9ccf53ac08f01e66fcbbe307cb80a477ceadea7fc8a5e814e78b0194cee"
+      }
+    },
+    "snapshot": {
+      "schemaVersion": "libre-ai.model-snapshot.v2",
+      "id": "urn:libre-ai:snapshot:duplicate-rule-id",
+      "tenantId": "ten_1234567890abcdef",
+      "modelId": "mdl_b524fccfa3b9774d",
+      "capturedAt": "2026-07-16T00:00:00Z",
+      "facts": [
+        {
+          "name": "model.score",
+          "value": 2,
+          "source": {
+            "uri": "https://example.org/evidence/e",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+            "licence": "CC-BY-4.0"
+          }
+        },
+        {
+          "name": "model.licence",
+          "value": "MIT",
+          "source": {
+            "uri": "https://example.org/evidence/f",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "6aa15e6f1a5c05546e09dc780918f1ba736c3ab187d29420c1528b7b69dd9822"
+    },
+    "need": {
+      "schemaVersion": "libre-ai.policy-need.v2",
+      "id": "urn:libre-ai:need:duplicate-rule-id",
+      "tenantId": "ten_1234567890abcdef",
+      "facts": [
+        {
+          "name": "need.task",
+          "value": "summary"
+        }
+      ],
+      "digest": "658314a792a85a3957843df5cdbedb90f0edf6b42fad8680fd414cfcfd71b313"
+    },
+    "evaluatedAt": "2026-07-17T00:00:00Z"
+  },
+  "expected": {
+    "outcome": "reject",
+    "code": "rule-id-duplicate"
+  }
+}
