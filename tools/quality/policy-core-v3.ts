@@ -78,6 +78,36 @@ export interface V3RawInputResult {
   carriedFromV2: number;
   /** Accepted cases read and checked. */
   accepted: number;
+  /** Refused cases that name an argument and a golden case (carrier vectors). */
+  carriers: number;
+}
+
+const ARGUMENTS = ["policy", "snapshot", "need"] as const;
+// A carrier is schema-valid once decoded permissively, so it can fail a component whose
+// decoder lets that class through; one per class a common permissive decoder admits.
+const CARRIER_DEFECTS: readonly RawDefect[] = [
+  "bom",
+  "invalid-json",
+  "duplicate-member",
+  "unpaired-surrogate",
+  "invalid-number",
+];
+
+/** The ids of the v3 golden cases that expect an evaluation, or a failure. */
+async function readEvaluatingGoldenCases(failures: string[]): Promise<Set<string> | null> {
+  try {
+    const golden = parseStrictJson(new Uint8Array(await readFile(POLICY_CORE_V3_GOLDEN_PATH)));
+    if (isRecord(golden) && Array.isArray(golden.cases))
+      return new Set(
+        golden.cases
+          .filter((entry) => isRecord(entry) && isRecord(entry.expectedEvaluation))
+          .map((entry) => (entry as JsonRecord).id as string),
+      );
+  } catch {
+    // reported below
+  }
+  failures.push(`${POLICY_CORE_V3_GOLDEN_PATH}: unreadable golden cases`);
+  return null;
 }
 
 /** `decoderQualification.maximumJsonDepth` of the resource budgets, or a failure. */
@@ -130,11 +160,20 @@ export async function verifyPolicyCoreV3RawInputVectors(
   maxDepth?: number,
 ): Promise<V3RawInputResult> {
   const failures: string[] = [];
-  const result: V3RawInputResult = { failures, inspected: 0, carriedFromV2: 0, accepted: 0 };
+  const result: V3RawInputResult = {
+    failures,
+    inspected: 0,
+    carriedFromV2: 0,
+    accepted: 0,
+    carriers: 0,
+  };
   const manifest = await readManifestCases(root, failures, "policy-core-v3 raw inputs");
   const v2Manifest = await readManifestCases(v2Root, failures, "policy-core-v2 raw inputs");
   const depth = maxDepth ?? (await readMaximumJsonDepth(POLICY_CORE_V2_BUDGETS_PATH, failures));
-  if (manifest === null || v2Manifest === null || depth === null) return result;
+  const evaluating = await readEvaluatingGoldenCases(failures);
+  if (manifest === null || v2Manifest === null || depth === null || evaluating === null)
+    return result;
+  const carrierClasses = new Set<RawDefect>();
   if (manifest.schemaVersion !== RAW_INPUT_SCHEMA_VERSION)
     failures.push("policy-core-v3 raw inputs: invalid schemaVersion");
 
@@ -214,13 +253,112 @@ export async function verifyPolicyCoreV3RawInputVectors(
         failures.push(`${label}: bytes differ from policy-core-v2 case ${source}`);
       else carried.add(source);
     }
+
+    if (entry.argument !== undefined || entry.goldenCase !== undefined) {
+      if (!ARGUMENTS.includes(entry.argument as (typeof ARGUMENTS)[number]))
+        failures.push(`${label}: carrier argument is not policy, snapshot or need`);
+      else if (typeof entry.goldenCase !== "string" || !evaluating.has(entry.goldenCase))
+        failures.push(`${label}: carrier names no golden case that evaluates`);
+      else {
+        result.carriers += 1;
+        carrierClasses.add(defect);
+      }
+    }
   }
 
+  for (const defect of CARRIER_DEFECTS)
+    if (!carrierClasses.has(defect))
+      failures.push(`policy-core-v3 raw inputs: no ${defect} carrier case`);
   result.carriedFromV2 = carried.size;
   for (const id of v2Digests.keys())
     if (!carried.has(id)) failures.push(`policy-core-v3 raw inputs: v2 case ${id} is not carried`);
   for (const defect of V3_DEFECTS)
     if (!classes.has(defect)) failures.push(`policy-core-v3 raw inputs: no ${defect} case`);
+  return result;
+}
+
+export const POLICY_CORE_V3_MEMORY_QUALIFICATION_PATH =
+  "contracts/fixtures/policy-core-v3/memory-qualification.v1.json";
+
+const MEMORY_QUALIFICATION_SCHEMA_VERSION = "libre-ai.policy-core-memory-qualification.v1";
+const INPUT_CEILING_FIELD = { policy: "policyInput", snapshot: "snapshotInput", need: "needInput" };
+
+/**
+ * Every memory qualification input is generated from its segments at the byte ceiling of its
+ * argument, with its declared SHA-256, and expects `input-invalid`. The oracle class of these
+ * inputs is checked by the Rust instrument (crates/sdk-rs/tests/policy_core_vectors.rs), whose
+ * grammar pass is iterative; the grammar-first oracle would need hundreds of MiB here.
+ */
+export async function verifyPolicyCoreV3MemoryQualification(
+  path: string,
+): Promise<{ failures: string[]; inspected: number }> {
+  const failures: string[] = [];
+  const result = { failures, inspected: 0 };
+  let qualification: unknown;
+  let budgets: unknown;
+  try {
+    qualification = parseStrictJson(new Uint8Array(await readFile(path)));
+    budgets = parseStrictJson(new Uint8Array(await readFile(POLICY_CORE_V2_BUDGETS_PATH)));
+  } catch {
+    failures.push(`${path}: memory qualification inputs or budgets are absent or unreadable`);
+    return result;
+  }
+  const limits = isRecord(budgets) ? budgets.byteLimits : undefined;
+  if (
+    !isRecord(qualification) ||
+    qualification.schemaVersion !== MEMORY_QUALIFICATION_SCHEMA_VERSION ||
+    !Array.isArray(qualification.cases) ||
+    qualification.cases.length === 0 ||
+    !isRecord(limits)
+  ) {
+    failures.push(`${path}: no memory qualification case`);
+    return result;
+  }
+  const ids = new Set<string>();
+  for (const entry of qualification.cases as unknown[]) {
+    if (!isRecord(entry) || typeof entry.id !== "string" || ids.has(entry.id)) {
+      failures.push(`${path}: case without a unique id`);
+      continue;
+    }
+    ids.add(entry.id);
+    const label = `policy-core-v3 memory:${entry.id}`;
+    const field = INPUT_CEILING_FIELD[entry.argument as keyof typeof INPUT_CEILING_FIELD];
+    if (field === undefined || !Array.isArray(entry.segments)) {
+      failures.push(`${label}: invalid argument or segments`);
+      continue;
+    }
+    const hash = createHash("sha256");
+    let length = 0;
+    for (const segment of entry.segments as unknown[]) {
+      if (!isRecord(segment) || typeof segment.text !== "string") {
+        failures.push(`${label}: invalid segment`);
+        continue;
+      }
+      const count = segment.count;
+      if (typeof count !== "number" || !Number.isSafeInteger(count) || count < 1) {
+        failures.push(`${label}: invalid segment count`);
+        continue;
+      }
+      const chunk = new TextEncoder().encode(segment.text.repeat(count));
+      hash.update(chunk);
+      length += chunk.length;
+    }
+    result.inspected += 1;
+    if (length !== limits[field]) failures.push(`${label}: not at the ${field} ceiling`);
+    if (hash.digest("hex") !== entry.inputSha256) failures.push(`${label}: input SHA-256 mismatch`);
+    if (entry.defect !== null && !V3_DEFECTS.includes(entry.defect as RawDefect))
+      failures.push(`${label}: unknown defect`);
+    const errors = entry.expectedErrors;
+    const v3 = isRecord(errors) ? errors["policy-core-v3"] : undefined;
+    if (
+      !isRecord(errors) ||
+      Object.keys(errors).join() !== "policy-core-v3" ||
+      !isRecord(v3) ||
+      Object.keys(v3).join() !== "variant" ||
+      v3.variant !== "input-invalid"
+    )
+      failures.push(`${label}: invalid policy-core-v3 component refusal`);
+  }
   return result;
 }
 

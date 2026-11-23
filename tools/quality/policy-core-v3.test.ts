@@ -14,8 +14,10 @@ import {
   POLICY_CORE_V2_GOLDEN_PATH,
   POLICY_CORE_V3_ENGINE_VERSION,
   POLICY_CORE_V3_GOLDEN_PATH,
+  POLICY_CORE_V3_MEMORY_QUALIFICATION_PATH,
   POLICY_CORE_V3_RAW_INPUT_ROOT,
   policyEvaluationDigest,
+  verifyPolicyCoreV3MemoryQualification,
   verifyPolicyCoreV3RawInputVectors,
 } from "./policy-core-v3";
 
@@ -135,6 +137,40 @@ describe("policy-core-v3 raw-input vectors", () => {
     expect(result.carriedFromV2).toBe(9);
     expect(result.inspected).toBeGreaterThan(result.carriedFromV2);
     expect(result.accepted).toBe(3);
+    expect(result.carriers).toBe(5);
+  });
+
+  test("a permissive JSON.parse decoder returns the golden input on carrier vectors", async () => {
+    // The decoder of a fetch Response: UTF-8 without fatal errors, byte order mark dropped,
+    // JSON.parse, last duplicate member kept. On a carrier it yields the exact golden input,
+    // so a component built on it evaluates instead of returning input-invalid.
+    const manifest = (await Bun.file(
+      join(POLICY_CORE_V3_RAW_INPUT_ROOT, "manifest.json"),
+    ).json()) as JsonRecord;
+    const { cases: golden } = await goldenCases(POLICY_CORE_V3_GOLDEN_PATH);
+    const defeated: string[] = [];
+    for (const entry of manifest.cases as JsonRecord[]) {
+      if (entry.argument === undefined) continue;
+      const bytes = await Bun.file(
+        join(POLICY_CORE_V3_RAW_INPUT_ROOT, entry.file as string),
+      ).bytes();
+      const goldenCase = golden.find((candidate) => candidate.id === entry.goldenCase);
+      if (goldenCase === undefined) throw new Error(`${String(entry.id)}: golden case missing`);
+      let decoded: unknown;
+      try {
+        decoded = JSON.parse(new TextDecoder().decode(bytes));
+      } catch {
+        continue;
+      }
+      expect(decoded).toEqual(goldenCase[entry.argument as string]);
+      defeated.push(entry.defect as string);
+    }
+    expect(defeated.sort()).toEqual([
+      "bom",
+      "duplicate-member",
+      "invalid-number",
+      "unpaired-surrogate",
+    ]);
   });
 
   test("the depth vectors fail an oracle that counts the top-level value as depth 1", async () => {
@@ -155,6 +191,21 @@ describe("policy-core-v3 raw-input vectors", () => {
     expect(unbounded.failures.some((failure) => failure.includes("accepted forbidden input"))).toBe(
       true,
     );
+  });
+
+  test("the memory qualification inputs are generated at the input ceiling", async () => {
+    const result = await verifyPolicyCoreV3MemoryQualification(
+      POLICY_CORE_V3_MEMORY_QUALIFICATION_PATH,
+    );
+    console.log(`policy-core-v3 memory qualification: ${result.inspected} input(s) generated`);
+    expect(result.failures).toEqual([]);
+    expect(result.inspected).toBe(3);
+  });
+
+  test("an absent memory qualification file is a failure", async () => {
+    const result = await verifyPolicyCoreV3MemoryQualification("contracts/absent.json");
+    expect(result.inspected).toBe(0);
+    expect(result.failures.length).toBeGreaterThan(0);
   });
 
   test("an absent manifest is a failure, never an empty set", async () => {
@@ -193,18 +244,36 @@ function numberedSections(text: string): Map<string, string[]> {
 interface DeclaredChanges {
   sections: Set<string>;
   replacedFirstLines: string[];
+  addedFirstLines: string[];
 }
 
-/** The change record: per change, `Sections: 1, 2.` and the first line of each replaced v2 block. */
+/**
+ * The change record: per change, `Sections: 1, 2.`, then under `Replaced policy-core-v2
+ * blocks:` the first line of each v2 block it removes and under `Added blocks:` the first
+ * line of each block it adds, one `> ` line each. A quote outside those two lists is an error.
+ */
 function declaredChanges(text: string): DeclaredChanges {
   const start = text.indexOf(`## ${CHANGES_HEADING}`);
   if (start < 0) throw new Error("the semantics has no change record");
   const record = text.slice(start);
-  const sections = new Set<string>();
-  for (const match of record.matchAll(/^Sections: ([0-9, ]+)\.$/gm))
-    for (const number of (match[1] as string).split(",")) sections.add(number.trim());
-  const replacedFirstLines = [...record.matchAll(/^> (.+)$/gm)].map((match) => match[1] as string);
-  return { sections, replacedFirstLines };
+  const declared: DeclaredChanges = {
+    sections: new Set<string>(),
+    replacedFirstLines: [],
+    addedFirstLines: [],
+  };
+  let list: string[] | null = null;
+  for (const line of record.split("\n")) {
+    const sections = /^Sections: ([0-9, ]+)\.$/.exec(line);
+    if (sections !== null)
+      for (const number of (sections[1] as string).split(",")) declared.sections.add(number.trim());
+    if (/^Replaced policy-core-v2 blocks?:$/.test(line)) list = declared.replacedFirstLines;
+    else if (/^Added blocks?:$/.test(line)) list = declared.addedFirstLines;
+    else if (line.startsWith("> ")) {
+      if (list === null) throw new Error(`quoted line outside a block list: ${line}`);
+      list.push(line.slice(2));
+    } else if (line.trim() !== "") list = null;
+  }
+  return declared;
 }
 
 describe("policy-core-v3 consolidated semantics", () => {
@@ -223,6 +292,7 @@ describe("policy-core-v3 consolidated semantics", () => {
     expect(v2.size).toBe(10);
 
     const removedFirstLines: string[] = [];
+    const addedFirstLines: string[] = [];
     const touched = new Set<string>();
     let unchangedBlocks = 0;
     for (const [heading, v2Blocks] of v2) {
@@ -231,14 +301,17 @@ describe("policy-core-v3 consolidated semantics", () => {
       const added = v3Blocks.filter((block) => !v2Blocks.includes(block));
       unchangedBlocks += v2Blocks.length - removed.length;
       for (const block of removed) removedFirstLines.push(block.split("\n")[0] as string);
+      for (const block of added) addedFirstLines.push(block.split("\n")[0] as string);
       if (removed.length > 0 || added.length > 0) touched.add(heading.split(".")[0] as string);
     }
     const declared = declaredChanges(v3Text);
     console.log(
       `policy-core-v3 semantics: ${unchangedBlocks} v2 block(s) kept verbatim, ` +
-        `${removedFirstLines.length} replaced, sections touched: ${[...touched].join(", ")}`,
+        `${removedFirstLines.length} replaced, ${addedFirstLines.length} added, ` +
+        `sections touched: ${[...touched].join(", ")}`,
     );
     expect([...declared.replacedFirstLines].sort()).toEqual([...removedFirstLines].sort());
+    expect([...declared.addedFirstLines].sort()).toEqual([...addedFirstLines].sort());
     expect([...declared.sections].sort()).toEqual([...touched].sort());
   });
 
@@ -249,6 +322,14 @@ describe("policy-core-v3 consolidated semantics", () => {
     expect(normative).not.toContain("v2 HTTP boundary");
     expect(normative).not.toContain("conform to policy-core-v2");
     expect(normative).not.toContain("matches exactly");
+  });
+
+  test("no normative sentence depends on a test file or carries a dated measurement", async () => {
+    const v3Text = await Bun.file(V3_SEMANTICS_PATH).text();
+    const normative = v3Text.slice(0, v3Text.indexOf(`## ${CHANGES_HEADING}`));
+    expect(normative).not.toMatch(/\.test\.ts|\/tests\/|\btest\b/);
+    expect(normative).not.toMatch(/\b\d{4}-\d{2}-\d{2}\b(?!T)/);
+    expect(normative).not.toMatch(/\bmeasure/i);
   });
 });
 

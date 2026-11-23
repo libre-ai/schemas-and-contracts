@@ -1623,7 +1623,8 @@
         "contracts/fixtures/policy-core-v2/operators.json",
         "contracts/fixtures/policy-core-v3/golden.json",
         "contracts/fixtures/policy-core-v2/resource-budgets.v1.json",
-        "contracts/fixtures/policy-core-v3/raw-inputs/manifest.json"
+        "contracts/fixtures/policy-core-v3/raw-inputs/manifest.json",
+        "contracts/fixtures/policy-core-v3/memory-qualification.v1.json"
       ]
     }
   ]

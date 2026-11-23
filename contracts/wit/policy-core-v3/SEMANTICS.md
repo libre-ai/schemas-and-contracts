@@ -30,9 +30,7 @@ resolved WIT world exports one `api` interface and MUST have zero imports.
 component, with major version 3. It MUST NOT be accepted from the caller or derived
 from any input. The reference vectors use `3.0.0`; changing the embedded version
 changes the evaluation content, ID and digest even when all policy inputs are
-unchanged. Given the same inputs, a policy-core-v3 evaluation has the verdict and rule
-results of a policy-core-v2 evaluation and differs from it by `engineVersion`, `id` and
-`digest`; at the WIT boundary nothing else distinguishes the two worlds.
+unchanged.
 
 ## 2. Accepted values and validation order
 
@@ -86,9 +84,7 @@ conformance diagnostic below:
 The top-level value has depth 0. An element of an array and the value of an object member
 have the depth of that array or object plus 1, scalars included. Thus 64 nested arrays
 around `0` are accepted and 65 are refused, while 65 nested empty arrays are accepted: the
-innermost has depth 64 and holds no value. This is the count that the policy-core-v2
-budget test executes (`crates/sdk-rs/tests/policy_core_vectors.rs`), so policy-core-v3
-accepts the nesting that test accepts.
+innermost has depth 64 and holds no value.
 
 Every JSON number is interpreted as an IEEE-754 binary64 value and is schema-bounded to the
 inclusive safe-integer range `[-9007199254740991, 9007199254740991]`; fractional values in
@@ -118,12 +114,7 @@ The oracle gives the class by this precedence:
 A component MUST stay within the peak component linear memory budget
 (`memoryQualification.peakComponentLinearMemoryBytes`, 256 MiB) on every input within the
 8 MiB input ceilings, refused inputs included. Deciding the whole grammar before any other
-defect is not required of a component and does not exempt it from that budget. Measurement
-dated 2026-11-23, from the security review (`docs/reviews/policy-core-v3-review.md`): on
-8,388,608 octets of `[`, the reference oracle, which validates the grammar in full before
-classifying, peaked at 626 MiB resident, against 24 MiB for the policy-core-v2
-first-defect decoder, which stops at depth 65. These are process measurements of the
-oracle under Bun, not of a component.
+defect is not required of a component and does not exempt it from that budget.
 
 Every policy and fact source URI MUST be a sanitized public HTTPS citation with
 a DNS-shaped host containing a public-style alphabetic top-level label, no IP
@@ -323,8 +314,8 @@ Input digests are:
 - snapshot: `H("libre-ai.model-snapshot.v2", snapshot without digest)`;
 - need: `H("libre-ai.policy-need.v2", need without digest)`.
 
-The digest labels name payload schemas, not the world version: policy-core-v3 keeps the
-payloads and labels of policy-core-v2, `libre-ai.policy-evaluation.v2` below included.
+The digest labels name payload schemas, not the world version: they are the labels written
+in this section, `libre-ai.policy-evaluation.v2` below included.
 
 After verdict and sorted rule results are known, construct the unsigned evaluation
 with these fields and no others, in any object-member order:
@@ -358,13 +349,24 @@ ordered trace.
   cardinality, semantic-work, decoder-depth and peak-memory qualification ceilings;
 - `contracts/fixtures/policy-core-v3/raw-inputs/manifest.json` contains decoder vectors:
   refused inputs, each with its WIT variant (`expectedErrors`) and its oracle class
-  (`defect`), and accepted inputs (`acceptedCases`) that fix the depth bound.
+  (`defect`), and accepted inputs (`acceptedCases`) that fix the depth bound;
+- `contracts/fixtures/policy-core-v3/memory-qualification.v1.json` contains refused inputs
+  of adversarial shape at the input ceilings, each generated from its segments, for the
+  peak-memory qualification.
+
+A refused raw input that names an `argument` and a `goldenCase` is a carrier: it is passed
+to `evaluate` as that argument, with the other arguments and `evaluated-at` of that golden
+case. Apart from its one decoder defect it is the golden argument itself, so a component
+whose decoder lets that defect through evaluates it instead of refusing it. A refused raw
+input that names no argument is passed in turn as each of `policy`, `snapshot` and `need`,
+with the other arguments and `evaluated-at` of any golden case, and is refused each time. A
+memory qualification input is passed as the argument it names, in the same way.
 
 A component conforms only if it returns the expected result of every golden vector,
-returns the expected WIT variant for every refused raw input and stays within every
-budget. The `defect` of a raw-input vector and the accepted raw inputs bind the reference
-oracle only (section 2). Implementations MUST NOT rewrite expected vectors from their own
-output.
+returns the expected WIT variant for every refused raw input and every memory
+qualification input, and stays within every budget. The `defect` of a raw-input vector and
+the accepted raw inputs bind the reference oracle only (section 2). Implementations MUST
+NOT rewrite expected vectors from their own output.
 
 ## Changes from policy-core-v2 (not normative)
 
@@ -373,23 +375,35 @@ whose SHA-256 is
 `3525078d3baeb452e146d766df2afb87a3836d69197a794ef82a641be1d055cc`, by the four changes
 below. Every block of a numbered section of that file that no change names is kept here
 verbatim. `tools/quality/policy-core-v3.test.ts` checks it: the policy-core-v2 blocks
-missing from this text are exactly the ones whose first line is quoted below, and the
-sections that differ are exactly the ones named. The check reads the policy-core-v2 file;
-the normative text above does not depend on it.
+missing from this text and the blocks this text adds are exactly the ones whose first line
+is quoted below, and the sections that differ are exactly the ones named. The check reads
+the policy-core-v2 file; the normative text above does not depend on it.
 
 ### C1. Version
 
 Sections: 1, 2, 9.
 
 The world is `libre-ai:policy-core@3.0.0` and the engine version has major 3 (section 1).
-The host label of `input-invalid` names policy-core-v3, and the HTTP boundary sentence binds
-every HTTP boundary that exposes a policy-core-v3 result, where the policy-core-v2 text
-named "the v2 HTTP boundary" (section 2). Section 9 now says that its digest labels name
-payload schemas and are unchanged. Replaced policy-core-v2 blocks:
+Given the same inputs, a policy-core-v3 evaluation has the verdict and rule results of a
+policy-core-v2 evaluation and differs from it by `engineVersion`, `id` and `digest`; at the
+WIT boundary nothing else distinguishes the two worlds. The host label of `input-invalid`
+names policy-core-v3, and the HTTP boundary sentence binds every HTTP boundary that exposes
+a policy-core-v3 result, where the policy-core-v2 text named "the v2 HTTP boundary"
+(section 2). Section 9 now says that its digest labels name payload schemas; they are the
+policy-core-v2 labels.
+
+Replaced policy-core-v2 blocks:
 
 > `engineVersion` MUST be an immutable SemVer constant embedded in the qualified
 > | WIT variant | Public code | Optional host label |
 > The v2 HTTP boundary exposes only a stable `error.code` and opaque `requestId`.
+
+Added blocks:
+
+> `engineVersion` MUST be an immutable SemVer constant embedded in the qualified
+> | WIT variant | Public code | Optional host label |
+> Every HTTP boundary that exposes a policy-core-v3 result exposes only a stable
+> The digest labels name payload schemas, not the world version: they are the labels written
 
 ### C2. Decoder precedence and component freedom
 
@@ -402,9 +416,27 @@ reference oracle; it lets a component stop at the first defect, since every defe
 `input-invalid`, and it binds the component to the memory budget on every input within the
 input ceilings. Owner arbitration of 2026-11-23, recorded in
 `docs/adr/2026-11-23-policy-core-v3.md`: the classes are a diagnostic of the oracle.
+
+Why the memory clause: at the security review of 2026-11-23
+(`docs/reviews/policy-core-v3-review.md`), on 8,388,608 octets of `[`, the reference
+oracle, which validates the grammar in full before classifying, peaked at 626 MiB resident,
+against 24 MiB for the policy-core-v2 first-defect decoder, which stops at depth 65. These
+are process measurements of the oracle under Bun, not of a component; the review on
+`52801bf` measured 623 MiB on the same input.
+
 Replaced policy-core-v2 block:
 
 > The decoder MUST reject a BOM, invalid UTF-8, duplicate JSON object member names,
+
+Added blocks:
+
+> The decoder MUST reject, with `policy.input_invalid` (validation step 2), every input that
+> - `bom`: the input starts with the octets `EF BB BF`;
+> Every JSON number is interpreted as an IEEE-754 binary64 value and is schema-bounded to the
+> A component MAY detect these defects in any order and MAY stop at the first defect it
+> The class of a refused input is a conformance diagnostic of the reference oracle
+> 1. `bom`, then `invalid-utf8`;
+> A component MUST stay within the peak component linear memory budget
 
 The candidate `canonicalize` semantics of `signalement-policy-receipt-v1` (its
 `canonicalize` section, step 3) gives "the first defect met" left to right among its own
@@ -417,11 +449,23 @@ code sets; neither text reinterprets the other, and this record changes neither.
 Sections: 10.
 
 The golden file and the raw-input manifest of policy-core-v3 replace those of
-policy-core-v2; the operator corpus and the resource budgets are kept. A component is judged
-on WIT variants and budgets, never on the oracle class. Replaced policy-core-v2 blocks:
+policy-core-v2; the operator corpus and the resource budgets are kept, and a memory
+qualification file is added. A component is judged on WIT variants and budgets, never on
+the oracle class. Section 10 states the argument each raw input is passed as: carrier
+vectors, schema-valid once their single defect is ignored, are the only refused inputs that
+a component with a permissive decoder can fail; policy-core-v2 had none, and every one of
+its raw inputs was refused by schema validation alone.
+
+Replaced policy-core-v2 blocks:
 
 > - `contracts/fixtures/policy-core-v2/operators.json` is the atomic operator/type
 > An implementation conforms only if every vector and budget matches exactly.
+
+Added blocks:
+
+> - `contracts/fixtures/policy-core-v2/operators.json` is the atomic operator/type
+> A refused raw input that names an `argument` and a `goldenCase` is a carrier: it is passed
+> A component conforms only if it returns the expected result of every golden vector,
 
 ### C4. Nesting depth and equal positions
 
@@ -429,14 +473,20 @@ Sections: 2.
 
 policy-core-v2 says "nesting deeper than 64 values" without saying how depth is counted.
 policy-core-v3 counts the top-level value as depth 0 and refuses a value deeper than 64,
-the count of the policy-core-v2 budget test, and states where each defect stands and that,
-at the same octet, the earlier class of the list is given. Raw-input vectors fix both
-sides of the bound.
+the count that the policy-core-v2 budget test executes
+(`crates/sdk-rs/tests/policy_core_vectors.rs`), so policy-core-v3 accepts the nesting that
+test accepts. It states where each defect stands and that, at the same octet, the earlier
+class of the list is given. Raw-input vectors fix both sides of the bound.
+
+Added block:
+
+> The top-level value has depth 0. An element of an array and the value of an object member
 
 Two other readers of this repository count differently, and neither qualifies
 policy-core-v3: `crates/sdk-rs/src/strict_json.rs` gives the top-level value depth 1 with a
 maximum of 64 (the rule of the candidate `signalement-policy-receipt-v1` semantics) and so
 refuses 64 nested arrays around `0`; `tools/quality/strict-json-differential.test.ts` sets
 `TYPESCRIPT_MAX_DEPTH = 63` to align `parseStrictJson` with it. This change modifies
-neither. This change replaces no further policy-core-v2 block; its text is in the decoder
-blocks of change C2.
+neither. The Rust instrument that recomputes the raw-input classes reads with serde_json,
+whose recursion limit of 128 containers fires before its depth check when the budget depth
+exceeds 126; its test refuses such a budget.

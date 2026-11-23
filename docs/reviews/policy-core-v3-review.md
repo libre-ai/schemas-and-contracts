@@ -268,11 +268,26 @@ Residual risk, unchanged and prior to this candidate: input digests are unkeyed 
 over low-entropy content, so a guessed input can be confirmed; section 2 forbids personal
 data in facts.
 
+### Answers to the `52801bf` passes (commit after `3dad272`)
+
+Answered by the authoring commit that follows the one recording the passes above; the
+verdicts on `52801bf` stand as recorded.
+
+| Finding | Answer |
+| --- | --- |
+| Architecture m-a | The change record now quotes the first line of every added block as well as every replaced one, and the derivation test refuses an added block it does not quote. The pass's mutation (a block "A component MAY accept duplicate member names and keep the last value." added to section 2) turns the test red; with the new assertion replaced by a no-op it passes again |
+| Architecture m-b | Five carrier vectors (`carrier-*`): the `policy` of golden case `all-operators-eligible` with one decoder defect each (`bom`, `invalid-json`, `duplicate-member`, `unpaired-surrogate`, `invalid-number`). Section 10 states the argument each raw input is passed as. Measured by the tests: `JSON.parse` over a non-fatal UTF-8 decode returns the exact golden policy on the `bom`, `duplicate-member`, `unpaired-surrogate` and `invalid-number` carriers; `serde_json::from_slice` on `duplicate-member`; a serde_json first-value reader without an end check on `duplicate-member` and `invalid-json`. A component built on any of them evaluates these inputs instead of returning `input-invalid` |
+| Architecture m-c | The comparison with v2 (section 1), the link to the budget test (section 2) and the dated measurement (section 2) moved to the change record; a test refuses a test path, a date or a measurement in the normative text |
+| Security r1 | `contracts/fixtures/policy-core-v3/memory-qualification.v1.json`, a v3 vector beside the reused v2 budgets (unchanged): three refused inputs at the 8 MiB ceiling (8,388,608 `[`; 4 Mi balanced levels; `[{},…]`), generated from segments, digests checked in TypeScript and Rust, oracle classes checked by the Rust instrument. Measuring peak linear memory on them stays an implementation gate (Gate B): no component exists here |
+| Security r2 | The Rust instrument refuses a budget depth above 126, not 127: measured, at depth 126 an empty array at that depth is accepted, at 127 serde_json's limit of 128 containers fires before the seed. A test proves both sides and that the guard refuses 127 |
+
 ## Before the contract can be locked
 
 - The three role verdicts on `52801bf` are the current ones and replace those on
-  `133ba2b`, which stay as audit records. They hold only for the commit they name: any
-  later normative change makes them stale for the parts it touches.
+  `133ba2b`, which stay as audit records. The commit after `3dad272` changes sections 1, 2,
+  9 and 10 of the semantics and its change record, the raw-input manifest, and adds the
+  memory qualification file: all three verdicts on `52801bf` are stale for those parts and
+  need fresh passes.
 - The consolidated text (architecture M2) is a prerequisite of the lock; it exists from
   the commit after `133ba2b` and is checked against policy-core-v2 by
   `tools/quality/policy-core-v3.test.ts`.
