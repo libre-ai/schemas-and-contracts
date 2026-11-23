@@ -1,0 +1,101 @@
+{
+  "id": "policy-core-v2/golden/fractional-number-jcs",
+  "criteria": ["contracts/wit/policy-core-v2/SEMANTICS.md"],
+  "kind": "policy-core-v2.evaluate",
+  "description": "policy-core-v2 golden case fractional-number-jcs (contracts/fixtures/policy-core-v2/golden.json)",
+  "dependsOn": [],
+  "data": [],
+  "input": {
+    "policy": {
+      "schemaVersion": "libre-ai.policy-definition.v2",
+      "id": "urn:libre-ai:policy:fractional-number-jcs",
+      "tenantId": "ten_1234567890abcdef",
+      "version": 1,
+      "status": "approved",
+      "proposedBy": "svc_policyagent00001",
+      "rules": [
+        {
+          "id": "fractional_score",
+          "fact": "model.score",
+          "operator": "at-least",
+          "value": 0.000001,
+          "unknown": "indeterminate",
+          "source": {
+            "uri": "https://example.org/policy/method",
+            "retrievedAt": "2026-01-01T00:00:00Z",
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "ec8786e629a162f797bd2c8d8651c151b5126020248b173a5b1e116f85b1458f",
+      "approvedAt": "2026-01-02T00:00:00Z",
+      "approval": {
+        "role": "policy-approver",
+        "actorKind": "human",
+        "approverId": "usr_policyapprover001",
+        "approvedAt": "2026-01-02T00:00:00Z",
+        "reference": "urn:libre-ai:approval:fractional-number-jcs",
+        "subjectDigest": "ec8786e629a162f797bd2c8d8651c151b5126020248b173a5b1e116f85b1458f"
+      }
+    },
+    "snapshot": {
+      "schemaVersion": "libre-ai.model-snapshot.v2",
+      "id": "urn:libre-ai:snapshot:fractional-number-jcs",
+      "tenantId": "ten_1234567890abcdef",
+      "modelId": "mdl_4d501cee03139931",
+      "capturedAt": "2026-07-16T00:00:00Z",
+      "facts": [
+        {
+          "name": "model.score",
+          "value": 0.000001,
+          "source": {
+            "uri": "https://example.org/evidence/d",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "ad30e5242294bfa593b7f98d024f1f2ad626280514b9185b9e65e7f3de98aaf5"
+    },
+    "need": {
+      "schemaVersion": "libre-ai.policy-need.v2",
+      "id": "urn:libre-ai:need:fractional-number-jcs",
+      "tenantId": "ten_1234567890abcdef",
+      "facts": [
+        {
+          "name": "need.task",
+          "value": "summary"
+        }
+      ],
+      "digest": "e7089b8cfd2c15dda71d487a8052978a3aa284267b813c33b26676ed74c621a7"
+    },
+    "evaluatedAt": "2026-07-17T00:00:00Z"
+  },
+  "expected": {
+    "outcome": "accept",
+    "evaluation": {
+      "schemaVersion": "libre-ai.policy-evaluation.v2",
+      "id": "urn:libre-ai:evaluation:30c5a7a795d57c5af8f79dac8408982ccbb698692c05e2e45f2a7b2da0683f5f",
+      "tenantId": "ten_1234567890abcdef",
+      "policyId": "urn:libre-ai:policy:fractional-number-jcs",
+      "policyDigest": "ec8786e629a162f797bd2c8d8651c151b5126020248b173a5b1e116f85b1458f",
+      "snapshotId": "urn:libre-ai:snapshot:fractional-number-jcs",
+      "snapshotDigest": "ad30e5242294bfa593b7f98d024f1f2ad626280514b9185b9e65e7f3de98aaf5",
+      "needDigest": "e7089b8cfd2c15dda71d487a8052978a3aa284267b813c33b26676ed74c621a7",
+      "engineVersion": "2.0.0",
+      "verdict": "eligible",
+      "ruleResults": [
+        {
+          "ruleId": "fractional_score",
+          "status": "satisfied",
+          "reasonCode": "policy.rule_satisfied"
+        }
+      ],
+      "evaluatedAt": "2026-07-17T00:00:00Z",
+      "digest": "30c5a7a795d57c5af8f79dac8408982ccbb698692c05e2e45f2a7b2da0683f5f"
+    },
+    "canonicalOutput": "{\"digest\":\"30c5a7a795d57c5af8f79dac8408982ccbb698692c05e2e45f2a7b2da0683f5f\",\"engineVersion\":\"2.0.0\",\"evaluatedAt\":\"2026-07-17T00:00:00Z\",\"id\":\"urn:libre-ai:evaluation:30c5a7a795d57c5af8f79dac8408982ccbb698692c05e2e45f2a7b2da0683f5f\",\"needDigest\":\"e7089b8cfd2c15dda71d487a8052978a3aa284267b813c33b26676ed74c621a7\",\"policyDigest\":\"ec8786e629a162f797bd2c8d8651c151b5126020248b173a5b1e116f85b1458f\",\"policyId\":\"urn:libre-ai:policy:fractional-number-jcs\",\"ruleResults\":[{\"reasonCode\":\"policy.rule_satisfied\",\"ruleId\":\"fractional_score\",\"status\":\"satisfied\"}],\"schemaVersion\":\"libre-ai.policy-evaluation.v2\",\"snapshotDigest\":\"ad30e5242294bfa593b7f98d024f1f2ad626280514b9185b9e65e7f3de98aaf5\",\"snapshotId\":\"urn:libre-ai:snapshot:fractional-number-jcs\",\"tenantId\":\"ten_1234567890abcdef\",\"verdict\":\"eligible\"}"
+  }
+}

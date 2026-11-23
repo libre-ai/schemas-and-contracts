@@ -1,0 +1,102 @@
+{
+  "id": "policy-core-v2/golden/stale-boundary-inclusive",
+  "criteria": ["contracts/wit/policy-core-v2/SEMANTICS.md"],
+  "kind": "policy-core-v2.evaluate",
+  "description": "policy-core-v2 golden case stale-boundary-inclusive (contracts/fixtures/policy-core-v2/golden.json)",
+  "dependsOn": [],
+  "data": [],
+  "input": {
+    "policy": {
+      "schemaVersion": "libre-ai.policy-definition.v2",
+      "id": "urn:libre-ai:policy:stale-boundary-inclusive",
+      "tenantId": "ten_1234567890abcdef",
+      "version": 1,
+      "status": "approved",
+      "rules": [
+        {
+          "id": "fresh_bound",
+          "fact": "model.score",
+          "operator": "at-least",
+          "value": 7,
+          "unknown": "indeterminate",
+          "source": {
+            "uri": "https://example.org/policy/method",
+            "retrievedAt": "2026-01-01T00:00:00Z",
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "licence": "CC-BY-4.0"
+          },
+          "maxSourceAgeDays": 1
+        }
+      ],
+      "digest": "6d61d13e4d18775199be0ee46e4b665b1de404f46400d2e1cb58193ed8f5f974",
+      "approvedAt": "2026-01-02T00:00:00Z",
+      "approval": {
+        "role": "policy-approver",
+        "approvedAt": "2026-01-02T00:00:00Z",
+        "reference": "urn:libre-ai:approval:stale-boundary-inclusive",
+        "subjectDigest": "6d61d13e4d18775199be0ee46e4b665b1de404f46400d2e1cb58193ed8f5f974",
+        "actorKind": "human",
+        "approverId": "usr_policyapprover001"
+      },
+      "proposedBy": "svc_policyagent00001"
+    },
+    "snapshot": {
+      "schemaVersion": "libre-ai.model-snapshot.v2",
+      "id": "urn:libre-ai:snapshot:stale-boundary-inclusive",
+      "tenantId": "ten_1234567890abcdef",
+      "modelId": "mdl_83c06044e6c8f69a",
+      "capturedAt": "2026-07-16T00:00:00Z",
+      "facts": [
+        {
+          "name": "model.score",
+          "value": 8,
+          "source": {
+            "uri": "https://example.org/evidence/a",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "c93f686acfc2ba4d8e2fcec566e06302ad0e2091d844dc36e974ee6174a00dff"
+    },
+    "need": {
+      "schemaVersion": "libre-ai.policy-need.v2",
+      "id": "urn:libre-ai:need:stale-boundary-inclusive",
+      "tenantId": "ten_1234567890abcdef",
+      "facts": [
+        {
+          "name": "need.task",
+          "value": "summary"
+        }
+      ],
+      "digest": "e59aaa705019c7f108eaead0cf03f1b92bda1191c6eac88d12d481fda09f3fbe"
+    },
+    "evaluatedAt": "2026-07-17T00:00:00Z"
+  },
+  "expected": {
+    "outcome": "accept",
+    "evaluation": {
+      "schemaVersion": "libre-ai.policy-evaluation.v2",
+      "id": "urn:libre-ai:evaluation:ad59669b936a88372e421685529a7493f838f1c4eceebcb29e90e6276d2deef5",
+      "tenantId": "ten_1234567890abcdef",
+      "policyId": "urn:libre-ai:policy:stale-boundary-inclusive",
+      "policyDigest": "6d61d13e4d18775199be0ee46e4b665b1de404f46400d2e1cb58193ed8f5f974",
+      "snapshotId": "urn:libre-ai:snapshot:stale-boundary-inclusive",
+      "snapshotDigest": "c93f686acfc2ba4d8e2fcec566e06302ad0e2091d844dc36e974ee6174a00dff",
+      "needDigest": "e59aaa705019c7f108eaead0cf03f1b92bda1191c6eac88d12d481fda09f3fbe",
+      "engineVersion": "2.0.0",
+      "verdict": "eligible",
+      "ruleResults": [
+        {
+          "ruleId": "fresh_bound",
+          "status": "satisfied",
+          "reasonCode": "policy.rule_satisfied"
+        }
+      ],
+      "evaluatedAt": "2026-07-17T00:00:00Z",
+      "digest": "ad59669b936a88372e421685529a7493f838f1c4eceebcb29e90e6276d2deef5"
+    },
+    "canonicalOutput": "{\"digest\":\"ad59669b936a88372e421685529a7493f838f1c4eceebcb29e90e6276d2deef5\",\"engineVersion\":\"2.0.0\",\"evaluatedAt\":\"2026-07-17T00:00:00Z\",\"id\":\"urn:libre-ai:evaluation:ad59669b936a88372e421685529a7493f838f1c4eceebcb29e90e6276d2deef5\",\"needDigest\":\"e59aaa705019c7f108eaead0cf03f1b92bda1191c6eac88d12d481fda09f3fbe\",\"policyDigest\":\"6d61d13e4d18775199be0ee46e4b665b1de404f46400d2e1cb58193ed8f5f974\",\"policyId\":\"urn:libre-ai:policy:stale-boundary-inclusive\",\"ruleResults\":[{\"reasonCode\":\"policy.rule_satisfied\",\"ruleId\":\"fresh_bound\",\"status\":\"satisfied\"}],\"schemaVersion\":\"libre-ai.policy-evaluation.v2\",\"snapshotDigest\":\"c93f686acfc2ba4d8e2fcec566e06302ad0e2091d844dc36e974ee6174a00dff\",\"snapshotId\":\"urn:libre-ai:snapshot:stale-boundary-inclusive\",\"tenantId\":\"ten_1234567890abcdef\",\"verdict\":\"eligible\"}"
+  }
+}

@@ -259,6 +259,23 @@ describe("classification", () => {
     expect(outcome.code).toBe(2);
   });
 
+  test("an implementation that closes its stdin unread is judged on its answer alone", async () => {
+    // The request is larger than a pipe buffer, so writing it to a child that closed its stdin
+    // fails with EPIPE after the write call has returned. That failure must neither end the
+    // runner nor change the verdict: the exit code and the output decide (seen in CI on Linux).
+    const root = await tree([vector("one", { input: { value: "x".repeat(900_000) } })]);
+    const outcome = await cli([
+      root,
+      "--impl",
+      `exec 0<&-; sleep 0.2; printf '{"outcome":"unsupported"}'`,
+    ]);
+    expect(outcome.stderr).toBe("");
+    expect(outcome.stdout.trim().split("\n").at(-1)).toBe(
+      "discovered=1 total=1 pass=0 fail=0 unavailable=1 blocked=0",
+    );
+    expect(outcome.code).toBe(2);
+  });
+
   test("a reject without errors is unavailable, with other errors it fails", async () => {
     const errors = [{ keyword: "required", instancePath: "/subject" }];
     const root = await tree([vector("negative", { expected: { outcome: "reject", errors } })]);
