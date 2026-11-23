@@ -1,9 +1,11 @@
 # Review dossier — policy-core v3 (candidate)
 
 - **Candidate contract:** `policy-core-v3` (catalog entry after the post-lock baseline).
-- **Status:** `pending-independent-agent-review` (catalog `review.state`). Three role
-  passes ran on `133ba2b` (recorded below): architecture `reject`, security `reject`,
-  privacy `approve-with-minor-reservations`. The candidate stays pending.
+- **Status:** `pending-independent-agent-review` (catalog `review.state`). Role passes on
+  `133ba2b`: architecture `reject`, security `reject`, privacy
+  `approve-with-minor-reservations`; on `52801bf`: architecture
+  `approve-with-minor-reservations`, security `approve-with-minor-reservations`, privacy
+  `approve`. The candidate stays pending.
 - **Required roles (catalog `review.required`):** architecture, security, privacy — the
   roles policy-core-v2 names before implementation.
 - **Decision:** `docs/adr/2026-11-23-policy-core-v3.md`, status proposed.
@@ -87,10 +89,13 @@ the passes:
   `shasum -a 256` (calibrated on v2, 14 of 14); `JSON.parse` against the RFC 8259 grammar,
   56 of 56 rows agree under Bun 1.4.4-canary.1; neutralization of `JSON.parse`: 15 pass,
   8 fail.
+- **Limits:** Bun 1.4.4-canary.1 locally against `bun@1.4.0-canary.1` declared; the CI
+  engine not checked; `ai-model-policy` read as a shallow clone at its served head, its
+  tests not run.
 
 | Finding | Severity | Disposition | Answer |
 | --- | --- | --- | --- |
-| M1. The class order of C2 cannot be checked at the component boundary: every raw vector expects `input-invalid`, and a v2 component under engine `3.0.0` passes every v3 vector (measured: 7 of 14 cases differ in class) | major | required evidence | **Treated by the commit after `133ba2b`.** Owner answer of 2026-11-23, "Classes = diagnostic d'oracle (Recommandé)": section 2 and section 10 now say that a component is judged on the WIT variant only and that the class binds the reference oracle only; ADR consequences updated |
+| M1. The class order of C2 cannot be checked at the component boundary: every raw vector expects `input-invalid`, and a v2 component under engine `3.0.0` would pass every v3 vector (the pass's inferred scenario, not a measurement on a component; measured: `cases=14 rejectedByV2Decoder=14 classDiffers=7`) | major | required evidence | **Treated by the commit after `133ba2b`.** Owner answer of 2026-11-23, "Classes = diagnostic d'oracle (Recommandé)": section 2 and section 10 now say that a component is judged on the WIT variant only and that the class binds the reference oracle only; ADR consequences updated |
 | M2. The delta text is ambiguous: (a) "v2" sentences such as the HTTP boundary, (b) contradictory scope rules, (c) loss of the RFC 2119 MUST in the decoder sentence, (d) normative dependency on the v2 bytes | major | blocking for lock, not for `candidate` | **Treated by the commit after `133ba2b`.** The semantics is now a complete text: (a) the HTTP boundary sentence binds every boundary exposing a v3 result, and no normative sentence names the v2 world (a test greps for it); (b) no scope rule remains; (c) "The decoder MUST reject" is restored; (d) the v2 file is read only by the derivation test, not by the normative text |
 | m1. `unpaired-surrogate`, read literally, covers the low half of a valid pair | minor | suggestion | **Treated by the commit after `133ba2b`:** "not part of a high-then-low escaped pair" |
 | m2. No tie-break at equal position in step 4 | minor | suggestion | **Treated by the commit after `133ba2b`:** each defect's position is defined; at the same octet the earlier class of the list wins; vector `depth-65-non-finite-number` |
@@ -101,7 +106,15 @@ Consequences reported without finding: `ai-model-policy` vendors only `policy-co
 replays only the v2 golden; `project-governance` asserts 9 vendored worlds
 (`crates/ecosystem-engine/tests/wit_contracts.rs:17`) and would need 10 and a `matches!`
 entry if v3 is vendored; no catalog field says that v3 succeeds v2; evaluation IDs change
-for the same inputs (14 of 14).
+for the same inputs (14 of 14); `ai-model-policy` depends on `file:../schemas-and-contracts`
+(how its CI produces that checkout not verified: hypothesis), its
+`verifyPolicyCoreRawInputVectors` has no caller, and its decoder `serde_json::from_slice`
+accepts a duplicate member (measured by the v2 sdk-rs test); `policy-evaluation.v2`
+accepts `engineVersion` `3.0.0`.
+
+Transcription completed after the architecture pass on `52801bf`: the "suggestion"
+disposition of m2 to m4 was not stated by the `133ba2b` pass; that pass assigns it on
+`52801bf`.
 
 ### Security — `133ba2b` — verdict `reject`
 
@@ -144,12 +157,122 @@ Residual risk, prior to this candidate: input digests are unkeyed SHA-256 over
 low-entropy content, so a guessed input can be confirmed; the base text forbids personal
 data in facts.
 
+### Architecture — `52801bf` — verdict `approve-with-minor-reservations`
+
+- **reviewPassId:** none assigned by a runner, none proposed by the pass. Mode: specialized
+  role `architecture`. Model: `claude-opus-5-5`. Protocol read in `project-governance` at
+  `70fb8fa`. Starting point: the architecture pass on `133ba2b`; fresh pass on the whole
+  normative text.
+- **Verdict:** `approve-with-minor-reservations`. M1 settled by the owner answer of
+  2026-11-23; M2 and m1 to m4 treated; no required evidence open (ADR-0056 D2). It does not
+  stand for the security or privacy roles and does not authorize the lock.
+- **Contract and vector SHA-256 at `52801bf0667f114dcb2d06032bc043bb826f0f6b`:**
+  `world.wit` `4056f02278e3c27b6fce114f011cfaceb58810abb07540fef4727919980ce825`;
+  `SEMANTICS.md` `d3774eef304fc3d1033dd99ba87e118d3f84d41b4e6024c3dd71f2e48f8800fd`;
+  `golden.json` `0aa7755df2a5509aa840d7139b7967e77c392714f9a11c326f4c2a44a112b5e8`
+  (unchanged); `raw-inputs/manifest.json`
+  `d8fa4719bac69e1f32e5a73951f9942f89d929c1f6fe1f6622fb579e16ff4be9`; `operators.json` and
+  `resource-budgets.v1.json` unchanged.
+- **Evidence reproduced:** v2 decoder against v3 manifest at depth 64: `cases=21
+  rejectedByV2Decoder=21 classDiffers=8 v3MatchesDeclared=21 accepted=3`; the ten depth
+  fixtures rebuilt by `printf` and `shasum -a 256`, 10 of 10 match; `bun test
+  tools/quality/policy-core-v3.test.ts` 36 pass; `cargo test --test policy_core_vectors`
+  9 pass; derivation test mutated three times: section 5 changed, red; section 2 kept block
+  changed, red; block added to section 2, green.
+
+| Finding | Severity | Disposition | Answer |
+| --- | --- | --- | --- |
+| m-a. The derivation test does not see a block added to a declared section (measured: an added "A component MAY accept duplicate member names" passes 36 of 36) | minor | suggestion | |
+| m-b. No raw-input vector carries `schemaVersion` (measured 0 of 24), so every refused input is schema-invalid and a component without a strict decoder passes every refused case; the argument slot of a raw input is not stated (prior to this candidate, same in v2) | minor | suggestion | |
+| m-c. Informative text in normative sections: lines 89-91 tie the depth count to a test file, lines 121-126 carry a dated measurement | minor | suggestion | |
+
+Transcription of the `133ba2b` pass: faithful; the pass adds that M1 also measured
+`rejectedByV2Decoder=14`, that it assigns the "suggestion" disposition to m2 to m4 now, and
+that its limits were Bun 1.4.4-canary.1 locally against `bun@1.4.0-canary.1` declared.
+
+### Security — `52801bf` — verdict `approve-with-minor-reservations`
+
+- **reviewPassId:** `policy-core-v3/security/52801bf/2026-11-23`, proposed by the pass (no
+  runner). Mode: specialized role `security`. Model: `claude-opus-5-5`. Replaces the
+  security pass on `133ba2b`.
+- **Verdict:** `approve-with-minor-reservations`. No blocking finding and no required
+  evidence open (ADR-0056 D2). It is not a promotion approval and does not stand for the
+  architecture or privacy roles.
+- **Evidence reproduced:** depth table replayed: at the budget depth the oracle accepts 64
+  nested arrays around `0`, 65 nested empty arrays and 64 nested `{"a":`, and refuses 65
+  and 66 levels with `max-depth`; on 8 MiB of `[` the oracle still peaks at 623 MiB
+  (v2: 24 MiB), within the text since a component may stop at the first defect; fuzz at
+  depth 64 read from the budgets, 3 seeds × 700,000 inputs with a nesting generator: 0
+  acceptance difference v2/v3, 0 precedence break, 0 exception; the same 2,100,000 inputs
+  through the Rust instrument: 0 class difference with the TypeScript oracle, 0 panic; Rust
+  instrument on 8 MiB adversarial inputs (open, balanced, balanced then `x`, open objects,
+  long number, `[{},…]`): no stack overflow; neutralizing its grammar recognizer turns its
+  test red (0 pass, 1 fail); `bun test tools/quality/policy-core-v3.test.ts` 36 pass;
+  `cargo test --test policy_core_vectors` 9 pass; no dependency, lock or workflow change
+  since `133ba2b`.
+
+| File at `52801bf` | SHA-256 |
+| --- | --- |
+| `contracts/wit/policy-core-v3/world.wit` | `4056f02278e3c27b6fce114f011cfaceb58810abb07540fef4727919980ce825` |
+| `contracts/wit/policy-core-v3/SEMANTICS.md` | `d3774eef304fc3d1033dd99ba87e118d3f84d41b4e6024c3dd71f2e48f8800fd` |
+| `contracts/wit/policy-core-v2/SEMANTICS.md` | `3525078d3baeb452e146d766df2afb87a3836d69197a794ef82a641be1d055cc` |
+| `contracts/fixtures/policy-core-v3/golden.json` | `0aa7755df2a5509aa840d7139b7967e77c392714f9a11c326f4c2a44a112b5e8` |
+| `contracts/fixtures/policy-core-v3/raw-inputs/manifest.json` | `d8fa4719bac69e1f32e5a73951f9942f89d929c1f6fe1f6622fb579e16ff4be9` |
+| `contracts/fixtures/policy-core-v2/operators.json` | `cb4c4d1929e01cfc6cd87d5f4386e54b9f3294ef6789c562f556d1b0c5db5bc2` |
+| `contracts/fixtures/policy-core-v2/resource-budgets.v1.json` | `6f7ed86b5c84c9d29588d871908251370038dcabe90ebc646f2a9c1b620d8f77` |
+
+| Finding | Severity | Disposition |
+| --- | --- | --- |
+| M1, M2, m1, m2, m3 of the `133ba2b` pass | — | treated, verified on `52801bf` |
+| r1. The memory bound of section 2 is a MUST with no qualification case: `resource-budgets.v1.json` lists byte-length boundaries only. Gate B should measure peak linear memory on refused 8 MiB inputs of adversarial shape (8,388,608 `[`; 4 Mi balanced levels; `[{},…]`) | minor | suggestion |
+| r2. The Rust instrument classes by serde_json message substrings (`surrogate`, `hex escape`, `number out of range`). Fails closed on an unknown message (panic); a substring collision after a version bump could misclass a diagnostic, with no WIT effect; pinned `=1.0.151`; a budget depth above ~127 would hit serde_json's recursion limit (128) first and panic | minor | suggestion |
+
+Note: the depth bound has no WIT effect, since the three input schemas are closed (no
+recursive `$ref`, `additionalProperties: false`), so an input at depth 64 or 65 is refused
+by schema validation in any case; the bound matters for the oracle and for resources.
+
+### Privacy — `52801bf` — verdict `approve`
+
+- **reviewPassId:** `policy-core-v3@52801bf/privacy/2026-11-23`, proposed by the pass (no
+  runner). Mode: specialized role `privacy`. Model: `claude-opus-5-5`. Fresh pass on
+  `52801bf0667f114dcb2d06032bc043bb826f0f6b`, starting point `133ba2b` (ADR-0056 D2).
+- **Verdict:** `approve`; no finding, no required evidence open. It replaces the privacy
+  verdict on `133ba2b` and does not stand for the architecture or security roles.
+- **Evidence reproduced:** v2 lines 97-100 byte-identical to v3 lines 158-161 (`cmp`);
+  v2 lines 111-113 replaced by v3 lines 172-175, scope widened to every HTTP boundary
+  exposing a v3 result and "a library error" added, MUST NOT kept; block comparison of
+  v2 against the normative part of v3: 68 blocks, 59 verbatim, 9 not (3 header blocks and
+  the 6 blocks C1 to C3 quote); host-label table differs only in the `input-invalid` row;
+  24 of 24 raw-input SHA-256 match the manifest; the 10 `depth-*.bin` use only structural
+  octets, `a`, `0`, `1e400`, `\uD800` and `x`; the 3 `acceptedCases` and the 14 earlier
+  cases (identical apart from `note`) carry no personal data or real identifier; oracle
+  error messages unchanged (comment-only diff); `bun test tools/quality/policy-core-v3.test.ts`
+  36 pass, 0 fail.
+- **Earlier finding:** HTTP boundary subject — closed by section 2, lines 172-175.
+- **Limits:** `cargo test` not run; security and architecture matters (memory clause,
+  depth count, component order freedom) not reviewed by this role.
+
+Contract and vector SHA-256 at `52801bf0667f114dcb2d06032bc043bb826f0f6b`:
+
+| File | SHA-256 |
+| --- | --- |
+| `contracts/wit/policy-core-v3/world.wit` | `4056f02278e3c27b6fce114f011cfaceb58810abb07540fef4727919980ce825` |
+| `contracts/wit/policy-core-v3/SEMANTICS.md` | `d3774eef304fc3d1033dd99ba87e118d3f84d41b4e6024c3dd71f2e48f8800fd` |
+| `contracts/wit/policy-core-v2/SEMANTICS.md` (derivation source) | `3525078d3baeb452e146d766df2afb87a3836d69197a794ef82a641be1d055cc` |
+| `contracts/fixtures/policy-core-v3/golden.json` | `0aa7755df2a5509aa840d7139b7967e77c392714f9a11c326f4c2a44a112b5e8` |
+| `contracts/fixtures/policy-core-v3/raw-inputs/manifest.json` | `d8fa4719bac69e1f32e5a73951f9942f89d929c1f6fe1f6622fb579e16ff4be9` |
+| `contracts/fixtures/policy-core-v2/operators.json` | `cb4c4d1929e01cfc6cd87d5f4386e54b9f3294ef6789c562f556d1b0c5db5bc2` |
+| `contracts/fixtures/policy-core-v2/resource-budgets.v1.json` | `6f7ed86b5c84c9d29588d871908251370038dcabe90ebc646f2a9c1b620d8f77` |
+
+Residual risk, unchanged and prior to this candidate: input digests are unkeyed SHA-256
+over low-entropy content, so a guessed input can be confirmed; section 2 forbids personal
+data in facts.
+
 ## Before the contract can be locked
 
-- New architecture and security passes on a commit after `133ba2b`; their `reject`
-  verdicts stand until then. Every normative change since `133ba2b` (sections 1, 2, 9 and
-  10 of the semantics, the raw-input manifest) makes the privacy approval stale for those
-  parts.
+- The three role verdicts on `52801bf` are the current ones and replace those on
+  `133ba2b`, which stay as audit records. They hold only for the commit they name: any
+  later normative change makes them stale for the parts it touches.
 - The consolidated text (architecture M2) is a prerequisite of the lock; it exists from
   the commit after `133ba2b` and is checked against policy-core-v2 by
   `tools/quality/policy-core-v3.test.ts`.
