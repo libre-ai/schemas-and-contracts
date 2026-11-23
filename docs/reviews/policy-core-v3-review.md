@@ -427,6 +427,21 @@ treated before the entry moves to `locked`, which requires a new review in any c
 - The three role verdicts on `475c8b4` are the current ones and replace those on
   `52801bf` and `133ba2b`, which stay as audit records. The commit that records them
   touches only this dossier: no verdict is stale.
+- Update on base `11c8412` ("feat(vectors): derive policy-core-v2 golden runner vectors
+  (#43)"): merged into the branch by a signed-off merge commit (`5471101` and `11c8412`),
+  whose tree `fe55aec2f94cf085baa0b60e931ca702c2354b20` equals
+  `git merge-tree --write-tree 5471101 11c8412`. #43 changes no file under
+  `contracts/fixtures/` or `contracts/wit/`, neither catalog file, nor
+  `tools/quality/specification-lock.ts`, nor `tools/quality/policy-core-raw-inputs.ts`
+  (`git diff --name-only 1b0b6f4 11c8412` on those paths: empty). So the policy-core-v2
+  golden file from which the v3 golden is derived, the registry digest pin and every
+  reviewed SHA-256 above are unchanged, and the verdicts on `475c8b4` stand. #43 reads the
+  v2 golden through `parseStrictJson`, which calls `decodeStrictJson`; this branch moves its
+  byte order mark and UTF-8 checks into a shared helper without changing its result, and
+  `check:policy-core-v2-vectors` is green on the merged tree. #43 derives runner vectors
+  from locked fixtures only and no gate asks a candidate for them: policy-core-v3 has none,
+  and whether it gets a `policy-core-v3.evaluate` kind before the lock is left to the
+  owner.
 - The consolidated text (architecture M2) is a prerequisite of the lock; it exists from
   the commit after `133ba2b` and is checked against policy-core-v2 by
   `tools/quality/policy-core-v3.test.ts`.
