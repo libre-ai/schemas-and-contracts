@@ -331,6 +331,20 @@ describe("strict JSON differential: TypeScript and Rust readers", () => {
   );
 
   test(
+    "an oracle that exits without reading its input is judged on its exit code",
+    async () => {
+      // The input is larger than a pipe buffer, and cargo exits on the missing manifest
+      // without reading it: writing it fails with EPIPE after the write call has returned.
+      // That failure must neither end the test process (an unhandled rejection, seen on Linux)
+      // nor replace the oracle's own exit code and stderr in the error.
+      const missing = join(import.meta.dir, "strict-json-oracle", "absent", "Cargo.toml");
+      const documents = [{ id: "large", bytes: encoder.encode(`"${"x".repeat(900_000)}"`) }];
+      await expect(rustVerdicts(documents, missing)).rejects.toThrow("Rust oracle exited with");
+    },
+    ORACLE_TIMEOUT_MS,
+  );
+
+  test(
     "both readers give the same verdict on every trap document",
     async () => {
       const traps = trapDocuments(await loadTrapCorpus(TRAP_CORPUS_PATH));
