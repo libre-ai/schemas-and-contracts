@@ -1,0 +1,101 @@
+{
+  "id": "policy-core-v2/golden/origin-is-not-jurisdiction",
+  "criteria": ["contracts/wit/policy-core-v2/SEMANTICS.md"],
+  "kind": "policy-core-v2.evaluate",
+  "description": "policy-core-v2 golden case origin-is-not-jurisdiction (contracts/fixtures/policy-core-v2/golden.json)",
+  "dependsOn": [],
+  "data": [],
+  "input": {
+    "policy": {
+      "schemaVersion": "libre-ai.policy-definition.v2",
+      "id": "urn:libre-ai:policy:origin-is-not-jurisdiction",
+      "tenantId": "ten_1234567890abcdef",
+      "version": 1,
+      "status": "approved",
+      "rules": [
+        {
+          "id": "jurisdiction_required",
+          "fact": "model.hosting.jurisdiction",
+          "operator": "in",
+          "value": ["FR", "DE"],
+          "unknown": "indeterminate",
+          "source": {
+            "uri": "https://example.org/policy/method",
+            "retrievedAt": "2026-01-01T00:00:00Z",
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "6a0b8d681875162bd7d8d74a803efd20ac3860d0df4a77a9089a9fa187a33e9c",
+      "approvedAt": "2026-01-02T00:00:00Z",
+      "approval": {
+        "role": "policy-approver",
+        "approvedAt": "2026-01-02T00:00:00Z",
+        "reference": "urn:libre-ai:approval:origin-is-not-jurisdiction",
+        "subjectDigest": "6a0b8d681875162bd7d8d74a803efd20ac3860d0df4a77a9089a9fa187a33e9c",
+        "actorKind": "human",
+        "approverId": "usr_policyapprover001"
+      },
+      "proposedBy": "svc_policyagent00001"
+    },
+    "snapshot": {
+      "schemaVersion": "libre-ai.model-snapshot.v2",
+      "id": "urn:libre-ai:snapshot:origin-is-not-jurisdiction",
+      "tenantId": "ten_1234567890abcdef",
+      "modelId": "mdl_34a069f7ebed9c99",
+      "capturedAt": "2026-07-16T00:00:00Z",
+      "facts": [
+        {
+          "name": "model.provider.origin",
+          "value": "FR",
+          "source": {
+            "uri": "https://example.org/evidence/a",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "4949a9bd6ee47f9610542a26f9e200b60e8910f7ff2964b2c2aebcf0a915b153"
+    },
+    "need": {
+      "schemaVersion": "libre-ai.policy-need.v2",
+      "id": "urn:libre-ai:need:origin-is-not-jurisdiction",
+      "tenantId": "ten_1234567890abcdef",
+      "facts": [
+        {
+          "name": "need.task",
+          "value": "summary"
+        }
+      ],
+      "digest": "7cd94dcc6e3e459f2fc9f142d3c601a5fb921ed023922fc08f54f66a9a7559ec"
+    },
+    "evaluatedAt": "2026-07-17T00:00:00Z"
+  },
+  "expected": {
+    "outcome": "accept",
+    "evaluation": {
+      "schemaVersion": "libre-ai.policy-evaluation.v2",
+      "id": "urn:libre-ai:evaluation:f60c983403014e8e6e9ac07ff8f3929e459c13e33773b87b830deecf6320df70",
+      "tenantId": "ten_1234567890abcdef",
+      "policyId": "urn:libre-ai:policy:origin-is-not-jurisdiction",
+      "policyDigest": "6a0b8d681875162bd7d8d74a803efd20ac3860d0df4a77a9089a9fa187a33e9c",
+      "snapshotId": "urn:libre-ai:snapshot:origin-is-not-jurisdiction",
+      "snapshotDigest": "4949a9bd6ee47f9610542a26f9e200b60e8910f7ff2964b2c2aebcf0a915b153",
+      "needDigest": "7cd94dcc6e3e459f2fc9f142d3c601a5fb921ed023922fc08f54f66a9a7559ec",
+      "engineVersion": "2.0.0",
+      "verdict": "indeterminate",
+      "ruleResults": [
+        {
+          "ruleId": "jurisdiction_required",
+          "status": "unknown",
+          "reasonCode": "policy.fact_absent"
+        }
+      ],
+      "evaluatedAt": "2026-07-17T00:00:00Z",
+      "digest": "f60c983403014e8e6e9ac07ff8f3929e459c13e33773b87b830deecf6320df70"
+    },
+    "canonicalOutput": "{\"digest\":\"f60c983403014e8e6e9ac07ff8f3929e459c13e33773b87b830deecf6320df70\",\"engineVersion\":\"2.0.0\",\"evaluatedAt\":\"2026-07-17T00:00:00Z\",\"id\":\"urn:libre-ai:evaluation:f60c983403014e8e6e9ac07ff8f3929e459c13e33773b87b830deecf6320df70\",\"needDigest\":\"7cd94dcc6e3e459f2fc9f142d3c601a5fb921ed023922fc08f54f66a9a7559ec\",\"policyDigest\":\"6a0b8d681875162bd7d8d74a803efd20ac3860d0df4a77a9089a9fa187a33e9c\",\"policyId\":\"urn:libre-ai:policy:origin-is-not-jurisdiction\",\"ruleResults\":[{\"reasonCode\":\"policy.fact_absent\",\"ruleId\":\"jurisdiction_required\",\"status\":\"unknown\"}],\"schemaVersion\":\"libre-ai.policy-evaluation.v2\",\"snapshotDigest\":\"4949a9bd6ee47f9610542a26f9e200b60e8910f7ff2964b2c2aebcf0a915b153\",\"snapshotId\":\"urn:libre-ai:snapshot:origin-is-not-jurisdiction\",\"tenantId\":\"ten_1234567890abcdef\",\"verdict\":\"indeterminate\"}"
+  }
+}

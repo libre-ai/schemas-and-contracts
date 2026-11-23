@@ -126,8 +126,12 @@ async function launch(
   let exit: number;
   try {
     try {
-      child.stdin.write(JSON.stringify({ kind, input, dir }));
-      // Not awaited: a child that never reads its stdin must not hold the runner.
+      // Neither call is awaited: a child that never reads its stdin must not hold the runner.
+      // Both can reject later (EPIPE once the child closed its stdin, seen on Linux), and an
+      // unhandled rejection would end the runner: the exit code and the output decide instead.
+      void Promise.resolve(child.stdin.write(JSON.stringify({ kind, input, dir }))).catch(
+        () => undefined,
+      );
       void Promise.resolve(child.stdin.end()).catch(() => undefined);
     } catch {
       // The child closed its stdin or already exited; its exit code and output decide.
