@@ -184,10 +184,16 @@ describe("policy-core-v2 golden vectors", () => {
       ],
       { stdout: "pipe", stderr: "pipe" },
     );
-    const output = await new Response(child.stdout).text();
+    const [output, errors] = await Promise.all([
+      new Response(child.stdout).text(),
+      new Response(child.stderr).text(),
+    ]);
     const code = await child.exited;
     const summary = output.trim().split("\n").at(-1);
     console.log(`runner over policy-core-v2: ${summary}`);
+    // The summary alone cannot explain an exit code that disagrees with it: show the runner's
+    // stderr whenever the code is not the expected one.
+    if (code !== 2) console.log(`runner exit code ${code}, stderr:\n${errors}`);
     const total = source.cases.length;
     expect(summary).toBe(
       `discovered=${total} total=${total} pass=0 fail=0 unavailable=${total} blocked=0`,
