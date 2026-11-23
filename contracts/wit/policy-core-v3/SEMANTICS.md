@@ -4,116 +4,439 @@ Status: **cataloged candidate**. It defines conformance but authorizes no implem
 until independent architecture, security and privacy approval
 (`docs/reviews/policy-core-v3-review.md`).
 
-This document is normative for `libre-ai:policy-core@3.0.0`. The key words **MUST**,
-**MUST NOT**, **SHOULD** and **MAY** have the meaning defined by RFC 2119.
+This document is normative for `libre-ai:policy-core@3.0.0`. It is complete: no other text
+is needed to read it. The JSON Schemas and `world.wit` define the accepted bytes and
+boundary; this document defines the only valid decoding, evaluation, ordering and hashing
+behavior. The key words **MUST**, **MUST NOT**, **SHOULD** and **MAY** have the meaning
+defined by RFC 2119. The last section, which is not normative, records how this text
+derives from the locked policy-core-v2 one.
 
-## Base text
+## 1. Scope and safety boundary
 
-policy-core-v3 is the locked policy-core-v2 world with a different decoder precedence.
-Its normative text is `contracts/wit/policy-core-v2/SEMANTICS.md`, the file whose SHA-256 is
-`3525078d3baeb452e146d766df2afb87a3836d69197a794ef82a641be1d055cc`, read with changes C1 to
-C4 below. That file is locked and never changes in place; where it and this document
-disagree, this document prevails. Every section of the base text that no change names
-applies to policy-core-v3 unchanged, in particular: the scope and the zero-import world
-(section 1), the input ceilings, the validation order and the error mapping (section 2,
-except its decoder paragraph), fact namespaces (3), operators (4), freshness (5), rule
-evaluation (6), verdict (7), origin and jurisdiction (8), and canonicalization and digests
-(9).
+`PolicyEvaluation` is an advisory eligibility statement for one approved policy,
+one sourced model snapshot, one declared need and one explicit instant. `eligible`
+means only “all rules are satisfied for these exact inputs”. It is not a ranking,
+purchase recommendation, authorization, approval or instruction to transact.
+The evaluator MUST NOT buy, select, deploy or approve anything and MUST NOT create
+or mutate a policy approval. It verifies approval separation and subject binding,
+but the authorized caller MUST establish the authenticity and current validity of
+`approval.reference` before invocation.
 
-The WIT boundary (`world.wit`) is the one of policy-core-v2 under package version `3.0.0`:
-same function, same arguments, same closed `error-code`. The payloads are unchanged: the
-inputs are `policy-definition.v2`, `model-snapshot.v2` and `policy-need.v2`, the output is
-`policy-evaluation.v2`.
+The world is pure. It receives no clock, network, storage, identity, authorization
+or randomness capability. The caller authorizes access before invoking it. The
+resolved WIT world exports one `api` interface and MUST have zero imports.
 
-## C1. Version
+`engineVersion` MUST be an immutable SemVer constant embedded in the qualified
+component, with major version 3. It MUST NOT be accepted from the caller or derived
+from any input. The reference vectors use `3.0.0`; changing the embedded version
+changes the evaluation content, ID and digest even when all policy inputs are
+unchanged. Given the same inputs, a policy-core-v3 evaluation has the verdict and rule
+results of a policy-core-v2 evaluation and differs from it by `engineVersion`, `id` and
+`digest`; at the WIT boundary nothing else distinguishes the two worlds.
 
-- The base text's `libre-ai:policy-core@2.0.0` reads `libre-ai:policy-core@3.0.0`.
-- The embedded `engineVersion` of a policy-core-v3 component is a SemVer constant whose
-  major is 3; the reference vectors use `3.0.0`. As the base text states (section 1), the
-  engine version enters the evaluation content, ID and digest: a v3 evaluation of the same
-  inputs has a different `id` and `digest` from the v2 one, and its verdict and rule results
-  are the same.
-- The digest labels of section 9 name payload schemas, not the world, and are unchanged:
-  `libre-ai.policy-definition.v2`, `libre-ai.model-snapshot.v2`, `libre-ai.policy-need.v2`
-  and `libre-ai.policy-evaluation.v2`.
-- The optional host label of `input-invalid` (section 2 table) reads
-  `input does not conform to policy-core-v3`. The public code stays `policy.input_invalid`.
+## 2. Accepted values and validation order
 
-## C2. Decoder precedence
+Inputs are UTF-8 JSON objects conforming respectively to:
 
-This change replaces the first sentence of the base text's decoder paragraph (section 2,
-"The decoder MUST reject a BOM, …"). The rest of that paragraph (numbers as binary64,
-schema-bounded to the safe-integer range, fractions allowed, `-0` equal to `0`, strings
-never folded) applies unchanged.
+1. `policy-definition.v2.schema.json` (maximum 8 MiB);
+2. `model-snapshot.v2.schema.json` (maximum 8 MiB);
+3. `policy-need.v2.schema.json` (maximum 8 MiB).
 
-The decoder reads each JSON input in these steps; the first step that refuses gives the
-defect:
+`evaluated-at` is exactly 20 UTF-8 bytes when valid and the successful JCS output is at most 2 MiB. A larger input or output returns `policy.input_invalid` without partial output.
 
-1. `bom` — the input starts with `EF BB BF`.
-2. `invalid-utf8` — the input is not UTF-8.
-3. `invalid-json` — the text is not one JSON text of the RFC 8259 grammar (sections 2 to 7:
-   values, objects, arrays, numbers, strings and their escapes, insignificant whitespace),
-   followed only by insignificant whitespace. This defect is given whatever defect of step 4
-   the text also holds, wherever that defect stands in the text: a semantic defect earlier
-   in the octets never takes precedence over a grammar defect later in them.
-4. On a text that conforms to that grammar, the first of these defects in document order:
-   - `duplicate-member` — a member name equal, once its escapes are decoded, to an earlier
-     name of the same object;
-   - `unpaired-surrogate` — an escape `\uD800` to `\uDFFF` that is not a high surrogate
-     immediately followed by an escaped low surrogate;
-   - `max-depth` — nesting deeper than 64 values;
-   - `invalid-number` — a number whose IEEE-754 binary64 value is not finite (`1e400`).
+Before any decode, the evaluator MUST check the byte lengths of all three JSON
+inputs and `evaluated-at`; a value above its ceiling returns `policy.input_invalid`.
+After producing successful JCS bytes, the evaluator MUST apply the output ceiling
+before returning them, with the same refusal. Exact-ceiling values pass preflight.
 
-Consequences, each fixed by a raw-input vector:
+Before implementation, `contracts/fixtures/policy-core-v2/resource-budgets.v1.json`
+fixes the qualification ceilings and exact/+1 boundary cases derived from these schemas. At most 1,000 rules
+and 1,000 facts in either namespace can produce 1,000,000 matched rule/occurrence
+evaluations. A policy set has at most 100 members; set lookup MUST use sorted binary
+search or an equivalent lookup with at most 7 scalar comparisons, never a linear
+100-member scan for every occurrence. Duplicate detection MUST use canonical hashes
+or ordered indexes, not pairwise deep comparison. Peak component linear memory,
+including WIT input/output copies, decoded values, indexes, canonicalization/hashing scratch and
+the result, MUST NOT exceed 256 MiB. Caller-owned buffers outside component linear
+memory are excluded. A schema-valid input within all byte/cardinality ceilings MUST
+NOT be refused merely because an implementation chose a less efficient algorithm;
+such a component fails qualification. Wall-clock and WASM fuel thresholds are set
+only in implementation Gate B against the exact component, runtime and documented
+reference hardware; they cannot alter these deterministic work ceilings.
 
-- the base text refused "non-JSON numbers" with the number defect; under policy-core-v3 a
-  number literal outside the RFC 8259 grammar (`01`, `+1`, `NaN`, `1.`) makes the text
-  non-grammatical and gives `invalid-json`; `invalid-number` is left to a grammatical
-  literal outside the finite binary64 domain;
-- `[1x]`, `"\ud800\uZZZZ"`, `{"value":"\uD800"}x` and `{"key":1,"key":2,}` give
-  `invalid-json`.
+The decoder MUST reject, with `policy.input_invalid` (validation step 2), every input that
+holds one of the following defects. Each defect has a class name, used only by the
+conformance diagnostic below:
 
-The defect is a conformance diagnostic. At the component boundary every defect of the four
-steps returns `input-invalid` (base text, validation step 2), as in policy-core-v2: for
-every input, the WIT result of policy-core-v3 differs from the one of policy-core-v2 only by
-the engine version of change C1.
+- `bom`: the input starts with the octets `EF BB BF`;
+- `invalid-utf8`: the input is not UTF-8;
+- `invalid-json`: the text is not one JSON text of the RFC 8259 grammar (its sections 2
+  to 7: values, objects, arrays, numbers, strings and their escapes, insignificant
+  whitespace) followed only by insignificant whitespace; a number literal outside that
+  grammar (`01`, `+1`, `NaN`, `1.`) is such a defect;
+- `duplicate-member`: a member name equal, once its escapes are decoded, to an earlier
+  name of the same object;
+- `unpaired-surrogate`: an escape `\uD800` to `\uDFFF` that is not part of a
+  high-then-low escaped pair;
+- `max-depth`: a value whose depth exceeds 64, the `decoderQualification.maximumJsonDepth`
+  of the resource budgets;
+- `invalid-number`: a grammatical number whose IEEE-754 binary64 value is not finite
+  (`1e400`).
 
-Cost. Step 3 can be decided by validating the whole grammar before classifying (two passes
-over the input) or in one pass that records the first semantic defect and returns it only if
-the text ends grammatical. Both conform; the reference oracle
-(`tools/quality/policy-core-raw-inputs.ts`, `decodeStrictJsonGrammarFirst`) uses two passes.
+The top-level value has depth 0. An element of an array and the value of an object member
+have the depth of that array or object plus 1, scalars included. Thus 64 nested arrays
+around `0` are accepted and 65 are refused, while 65 nested empty arrays are accepted: the
+innermost has depth 64 and holds no value. This is the count that the policy-core-v2
+budget test executes (`crates/sdk-rs/tests/policy_core_vectors.rs`), so policy-core-v3
+accepts the nesting that test accepts.
 
-### Difference from the candidate `canonicalize` semantics
+Every JSON number is interpreted as an IEEE-754 binary64 value and is schema-bounded to the
+inclusive safe-integer range `[-9007199254740991, 9007199254740991]`; fractional values in
+that range are allowed. `-0` and `0` are equal. Strings are never case-folded, trimmed or
+Unicode-normalized.
 
-`contracts/wit/signalement-policy-receipt-v1/SEMANTICS.md` (its `canonicalize` section,
-step 3) gives "the first defect met" left to right among its codes. On
-`{"value":"\uD800"}x` that semantics gives `canonicalize.lone_surrogate` where
-policy-core-v3 gives `invalid-json`. The two are different worlds with different code sets;
-neither text reinterprets the other, and this record changes neither.
+A component MAY detect these defects in any order and MAY stop at the first defect it
+meets, `max-depth` included: every defect returns the same `input-invalid` variant, so the
+order has no effect at the WIT boundary. The conformance of a component is judged on the
+WIT variant only, and no defect class crosses the boundary.
 
-## C3. Conformance vectors
+The class of a refused input is a conformance diagnostic of the reference oracle
+(`tools/quality/policy-core-raw-inputs.ts`, `decodeStrictJsonGrammarFirst`, run at the
+budget depth) and of the `defect` field of the raw-input vectors; it binds no component.
+The oracle gives the class by this precedence:
 
-This change replaces section 10 of the base text.
+1. `bom`, then `invalid-utf8`;
+2. `invalid-json`, whatever other defect the text also holds and wherever that defect
+   stands: a defect earlier in the octets never takes precedence over a grammar defect
+   later in them;
+3. on a grammatical text, the first other defect in document order. A defect stands at
+   the opening quotation mark of the repeated name (`duplicate-member`), at the backslash
+   of the escape (`unpaired-surrogate`), and at the first octet of the value (`max-depth`,
+   `invalid-number`). At the same octet, the earlier class of the defect list above is
+   given: 65 nested arrays around `1e400` give `max-depth`.
 
-- `contracts/fixtures/policy-core-v2/operators.json` remains the atomic operator/type
-  corpus: section 4 is unchanged.
-- `contracts/fixtures/policy-core-v2/resource-budgets.v1.json` remains the qualification
-  ceilings: no ceiling changes.
-- `contracts/fixtures/policy-core-v3/golden.json` holds the twenty cases of the
-  policy-core-v2 golden file with the same inputs, verdicts, rule results and error
-  variants; each expected evaluation carries `engineVersion` `3.0.0` and the `id` and
-  `digest` recomputed by section 9.
-- `contracts/fixtures/policy-core-v3/raw-inputs/manifest.json` holds the decoder refusals:
-  the nine policy-core-v2 raw inputs, byte-identical (`carriedFrom`), the four of them that
-  are not grammatical now filed `invalid-json`, and the precedence cases of change C2.
+A component MUST stay within the peak component linear memory budget
+(`memoryQualification.peakComponentLinearMemoryBytes`, 256 MiB) on every input within the
+8 MiB input ceilings, refused inputs included. Deciding the whole grammar before any other
+defect is not required of a component and does not exempt it from that budget. Measurement
+dated 2026-11-23, from the security review (`docs/reviews/policy-core-v3-review.md`): on
+8,388,608 octets of `[`, the reference oracle, which validates the grammar in full before
+classifying, peaked at 626 MiB resident, against 24 MiB for the policy-core-v2
+first-defect decoder, which stops at depth 65. These are process measurements of the
+oracle under Bun, not of a component.
 
-An implementation conforms only if every vector and budget matches exactly.
-Implementations MUST NOT rewrite expected vectors from their own output.
+Every policy and fact source URI MUST be a sanitized public HTTPS citation with
+a DNS-shaped host containing a public-style alphabetic top-level label, no IP
+literal, `localhost`, userinfo, query, fragment or percent encoding, and at most
+2,048 characters. It MUST NOT contain
+credentials, tokens, email addresses or other personal data. `proposedBy` is an
+opaque `usr_*` or `svc_*` principal ID; `approval.approverId` is an opaque `usr_*`
+ID and never a name, email or external account identifier. `modelId` is an opaque
+`mdl_*` identifier. String facts are bounded machine tokens without whitespace or
+`@`; fact names/values and need facts MUST describe models and organizational
+requirements only. They MUST NOT contain natural-person identifiers, free-form
+personal content, credentials or secrets. The authorized caller owns identity mapping, data
+minimization and source sanitization before invocation.
 
-## C4. Points left to review
+`evaluated-at`, every snapshot `source.retrievedAt` and every emitted `evaluatedAt`
+MUST be a real Gregorian instant in the exact UTC-seconds form
+`YYYY-MM-DDTHH:mm:ssZ`. Leap seconds and fractional seconds are rejected.
 
-- The base text does not say how nesting depth is counted (whether the top-level value has
-  depth 0 or 1); this change keeps its wording, "deeper than 64 values", and no raw-input
-  vector fixes the boundary, as in policy-core-v2.
-- Whether a defect class should ever cross the component boundary is unchanged: it does
-  not.
+Validation occurs before rule evaluation, in this order:
+
+1. apply input byte preflight, otherwise `policy.input_invalid`;
+2. decode with depth at most 64 and validate all three schemas, otherwise `policy.input_invalid`;
+3. validate `evaluated-at`, otherwise `policy.evaluated_at_invalid`;
+4. reject repeated rule IDs, otherwise `policy.rule_id_duplicate`;
+5. require `approval.actorKind = human` and `approval.approverId != proposedBy`, otherwise
+   `policy.approval_invalid`;
+6. verify the three input digests and `approval.subjectDigest`, otherwise
+   `policy.digest_mismatch`;
+7. require exact equality of policy, snapshot and need `tenantId`, otherwise
+   `policy.tenant_mismatch`.
+
+A failure returns only the closed WIT `error-code`, never a `PolicyEvaluation` or
+free-form string. The host maps variants to the public code and optional static
+label below; no input value, parser diagnostic, tenant, fact, reviewer identity or
+library error crosses the component boundary.
+
+| WIT variant | Public code | Optional host label |
+| --- | --- | --- |
+| `input-invalid` | `policy.input_invalid` | `input does not conform to policy-core-v3` |
+| `evaluated-at-invalid` | `policy.evaluated_at_invalid` | `evaluated-at is not canonical UTC seconds` |
+| `rule-id-duplicate` | `policy.rule_id_duplicate` | `policy contains duplicate rule ids` |
+| `approval-invalid` | `policy.approval_invalid` | `policy approval separation is invalid` |
+| `digest-mismatch` | `policy.digest_mismatch` | `input digest does not match canonical content` |
+| `tenant-mismatch` | `policy.tenant_mismatch` | `policy, snapshot and need tenants differ` |
+
+Every HTTP boundary that exposes a policy-core-v3 result exposes only a stable
+`error.code` and opaque `requestId`. It MUST NOT serialize the optional host label, a
+library error or any other free-form message. A UI MAY map the code to a local static
+translation after receiving the refusal.
+
+## 3. Fact namespaces, cardinality and duplicates
+
+A rule resolves its `fact` by exact name only:
+
+- `need.*` names are looked up only in `PolicyNeed.facts`;
+- `model.*` names are looked up only in `ModelSnapshot.facts`.
+
+There is no fallback, alias, path traversal, case folding or derived fact. A name
+may occur zero, one or several times. Exact duplicate fact objects are rejected by
+the schemas (`uniqueItems: true`). Equal name/value pairs with distinct snapshot
+sources are not exact duplicates and remain distinct occurrences.
+
+- zero occurrences produce `unknown / policy.fact_absent`;
+- one occurrence is evaluated directly;
+- several occurrences are all evaluated (universal, not existential semantics),
+  then reduced with `failed > unknown > satisfied`.
+
+Thus no implementation may cherry-pick a satisfying occurrence. Input array order
+never affects a rule status.
+
+## 4. Operator and type matrix
+
+A fact occurrence is always one scalar. Arrays are policy sets and are legal only
+as the right-hand value of `in` and `not-in`.
+
+| operator | rule `value` | occurrence | predicate |
+| --- | --- | --- | --- |
+| `equals` | string, number or boolean | same scalar type | `occurrence = value` |
+| `not-equals` | string, number or boolean | same scalar type | `occurrence ≠ value` |
+| `in` | non-empty homogeneous set of strings, numbers or booleans | same type as set items | some set item equals occurrence |
+| `not-in` | non-empty homogeneous set of strings, numbers or booleans | same type as set items | no set item equals occurrence |
+| `at-least` | number | number | `occurrence ≥ value` |
+| `at-most` | number | number | `occurrence ≤ value` |
+
+String equality is exact Unicode scalar-sequence equality. Boolean equality is
+exact. Number equality and ordering use IEEE-754 binary64 comparisons; schemas
+exclude NaN and infinities. Set order has no meaning. No coercion is permitted:
+`"1"`, `1` and `true` are three different types. An occurrence with a disallowed
+type is `unknown / policy.fact_type_mismatch`; negated operators MUST NOT turn a
+type mismatch into satisfaction. A rule with a disallowed operator/value
+combination is schema-invalid and returns `policy.input_invalid`.
+
+## 5. Freshness
+
+`maxSourceAgeDays` is legal only for a `model.*` rule. For each matched model fact,
+let:
+
+```text
+ageSeconds = instant(evaluated-at) - instant(fact.source.retrievedAt)
+maximumAgeSeconds = maxSourceAgeDays × 86400
+```
+
+The multiplication is exact integer arithmetic. The occurrence is fresh iff
+`0 ≤ ageSeconds ≤ maximumAgeSeconds`; the upper boundary is inclusive.
+
+- `ageSeconds < 0` gives `unknown / policy.source_from_future`, whether or not a
+  maximum age is configured;
+- if a maximum is configured and `ageSeconds > maximumAgeSeconds`, the occurrence
+  gives `unknown / policy.snapshot_stale`;
+- without a maximum, any non-future source age is accepted.
+
+Freshness is checked before type and operator evaluation. Need facts have no source
+age. The policy rule's own source date and snapshot `capturedAt` are not substituted
+for the matched fact's `retrievedAt`.
+
+## 6. Occurrence and rule evaluation
+
+For each occurrence, in order:
+
+1. apply the freshness rules when it is a model fact;
+2. require the operator's occurrence type;
+3. evaluate the predicate in section 4;
+4. emit `satisfied / policy.rule_satisfied` when true, otherwise
+   `failed / policy.rule_failed`.
+
+A rule reduces its occurrence outcomes by status priority:
+
+1. any `failed` → `failed / policy.rule_failed`;
+2. otherwise any `unknown` → `unknown`, choosing the first present reason in this
+   fixed order: `policy.source_from_future`, `policy.snapshot_stale`,
+   `policy.fact_type_mismatch`, `policy.fact_absent`;
+3. otherwise → `satisfied / policy.rule_satisfied`.
+
+Exactly one `ruleResult` is emitted per policy rule. `ruleResults` MUST be sorted by
+ascending raw ASCII `rule.id`; IDs are unique and schema-limited to ASCII. Policy
+rule order, fact order and set-item order MUST NOT affect this output order.
+
+## 7. Verdict
+
+After every rule has a result:
+
+1. if any result is `failed`, verdict is `ineligible`;
+2. otherwise, if any result is `unknown` and at least one corresponding rule has
+   `unknown: ineligible`, verdict is `ineligible`;
+3. otherwise, if any result is `unknown`, verdict is `indeterminate`;
+4. otherwise every result is `satisfied` and verdict is `eligible`.
+
+The result status remains `unknown` when its rule maps unknown to `ineligible`; the
+verdict records the disposition without falsifying the evidence state. Therefore:
+
+- `eligible` has only satisfied results;
+- `indeterminate` has at least one unknown result and no failed result;
+- `ineligible` has at least one failed result, or at least one unknown result whose
+  policy disposition is `ineligible`.
+
+A failed rule has priority over all unknown rules. Unknown can never yield
+`eligible`, and no UI or caller may override it to `eligible`.
+
+## 8. Origin is not jurisdiction
+
+The evaluator MUST NOT derive, copy or approximate a jurisdiction from model,
+provider or company origin; hosting country; headquarters; source URI; model ID;
+or any other fact. In particular, `model.provider.origin` does not satisfy a rule
+on `model.hosting.jurisdiction`. If the exact jurisdiction fact is absent, the rule
+is unknown. If origin and jurisdiction are both present and differ, each remains
+an independent fact and only the exact rule name is read.
+
+A source adapter that labels origin-derived data as jurisdiction violates this
+contract and MUST be refused upstream as `policy.origin_jurisdiction_conflated`.
+The pure evaluator itself performs no inference and cannot repair provenance.
+
+## 9. Canonicalization and digests
+
+`JCS(x)` is RFC 8785 JSON Canonicalization Scheme over the validated IEEE-754 value.
+`H(label, x)` is lowercase hexadecimal SHA-256 over these exact bytes:
+
+```text
+UTF8(label) || 0x00 || JCS(normalize(x))
+```
+
+Normalization changes only arrays declared unordered by this section:
+
+- policy `rules`: sort by ascending rule `id`;
+- `in`/`not-in` rule sets: sort by ascending JCS scalar bytes;
+- need facts: sort by `(name, type-rank, JCS(value))`;
+- snapshot facts: sort by `(name, type-rank, JCS(value), JCS(source))`;
+- evaluation `ruleResults`: already sorted by rule ID.
+
+The type rank is `boolean = 0`, `number = 1`, `string = 2`. All comparisons above
+are bytewise unsigned lexicographic comparisons. No other array is reordered.
+
+Input digests are:
+
+- policy: `H("libre-ai.policy-definition.v2", {schemaVersion, id, tenantId,
+  version, status, proposedBy, rules})`; both `policy.digest` and
+  `policy.approval.subjectDigest` MUST equal it;
+- snapshot: `H("libre-ai.model-snapshot.v2", snapshot without digest)`;
+- need: `H("libre-ai.policy-need.v2", need without digest)`.
+
+The digest labels name payload schemas, not the world version: policy-core-v3 keeps the
+payloads and labels of policy-core-v2, `libre-ai.policy-evaluation.v2` below included.
+
+After verdict and sorted rule results are known, construct the unsigned evaluation
+with these fields and no others, in any object-member order:
+
+```text
+schemaVersion, tenantId, policyId, policyDigest, snapshotId, snapshotDigest,
+needDigest, engineVersion, verdict, ruleResults, evaluatedAt
+```
+
+Then:
+
+```text
+evaluationDigest = H("libre-ai.policy-evaluation.v2", unsignedEvaluation)
+id = "urn:libre-ai:evaluation:" || evaluationDigest
+digest = evaluationDigest
+```
+
+The final object is the unsigned evaluation plus `id` and `digest`. The digest does
+not include either field, avoiding recursion; the ID is content-addressed by the
+same digest. Given the same semantic inputs, engine version and evaluated instant,
+TypeScript and Rust MUST emit byte-identical JCS output, ID, digest, verdict and
+ordered trace.
+
+## 10. Conformance vectors
+
+- `contracts/fixtures/policy-core-v2/operators.json` is the atomic operator/type
+  corpus;
+- `contracts/fixtures/policy-core-v3/golden.json` contains complete cross-runtime
+  evaluations under engine version `3.0.0` and closed WIT `error-code` vectors;
+- `contracts/fixtures/policy-core-v2/resource-budgets.v1.json` fixes byte,
+  cardinality, semantic-work, decoder-depth and peak-memory qualification ceilings;
+- `contracts/fixtures/policy-core-v3/raw-inputs/manifest.json` contains decoder vectors:
+  refused inputs, each with its WIT variant (`expectedErrors`) and its oracle class
+  (`defect`), and accepted inputs (`acceptedCases`) that fix the depth bound.
+
+A component conforms only if it returns the expected result of every golden vector,
+returns the expected WIT variant for every refused raw input and stays within every
+budget. The `defect` of a raw-input vector and the accepted raw inputs bind the reference
+oracle only (section 2). Implementations MUST NOT rewrite expected vectors from their own
+output.
+
+## Changes from policy-core-v2 (not normative)
+
+This text was derived from `contracts/wit/policy-core-v2/SEMANTICS.md`, the locked file
+whose SHA-256 is
+`3525078d3baeb452e146d766df2afb87a3836d69197a794ef82a641be1d055cc`, by the four changes
+below. Every block of a numbered section of that file that no change names is kept here
+verbatim. `tools/quality/policy-core-v3.test.ts` checks it: the policy-core-v2 blocks
+missing from this text are exactly the ones whose first line is quoted below, and the
+sections that differ are exactly the ones named. The check reads the policy-core-v2 file;
+the normative text above does not depend on it.
+
+### C1. Version
+
+Sections: 1, 2, 9.
+
+The world is `libre-ai:policy-core@3.0.0` and the engine version has major 3 (section 1).
+The host label of `input-invalid` names policy-core-v3, and the HTTP boundary sentence binds
+every HTTP boundary that exposes a policy-core-v3 result, where the policy-core-v2 text
+named "the v2 HTTP boundary" (section 2). Section 9 now says that its digest labels name
+payload schemas and are unchanged. Replaced policy-core-v2 blocks:
+
+> `engineVersion` MUST be an immutable SemVer constant embedded in the qualified
+> | WIT variant | Public code | Optional host label |
+> The v2 HTTP boundary exposes only a stable `error.code` and opaque `requestId`.
+
+### C2. Decoder precedence and component freedom
+
+Sections: 2.
+
+policy-core-v2 lists the decoder defects in one sentence, files a number literal outside
+the RFC 8259 grammar under its number defect, and fixes no precedence. policy-core-v3
+files such a text under `invalid-json`, whatever semantic defect it also holds, in the
+reference oracle; it lets a component stop at the first defect, since every defect returns
+`input-invalid`, and it binds the component to the memory budget on every input within the
+input ceilings. Owner arbitration of 2026-11-23, recorded in
+`docs/adr/2026-11-23-policy-core-v3.md`: the classes are a diagnostic of the oracle.
+Replaced policy-core-v2 block:
+
+> The decoder MUST reject a BOM, invalid UTF-8, duplicate JSON object member names,
+
+The candidate `canonicalize` semantics of `signalement-policy-receipt-v1` (its
+`canonicalize` section, step 3) gives "the first defect met" left to right among its own
+codes. On `{"value":"\uD800"}x` it gives `canonicalize.lone_surrogate` where the
+policy-core-v3 oracle gives `invalid-json`. The two are different worlds with different
+code sets; neither text reinterprets the other, and this record changes neither.
+
+### C3. Conformance vectors
+
+Sections: 10.
+
+The golden file and the raw-input manifest of policy-core-v3 replace those of
+policy-core-v2; the operator corpus and the resource budgets are kept. A component is judged
+on WIT variants and budgets, never on the oracle class. Replaced policy-core-v2 blocks:
+
+> - `contracts/fixtures/policy-core-v2/operators.json` is the atomic operator/type
+> An implementation conforms only if every vector and budget matches exactly.
+
+### C4. Nesting depth and equal positions
+
+Sections: 2.
+
+policy-core-v2 says "nesting deeper than 64 values" without saying how depth is counted.
+policy-core-v3 counts the top-level value as depth 0 and refuses a value deeper than 64,
+the count of the policy-core-v2 budget test, and states where each defect stands and that,
+at the same octet, the earlier class of the list is given. Raw-input vectors fix both
+sides of the bound.
+
+Two other readers of this repository count differently, and neither qualifies
+policy-core-v3: `crates/sdk-rs/src/strict_json.rs` gives the top-level value depth 1 with a
+maximum of 64 (the rule of the candidate `signalement-policy-receipt-v1` semantics) and so
+refuses 64 nested arrays around `0`; `tools/quality/strict-json-differential.test.ts` sets
+`TYPESCRIPT_MAX_DEPTH = 63` to align `parseStrictJson` with it. This change modifies
+neither. This change replaces no further policy-core-v2 block; its text is in the decoder
+blocks of change C2.

@@ -10,6 +10,7 @@ import {
   verifyPolicyCoreRawInputVectors,
 } from "./policy-core-raw-inputs";
 import {
+  POLICY_CORE_V2_BUDGETS_PATH,
   POLICY_CORE_V2_GOLDEN_PATH,
   POLICY_CORE_V3_ENGINE_VERSION,
   POLICY_CORE_V3_GOLDEN_PATH,
@@ -91,16 +92,69 @@ describe("policy-core-v3 decoder precedence (change C2)", () => {
   });
 });
 
+describe("policy-core-v3 nesting depth (section 2, depth paragraph)", () => {
+  // The top-level value has depth 0; a value inside an array or an object has the depth of
+  // that container plus 1, scalars included; a value deeper than 64 is max-depth.
+  const nest = (open: string, inner: string, close: string, count: number, after = "") =>
+    bytesOf(`${open.repeat(count)}${inner}${close.repeat(count)}${after}`);
+  const cases: [string, Uint8Array, RawDefect | "ok"][] = [
+    ["a scalar at depth 64", nest("[", "0", "]", 64), "ok"],
+    ["a scalar at depth 65", nest("[", "0", "]", 65), "max-depth"],
+    ["an empty array at depth 64", nest("[", "", "]", 65), "ok"],
+    ["an empty array at depth 65", nest("[", "", "]", 66), "max-depth"],
+    ["a member value at depth 64", nest('{"a":', "0", "}", 64), "ok"],
+    ["a member value at depth 65", nest('{"a":', "0", "}", 65), "max-depth"],
+    ["a grammar defect after a value at depth 65", nest("[", "0", "]", 65, "x"), "invalid-json"],
+    ["depth 65 before a lone surrogate", nest("[", '"\\uD800"', "]", 65), "max-depth"],
+    ["depth 65 on a non-finite number: same octet", nest("[", "1e400", "]", 65), "max-depth"],
+    ["a non-finite number at depth 64", nest("[", "1e400", "]", 64), "invalid-number"],
+  ];
+
+  for (const [label, bytes, expected] of cases) {
+    test(`${label} gives ${expected}`, async () => {
+      const depth = await maximumJsonDepth();
+      expect(defectOf((input) => decodeStrictJsonGrammarFirst(input, depth), bytes)).toBe(expected);
+    });
+  }
+});
+
+async function maximumJsonDepth(): Promise<number> {
+  const budgets = (await Bun.file(POLICY_CORE_V2_BUDGETS_PATH).json()) as JsonRecord;
+  const qualification = budgets.decoderQualification as JsonRecord;
+  return qualification.maximumJsonDepth as number;
+}
+
 describe("policy-core-v3 raw-input vectors", () => {
   test("every case is refused with its declared class, every v2 case is carried", async () => {
     const result = await verifyPolicyCoreV3RawInputVectors(POLICY_CORE_V3_RAW_INPUT_ROOT);
     console.log(
       `policy-core-v3 raw inputs: ${result.inspected} case(s) inspected, ` +
-        `${result.carriedFromV2} carried from policy-core-v2`,
+        `${result.carriedFromV2} carried from policy-core-v2, ${result.accepted} accepted`,
     );
     expect(result.failures).toEqual([]);
     expect(result.carriedFromV2).toBe(9);
     expect(result.inspected).toBeGreaterThan(result.carriedFromV2);
+    expect(result.accepted).toBe(3);
+  });
+
+  test("the depth vectors fail an oracle that counts the top-level value as depth 1", async () => {
+    const depth = await maximumJsonDepth();
+    const shifted = await verifyPolicyCoreV3RawInputVectors(
+      POLICY_CORE_V3_RAW_INPUT_ROOT,
+      undefined,
+      depth - 1,
+    );
+    expect(shifted.failures.some((failure) => failure.includes("accepted case refused"))).toBe(
+      true,
+    );
+    const unbounded = await verifyPolicyCoreV3RawInputVectors(
+      POLICY_CORE_V3_RAW_INPUT_ROOT,
+      undefined,
+      Number.MAX_SAFE_INTEGER,
+    );
+    expect(unbounded.failures.some((failure) => failure.includes("accepted forbidden input"))).toBe(
+      true,
+    );
   });
 
   test("an absent manifest is a failure, never an empty set", async () => {
@@ -115,12 +169,86 @@ describe("policy-core-v3 raw-input vectors", () => {
   });
 });
 
-describe("policy-core-v3 base text", () => {
-  test("the semantics names the exact bytes of the locked policy-core-v2 text it amends", async () => {
-    const v3Semantics = await Bun.file("contracts/wit/policy-core-v3/SEMANTICS.md").text();
-    const v2Bytes = await Bun.file("contracts/wit/policy-core-v2/SEMANTICS.md").bytes();
+const V2_SEMANTICS_PATH = "contracts/wit/policy-core-v2/SEMANTICS.md";
+const V3_SEMANTICS_PATH = "contracts/wit/policy-core-v3/SEMANTICS.md";
+const CHANGES_HEADING = "Changes from policy-core-v2 (not normative)";
+
+/** Numbered sections (`## 1. …`) and the blank-line-separated blocks of their bodies. */
+function numberedSections(text: string): Map<string, string[]> {
+  const sections = new Map<string, string[]>();
+  for (const part of text.split(/^## /m).slice(1)) {
+    const newline = part.indexOf("\n");
+    const heading = part.slice(0, newline).trim();
+    if (!/^\d+\. /.test(heading)) continue;
+    const blocks = part
+      .slice(newline + 1)
+      .split(/\n[ \t]*\n/)
+      .map((block) => block.trim())
+      .filter((block) => block.length > 0);
+    sections.set(heading, blocks);
+  }
+  return sections;
+}
+
+interface DeclaredChanges {
+  sections: Set<string>;
+  replacedFirstLines: string[];
+}
+
+/** The change record: per change, `Sections: 1, 2.` and the first line of each replaced v2 block. */
+function declaredChanges(text: string): DeclaredChanges {
+  const start = text.indexOf(`## ${CHANGES_HEADING}`);
+  if (start < 0) throw new Error("the semantics has no change record");
+  const record = text.slice(start);
+  const sections = new Set<string>();
+  for (const match of record.matchAll(/^Sections: ([0-9, ]+)\.$/gm))
+    for (const number of (match[1] as string).split(",")) sections.add(number.trim());
+  const replacedFirstLines = [...record.matchAll(/^> (.+)$/gm)].map((match) => match[1] as string);
+  return { sections, replacedFirstLines };
+}
+
+describe("policy-core-v3 consolidated semantics", () => {
+  test("the change record names the exact bytes of the policy-core-v2 text it derives from", async () => {
+    const v3Semantics = await Bun.file(V3_SEMANTICS_PATH).text();
+    const v2Bytes = await Bun.file(V2_SEMANTICS_PATH).bytes();
     const pinned = /whose SHA-256 is\s+`([0-9a-f]{64})`/.exec(v3Semantics)?.[1];
     expect(pinned).toBe(new Bun.CryptoHasher("sha256").update(v2Bytes).digest("hex"));
+  });
+
+  test("policy-core-v2 plus the declared changes C1 to C4 is the consolidated text", async () => {
+    const v2 = numberedSections(await Bun.file(V2_SEMANTICS_PATH).text());
+    const v3Text = await Bun.file(V3_SEMANTICS_PATH).text();
+    const v3 = numberedSections(v3Text);
+    expect([...v3.keys()]).toEqual([...v2.keys()]);
+    expect(v2.size).toBe(10);
+
+    const removedFirstLines: string[] = [];
+    const touched = new Set<string>();
+    let unchangedBlocks = 0;
+    for (const [heading, v2Blocks] of v2) {
+      const v3Blocks = v3.get(heading) ?? [];
+      const removed = v2Blocks.filter((block) => !v3Blocks.includes(block));
+      const added = v3Blocks.filter((block) => !v2Blocks.includes(block));
+      unchangedBlocks += v2Blocks.length - removed.length;
+      for (const block of removed) removedFirstLines.push(block.split("\n")[0] as string);
+      if (removed.length > 0 || added.length > 0) touched.add(heading.split(".")[0] as string);
+    }
+    const declared = declaredChanges(v3Text);
+    console.log(
+      `policy-core-v3 semantics: ${unchangedBlocks} v2 block(s) kept verbatim, ` +
+        `${removedFirstLines.length} replaced, sections touched: ${[...touched].join(", ")}`,
+    );
+    expect([...declared.replacedFirstLines].sort()).toEqual([...removedFirstLines].sort());
+    expect([...declared.sections].sort()).toEqual([...touched].sort());
+  });
+
+  test("no sentence of the consolidated text binds the policy-core-v2 world", async () => {
+    const v3Text = await Bun.file(V3_SEMANTICS_PATH).text();
+    const normative = v3Text.slice(0, v3Text.indexOf(`## ${CHANGES_HEADING}`));
+    expect(normative).not.toContain("policy-core@2.0.0");
+    expect(normative).not.toContain("v2 HTTP boundary");
+    expect(normative).not.toContain("conform to policy-core-v2");
+    expect(normative).not.toContain("matches exactly");
   });
 });
 

@@ -374,6 +374,318 @@ fn policy_core_raw_inputs_are_rejected_before_schema_validation() {
     .expect("valid strict JSON control");
 }
 
+// policy-core-v3 (contracts/wit/policy-core-v3/SEMANTICS.md, section 2): a second instrument
+// for the raw-input classes, independent of the TypeScript oracle and of JSON.parse. The
+// grammar is judged by a hand-written iterative recognizer of RFC 8259 sections 2 to 7, then
+// the semantic classes by the policy-core-v2 test seed above. The v2 reader and its test are
+// left unchanged.
+
+#[derive(Clone, Copy)]
+enum JsonContainer {
+    Array,
+    Object,
+}
+
+fn skip_json_whitespace(text: &[u8], mut position: usize) -> usize {
+    while matches!(text.get(position), Some(b' ' | b'\t' | b'\n' | b'\r')) {
+        position += 1;
+    }
+    position
+}
+
+fn json_string_end(text: &[u8], start: usize) -> Result<usize, usize> {
+    let mut position = start + 1;
+    loop {
+        match text.get(position) {
+            None => return Err(position),
+            Some(b'"') => return Ok(position + 1),
+            Some(b'\\') => match text.get(position + 1) {
+                Some(b'"' | b'\\' | b'/' | b'b' | b'f' | b'n' | b'r' | b't') => position += 2,
+                Some(b'u') => {
+                    let digits = text.get(position + 2..position + 6).ok_or(position)?;
+                    if !digits.iter().all(u8::is_ascii_hexdigit) {
+                        return Err(position);
+                    }
+                    position += 6;
+                }
+                _ => return Err(position),
+            },
+            Some(byte) if *byte < 0x20 => return Err(position),
+            Some(_) => position += 1,
+        }
+    }
+}
+
+fn json_digits_end(text: &[u8], mut position: usize) -> Result<usize, usize> {
+    if !text.get(position).is_some_and(u8::is_ascii_digit) {
+        return Err(position);
+    }
+    while text.get(position).is_some_and(u8::is_ascii_digit) {
+        position += 1;
+    }
+    Ok(position)
+}
+
+fn json_number_end(text: &[u8], start: usize) -> Result<usize, usize> {
+    let mut position = start;
+    if text.get(position) == Some(&b'-') {
+        position += 1;
+    }
+    position = match text.get(position) {
+        Some(b'0') => position + 1,
+        Some(b'1'..=b'9') => json_digits_end(text, position)?,
+        _ => return Err(position),
+    };
+    if text.get(position) == Some(&b'.') {
+        position = json_digits_end(text, position + 1)?;
+    }
+    if matches!(text.get(position), Some(b'e' | b'E')) {
+        position += 1;
+        if matches!(text.get(position), Some(b'+' | b'-')) {
+            position += 1;
+        }
+        position = json_digits_end(text, position)?;
+    }
+    Ok(position)
+}
+
+/// A member name, its colon and the whitespace before the member value.
+fn json_member_name_end(text: &[u8], position: usize) -> Result<usize, usize> {
+    if text.get(position) != Some(&b'"') {
+        return Err(position);
+    }
+    let position = skip_json_whitespace(text, json_string_end(text, position)?);
+    if text.get(position) != Some(&b':') {
+        return Err(position);
+    }
+    Ok(skip_json_whitespace(text, position + 1))
+}
+
+/// `Ok` when `text` is one RFC 8259 JSON text, otherwise the offset of the first grammar
+/// error. Duplicate names, lone surrogate escapes, depth and number range are not grammar.
+/// Iterative, so that its stack does not grow with the nesting of the input.
+fn rfc_8259_grammar(text: &[u8]) -> Result<(), usize> {
+    let mut stack = Vec::new();
+    let mut position = skip_json_whitespace(text, 0);
+    loop {
+        match text.get(position) {
+            Some(b'[') => {
+                position = skip_json_whitespace(text, position + 1);
+                if text.get(position) == Some(&b']') {
+                    position += 1;
+                } else {
+                    stack.push(JsonContainer::Array);
+                    continue;
+                }
+            }
+            Some(b'{') => {
+                position = skip_json_whitespace(text, position + 1);
+                if text.get(position) == Some(&b'}') {
+                    position += 1;
+                } else {
+                    stack.push(JsonContainer::Object);
+                    position = json_member_name_end(text, position)?;
+                    continue;
+                }
+            }
+            Some(b'"') => position = json_string_end(text, position)?,
+            Some(b'-' | b'0'..=b'9') => position = json_number_end(text, position)?,
+            Some(b't' | b'f' | b'n') => {
+                let literal = [&b"true"[..], b"false", b"null"]
+                    .into_iter()
+                    .find(|literal| text[position..].starts_with(literal))
+                    .ok_or(position)?;
+                position += literal.len();
+            }
+            _ => return Err(position),
+        }
+        // A value is complete: close containers until the next value is due.
+        loop {
+            position = skip_json_whitespace(text, position);
+            match (stack.last(), text.get(position)) {
+                (None, None) => return Ok(()),
+                (None, Some(_)) => return Err(position),
+                (Some(JsonContainer::Array), Some(b',')) => {
+                    position = skip_json_whitespace(text, position + 1);
+                    break;
+                }
+                (Some(JsonContainer::Object), Some(b',')) => {
+                    position =
+                        json_member_name_end(text, skip_json_whitespace(text, position + 1))?;
+                    break;
+                }
+                (Some(JsonContainer::Array), Some(b']'))
+                | (Some(JsonContainer::Object), Some(b'}')) => {
+                    stack.pop();
+                    position += 1;
+                }
+                _ => return Err(position),
+            }
+        }
+    }
+}
+
+/// The policy-core-v3 decoder classes (section 2, precedence of the reference oracle).
+fn policy_core_v3_defect(bytes: &[u8], maximum_depth: usize) -> Option<&'static str> {
+    if bytes.starts_with(&[0xef, 0xbb, 0xbf]) {
+        return Some("bom");
+    }
+    let Ok(text) = std::str::from_utf8(bytes) else {
+        return Some("invalid-utf8");
+    };
+    if rfc_8259_grammar(text.as_bytes()).is_err() {
+        return Some("invalid-json");
+    }
+    let mut deserializer = serde_json::Deserializer::from_str(text);
+    let semantic = StrictJsonSeed {
+        depth: 0,
+        maximum_depth,
+    }
+    .deserialize(&mut deserializer)
+    .and_then(|()| deserializer.end());
+    let message = semantic.err()?.to_string();
+    // On a grammatical text serde_json can only refuse for these reasons; anything else is
+    // reported as is and fails the test.
+    Some(if message.contains("duplicate JSON object member") {
+        "duplicate-member"
+    } else if message.contains("maximum JSON depth exceeded") {
+        "max-depth"
+    } else if message.contains("surrogate") || message.contains("hex escape") {
+        "unpaired-surrogate"
+    } else if message.contains("number out of range") || message.contains("non-finite") {
+        "invalid-number"
+    } else {
+        panic!("grammatical text refused outside the semantic classes: {message}")
+    })
+}
+
+fn read_raw_input_case(root: &std::path::Path, case: &Value) -> (String, Vec<u8>) {
+    let id = case["id"].as_str().expect("raw input id").to_owned();
+    let file = case["file"].as_str().expect("raw input file");
+    assert!(
+        file.ends_with(".bin")
+            && file.bytes().all(|byte| byte.is_ascii_lowercase()
+                || byte.is_ascii_digit()
+                || b"-.".contains(&byte)),
+        "unsafe raw input file name: {file}"
+    );
+    let bytes = fs::read(root.join(file)).expect("raw input bytes");
+    assert_eq!(
+        bytes.len() as u64,
+        case["byteLength"].as_u64().expect("raw byte length"),
+        "{id}: byte length"
+    );
+    assert_eq!(
+        sha256_hex(&bytes),
+        case["inputSha256"].as_str().expect("raw input digest"),
+        "{id}: SHA-256"
+    );
+    (id, bytes)
+}
+
+#[test]
+fn policy_core_v3_raw_inputs_follow_the_grammar_first_classes() {
+    let manifest: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/policy-core-v3/raw-inputs/manifest.json"
+    ))
+    .expect("policy-core-v3 raw input manifest");
+    assert_eq!(
+        manifest["schemaVersion"],
+        "libre-ai.policy-core-raw-input-vectors.v2"
+    );
+    let budgets: Value = serde_json::from_str(include_str!(
+        "../../../contracts/fixtures/policy-core-v2/resource-budgets.v1.json"
+    ))
+    .expect("policy-core resource budgets");
+    let maximum_depth = usize::try_from(
+        budgets["decoderQualification"]["maximumJsonDepth"]
+            .as_u64()
+            .expect("maximum JSON depth"),
+    )
+    .expect("depth fits usize");
+    let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../contracts/fixtures/policy-core-v3/raw-inputs");
+    let mut ids = HashSet::new();
+    let mut defects = HashSet::new();
+
+    let refused = manifest["cases"].as_array().expect("refused cases");
+    for case in refused {
+        let (id, bytes) = read_raw_input_case(&root, case);
+        assert!(ids.insert(id.clone()), "duplicate raw input id: {id}");
+        let defect = case["defect"].as_str().expect("raw input defect");
+        defects.insert(defect);
+        assert_eq!(
+            policy_core_v3_defect(&bytes, maximum_depth),
+            Some(defect),
+            "{id}: class"
+        );
+        assert_eq!(
+            case["expectedErrors"],
+            json!({"policy-core-v3": {"variant": "input-invalid"}}),
+            "{id}: component refusal"
+        );
+    }
+    let accepted = manifest["acceptedCases"]
+        .as_array()
+        .expect("accepted cases");
+    for case in accepted {
+        let (id, bytes) = read_raw_input_case(&root, case);
+        assert!(ids.insert(id.clone()), "duplicate raw input id: {id}");
+        assert_eq!(
+            policy_core_v3_defect(&bytes, maximum_depth),
+            None,
+            "{id}: accepted"
+        );
+    }
+    assert_eq!(
+        defects,
+        HashSet::from([
+            "bom",
+            "invalid-utf8",
+            "invalid-json",
+            "duplicate-member",
+            "unpaired-surrogate",
+            "max-depth",
+            "invalid-number",
+        ])
+    );
+    assert!(!accepted.is_empty());
+    println!(
+        "policy-core-v3 raw inputs (Rust): {} refused, {} accepted",
+        refused.len(),
+        accepted.len()
+    );
+}
+
+#[test]
+fn rfc_8259_grammar_recognizer_separates_grammar_from_semantic_classes() {
+    for (text, grammatical) in [
+        (r#"{"a":[1,-0.5e+3,true,false,null,"𝄞"]}"#, true),
+        (r#"{"a":1,"a":2}"#, true),
+        (r#""\uD800""#, true),
+        ("1e400", true),
+        (" [ ] ", true),
+        ("[1x]", false),
+        (r#""\ud800\uZZZZ""#, false),
+        (r#"{"key":1,"key":2,}"#, false),
+        ("01", false),
+        ("+1", false),
+        ("1.", false),
+        ("NaN", false),
+        ("", false),
+        ("[", false),
+        ("\"\u{1}\"", false),
+        ("[1]]", false),
+        (r#"{"a"}"#, false),
+    ] {
+        assert_eq!(
+            rfc_8259_grammar(text.as_bytes()).is_ok(),
+            grammatical,
+            "{text:?}"
+        );
+    }
+}
+
 #[test]
 fn rust_test_canonicalizer_matches_rfc_8785_number_rendering() {
     for (value, expected) in [

@@ -20,15 +20,20 @@ export const POLICY_CORE_V2_GOLDEN_PATH = "contracts/fixtures/policy-core-v2/gol
 export const POLICY_CORE_V3_GOLDEN_PATH = "contracts/fixtures/policy-core-v3/golden.json";
 export const POLICY_CORE_V2_RAW_INPUT_ROOT = "contracts/fixtures/policy-core-invalid-json";
 export const POLICY_CORE_V3_RAW_INPUT_ROOT = "contracts/fixtures/policy-core-v3/raw-inputs";
+// policy-core-v3 keeps the policy-core-v2 qualification ceilings (SEMANTICS section 10).
+export const POLICY_CORE_V2_BUDGETS_PATH =
+  "contracts/fixtures/policy-core-v2/resource-budgets.v1.json";
 
 const RAW_INPUT_SCHEMA_VERSION = "libre-ai.policy-core-raw-input-vectors.v2";
+// The classes of SEMANTICS section 2, in the precedence order of the reference oracle.
 const V3_DEFECTS: readonly RawDefect[] = [
   "bom",
   "invalid-utf8",
+  "invalid-json",
   "duplicate-member",
   "unpaired-surrogate",
+  "max-depth",
   "invalid-number",
-  "invalid-json",
 ];
 // The evaluation payload stays policy-evaluation.v2: the digest label of SEMANTICS section 9
 // names the payload schema, not the world (change C1 leaves it unchanged).
@@ -68,24 +73,68 @@ async function readManifestCases(root: string, failures: string[], label: string
 
 export interface V3RawInputResult {
   failures: string[];
+  /** Refused cases read and checked. */
   inspected: number;
   carriedFromV2: number;
+  /** Accepted cases read and checked. */
+  accepted: number;
+}
+
+/** `decoderQualification.maximumJsonDepth` of the resource budgets, or a failure. */
+async function readMaximumJsonDepth(path: string, failures: string[]): Promise<number | null> {
+  try {
+    const budgets = parseStrictJson(new Uint8Array(await readFile(path)));
+    const qualification = isRecord(budgets) ? budgets.decoderQualification : undefined;
+    const depth = isRecord(qualification) ? qualification.maximumJsonDepth : undefined;
+    if (typeof depth === "number" && Number.isSafeInteger(depth) && depth > 0) return depth;
+  } catch {
+    // reported below
+  }
+  failures.push(`${path}: no positive decoderQualification.maximumJsonDepth`);
+  return null;
+}
+
+/** The fixture bytes of one manifest entry, after its name, SHA-256 and length checks. */
+async function readCaseBytes(
+  root: string,
+  entry: JsonRecord & { id: string },
+  label: string,
+  failures: string[],
+): Promise<Uint8Array | null> {
+  if (typeof entry.file !== "string" || !/^[a-z0-9-]+\.bin$/.test(entry.file)) {
+    failures.push(`${label}: unsafe fixture file name`);
+    return null;
+  }
+  let bytes: Uint8Array;
+  try {
+    bytes = new Uint8Array(await readFile(join(root, entry.file)));
+  } catch {
+    failures.push(`${label}: fixture file is absent or unreadable`);
+    return null;
+  }
+  if (sha256Hex(bytes) !== entry.inputSha256) failures.push(`${label}: input SHA-256 mismatch`);
+  if (bytes.length !== entry.byteLength) failures.push(`${label}: byte length mismatch`);
+  return bytes;
 }
 
 /**
- * Every case is refused by the grammar-first decoder with its declared class and maps to the
- * single WIT variant `input-invalid`; every policy-core-v2 case is carried once, byte-identical.
- * An absent or empty manifest is a failure, never an empty set.
+ * Every refused case is refused by the reference oracle with its declared class and maps to
+ * the single WIT variant `input-invalid`; every accepted case is accepted; every
+ * policy-core-v2 case is carried once, byte-identical. The oracle runs at the maximum depth of
+ * the resource budgets unless `maxDepth` is given (a test passes it to prove the depth vectors
+ * discriminate). An absent or empty manifest is a failure, never an empty set.
  */
 export async function verifyPolicyCoreV3RawInputVectors(
   root: string,
   v2Root: string = POLICY_CORE_V2_RAW_INPUT_ROOT,
+  maxDepth?: number,
 ): Promise<V3RawInputResult> {
   const failures: string[] = [];
-  const result: V3RawInputResult = { failures, inspected: 0, carriedFromV2: 0 };
+  const result: V3RawInputResult = { failures, inspected: 0, carriedFromV2: 0, accepted: 0 };
   const manifest = await readManifestCases(root, failures, "policy-core-v3 raw inputs");
   const v2Manifest = await readManifestCases(v2Root, failures, "policy-core-v2 raw inputs");
-  if (manifest === null || v2Manifest === null) return result;
+  const depth = maxDepth ?? (await readMaximumJsonDepth(POLICY_CORE_V2_BUDGETS_PATH, failures));
+  if (manifest === null || v2Manifest === null || depth === null) return result;
   if (manifest.schemaVersion !== RAW_INPUT_SCHEMA_VERSION)
     failures.push("policy-core-v3 raw inputs: invalid schemaVersion");
 
@@ -96,6 +145,29 @@ export async function verifyPolicyCoreV3RawInputVectors(
   const ids = new Set<string>();
   const classes = new Set<RawDefect>();
 
+  if (!Array.isArray(manifest.acceptedCases) || manifest.acceptedCases.length === 0)
+    failures.push("policy-core-v3 raw inputs: no accepted case");
+  else
+    for (const entry of manifest.acceptedCases as unknown[]) {
+      if (!isRecord(entry) || typeof entry.id !== "string") {
+        failures.push("policy-core-v3 raw inputs: accepted case without id");
+        continue;
+      }
+      const label = `policy-core-v3 raw:${entry.id}`;
+      if (ids.has(entry.id)) failures.push(`${label}: duplicate case id`);
+      ids.add(entry.id);
+      if ("defect" in entry || "expectedErrors" in entry)
+        failures.push(`${label}: an accepted case carries no defect and no error`);
+      const bytes = await readCaseBytes(root, { ...entry, id: entry.id }, label, failures);
+      if (bytes === null) continue;
+      result.accepted += 1;
+      try {
+        decodeStrictJsonGrammarFirst(bytes, depth);
+      } catch (error) {
+        failures.push(`${label}: accepted case refused: ${String(error)}`);
+      }
+    }
+
   for (const entry of manifest.cases as unknown[]) {
     if (!isRecord(entry) || typeof entry.id !== "string") {
       failures.push("policy-core-v3 raw inputs: case without id");
@@ -104,20 +176,9 @@ export async function verifyPolicyCoreV3RawInputVectors(
     const label = `policy-core-v3 raw:${entry.id}`;
     if (ids.has(entry.id)) failures.push(`${label}: duplicate case id`);
     ids.add(entry.id);
-    if (typeof entry.file !== "string" || !/^[a-z0-9-]+\.bin$/.test(entry.file)) {
-      failures.push(`${label}: unsafe fixture file name`);
-      continue;
-    }
-    let bytes: Uint8Array;
-    try {
-      bytes = new Uint8Array(await readFile(join(root, entry.file)));
-    } catch {
-      failures.push(`${label}: fixture file is absent or unreadable`);
-      continue;
-    }
+    const bytes = await readCaseBytes(root, { ...entry, id: entry.id }, label, failures);
+    if (bytes === null) continue;
     result.inspected += 1;
-    if (sha256Hex(bytes) !== entry.inputSha256) failures.push(`${label}: input SHA-256 mismatch`);
-    if (bytes.length !== entry.byteLength) failures.push(`${label}: byte length mismatch`);
 
     const defect = entry.defect as RawDefect;
     if (!V3_DEFECTS.includes(defect)) {
@@ -126,7 +187,7 @@ export async function verifyPolicyCoreV3RawInputVectors(
     }
     classes.add(defect);
     try {
-      decodeStrictJsonGrammarFirst(bytes);
+      decodeStrictJsonGrammarFirst(bytes, depth);
       failures.push(`${label}: grammar-first decoder accepted forbidden input`);
     } catch (error) {
       if (!(error instanceof StrictJsonError) || error.defect !== defect)

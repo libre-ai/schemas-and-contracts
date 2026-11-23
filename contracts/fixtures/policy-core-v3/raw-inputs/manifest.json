@@ -1,6 +1,6 @@
 {
   "schemaVersion": "libre-ai.policy-core-raw-input-vectors.v2",
-  "description": "Byte-exact decoder refusals of policy-core-v3: a text that is not RFC 8259 JSON is invalid-json whatever semantic defect it also holds; semantic classes apply only to a grammatical text (contracts/wit/policy-core-v3/SEMANTICS.md, change C2). carriedFrom names the policy-core-v2 raw-input case whose bytes are reused unchanged.",
+  "description": "Byte-exact decoder vectors of policy-core-v3 (contracts/wit/policy-core-v3/SEMANTICS.md, sections 2 and 10). cases are refused inputs: expectedErrors is the WIT variant a component returns and binds it; defect is the class the reference oracle gives and binds only that oracle. acceptedCases are inputs the reference oracle accepts; they fix the depth bound (the top-level value has depth 0, a value deeper than 64 is max-depth). carriedFrom names the policy-core-v2 raw-input case whose bytes are reused unchanged.",
   "cases": [
     {
       "id": "utf8-bom",
@@ -97,6 +97,7 @@
       "inputSha256": "02a673b2c38db4022ebd730c0cad500c331ab2df6379cde6043d4f5b6b33d800",
       "byteLength": 14,
       "defect": "invalid-json",
+      "note": "The policy-core-v2 decoder also gives invalid-json here: this case does not tell policy-core-v3 from policy-core-v2. It tells the grammar-first reader from crates/sdk-rs strict_json, which gives UnpairedSurrogate at the first escape.",
       "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
     },
     {
@@ -122,6 +123,92 @@
       "byteLength": 15,
       "defect": "invalid-number",
       "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-scalar-in-arrays",
+      "file": "depth-65-scalar-in-arrays.bin",
+      "inputSha256": "2574b71c86249bc36bf15157b4883f41da049924b6ddd4477f68af56d73d76b2",
+      "byteLength": 131,
+      "defect": "max-depth",
+      "note": "65 nested arrays around 0: the scalar has depth 65.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-empty-array",
+      "file": "depth-65-empty-array.bin",
+      "inputSha256": "1d32a5425f5002965013363638b3da4650bf294993f62998aac1785fdc62f736",
+      "byteLength": 132,
+      "defect": "max-depth",
+      "note": "66 nested arrays: the innermost, empty, has depth 65.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-member-value",
+      "file": "depth-65-member-value.bin",
+      "inputSha256": "895b63be0394e83162f2def642326d57e1b5aa99fc55c25bde78de1a2c47ffdd",
+      "byteLength": 391,
+      "defect": "max-depth",
+      "note": "65 nested objects {\"a\": around 0: the member value 0 has depth 65.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-then-trailing-octet",
+      "file": "depth-65-then-trailing-octet.bin",
+      "inputSha256": "cb39502530c18006bb87a15f7f90ac56a9904d48886dfc5e1a1ef00a40b2b54a",
+      "byteLength": 132,
+      "defect": "invalid-json",
+      "note": "depth-65-scalar-in-arrays followed by x: the grammar defect takes precedence over max-depth, earlier in the octets. The policy-core-v2 decoder gives max-depth.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-before-unpaired-surrogate",
+      "file": "depth-65-before-unpaired-surrogate.bin",
+      "inputSha256": "3eff57550f0bbdb31c0bbebaa5d6db2aa9b6a9a3e3bcf8c2fab72dd29d240567",
+      "byteLength": 138,
+      "defect": "max-depth",
+      "note": "65 nested arrays around a lone high surrogate: max-depth stands at the opening quotation mark, the surrogate at the backslash after it; document order gives max-depth.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-non-finite-number",
+      "file": "depth-65-non-finite-number.bin",
+      "inputSha256": "158d49ad1de1fba2d77ef498c13ec356690979ae68dbd9dc5f58f7fd6be1962c",
+      "byteLength": 135,
+      "defect": "max-depth",
+      "note": "65 nested arrays around 1e400: max-depth and invalid-number stand at the same octet; the earlier class of the list, max-depth, is given.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-64-non-finite-number",
+      "file": "depth-64-non-finite-number.bin",
+      "inputSha256": "a66199cabf9aeee788b9d9e75c97c26056e49912c6745e60bd4426d78c015cfc",
+      "byteLength": 133,
+      "defect": "invalid-number",
+      "note": "64 nested arrays around 1e400: the number has depth 64, within the bound.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    }
+  ],
+  "acceptedCases": [
+    {
+      "id": "depth-64-scalar-in-arrays",
+      "file": "depth-64-scalar-in-arrays.bin",
+      "inputSha256": "f0244ae1938270f711155b0a26a4307cde7050495140dd858a88a1cfc378cf40",
+      "byteLength": 129,
+      "note": "64 nested arrays around 0: the scalar has depth 64."
+    },
+    {
+      "id": "depth-64-empty-array",
+      "file": "depth-64-empty-array.bin",
+      "inputSha256": "d3ee90dfd8c7ae285b99965bc228314571a3a09deb168b69aa871a2d5bcef236",
+      "byteLength": 130,
+      "note": "65 nested arrays: the innermost, empty, has depth 64 and holds no value."
+    },
+    {
+      "id": "depth-64-member-value",
+      "file": "depth-64-member-value.bin",
+      "inputSha256": "8e9b83c30898716a2cd9468c0a4db4141d931272fcd7ed964bfb1a01ac2ff62e",
+      "byteLength": 385,
+      "note": "64 nested objects {\"a\": around 0: the member value 0 has depth 64."
     }
   ]
 }

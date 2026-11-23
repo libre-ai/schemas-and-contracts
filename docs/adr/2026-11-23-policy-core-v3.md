@@ -6,7 +6,10 @@ Status: proposed. The entry is `candidate`, not `locked`. Arbitration reference:
 "JSON non grammatical → invalid-json ; classes sémantiques seulement sur JSON
 grammatical", then "Nouvelle majeure policy-core-v3" once told that the rule contradicts
 locked policy-core-v2 bytes. The options set aside were a manifest of the strict reader's
-own and a change of policy-core-v2 in place.
+own and a change of policy-core-v2 in place. Then, on 2026-11-23, after the architecture
+review found that the defect classes cannot be checked at the component boundary, the
+owner answered "Classes = diagnostic d'oracle (Recommandé)"; the options set aside were
+"Surface de décodage hors WIT" and "Fermer #44".
 
 ## Context
 
@@ -46,22 +49,35 @@ and every such file must be cataloged (`tools/quality/check-contracts.ts`). The 
 therefore the v2 world under package `libre-ai:policy-core@3.0.0`, with the same function,
 arguments and error codes.
 
-`contracts/wit/policy-core-v3/SEMANTICS.md` is written as changes to the locked v2 text,
-named by its SHA-256 (a test checks the digest):
+`contracts/wit/policy-core-v3/SEMANTICS.md` is a complete text: the locked v2 text with
+four changes, recorded in its last, non-normative section. A test checks that every v2
+block the changes do not name is kept verbatim, that the replaced blocks are exactly the
+quoted ones, and that the v2 file it derives from has the pinned SHA-256:
 
-- C1, version: engine version `3.0.0`; payloads and digest labels unchanged.
-- C2, decoder precedence: byte order mark, then UTF-8, then the RFC 8259 grammar
-  (`invalid-json`), and only on a grammatical text the first semantic defect in document
-  order (`duplicate-member`, `unpaired-surrogate`, `max-depth`, `invalid-number` for a
-  non-finite binary64 value). At the WIT boundary every defect is still `input-invalid`.
+- C1, version: engine version `3.0.0`; payloads and digest labels unchanged; the host
+  label and the HTTP boundary sentence name every boundary exposing a v3 result.
+- C2, decoder: the defects a decoder MUST reject, each with a class name. The classes are
+  a conformance diagnostic of the reference oracle and of the `defect` field of the
+  raw-input vectors, and bind no component (owner answer above). In the oracle, byte order
+  mark, then UTF-8, then the RFC 8259 grammar (`invalid-json`), and only on a grammatical
+  text the first other defect in document order (`duplicate-member`,
+  `unpaired-surrogate`, `max-depth`, `invalid-number` for a non-finite binary64 value). A
+  component MAY stop at the first defect it meets, `max-depth` included, and MUST stay
+  within `peakComponentLinearMemoryBytes` on every input within the 8 MiB ceilings.
 - C3, vectors: v2 operators and resource budgets reused; a v3 golden file derived from the
   v2 one (same cases, engine `3.0.0`, recomputed `id` and `digest`); a v3 raw-input
-  manifest carrying the nine v2 inputs byte-identical plus the precedence cases.
-- C4, points left to review: depth counting, unchanged from v2.
+  manifest carrying the nine v2 inputs byte-identical, the precedence cases, the depth
+  cases and accepted inputs at the depth bound. A component is judged on WIT variants and
+  budgets.
+- C4, depth: the top-level value has depth 0, a value deeper than 64 is `max-depth` (the
+  count the v2 budget test executes); at the same octet the earlier class of the list is
+  given.
 
 The reference oracle is `decodeStrictJsonGrammarFirst` in
-`tools/quality/policy-core-raw-inputs.ts`, a check of the vectors like the existing v2
-oracle; `decodeStrictJson`, the v2 decoder, is unchanged.
+`tools/quality/policy-core-raw-inputs.ts`, run at the budget depth, a check of the vectors
+like the existing v2 oracle; `decodeStrictJson`, the v2 decoder, is unchanged. A second
+instrument in `crates/sdk-rs/tests/policy_core_vectors.rs` recomputes the raw-input classes
+with an iterative RFC 8259 recognizer and the v2 test seed, without `JSON.parse`.
 
 ## Consequences
 
@@ -70,6 +86,14 @@ oracle; `decodeStrictJson`, the v2 decoder, is unchanged.
   (`contracts/COMPATIBILITY.md`, "Pre-implementation candidates").
 - policy-core-v2 stays locked and byte-identical; its consumers are unaffected until they
   choose to move to v3.
+- At the WIT boundary only the engine version distinguishes v3 from v2: for every input
+  the result differs by `engineVersion`, `id` and `digest` of a successful evaluation, and
+  every decoder defect is `input-invalid` in both. The decoder precedence, the only other
+  change, is observable in the reference oracle and its vectors, not in a component; a
+  consumer that moves to v3 sees new evaluation IDs and digests for the same inputs.
+- A component that follows the v2 first-defect order, under engine version `3.0.0`, is not
+  refused by the v3 vectors for that order alone. That is the meaning of the owner's
+  answer, not a gap in the vectors.
 - The candidate `canonicalize` semantics of `signalement-policy-receipt-v1` keeps "the
   first defect met"; the difference is written in the v3 semantics and changes neither.
 - The strict reader of `crates/sdk-rs` (`strict_json`) is not a policy-core decoder
