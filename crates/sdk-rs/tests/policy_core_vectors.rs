@@ -746,6 +746,64 @@ struct MemorySegment {
     count: usize,
 }
 
+/// The input a memory qualification case generates from its segments. The length is bounded
+/// by the ceiling before `repeat` allocates: an absurd count fails by name instead of
+/// allocating, or panicking on a capacity overflow.
+fn generate_memory_input(
+    segments: &[MemorySegment],
+    field: &str,
+    ceiling: u64,
+) -> Result<Vec<u8>, String> {
+    let exceeds = || format!("segments exceed the {field} ceiling of {ceiling} octets");
+    let mut length: u64 = 0;
+    for segment in segments {
+        let segment_length = u64::try_from(segment.text.len())
+            .ok()
+            .and_then(|text| text.checked_mul(u64::try_from(segment.count).ok()?))
+            .ok_or_else(exceeds)?;
+        length = length
+            .checked_add(segment_length)
+            .filter(|total| *total <= ceiling)
+            .ok_or_else(exceeds)?;
+    }
+    let mut bytes = Vec::with_capacity(usize::try_from(length).map_err(|_| exceeds())?);
+    for segment in segments {
+        bytes.extend(segment.text.repeat(segment.count).into_bytes());
+    }
+    Ok(bytes)
+}
+
+#[test]
+fn memory_qualification_generator_fails_by_name_before_allocating() {
+    let ceiling = 8_388_608;
+    let segments = |count: usize| {
+        vec![MemorySegment {
+            text: "[]".to_owned(),
+            count,
+        }]
+    };
+    let expected = Err(format!(
+        "segments exceed the policyInput ceiling of {ceiling} octets"
+    ));
+    // Lengths only: a failing comparison must not print megabytes of generated input.
+    // Without the check first, `repeat` panics on a capacity overflow for usize::MAX copies.
+    assert_eq!(
+        generate_memory_input(&segments(usize::MAX), "policyInput", ceiling)
+            .map(|bytes| bytes.len()),
+        expected
+    );
+    assert_eq!(
+        generate_memory_input(&segments(4_194_305), "policyInput", ceiling)
+            .map(|bytes| bytes.len()),
+        expected
+    );
+    assert_eq!(
+        generate_memory_input(&segments(4_194_304), "policyInput", ceiling)
+            .map(|bytes| bytes.len()),
+        Ok(8_388_608)
+    );
+}
+
 #[test]
 fn policy_core_v3_memory_qualification_inputs_are_refused_at_the_ceiling() {
     let qualification: Value = serde_json::from_str(include_str!(
@@ -763,17 +821,15 @@ fn policy_core_v3_memory_qualification_inputs_are_refused_at_the_ceiling() {
         let id = case["id"].as_str().expect("memory case id");
         let segments: Vec<MemorySegment> =
             serde_json::from_value(case["segments"].clone()).expect("segments");
-        let mut bytes = Vec::new();
-        for segment in &segments {
-            bytes.extend(segment.text.repeat(segment.count).into_bytes());
-        }
-        let ceiling = match case["argument"].as_str().expect("argument") {
-            "policy" => budgets["byteLimits"]["policyInput"].as_u64(),
-            "snapshot" => budgets["byteLimits"]["snapshotInput"].as_u64(),
-            "need" => budgets["byteLimits"]["needInput"].as_u64(),
+        let field = match case["argument"].as_str().expect("argument") {
+            "policy" => "policyInput",
+            "snapshot" => "snapshotInput",
+            "need" => "needInput",
             other => panic!("{id}: unknown argument {other}"),
-        }
-        .expect("byte ceiling");
+        };
+        let ceiling = budgets["byteLimits"][field].as_u64().expect("byte ceiling");
+        let bytes = generate_memory_input(&segments, field, ceiling)
+            .unwrap_or_else(|error| panic!("{id}: {error}"));
         assert_eq!(bytes.len() as u64, ceiling, "{id}: at the ceiling");
         assert_eq!(
             sha256_hex(&bytes),

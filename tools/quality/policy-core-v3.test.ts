@@ -2,6 +2,8 @@ import { describe, expect, test } from "bun:test";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import Ajv2020, { type ValidateFunction } from "ajv/dist/2020";
+import addFormats from "ajv-formats";
 import {
   decodeStrictJson,
   decodeStrictJsonGrammarFirst,
@@ -120,6 +122,22 @@ describe("policy-core-v3 nesting depth (section 2, depth paragraph)", () => {
   }
 });
 
+/** The schema validator of each JSON argument of `evaluate` (SEMANTICS section 2). */
+async function argumentValidators(): Promise<
+  Record<"policy" | "snapshot" | "need", ValidateFunction>
+> {
+  const read = async (name: string) =>
+    (await Bun.file(join("contracts/schemas", name)).json()) as JsonRecord;
+  const ajv = new Ajv2020({ allErrors: true, strict: true });
+  addFormats(ajv);
+  ajv.addSchema(await read("common.v1.schema.json"));
+  return {
+    policy: ajv.compile(await read("policy-definition.v2.schema.json")),
+    snapshot: ajv.compile(await read("model-snapshot.v2.schema.json")),
+    need: ajv.compile(await read("policy-need.v2.schema.json")),
+  };
+}
+
 async function maximumJsonDepth(): Promise<number> {
   const budgets = (await Bun.file(POLICY_CORE_V2_BUDGETS_PATH).json()) as JsonRecord;
   const qualification = budgets.decoderQualification as JsonRecord;
@@ -137,20 +155,28 @@ describe("policy-core-v3 raw-input vectors", () => {
     expect(result.carriedFromV2).toBe(9);
     expect(result.inspected).toBeGreaterThan(result.carriedFromV2);
     expect(result.accepted).toBe(3);
-    expect(result.carriers).toBe(5);
+    expect(result.carriers).toBe(6);
   });
 
-  test("a permissive JSON.parse decoder returns the golden input on carrier vectors", async () => {
-    // The decoder of a fetch Response: UTF-8 without fatal errors, byte order mark dropped,
-    // JSON.parse, last duplicate member kept. On a carrier it yields the exact golden input,
-    // so a component built on it evaluates instead of returning input-invalid.
+  test("a permissive JSON.parse decoder reads a schema-valid argument from carrier vectors", async () => {
+    // The decoder of a fetch Response: UTF-8 without fatal errors (an invalid octet becomes
+    // U+FFFD), byte order mark dropped, lone surrogates kept, JSON.parse, last duplicate member
+    // kept. On a carrier it yields a schema-valid argument, so a component built on it does
+    // not return input-invalid (SEMANTICS section 10).
     const manifest = (await Bun.file(
       join(POLICY_CORE_V3_RAW_INPUT_ROOT, "manifest.json"),
     ).json()) as JsonRecord;
     const { cases: golden } = await goldenCases(POLICY_CORE_V3_GOLDEN_PATH);
+    const validators = await argumentValidators();
+    // The bom, duplicate-member and invalid-number carriers hide their defect entirely; the
+    // unpaired-surrogate and invalid-utf8 ones carry it in the free licence string of the first
+    // rule source, the only change from the golden policy (manifest notes).
+    const exactGolden = ["bom", "duplicate-member", "invalid-number"];
+    const licenceOnly = ["invalid-utf8", "unpaired-surrogate"];
     const defeated: string[] = [];
     for (const entry of manifest.cases as JsonRecord[]) {
       if (entry.argument === undefined) continue;
+      const argument = entry.argument as keyof typeof validators;
       const bytes = await Bun.file(
         join(POLICY_CORE_V3_RAW_INPUT_ROOT, entry.file as string),
       ).bytes();
@@ -162,13 +188,31 @@ describe("policy-core-v3 raw-input vectors", () => {
       } catch {
         continue;
       }
-      expect(decoded).toEqual(goldenCase[entry.argument as string]);
-      defeated.push(entry.defect as string);
+      const defect = entry.defect as string;
+      const validate = validators[argument];
+      expect({ defect, valid: validate(decoded), errors: validate.errors ?? null }).toEqual({
+        defect,
+        valid: true,
+        errors: null,
+      });
+      const expected = goldenCase[argument] as JsonRecord;
+      if (exactGolden.includes(defect)) expect(decoded).toEqual(expected);
+      else if (licenceOnly.includes(defect)) {
+        expect(decoded).not.toEqual(expected);
+        const repaired = structuredClone(decoded) as { rules: { source: JsonRecord }[] };
+        const goldenRules = expected.rules as { source: JsonRecord }[];
+        (repaired.rules[0] as { source: JsonRecord }).source.licence = (
+          goldenRules[0] as { source: JsonRecord }
+        ).source.licence;
+        expect(repaired as unknown).toEqual(expected);
+      } else throw new Error(`${String(entry.id)}: carrier class ${defect} has no expectation`);
+      defeated.push(defect);
     }
     expect(defeated.sort()).toEqual([
       "bom",
       "duplicate-member",
       "invalid-number",
+      "invalid-utf8",
       "unpaired-surrogate",
     ]);
   });
@@ -200,6 +244,39 @@ describe("policy-core-v3 raw-input vectors", () => {
     console.log(`policy-core-v3 memory qualification: ${result.inspected} input(s) generated`);
     expect(result.failures).toEqual([]);
     expect(result.inspected).toBe(3);
+  });
+
+  test("a segment count beyond the ceiling fails by name before any allocation", async () => {
+    // Without the length check first, `repeat` is asked for 2^53 - 1 copies and throws a
+    // RangeError of the engine, or allocates up to its string limit for a smaller absurd count.
+    const scratch = await mkdtemp(join(tmpdir(), "policy-core-v3-memory-"));
+    try {
+      const path = join(scratch, "memory-qualification.v1.json");
+      const segments = (count: number) => [{ text: "[", count }];
+      const document = {
+        schemaVersion: "libre-ai.policy-core-memory-qualification.v1",
+        cases: [
+          ["absurd", Number.MAX_SAFE_INTEGER],
+          ["one-over", 8_388_609],
+        ].map(([id, count]) => ({
+          id,
+          argument: "policy",
+          segments: segments(count as number),
+          inputSha256: "0".repeat(64),
+          defect: "invalid-json",
+          expectedErrors: { "policy-core-v3": { variant: "input-invalid" } },
+        })),
+      };
+      await Bun.write(path, JSON.stringify(document));
+      const result = await verifyPolicyCoreV3MemoryQualification(path);
+      expect(result.inspected).toBe(2);
+      expect(result.failures).toEqual([
+        "policy-core-v3 memory:absurd: segments exceed the policyInput ceiling of 8388608 octets",
+        "policy-core-v3 memory:one-over: segments exceed the policyInput ceiling of 8388608 octets",
+      ]);
+    } finally {
+      await rm(scratch, { recursive: true, force: true });
+    }
   });
 
   test("an absent memory qualification file is a failure", async () => {
@@ -241,16 +318,27 @@ function numberedSections(text: string): Map<string, string[]> {
   return sections;
 }
 
+/** An added block, named by its first line, and the SHA-256 of its trimmed UTF-8 text. */
+interface AddedBlock {
+  firstLine: string;
+  sha256: string;
+}
+
 interface DeclaredChanges {
   sections: Set<string>;
   replacedFirstLines: string[];
-  addedFirstLines: string[];
+  addedBlocks: AddedBlock[];
+}
+
+function blockSha256(block: string): string {
+  return new Bun.CryptoHasher("sha256").update(block).digest("hex");
 }
 
 /**
  * The change record: per change, `Sections: 1, 2.`, then under `Replaced policy-core-v2
- * blocks:` the first line of each v2 block it removes and under `Added blocks:` the first
- * line of each block it adds, one `> ` line each. A quote outside those two lists is an error.
+ * blocks:` the first line of each v2 block it removes and under `Added blocks:` the SHA-256
+ * and the first line of each block it adds, one `> ` line each. A quote outside those two
+ * lists, or an added-block quote without its SHA-256, is an error.
  */
 function declaredChanges(text: string): DeclaredChanges {
   const start = text.indexOf(`## ${CHANGES_HEADING}`);
@@ -259,21 +347,92 @@ function declaredChanges(text: string): DeclaredChanges {
   const declared: DeclaredChanges = {
     sections: new Set<string>(),
     replacedFirstLines: [],
-    addedFirstLines: [],
+    addedBlocks: [],
   };
-  let list: string[] | null = null;
+  let list: "replaced" | "added" | null = null;
   for (const line of record.split("\n")) {
     const sections = /^Sections: ([0-9, ]+)\.$/.exec(line);
     if (sections !== null)
       for (const number of (sections[1] as string).split(",")) declared.sections.add(number.trim());
-    if (/^Replaced policy-core-v2 blocks?:$/.test(line)) list = declared.replacedFirstLines;
-    else if (/^Added blocks?:$/.test(line)) list = declared.addedFirstLines;
+    if (/^Replaced policy-core-v2 blocks?:$/.test(line)) list = "replaced";
+    else if (/^Added blocks?:$/.test(line)) list = "added";
     else if (line.startsWith("> ")) {
       if (list === null) throw new Error(`quoted line outside a block list: ${line}`);
-      list.push(line.slice(2));
+      if (list === "replaced") declared.replacedFirstLines.push(line.slice(2));
+      else {
+        const pinned = /^> ([0-9a-f]{64}) (.+)$/.exec(line);
+        if (pinned === null) throw new Error(`added block quoted without its SHA-256: ${line}`);
+        declared.addedBlocks.push({
+          sha256: pinned[1] as string,
+          firstLine: pinned[2] as string,
+        });
+      }
     } else if (line.trim() !== "") list = null;
   }
   return declared;
+}
+
+interface Derivation {
+  removedFirstLines: string[];
+  addedBlocks: (AddedBlock & { section: string })[];
+  touched: Set<string>;
+  unchangedBlocks: number;
+}
+
+/** The blocks of the numbered sections of v3 that v2 does not hold, and the reverse. */
+function derivation(v2: Map<string, string[]>, v3: Map<string, string[]>): Derivation {
+  const result: Derivation = {
+    removedFirstLines: [],
+    addedBlocks: [],
+    touched: new Set<string>(),
+    unchangedBlocks: 0,
+  };
+  for (const [heading, v2Blocks] of v2) {
+    const v3Blocks = v3.get(heading) ?? [];
+    const removed = v2Blocks.filter((block) => !v3Blocks.includes(block));
+    const added = v3Blocks.filter((block) => !v2Blocks.includes(block));
+    result.unchangedBlocks += v2Blocks.length - removed.length;
+    const section = heading.split(".")[0] as string;
+    for (const block of removed) result.removedFirstLines.push(block.split("\n")[0] as string);
+    for (const block of added)
+      result.addedBlocks.push({
+        section,
+        firstLine: block.split("\n")[0] as string,
+        sha256: blockSha256(block),
+      });
+    if (removed.length > 0 || added.length > 0) result.touched.add(section);
+  }
+  return result;
+}
+
+/**
+ * One message per added block whose text is not the one the change record pins, and per pin
+ * that matches no added block. The first-line comparison alone does not see a change inside
+ * the body of an added block.
+ */
+function addedBlockDigestFailures(derived: Derivation, declared: DeclaredChanges): string[] {
+  const failures: string[] = [];
+  const unmatched = [...declared.addedBlocks];
+  for (const block of derived.addedBlocks) {
+    const index = unmatched.findIndex(
+      (pin) => pin.firstLine === block.firstLine && pin.sha256 === block.sha256,
+    );
+    if (index >= 0) {
+      unmatched.splice(index, 1);
+      continue;
+    }
+    const pins = declared.addedBlocks
+      .filter((pin) => pin.firstLine === block.firstLine)
+      .map((pin) => pin.sha256);
+    failures.push(
+      `section ${block.section}, added block "${block.firstLine}": its text has SHA-256 ` +
+        `${block.sha256}, the change record pins ${pins.length > 0 ? pins.join(", ") : "none"}`,
+    );
+  }
+  for (const pin of unmatched)
+    if (!derived.addedBlocks.some((block) => block.firstLine === pin.firstLine))
+      failures.push(`change record pins an added block absent from the text: "${pin.firstLine}"`);
+  return failures;
 }
 
 describe("policy-core-v3 consolidated semantics", () => {
@@ -291,28 +450,42 @@ describe("policy-core-v3 consolidated semantics", () => {
     expect([...v3.keys()]).toEqual([...v2.keys()]);
     expect(v2.size).toBe(10);
 
-    const removedFirstLines: string[] = [];
-    const addedFirstLines: string[] = [];
-    const touched = new Set<string>();
-    let unchangedBlocks = 0;
-    for (const [heading, v2Blocks] of v2) {
-      const v3Blocks = v3.get(heading) ?? [];
-      const removed = v2Blocks.filter((block) => !v3Blocks.includes(block));
-      const added = v3Blocks.filter((block) => !v2Blocks.includes(block));
-      unchangedBlocks += v2Blocks.length - removed.length;
-      for (const block of removed) removedFirstLines.push(block.split("\n")[0] as string);
-      for (const block of added) addedFirstLines.push(block.split("\n")[0] as string);
-      if (removed.length > 0 || added.length > 0) touched.add(heading.split(".")[0] as string);
-    }
+    const derived = derivation(v2, v3);
     const declared = declaredChanges(v3Text);
+    const digestFailures = addedBlockDigestFailures(derived, declared);
     console.log(
-      `policy-core-v3 semantics: ${unchangedBlocks} v2 block(s) kept verbatim, ` +
-        `${removedFirstLines.length} replaced, ${addedFirstLines.length} added, ` +
-        `sections touched: ${[...touched].join(", ")}`,
+      `policy-core-v3 semantics: ${derived.unchangedBlocks} v2 block(s) kept verbatim, ` +
+        `${derived.removedFirstLines.length} replaced, ${derived.addedBlocks.length} added ` +
+        `(${derived.addedBlocks.length - digestFailures.length} with the pinned SHA-256), ` +
+        `sections touched: ${[...derived.touched].join(", ")}`,
     );
-    expect([...declared.replacedFirstLines].sort()).toEqual([...removedFirstLines].sort());
-    expect([...declared.addedFirstLines].sort()).toEqual([...addedFirstLines].sort());
-    expect([...declared.sections].sort()).toEqual([...touched].sort());
+    expect([...declared.replacedFirstLines].sort()).toEqual([...derived.removedFirstLines].sort());
+    expect(declared.addedBlocks.map((pin) => pin.firstLine).sort()).toEqual(
+      derived.addedBlocks.map((block) => block.firstLine).sort(),
+    );
+    expect([...declared.sections].sort()).toEqual([...derived.touched].sort());
+    expect(digestFailures).toEqual([]);
+  });
+
+  test("a change inside the body of an added block is refused and named", async () => {
+    // The mutation of the architecture review on 475c8b4: the memory budget of an added block
+    // of section 2 raised from 256 to 512 MiB. Its first line does not change.
+    const v2 = numberedSections(await Bun.file(V2_SEMANTICS_PATH).text());
+    const v3Text = await Bun.file(V3_SEMANTICS_PATH).text();
+    const original = "(`memoryQualification.peakComponentLinearMemoryBytes`, 256 MiB)";
+    expect(v3Text.split(original).length).toBe(2);
+    const mutated = v3Text.replace(original, original.replace("256 MiB", "512 MiB"));
+    const derived = derivation(v2, numberedSections(mutated));
+    const declared = declaredChanges(mutated);
+    // The first lines still match: only the pinned SHA-256 sees the change.
+    expect(declared.addedBlocks.map((pin) => pin.firstLine).sort()).toEqual(
+      derived.addedBlocks.map((block) => block.firstLine).sort(),
+    );
+    const failures = addedBlockDigestFailures(derived, declared);
+    expect(failures).toHaveLength(1);
+    expect(failures[0]).toContain(
+      'section 2, added block "A component MUST stay within the peak component linear memory budget"',
+    );
   });
 
   test("no sentence of the consolidated text binds the policy-core-v2 world", async () => {
