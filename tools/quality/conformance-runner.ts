@@ -21,6 +21,17 @@
 //   data        string[] of paths relative to the vector's directory (may be empty)
 //   input       any JSON value
 //   expected    object with `outcome` ("accept" or "reject") and any other member to compare
+// and, optionally, one more member for inputs that no JSON value can carry (a byte order mark,
+// invalid UTF-8, a duplicate member name, a text outside the JSON grammar):
+//   inputBytes  non-empty object whose every member is a byte string in canonical base64
+//               (RFC 4648 section 4: standard alphabet, padded, zero padding bits, nothing
+//               else, so one byte string has exactly one spelling); `input` is then an object
+//               that names none of these members, each name being carried by one of the two
+//
+// The runner decodes no byte string: it checks the spelling and forwards it as written, so the
+// implementation receives the exact octets of the vector whatever base64 decoder it uses (a
+// lenient decoder that skips foreign characters would otherwise read other octets). Which names
+// a kind carries as bytes, and what they mean, is defined by the kind (contracts/vectors/README.md).
 //
 // Each discovered entry gets exactly one state:
 //   pass         the response carries the expected outcome and every other expected member
@@ -96,7 +107,10 @@ const VECTOR_MEMBERS = [
   "input",
   "kind",
 ];
+const OPTIONAL_MEMBERS = ["inputBytes"];
 const STATES: readonly ConformanceState[] = ["pass", "fail", "unavailable", "blocked"];
+// RFC 4648 section 4 with padding; the round trip below also refuses non-zero padding bits.
+const BASE64 = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 
 interface Vector {
   id: string;
@@ -104,6 +118,7 @@ interface Vector {
   dependsOn: string[];
   data: string[];
   input: unknown;
+  inputBytes: Record<string, string> | null;
   expected: Record<string, unknown>;
   directory: string;
 }
@@ -120,6 +135,27 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function isStringList(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+function isCanonicalBase64(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    BASE64.test(value) &&
+    Buffer.from(value, "base64").toString("base64") === value
+  );
+}
+
+/** The byte members of a vector, or the cause that blocks it. */
+function byteMembers(inputBytes: unknown, input: unknown): Record<string, string> | string {
+  if (!isRecord(inputBytes)) return "invalid vector: inputBytes is not an object";
+  const names = Object.keys(inputBytes);
+  if (names.length === 0) return "invalid vector: inputBytes is empty";
+  if (!names.every((name) => isCanonicalBase64(inputBytes[name])))
+    return "invalid vector: inputBytes member is not canonical base64";
+  if (!isRecord(input)) return "invalid vector: inputBytes needs an object input";
+  if (names.some((name) => Object.hasOwn(input, name)))
+    return "invalid vector: inputBytes names a member of input";
+  return inputBytes as Record<string, string>;
 }
 
 async function discover(root: string, directory: string, found: Discovered[]): Promise<void> {
@@ -165,7 +201,9 @@ async function loadVector(file: string, id: string): Promise<Vector | string> {
   }
   if (!isRecord(value)) return "invalid vector: not an object";
   const members = Object.keys(value).sort();
-  const unknown = members.find((member) => !VECTOR_MEMBERS.includes(member));
+  const unknown = members.find(
+    (member) => !VECTOR_MEMBERS.includes(member) && !OPTIONAL_MEMBERS.includes(member),
+  );
   if (unknown !== undefined) return "invalid vector: unknown member";
   const missing = VECTOR_MEMBERS.find((member) => !members.includes(member));
   if (missing !== undefined) return `invalid vector: missing member ${missing}`;
@@ -183,8 +221,14 @@ async function loadVector(file: string, id: string): Promise<Vector | string> {
   } catch {
     return "invalid vector: expected has no canonical form";
   }
+  let inputBytes: Record<string, string> | null = null;
+  if ("inputBytes" in value) {
+    const bytes = byteMembers(value.inputBytes, input);
+    if (typeof bytes === "string") return bytes;
+    inputBytes = bytes;
+  }
   if (declared !== id) return "id differs from path";
-  return { id, kind, dependsOn, data, input, expected, directory: dirname(file) };
+  return { id, kind, dependsOn, data, input, inputBytes, expected, directory: dirname(file) };
 }
 
 /** Ids that can reach themselves through `dependsOn`. */
@@ -332,6 +376,7 @@ export async function runConformance(
       vector.input,
       vector.data,
       options.timeoutMs,
+      vector.inputBytes,
     );
     if (outcome.kind === "blocked") return settle(vector.id, "blocked", outcome.cause);
     const { state, detail } = classify(vector, outcome.response, options.invariants);

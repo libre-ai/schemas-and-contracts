@@ -1,0 +1,102 @@
+{
+  "id": "policy-core-v3/golden/stale-one-second-over",
+  "criteria": ["contracts/wit/policy-core-v3/SEMANTICS.md"],
+  "kind": "policy-core-v3.evaluate",
+  "description": "policy-core-v3 golden case stale-one-second-over (contracts/fixtures/policy-core-v3/golden.json)",
+  "dependsOn": [],
+  "data": [],
+  "input": {
+    "policy": {
+      "schemaVersion": "libre-ai.policy-definition.v2",
+      "id": "urn:libre-ai:policy:stale-one-second-over",
+      "tenantId": "ten_1234567890abcdef",
+      "version": 1,
+      "status": "approved",
+      "rules": [
+        {
+          "id": "stale_bound",
+          "fact": "model.score",
+          "operator": "at-least",
+          "value": 7,
+          "unknown": "indeterminate",
+          "source": {
+            "uri": "https://example.org/policy/method",
+            "retrievedAt": "2026-01-01T00:00:00Z",
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "licence": "CC-BY-4.0"
+          },
+          "maxSourceAgeDays": 1
+        }
+      ],
+      "digest": "035a68920979556b3add5ee0a701e14cbc998d688d07a6970ce84596b00f56e1",
+      "approvedAt": "2026-01-02T00:00:00Z",
+      "approval": {
+        "role": "policy-approver",
+        "approvedAt": "2026-01-02T00:00:00Z",
+        "reference": "urn:libre-ai:approval:stale-one-second-over",
+        "subjectDigest": "035a68920979556b3add5ee0a701e14cbc998d688d07a6970ce84596b00f56e1",
+        "actorKind": "human",
+        "approverId": "usr_policyapprover001"
+      },
+      "proposedBy": "svc_policyagent00001"
+    },
+    "snapshot": {
+      "schemaVersion": "libre-ai.model-snapshot.v2",
+      "id": "urn:libre-ai:snapshot:stale-one-second-over",
+      "tenantId": "ten_1234567890abcdef",
+      "modelId": "mdl_f51145d90b795ca7",
+      "capturedAt": "2026-07-16T00:00:00Z",
+      "facts": [
+        {
+          "name": "model.score",
+          "value": 8,
+          "source": {
+            "uri": "https://example.org/evidence/a",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "8f78843a1a26e48aa8a5f50b63641c21191d955f4f30212a5bced09c09f6f838"
+    },
+    "need": {
+      "schemaVersion": "libre-ai.policy-need.v2",
+      "id": "urn:libre-ai:need:stale-one-second-over",
+      "tenantId": "ten_1234567890abcdef",
+      "facts": [
+        {
+          "name": "need.task",
+          "value": "summary"
+        }
+      ],
+      "digest": "632e4508928cc3ea582a91984eea5c5824f9c2f4968f88214ac8f668a83bf0a7"
+    },
+    "evaluatedAt": "2026-07-17T00:00:01Z"
+  },
+  "expected": {
+    "outcome": "accept",
+    "evaluation": {
+      "schemaVersion": "libre-ai.policy-evaluation.v2",
+      "id": "urn:libre-ai:evaluation:76274eda0738fda0f93cd7cccd62978f0521a7f01f2d6355e57de99d527497f4",
+      "tenantId": "ten_1234567890abcdef",
+      "policyId": "urn:libre-ai:policy:stale-one-second-over",
+      "policyDigest": "035a68920979556b3add5ee0a701e14cbc998d688d07a6970ce84596b00f56e1",
+      "snapshotId": "urn:libre-ai:snapshot:stale-one-second-over",
+      "snapshotDigest": "8f78843a1a26e48aa8a5f50b63641c21191d955f4f30212a5bced09c09f6f838",
+      "needDigest": "632e4508928cc3ea582a91984eea5c5824f9c2f4968f88214ac8f668a83bf0a7",
+      "engineVersion": "3.0.0",
+      "verdict": "indeterminate",
+      "ruleResults": [
+        {
+          "ruleId": "stale_bound",
+          "status": "unknown",
+          "reasonCode": "policy.snapshot_stale"
+        }
+      ],
+      "evaluatedAt": "2026-07-17T00:00:01Z",
+      "digest": "76274eda0738fda0f93cd7cccd62978f0521a7f01f2d6355e57de99d527497f4"
+    },
+    "canonicalOutput": "{\"digest\":\"76274eda0738fda0f93cd7cccd62978f0521a7f01f2d6355e57de99d527497f4\",\"engineVersion\":\"3.0.0\",\"evaluatedAt\":\"2026-07-17T00:00:01Z\",\"id\":\"urn:libre-ai:evaluation:76274eda0738fda0f93cd7cccd62978f0521a7f01f2d6355e57de99d527497f4\",\"needDigest\":\"632e4508928cc3ea582a91984eea5c5824f9c2f4968f88214ac8f668a83bf0a7\",\"policyDigest\":\"035a68920979556b3add5ee0a701e14cbc998d688d07a6970ce84596b00f56e1\",\"policyId\":\"urn:libre-ai:policy:stale-one-second-over\",\"ruleResults\":[{\"reasonCode\":\"policy.snapshot_stale\",\"ruleId\":\"stale_bound\",\"status\":\"unknown\"}],\"schemaVersion\":\"libre-ai.policy-evaluation.v2\",\"snapshotDigest\":\"8f78843a1a26e48aa8a5f50b63641c21191d955f4f30212a5bced09c09f6f838\",\"snapshotId\":\"urn:libre-ai:snapshot:stale-one-second-over\",\"tenantId\":\"ten_1234567890abcdef\",\"verdict\":\"indeterminate\"}"
+  }
+}
