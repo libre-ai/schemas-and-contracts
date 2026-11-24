@@ -218,6 +218,24 @@ function isVerdict(value: unknown): value is Verdict {
   );
 }
 
+/**
+ * Runs one call on a child's stdin and drops its failure, whether thrown at once or rejected
+ * later. Once the oracle closed its stdin or exited unread, `write` and `end` fail with EPIPE in
+ * either form (both seen on Linux CI, in libre-ai/project-governance#308: a later rejection, an
+ * `end` that threw). Unhandled, the failure would end the test process; thrown or awaited, it
+ * would replace the oracle's own exit code and stderr in the error.
+ */
+function dropStdinFailure(call: () => unknown): Promise<void> {
+  try {
+    return Promise.resolve(call()).then(
+      () => undefined,
+      () => undefined,
+    );
+  } catch {
+    return Promise.resolve();
+  }
+}
+
 /** A Rust oracle that cannot be built, run or read is an error, never a skipped comparison. */
 async function rustVerdicts(documents: Document[], manifest = ORACLE_MANIFEST): Promise<Verdict[]> {
   const input = JSON.stringify({ documents: documents.map((document) => toHex(document.bytes)) });
@@ -233,8 +251,9 @@ async function rustVerdicts(documents: Document[], manifest = ORACLE_MANIFEST): 
   } catch (error) {
     throw new Error(`Rust oracle cannot be launched: ${String(error)}`);
   }
-  child.stdin.write(input);
-  await child.stdin.end();
+  // The oracle's exit code and stderr decide below, not the fate of the pipe.
+  void dropStdinFailure(() => child.stdin.write(input));
+  await dropStdinFailure(() => child.stdin.end());
   const [stdout, stderr, exitCode] = await Promise.all([
     new Response(child.stdout).text(),
     new Response(child.stderr).text(),
@@ -326,6 +345,20 @@ describe("strict JSON differential: TypeScript and Rust readers", () => {
     async () => {
       const missing = join(import.meta.dir, "strict-json-oracle", "absent", "Cargo.toml");
       await expect(rustVerdicts([], missing)).rejects.toThrow("Rust oracle");
+    },
+    ORACLE_TIMEOUT_MS,
+  );
+
+  test(
+    "an oracle that exits without reading its input is judged on its exit code",
+    async () => {
+      // The input is larger than a pipe buffer, and cargo exits on the missing manifest
+      // without reading it: writing it fails with EPIPE after the write call has returned.
+      // That failure must neither end the test process (an unhandled rejection, seen on Linux)
+      // nor replace the oracle's own exit code and stderr in the error.
+      const missing = join(import.meta.dir, "strict-json-oracle", "absent", "Cargo.toml");
+      const documents = [{ id: "large", bytes: encoder.encode(`"${"x".repeat(900_000)}"`) }];
+      await expect(rustVerdicts(documents, missing)).rejects.toThrow("Rust oracle exited with");
     },
     ORACLE_TIMEOUT_MS,
   );
