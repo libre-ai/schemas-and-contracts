@@ -217,14 +217,50 @@ class StrictJsonParser {
   }
 }
 
-export function decodeStrictJson(bytes: Uint8Array, maxDepth = Number.MAX_SAFE_INTEGER): string {
+/** The byte order mark, then UTF-8 over the whole input: the first two checks of both decoders. */
+function strictUtf8Text(bytes: Uint8Array): string {
   if (bytes.length >= 3 && bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf)
     throw new StrictJsonError("bom", "UTF-8 BOM is forbidden");
-  let decoded: string;
   try {
-    decoded = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+    return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
   } catch {
     throw new StrictJsonError("invalid-utf8", "input is not valid UTF-8");
+  }
+}
+
+export function decodeStrictJson(bytes: Uint8Array, maxDepth = Number.MAX_SAFE_INTEGER): string {
+  const decoded = strictUtf8Text(bytes);
+  new StrictJsonParser(decoded, maxDepth).parse();
+  return decoded;
+}
+
+/**
+ * The reference oracle of the policy-core-v3 decoder classes
+ * (contracts/wit/policy-core-v3/SEMANTICS.md, section 2): after the byte order mark and UTF-8
+ * checks, a text that is not RFC 8259 JSON is `invalid-json`, whatever semantic defect it also
+ * holds; the semantic classes are judged only on a grammatical text. The order binds this
+ * oracle only: a component may stop at the first defect it meets. Two passes: the grammar,
+ * then the strict scan of `decodeStrictJson`, which can then only meet a semantic defect.
+ * policy-core-v2 keeps `decodeStrictJson` and its first-defect order.
+ */
+export function decodeStrictJsonGrammarFirst(
+  bytes: Uint8Array,
+  maxDepth = Number.MAX_SAFE_INTEGER,
+): string {
+  const decoded = strictUtf8Text(bytes);
+  // JSON.parse implements the ECMA-404 grammar, which is the RFC 8259 grammar; it admits
+  // duplicate member names, lone surrogate escapes and out-of-range numbers, so it judges
+  // the grammar alone. Its parser is iterative under Bun and Node and throws only
+  // SyntaxError (security review of policy-core-v3, 2026-11-23, six 8 MiB adversarial
+  // texts); any other exception is rethrown, never a verdict. The exception actually
+  // reachable here is the RangeError of the recursive second pass below, when no maximum
+  // depth is passed on a deep text; the policy-core-v3 checks pass the budget depth.
+  try {
+    JSON.parse(decoded);
+  } catch (error) {
+    if (error instanceof SyntaxError)
+      throw new StrictJsonError("invalid-json", "input is not RFC 8259 JSON");
+    throw error;
   }
   new StrictJsonParser(decoded, maxDepth).parse();
   return decoded;

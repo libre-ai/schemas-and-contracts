@@ -1,0 +1,34 @@
+{
+  "schemaVersion": "libre-ai.policy-core-memory-qualification.v1",
+  "description": "Refused inputs of adversarial shape at the 8 MiB input ceiling, for the peak component linear memory qualification of policy-core-v3 (contracts/wit/policy-core-v3/SEMANTICS.md, sections 2 and 10). Each input is the concatenation of its segments, each text repeated count times. A component returns input-invalid and stays within memoryQualification.peakComponentLinearMemoryBytes of contracts/fixtures/policy-core-v2/resource-budgets.v1.json; the measurement itself is an implementation gate. defect is the class of the reference oracle, null when the decoder accepts the text and schema validation refuses it.",
+  "cases": [
+    {
+      "id": "open-arrays",
+      "argument": "policy",
+      "segments": [{ "text": "[", "count": 8388608 }],
+      "inputSha256": "d6da60c0eddd93a5c447f65a7e12dc629ec32618609c9c39674722f7ece241db",
+      "defect": "invalid-json",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "balanced-arrays",
+      "argument": "policy",
+      "segments": [{ "text": "[", "count": 4194304 }, { "text": "]", "count": 4194304 }],
+      "inputSha256": "408166907a78f315d5a0a9598d1cefd57acda32c4ea4ebd00b475db9d7df8ac8",
+      "defect": "max-depth",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "many-empty-objects",
+      "argument": "policy",
+      "segments": [
+        { "text": "[{}", "count": 1 },
+        { "text": ",{}", "count": 2796201 },
+        { "text": "] ", "count": 1 }
+      ],
+      "inputSha256": "c06fb7d49640f2298cd4c426fc00025e642ac34a66980029c26011dd88ed6ae7",
+      "defect": null,
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    }
+  ]
+}

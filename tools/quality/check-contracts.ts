@@ -723,6 +723,7 @@ const specializedVectorPaths = [
   "contracts/fixtures/notebook-core-v2/golden-vectors.v1.json",
   "contracts/fixtures/policy-core-v1/golden.json",
   "contracts/fixtures/policy-core-v2/golden.json",
+  "contracts/fixtures/policy-core-v3/golden.json",
   "contracts/fixtures/boussole-scoring-v2/golden-vectors.v1.json",
   POLICY_RECEIPT_GOLDEN_PATH,
 ] as const;

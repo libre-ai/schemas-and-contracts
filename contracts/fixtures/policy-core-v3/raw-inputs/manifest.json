@@ -1,0 +1,269 @@
+{
+  "schemaVersion": "libre-ai.policy-core-raw-input-vectors.v2",
+  "description": "Byte-exact decoder vectors of policy-core-v3 (contracts/wit/policy-core-v3/SEMANTICS.md, sections 2 and 10). cases are refused inputs: expectedErrors is the WIT variant a component returns and binds it; defect is the class the reference oracle gives and binds only that oracle. A case with argument and goldenCase is a carrier: its bytes are the argument it names of that golden case, schema-valid once decoded permissively, with one decoder defect; it is passed in that argument with the other arguments of the golden case. A case without argument is refused in each of the three JSON arguments. acceptedCases are inputs the reference oracle accepts; they fix the depth bound (the top-level value has depth 0, a value deeper than 64 is max-depth). carriedFrom names the policy-core-v2 raw-input case whose bytes are reused unchanged.",
+  "cases": [
+    {
+      "id": "utf8-bom",
+      "file": "utf8-bom.bin",
+      "inputSha256": "aa25e978046d680ef8740d837e6de5bc1e2a2dc6089dbda1012544b538d53f65",
+      "byteLength": 5,
+      "defect": "bom",
+      "carriedFrom": "utf8-bom",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-utf8",
+      "file": "invalid-utf8.bin",
+      "inputSha256": "a452ad021237e7af393f6432d26969900a9e4047075b776dc8a4383e36ffaffd",
+      "byteLength": 14,
+      "defect": "invalid-utf8",
+      "carriedFrom": "invalid-utf8",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "duplicate-object-member",
+      "file": "duplicate-object-member.bin",
+      "inputSha256": "eef30767818f537ae9974973d0b89e7b5b995cc5d0cf01cc2e304513468a93b9",
+      "byteLength": 22,
+      "defect": "duplicate-member",
+      "carriedFrom": "duplicate-object-member",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "unpaired-high-surrogate",
+      "file": "unpaired-high-surrogate.bin",
+      "inputSha256": "c3c0f6e73919dc685c0a333f2160a12cbc94663790ff525abd109f1ceedcf00b",
+      "byteLength": 18,
+      "defect": "unpaired-surrogate",
+      "carriedFrom": "unpaired-high-surrogate",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "unpaired-low-surrogate",
+      "file": "unpaired-low-surrogate.bin",
+      "inputSha256": "c12f9aef893dd8f4ac8e3df305685220562af5c576b9c145eeac74be2fe53160",
+      "byteLength": 18,
+      "defect": "unpaired-surrogate",
+      "carriedFrom": "unpaired-low-surrogate",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-leading-zero",
+      "file": "invalid-json-leading-zero.bin",
+      "inputSha256": "cc7c115896e02faf43b57f3f5ee079206a25ae9a00ed0170ffb1e329d4e2416a",
+      "byteLength": 12,
+      "defect": "invalid-json",
+      "carriedFrom": "invalid-number-leading-zero",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-plus-sign",
+      "file": "invalid-json-plus-sign.bin",
+      "inputSha256": "2d13d8d574884095d46cdb8f6b401983fa350a3bfac079c314570ccfd1c95e57",
+      "byteLength": 12,
+      "defect": "invalid-json",
+      "carriedFrom": "invalid-number-plus-sign",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-nan",
+      "file": "invalid-json-nan.bin",
+      "inputSha256": "159f99e03ec6dfb7edcad87bac613ac97a235493ad8b79b33cfa4002fb4477f8",
+      "byteLength": 13,
+      "defect": "invalid-json",
+      "carriedFrom": "invalid-number-nan",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-trailing-decimal",
+      "file": "invalid-json-trailing-decimal.bin",
+      "inputSha256": "07860f78431ccaf010ed6a3ae44ad279807ea0eaff2bd2885ee4e0db21855409",
+      "byteLength": 12,
+      "defect": "invalid-json",
+      "carriedFrom": "invalid-number-trailing-decimal",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-letter-after-number",
+      "file": "invalid-json-letter-after-number.bin",
+      "inputSha256": "b8b2b83ebc9a49520be7c9e899b94db52df55a0c51d7085e9f1d5f664780415e",
+      "byteLength": 4,
+      "defect": "invalid-json",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-surrogate-bad-escape",
+      "file": "invalid-json-surrogate-bad-escape.bin",
+      "inputSha256": "02a673b2c38db4022ebd730c0cad500c331ab2df6379cde6043d4f5b6b33d800",
+      "byteLength": 14,
+      "defect": "invalid-json",
+      "note": "The policy-core-v2 decoder also gives invalid-json here: this case does not tell policy-core-v3 from policy-core-v2. It tells the grammar-first reader from crates/sdk-rs strict_json, which gives UnpairedSurrogate at the first escape.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-surrogate-then-trailing-octet",
+      "file": "invalid-json-surrogate-then-trailing-octet.bin",
+      "inputSha256": "fd29ea612537c76477129ad3100303796229e21531eb6ee69405e783c4de0021",
+      "byteLength": 19,
+      "defect": "invalid-json",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-json-duplicate-then-trailing-comma",
+      "file": "invalid-json-duplicate-then-trailing-comma.bin",
+      "inputSha256": "4363c2084e3a35b1d6f08c047f9446d501d0a20f258e7dd77ed7219fb38a55dd",
+      "byteLength": 18,
+      "defect": "invalid-json",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "invalid-number-non-finite",
+      "file": "invalid-number-non-finite.bin",
+      "inputSha256": "c3481b4e0f5fa4a1c11f5d5f510a0a0da26a5b1bca5894159a6ce18f2c99331c",
+      "byteLength": 15,
+      "defect": "invalid-number",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-scalar-in-arrays",
+      "file": "depth-65-scalar-in-arrays.bin",
+      "inputSha256": "2574b71c86249bc36bf15157b4883f41da049924b6ddd4477f68af56d73d76b2",
+      "byteLength": 131,
+      "defect": "max-depth",
+      "note": "65 nested arrays around 0: the scalar has depth 65.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-empty-array",
+      "file": "depth-65-empty-array.bin",
+      "inputSha256": "1d32a5425f5002965013363638b3da4650bf294993f62998aac1785fdc62f736",
+      "byteLength": 132,
+      "defect": "max-depth",
+      "note": "66 nested arrays: the innermost, empty, has depth 65.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-member-value",
+      "file": "depth-65-member-value.bin",
+      "inputSha256": "895b63be0394e83162f2def642326d57e1b5aa99fc55c25bde78de1a2c47ffdd",
+      "byteLength": 391,
+      "defect": "max-depth",
+      "note": "65 nested objects {\"a\": around 0: the member value 0 has depth 65.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-then-trailing-octet",
+      "file": "depth-65-then-trailing-octet.bin",
+      "inputSha256": "cb39502530c18006bb87a15f7f90ac56a9904d48886dfc5e1a1ef00a40b2b54a",
+      "byteLength": 132,
+      "defect": "invalid-json",
+      "note": "depth-65-scalar-in-arrays followed by x: the grammar defect takes precedence over max-depth, earlier in the octets. The policy-core-v2 decoder gives max-depth.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-before-unpaired-surrogate",
+      "file": "depth-65-before-unpaired-surrogate.bin",
+      "inputSha256": "3eff57550f0bbdb31c0bbebaa5d6db2aa9b6a9a3e3bcf8c2fab72dd29d240567",
+      "byteLength": 138,
+      "defect": "max-depth",
+      "note": "65 nested arrays around a lone high surrogate: max-depth stands at the opening quotation mark, the surrogate at the backslash after it; document order gives max-depth.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-65-non-finite-number",
+      "file": "depth-65-non-finite-number.bin",
+      "inputSha256": "158d49ad1de1fba2d77ef498c13ec356690979ae68dbd9dc5f58f7fd6be1962c",
+      "byteLength": 135,
+      "defect": "max-depth",
+      "note": "65 nested arrays around 1e400: max-depth and invalid-number stand at the same octet; the earlier class of the list, max-depth, is given.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "depth-64-non-finite-number",
+      "file": "depth-64-non-finite-number.bin",
+      "inputSha256": "a66199cabf9aeee788b9d9e75c97c26056e49912c6745e60bd4426d78c015cfc",
+      "byteLength": 133,
+      "defect": "invalid-number",
+      "note": "64 nested arrays around 1e400: the number has depth 64, within the bound.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "carrier-duplicate-member",
+      "file": "carrier-duplicate-member.bin",
+      "inputSha256": "27ff64871a5886d96f4fa43432fe658df8ad523d19ce7965efb0762311e5f822",
+      "byteLength": 4769,
+      "defect": "duplicate-member",
+      "argument": "policy",
+      "goldenCase": "all-operators-eligible",
+      "note": "The golden policy with a second \"status\":\"approved\" member before the first. A decoder that keeps the last duplicate reads the exact golden policy.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "carrier-unpaired-surrogate",
+      "file": "carrier-unpaired-surrogate.bin",
+      "inputSha256": "added380cc3762e341769b723dc83b135c50831412ff28a7fed77c4f9e43d0ae",
+      "byteLength": 4767,
+      "defect": "unpaired-surrogate",
+      "argument": "policy",
+      "goldenCase": "all-operators-eligible",
+      "note": "The golden policy with a leading \"status\":\"\\uD800\" member; the lone surrogate comes before the duplicate name in document order. A decoder that admits lone surrogates and keeps the last duplicate reads the exact golden policy.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "carrier-invalid-number",
+      "file": "carrier-invalid-number.bin",
+      "inputSha256": "bab5b606d7fd31cec72dd18d8f2af027ebfea2e8bd2f315bba495c8448471088",
+      "byteLength": 4765,
+      "defect": "invalid-number",
+      "argument": "policy",
+      "goldenCase": "all-operators-eligible",
+      "note": "The golden policy with a leading \"version\":1e400 member. A decoder that maps 1e400 to infinity and keeps the last duplicate reads the exact golden policy.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "carrier-invalid-json",
+      "file": "carrier-invalid-json.bin",
+      "inputSha256": "646e53fd56a45a13b976a903174210c2abc240de937d5f2ec285beb09ad97044",
+      "byteLength": 4750,
+      "defect": "invalid-json",
+      "argument": "policy",
+      "goldenCase": "all-operators-eligible",
+      "note": "The golden policy followed by x. A reader that takes the first JSON value without checking the end of the input reads the exact golden policy.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "carrier-bom",
+      "file": "carrier-bom.bin",
+      "inputSha256": "521a2b529a316a966c2f3b255b4f2c56ba5396920a740cb31c4faa3d7f7e66fb",
+      "byteLength": 4752,
+      "defect": "bom",
+      "argument": "policy",
+      "goldenCase": "all-operators-eligible",
+      "note": "The golden policy after a byte order mark. A decoder that drops the mark reads the exact golden policy.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    }
+  ],
+  "acceptedCases": [
+    {
+      "id": "depth-64-scalar-in-arrays",
+      "file": "depth-64-scalar-in-arrays.bin",
+      "inputSha256": "f0244ae1938270f711155b0a26a4307cde7050495140dd858a88a1cfc378cf40",
+      "byteLength": 129,
+      "note": "64 nested arrays around 0: the scalar has depth 64."
+    },
+    {
+      "id": "depth-64-empty-array",
+      "file": "depth-64-empty-array.bin",
+      "inputSha256": "d3ee90dfd8c7ae285b99965bc228314571a3a09deb168b69aa871a2d5bcef236",
+      "byteLength": 130,
+      "note": "65 nested arrays: the innermost, empty, has depth 64 and holds no value."
+    },
+    {
+      "id": "depth-64-member-value",
+      "file": "depth-64-member-value.bin",
+      "inputSha256": "8e9b83c30898716a2cd9468c0a4db4141d931272fcd7ed964bfb1a01ac2ff62e",
+      "byteLength": 385,
+      "note": "64 nested objects {\"a\": around 0: the member value 0 has depth 64."
+    }
+  ]
+}
