@@ -2,7 +2,7 @@ use serde::de::{DeserializeSeed, Error as _, MapAccess, SeqAccess, Visitor};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::cmp::Ordering;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fmt::{self, Write as _};
 use std::fs;
 
@@ -655,10 +655,11 @@ fn policy_core_v3_raw_inputs_follow_the_grammar_first_classes() {
             !readings.is_empty(),
             "{id}: not its golden argument plus one inserted run"
         );
+        let mut index = ReferenceIndex::new(&reference);
         assert!(
-            readings.iter().any(|&(offset, run)| {
-                adds_one_defect(defect, &reference, offset, run, maximum_depth)
-            }),
+            readings
+                .iter()
+                .any(|&(offset, run)| adds_one_defect(defect, &mut index, offset, run)),
             "{id}: its inserted run ({} octets) is not one {defect} defect at a place where that \
              class can stand",
             readings[0].1.len()
@@ -818,54 +819,142 @@ enum Place {
     Outside,
 }
 
-/// Where `offset` falls in the compact JSON `text`, and the start of the innermost object or
-/// array open there.
-fn position_in(text: &[u8], offset: usize) -> (Place, Option<usize>) {
-    let mut open = Vec::new();
-    let (mut in_string, mut escaped, mut hex_left) = (false, false, 0usize);
-    for (index, &octet) in text.iter().enumerate().take(offset) {
-        if in_string {
-            if hex_left > 0 {
-                hex_left -= 1;
-            } else if escaped {
-                escaped = false;
-                if octet == b'u' {
-                    hex_left = 4;
-                }
-            } else if octet == b'\\' {
-                escaped = true;
-            } else if octet == b'"' {
-                in_string = false;
-            }
-            continue;
-        }
-        match octet {
-            b'"' => in_string = true,
-            b'{' | b'[' => open.push(index),
-            b'}' | b']' => {
-                open.pop();
-            }
-            _ => {}
-        }
-    }
-    let place = match (in_string, escaped || hex_left > 0) {
-        (false, _) => Place::Outside,
-        (true, true) => Place::Escape,
-        (true, false) => Place::String,
-    };
-    (place, open.last().copied())
+/// One pass over the compact JSON `text`: for each offset from 0 to its length, where it falls
+/// and the start of the innermost object or array open there. Every reading of a carrier is
+/// then checked without walking the reference again.
+struct ReferenceIndex<'a> {
+    text: &'a [u8],
+    place: Vec<Place>,
+    container: Vec<Option<usize>>,
+    /// The octet range of each member of an object, by the offset of its `{`, computed once.
+    members: HashMap<usize, Vec<std::ops::Range<usize>>>,
 }
 
-/// The member names of the object that opens at `start` of the compact JSON `text`.
-fn member_names_at(text: &[u8], start: usize) -> Vec<String> {
-    if text.get(start) != Some(&b'{') {
-        return Vec::new();
+impl<'a> ReferenceIndex<'a> {
+    fn new(text: &'a [u8]) -> Self {
+        let mut place = Vec::with_capacity(text.len() + 1);
+        let mut container = Vec::with_capacity(text.len() + 1);
+        let mut open = Vec::new();
+        let (mut in_string, mut escaped, mut hex_left) = (false, false, 0usize);
+        for index in 0..=text.len() {
+            place.push(match (in_string, escaped || hex_left > 0) {
+                (false, _) => Place::Outside,
+                (true, true) => Place::Escape,
+                (true, false) => Place::String,
+            });
+            container.push(open.last().copied());
+            let Some(&octet) = text.get(index) else {
+                break;
+            };
+            if in_string {
+                if hex_left > 0 {
+                    hex_left -= 1;
+                } else if escaped {
+                    escaped = false;
+                    if octet == b'u' {
+                        hex_left = 4;
+                    }
+                } else if octet == b'\\' {
+                    escaped = true;
+                } else if octet == b'"' {
+                    in_string = false;
+                }
+                continue;
+            }
+            match octet {
+                b'"' => in_string = true,
+                b'{' | b'[' => open.push(index),
+                b'}' | b']' => {
+                    open.pop();
+                }
+                _ => {}
+            }
+        }
+        Self {
+            text,
+            place,
+            container,
+            members: HashMap::new(),
+        }
     }
-    let end = container_end(text, start);
-    match serde_json::from_slice::<Value>(&text[start..end]) {
-        Ok(Value::Object(members)) => members.keys().cloned().collect(),
-        _ => Vec::new(),
+
+    /// The octets of each member of the object that opens at `start`, as `"name":value`.
+    fn members_at(&mut self, start: usize) -> Vec<&'a [u8]> {
+        let Self {
+            text,
+            place,
+            members,
+            ..
+        } = self;
+        let text: &'a [u8] = text;
+        members
+            .entry(start)
+            .or_insert_with(|| {
+                let mut ranges = Vec::new();
+                let (mut depth, mut member_start) = (0usize, start + 1);
+                for at in start + 1..text.len() {
+                    if place[at] != Place::Outside {
+                        continue;
+                    }
+                    match text[at] {
+                        b'{' | b'[' => depth += 1,
+                        b'}' | b']' if depth == 0 => {
+                            if at > member_start {
+                                ranges.push(member_start..at);
+                            }
+                            break;
+                        }
+                        b'}' | b']' => depth -= 1,
+                        b',' if depth == 0 => {
+                            ranges.push(member_start..at);
+                            member_start = at + 1;
+                        }
+                        _ => {}
+                    }
+                }
+                ranges
+            })
+            .iter()
+            .map(|range| &text[range.clone()])
+            .collect()
     }
+}
+
+/// The `"name"` token that opens `member`, escapes included.
+fn name_token(member: &[u8]) -> Option<&[u8]> {
+    if member.first() != Some(&b'"') {
+        return None;
+    }
+    let mut at = 1;
+    while at < member.len() {
+        match member[at] {
+            b'\\' => at += 2,
+            b'"' => return Some(&member[..=at]),
+            _ => at += 1,
+        }
+    }
+    None
+}
+
+/// The member a run inserts at a member boundary of an object: `member,` right after its `{`,
+/// or, unless `leading_only`, `,member` before a `,` or its `}`. None anywhere else.
+fn inserted_member<'r>(
+    index: &ReferenceIndex,
+    offset: usize,
+    run: &'r [u8],
+    leading_only: bool,
+) -> Option<(usize, &'r [u8])> {
+    let container = index.container[offset]?;
+    if index.place[offset] != Place::Outside || index.text[container] != b'{' {
+        return None;
+    }
+    if container + 1 == offset {
+        return run.strip_suffix(b",").map(|member| (container, member));
+    }
+    if !leading_only && matches!(index.text.get(offset), Some(b',' | b'}')) {
+        return run.strip_prefix(b",").map(|member| (container, member));
+    }
+    None
 }
 
 /// `\uD800` to `\uDFFF`, and which half of a pair it is.
@@ -883,76 +972,36 @@ fn surrogate_escape(octets: &[u8]) -> Option<bool> {
     }
 }
 
-/// One member inserted at a member boundary of an object of `reference`, under a name that
-/// object already holds: `"name":value,` right after its `{`, or `,"name":value` before a `,`
-/// or its `}`. `leading_only` admits only the first form, where the golden member repeats it.
-fn one_repeated_member(
-    reference: &[u8],
-    offset: usize,
-    run: &[u8],
-    value: impl Fn(&[u8]) -> bool,
-    leading_only: bool,
-) -> bool {
-    let (place, container) = position_in(reference, offset);
-    let Some(container) = container else {
-        return false;
-    };
-    if place != Place::Outside || reference[container] != b'{' {
-        return false;
-    }
-    let member = if container + 1 == offset && run.ends_with(b",") {
-        &run[..run.len() - 1]
-    } else if !leading_only
-        && container + 1 != offset
-        && matches!(reference.get(offset), Some(b',' | b'}'))
-        && run.starts_with(b",")
-    {
-        &run[1..]
-    } else {
-        return false;
-    };
-    if member.first() != Some(&b'"') {
-        return false;
-    }
-    let Ok(name_end) = json_string_end(member, 0) else {
-        return false;
-    };
-    let Ok(name) = serde_json::from_slice::<String>(&member[..name_end]) else {
-        return false;
-    };
-    member.get(name_end) == Some(&b':')
-        && member_names_at(reference, container).contains(&name)
-        && value(&member[name_end + 1..])
-}
-
-/// Whether `run` inserted at `offset` adds exactly one defect of `defect` to `reference`, by
-/// the class definitions of SEMANTICS section 2 and the carrier rule of section 10, never by
-/// the fixtures: a second defect of any class, hidden in the run, makes it false.
-fn adds_one_defect(
-    defect: &str,
-    reference: &[u8],
-    offset: usize,
-    run: &[u8],
-    maximum_depth: usize,
-) -> bool {
+/// Whether `run` inserted at `offset` adds exactly one defect of `defect` to the reference, in
+/// the minimal form of its class, which can hide nothing else: SEMANTICS section 2 for the
+/// classes, section 10 for the carriers, never the fixtures. Any octet beyond that form makes
+/// it false.
+fn adds_one_defect(defect: &str, index: &mut ReferenceIndex, offset: usize, run: &[u8]) -> bool {
+    let text = index.text;
     match defect {
         "bom" => offset == 0 && run == [0xef, 0xbb, 0xbf],
+        // One octet that is never valid after an ASCII octet (a continuation octet, or F5 to
+        // FF), between two ASCII octets of a string: dropped, it gives the reference back;
+        // replaced, it gives U+FFFD; no reading turns it into a character of the JSON syntax.
         "invalid-utf8" => {
-            position_in(reference, offset).0 == Place::String
-                && run.iter().all(|octet| *octet >= 0x80)
-                && std::str::from_utf8(run).is_err()
+            matches!(run, [0x80..=0xbf | 0xf5..=0xff])
+                && index.place[offset] == Place::String
+                && offset
+                    .checked_sub(1)
+                    .and_then(|before| text.get(before))
+                    .is_some_and(u8::is_ascii)
+                && text.get(offset).is_some_and(u8::is_ascii)
         }
         "unpaired-surrogate" => {
-            if position_in(reference, offset).0 != Place::String {
+            if index.place[offset] != Place::String {
                 return false;
             }
             match surrogate_escape(run) {
                 Some(true) => {
-                    reference.get(offset..offset + 6).and_then(surrogate_escape) != Some(false)
+                    text.get(offset..offset + 6).and_then(surrogate_escape) != Some(false)
                 }
                 Some(false) => {
-                    reference
-                        .get(offset.saturating_sub(6)..offset)
+                    text.get(offset.saturating_sub(6)..offset)
                         .and_then(surrogate_escape)
                         != Some(true)
                 }
@@ -960,30 +1009,39 @@ fn adds_one_defect(
             }
         }
         // Section 2: one JSON text followed by something other than insignificant whitespace.
+        // One printable octet that cannot start a value, so the tail holds no second JSON text.
         "invalid-json" => {
-            offset == reference.len() && run.iter().all(|octet| (0x21..=0x7e).contains(octet))
+            offset == text.len()
+                && matches!(run, [octet @ 0x21..=0x7e]
+                    if !b"\"[{-0123456789tfn".contains(octet))
         }
-        "duplicate-member" => one_repeated_member(
-            reference,
-            offset,
-            run,
-            |value| policy_core_v3_defect(value, maximum_depth).is_none(),
-            false,
-        ),
-        // Section 10: the non-finite number is the value of a member the golden one repeats.
-        "invalid-number" => one_repeated_member(
-            reference,
-            offset,
-            run,
-            |value| {
-                json_number_end(value, 0) == Ok(value.len())
-                    && std::str::from_utf8(value)
-                        .ok()
-                        .and_then(|number| number.parse::<f64>().ok())
-                        .is_some_and(|number| !number.is_finite())
-            },
-            true,
-        ),
+        // A byte-exact copy of a member of the same object: a reader that keeps the first
+        // duplicate and one that keeps the last both read the golden argument.
+        "duplicate-member" => inserted_member(index, offset, run, false)
+            .is_some_and(|(container, member)| index.members_at(container).contains(&member)),
+        // Section 10: one leading member, under the name token of a member of the same object,
+        // whose value is an RFC 8259 number out of the binary64 range.
+        "invalid-number" => {
+            let Some((container, member)) = inserted_member(index, offset, run, true) else {
+                return false;
+            };
+            let Some(name) = name_token(member) else {
+                return false;
+            };
+            if member.get(name.len()) != Some(&b':') {
+                return false;
+            }
+            let value = &member[name.len() + 1..];
+            index
+                .members_at(container)
+                .iter()
+                .any(|golden| name_token(golden) == Some(name))
+                && json_number_end(value, 0) == Ok(value.len())
+                && std::str::from_utf8(value)
+                    .ok()
+                    .and_then(|number| number.parse::<f64>().ok())
+                    .is_some_and(|number| !number.is_finite())
+        }
         _ => false,
     }
 }

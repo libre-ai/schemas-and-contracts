@@ -206,7 +206,7 @@
       "defect": "unpaired-surrogate",
       "argument": "policy",
       "goldenCase": "all-operators-eligible",
-      "note": "The golden policy with the escape \\uD800 appended to the free licence string of a rule source, and no other change. A decoder that admits lone surrogates reads a schema-valid policy whose digest is not policy.digest, so a component built on it returns digest-mismatch or evaluates.",
+      "note": "The golden policy with the escape \\uD800 appended to the free licence string of rules[0].source (offset 461 of the compact golden policy), and no other change. A decoder that admits lone surrogates reads a schema-valid policy whose digest is not policy.digest, so a component built on it returns digest-mismatch or evaluates.",
       "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
     },
     {
@@ -250,7 +250,7 @@
       "defect": "invalid-utf8",
       "argument": "policy",
       "goldenCase": "all-operators-eligible",
-      "note": "The golden policy with the octet 0xFF appended to the free licence string of a rule source, and no other change. A decoder that drops the octet reads the exact golden policy, so a component built on it evaluates; one that replaces it with U+FFFD (a TextDecoder without fatal) reads a schema-valid policy whose digest is not policy.digest, so a component built on it returns digest-mismatch or evaluates.",
+      "note": "The golden policy with the octet 0xFF appended to the free licence string of rules[0].source (offset 461 of the compact golden policy), and no other change. A decoder that drops the octet reads the exact golden policy, so a component built on it evaluates; one that replaces it with U+FFFD (a TextDecoder without fatal) reads a schema-valid policy whose digest is not policy.digest, so a component built on it returns digest-mismatch or evaluates.",
       "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
     }
   ],

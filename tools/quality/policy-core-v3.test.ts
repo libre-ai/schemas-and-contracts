@@ -7,7 +7,6 @@ import addFormats from "ajv-formats";
 import {
   decodeStrictJson,
   decodeStrictJsonGrammarFirst,
-  parseStrictJson,
   type RawDefect,
   StrictJsonError,
   verifyPolicyCoreRawInputVectors,
@@ -147,157 +146,195 @@ function insertions(reference: Uint8Array, bytes: Uint8Array): Insertion[] {
     suffix += 1;
   const readings: Insertion[] = [];
   for (let offset = Math.max(0, reference.length - suffix); offset <= prefix; offset += 1)
-    readings.push({ offset, run: bytes.slice(offset, offset + extra) });
+    readings.push({ offset, run: bytes.subarray(offset, offset + extra) });
   return readings;
 }
 
-const latin1 = (octets: Uint8Array): string => String.fromCharCode(...octets);
+/** `octets` as one character per octet, without spreading them on the call stack. */
+function latin1(octets: Uint8Array): string {
+  let text = "";
+  for (const octet of octets) text += String.fromCharCode(octet);
+  return text;
+}
+
+function sameOctets(left: Uint8Array, right: Uint8Array): boolean {
+  return left.length === right.length && left.every((octet, at) => octet === right[at]);
+}
+
+const OUTSIDE = 0;
+const IN_STRING = 1;
+const IN_ESCAPE = 2;
 
 /**
- * Where `offset` falls in the compact JSON `text`: between two characters of a string, inside
- * an escape, or outside every string; and the start of the innermost open object or array.
+ * One pass over the compact JSON `text`: for each offset from 0 to its length, whether it
+ * falls outside every string, between two characters of a string or inside an escape, and the
+ * start of the innermost object or array open there (-1 for none). Every reading of a carrier
+ * is then checked without walking the reference again.
  */
-function positionIn(
-  text: Uint8Array,
-  offset: number,
-): { place: "string" | "escape" | "outside"; container: number | null } {
+interface ReferenceIndex {
+  text: Uint8Array;
+  place: Uint8Array;
+  container: Int32Array;
+  /** The octets of each member of an object, by the offset of its `{`, computed once. */
+  members: Map<number, Uint8Array[]>;
+}
+
+function indexReference(text: Uint8Array): ReferenceIndex {
+  const place = new Uint8Array(text.length + 1);
+  const container = new Int32Array(text.length + 1);
   const open: number[] = [];
   let inString = false;
   let escaped = false;
   let hexLeft = 0;
-  for (let index = 0; index < offset; index += 1) {
-    const octet = String.fromCharCode(text[index] as number);
+  for (let index = 0; index <= text.length; index += 1) {
+    place[index] = !inString ? OUTSIDE : escaped || hexLeft > 0 ? IN_ESCAPE : IN_STRING;
+    container[index] = open.at(-1) ?? -1;
+    const octet = text[index];
+    if (octet === undefined) break;
     if (inString) {
       if (hexLeft > 0) hexLeft -= 1;
       else if (escaped) {
         escaped = false;
-        if (octet === "u") hexLeft = 4;
-      } else if (octet === "\\") escaped = true;
-      else if (octet === '"') inString = false;
-    } else if (octet === '"') inString = true;
-    else if (octet === "{" || octet === "[") open.push(index);
-    else if (octet === "}" || octet === "]") open.pop();
+        if (octet === 0x75) hexLeft = 4;
+      } else if (octet === 0x5c) escaped = true;
+      else if (octet === 0x22) inString = false;
+    } else if (octet === 0x22) inString = true;
+    else if (octet === 0x7b || octet === 0x5b) open.push(index);
+    else if (octet === 0x7d || octet === 0x5d) open.pop();
   }
-  const place = !inString ? "outside" : escaped || hexLeft > 0 ? "escape" : "string";
-  return { place, container: open.at(-1) ?? null };
+  return { text, place, container, members: new Map() };
 }
 
-/** The member names of the object that opens at `start` of the compact JSON `text`. */
-function memberNamesAt(text: Uint8Array, start: number): string[] {
-  if (text[start] !== 0x7b) return [];
+/** The octets of each member of the object that opens at `start`, as `"name":value`. */
+function membersAt(index: ReferenceIndex, start: number): Uint8Array[] {
+  const known = index.members.get(start);
+  if (known !== undefined) return known;
+  const members: Uint8Array[] = [];
   let depth = 0;
-  let inString = false;
-  let escaped = false;
-  for (let index = start; index < text.length; index += 1) {
-    const octet = String.fromCharCode(text[index] as number);
-    if (inString) {
-      if (escaped) escaped = false;
-      else if (octet === "\\") escaped = true;
-      else if (octet === '"') inString = false;
-    } else if (octet === '"') inString = true;
-    else if (octet === "{" || octet === "[") depth += 1;
-    else if ((octet === "}" || octet === "]") && --depth === 0)
-      return Object.keys(JSON.parse(latin1(text.slice(start, index + 1))) as JsonRecord);
+  let memberStart = start + 1;
+  for (let at = start + 1; at < index.text.length; at += 1) {
+    if (index.place[at] !== OUTSIDE) continue;
+    const octet = index.text[at];
+    if (octet === 0x7b || octet === 0x5b) depth += 1;
+    else if (octet === 0x7d || octet === 0x5d) {
+      if (depth === 0) {
+        if (at > memberStart) members.push(index.text.subarray(memberStart, at));
+        break;
+      }
+      depth -= 1;
+    } else if (octet === 0x2c && depth === 0) {
+      members.push(index.text.subarray(memberStart, at));
+      memberStart = at + 1;
+    }
   }
-  return [];
+  index.members.set(start, members);
+  return members;
 }
 
-const UTF8_FATAL = new TextDecoder("utf-8", { fatal: true });
+/** The `"name"` token that opens `member`, escapes included, or null. */
+function nameToken(member: Uint8Array): Uint8Array | null {
+  if (member[0] !== 0x22) return null;
+  for (let at = 1; at < member.length; at += 1) {
+    if (member[at] === 0x5c) at += 1;
+    else if (member[at] === 0x22) return member.subarray(0, at + 1);
+  }
+  return null;
+}
+
+/**
+ * The member a run inserts at a member boundary of an object: `member,` right after its `{`,
+ * or, unless `leadingOnly`, `,member` before a `,` or its `}`. Null anywhere else.
+ */
+function insertedMember(
+  index: ReferenceIndex,
+  { offset, run }: Insertion,
+  leadingOnly: boolean,
+): { container: number; member: Uint8Array } | null {
+  const container = index.container[offset] ?? -1;
+  if (index.place[offset] !== OUTSIDE || container < 0 || index.text[container] !== 0x7b)
+    return null;
+  if (container === offset - 1)
+    return run.at(-1) === 0x2c ? { container, member: run.subarray(0, -1) } : null;
+  if (!leadingOnly && (index.text[offset] === 0x2c || index.text[offset] === 0x7d))
+    return run[0] === 0x2c ? { container, member: run.subarray(1) } : null;
+  return null;
+}
+
+const BOM = Uint8Array.of(0xef, 0xbb, 0xbf);
 const RFC_8259_NUMBER = /^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?(?:[eE][+-]?[0-9]+)?$/;
 const SURROGATE_ESCAPE = /^\\u[dD][89a-fA-F][0-9a-fA-F]{2}$/;
 const HIGH_ESCAPE = /^\\u[dD][89abAB][0-9a-fA-F]{2}$/;
 const LOW_ESCAPE = /^\\u[dD][c-fC-F][0-9a-fA-F]{2}$/;
+/** The octets that can start a JSON value, and the insignificant whitespace (RFC 8259). */
+const VALUE_START_OR_WHITESPACE = new Set(encoder.encode('"[{-0123456789tfn \t\n\r'));
 
 /**
- * One member inserted at a member boundary of an object of `reference`, under a name that
- * object already holds: `"name":value,` right after its `{`, or `,"name":value` before a `,` or
- * its `}`. `leadingOnly` admits only the first form, where the golden member repeats it.
+ * Whether `insertion` adds exactly one defect of `defect` to the reference, in the minimal
+ * form of its class, which can hide nothing else: SEMANTICS section 2 for the classes, section
+ * 10 for the carriers, never the fixtures. Any octet beyond that form makes it false.
  */
-function oneRepeatedMember(
-  reference: Uint8Array,
-  { offset, run }: Insertion,
-  value: (text: string) => boolean,
-  leadingOnly: boolean,
-): boolean {
-  const text = latin1(run);
-  const { place, container } = positionIn(reference, offset);
-  if (place !== "outside" || container === null || reference[container] !== 0x7b) return false;
-  let member: string;
-  if (container === offset - 1 && text.endsWith(",")) member = text.slice(0, -1);
-  else if (
-    !leadingOnly &&
-    container !== offset - 1 &&
-    (reference[offset] === 0x2c || reference[offset] === 0x7d) &&
-    text.startsWith(",")
-  )
-    member = text.slice(1);
-  else return false;
-  const parts = /^("(?:[^"\\]|\\.)*"):(.*)$/s.exec(member);
-  if (parts === null) return false;
-  let name: unknown;
-  try {
-    name = parseStrictJson(encoder.encode(parts[1] as string));
-  } catch {
-    return false;
-  }
-  return (
-    typeof name === "string" &&
-    memberNamesAt(reference, container).includes(name) &&
-    value(parts[2] as string)
-  );
-}
-
-/** A value without any decoder defect, by the strict reader. */
-function soundValue(text: string): boolean {
-  try {
-    parseStrictJson(encoder.encode(text));
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Whether `insertion` adds exactly one defect of `defect` to `reference`, by the class
- * definitions of SEMANTICS section 2 and the carrier rule of section 10, never by the
- * fixtures: a second defect of any class, hidden in the run, makes it false.
- */
-function addsOneDefect(defect: string, reference: Uint8Array, insertion: Insertion): boolean {
+function addsOneDefect(defect: string, index: ReferenceIndex, insertion: Insertion): boolean {
   const { offset, run } = insertion;
-  const text = latin1(run);
+  const { text, place } = index;
   switch (defect) {
     case "bom":
-      return offset === 0 && text === "\xef\xbb\xbf";
+      return offset === 0 && sameOctets(run, BOM);
     case "invalid-utf8": {
-      if (positionIn(reference, offset).place !== "string") return false;
-      if (!run.every((octet) => octet >= 0x80)) return false;
-      try {
-        UTF8_FATAL.decode(run);
-        return false;
-      } catch {
-        return true;
-      }
+      // One octet that is never valid after an ASCII octet (a continuation octet, or F5 to FF),
+      // between two ASCII octets of a string: dropped, it gives the reference back; replaced,
+      // it gives U+FFFD; no reading turns it into a character of the JSON syntax.
+      const octet = run[0] ?? 0;
+      return (
+        run.length === 1 &&
+        ((octet >= 0x80 && octet <= 0xbf) || octet >= 0xf5) &&
+        place[offset] === IN_STRING &&
+        (text[offset - 1] ?? 0x80) < 0x80 &&
+        (text[offset] ?? 0x80) < 0x80
+      );
     }
     case "unpaired-surrogate": {
-      if (positionIn(reference, offset).place !== "string" || !SURROGATE_ESCAPE.test(text))
-        return false;
-      if (HIGH_ESCAPE.test(text))
-        return !LOW_ESCAPE.test(latin1(reference.slice(offset, offset + 6)));
-      return !HIGH_ESCAPE.test(latin1(reference.slice(Math.max(0, offset - 6), offset)));
+      if (run.length !== 6 || place[offset] !== IN_STRING) return false;
+      const sequence = latin1(run);
+      if (!SURROGATE_ESCAPE.test(sequence)) return false;
+      if (HIGH_ESCAPE.test(sequence))
+        return !LOW_ESCAPE.test(latin1(text.subarray(offset, offset + 6)));
+      return !HIGH_ESCAPE.test(latin1(text.subarray(Math.max(0, offset - 6), offset)));
     }
-    case "invalid-json":
+    case "invalid-json": {
       // Section 2: one JSON text followed by something other than insignificant whitespace.
-      return offset === reference.length && run.every((octet) => octet >= 0x21 && octet <= 0x7e);
-    case "duplicate-member":
-      return oneRepeatedMember(reference, insertion, soundValue, false);
-    case "invalid-number":
-      // Section 10: the non-finite number is the value of a member the golden one repeats.
-      return oneRepeatedMember(
-        reference,
-        insertion,
-        (value) => RFC_8259_NUMBER.test(value) && !Number.isFinite(Number(value)),
-        true,
+      // One printable octet that cannot start a value, so the tail holds no second JSON text.
+      const octet = run[0] ?? 0;
+      return (
+        offset === text.length &&
+        run.length === 1 &&
+        octet >= 0x21 &&
+        octet <= 0x7e &&
+        !VALUE_START_OR_WHITESPACE.has(octet)
       );
+    }
+    case "duplicate-member": {
+      // A byte-exact copy of a member of the same object: a reader that keeps the first
+      // duplicate and one that keeps the last both read the golden argument.
+      const inserted = insertedMember(index, insertion, false);
+      return (
+        inserted !== null &&
+        membersAt(index, inserted.container).some((member) => sameOctets(member, inserted.member))
+      );
+    }
+    case "invalid-number": {
+      // Section 10: one leading member, under the name token of a member of the same object,
+      // whose value is an RFC 8259 number out of the binary64 range.
+      const inserted = insertedMember(index, insertion, true);
+      if (inserted === null) return false;
+      const name = nameToken(inserted.member);
+      if (name === null || inserted.member[name.length] !== 0x3a) return false;
+      const holdsName = membersAt(index, inserted.container).some((member) => {
+        const golden = nameToken(member);
+        return golden !== null && sameOctets(golden, name);
+      });
+      const value = latin1(inserted.member.subarray(name.length + 1));
+      return holdsName && RFC_8259_NUMBER.test(value) && !Number.isFinite(Number(value));
+    }
     default:
       return false;
   }
@@ -411,7 +448,8 @@ describe("policy-core-v3 raw-input vectors", () => {
         continue;
       }
       const defect = entry.defect as string;
-      if (!readings.some((reading) => addsOneDefect(defect, reference, reading)))
+      const index = indexReference(reference);
+      if (!readings.some((reading) => addsOneDefect(defect, index, reading)))
         findings.push(
           `${String(entry.id)}: its inserted run (${bytes.length - reference.length} octets) ` +
             `is not one ${defect} defect at a place where that class can stand`,
