@@ -1,0 +1,101 @@
+{
+  "id": "policy-core-v3/golden/type-mismatch-unknown",
+  "criteria": ["contracts/wit/policy-core-v3/SEMANTICS.md"],
+  "kind": "policy-core-v3.evaluate",
+  "description": "policy-core-v3 golden case type-mismatch-unknown (contracts/fixtures/policy-core-v3/golden.json)",
+  "dependsOn": [],
+  "data": [],
+  "input": {
+    "policy": {
+      "schemaVersion": "libre-ai.policy-definition.v2",
+      "id": "urn:libre-ai:policy:type-mismatch-unknown",
+      "tenantId": "ten_1234567890abcdef",
+      "version": 1,
+      "status": "approved",
+      "rules": [
+        {
+          "id": "numeric_score",
+          "fact": "model.score",
+          "operator": "at-least",
+          "value": 7,
+          "unknown": "indeterminate",
+          "source": {
+            "uri": "https://example.org/policy/method",
+            "retrievedAt": "2026-01-01T00:00:00Z",
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "a645abe8984a5b481cb1206521e37e512d7352032ebfddcd6a10ab62ec3a5c9e",
+      "approvedAt": "2026-01-02T00:00:00Z",
+      "approval": {
+        "role": "policy-approver",
+        "approvedAt": "2026-01-02T00:00:00Z",
+        "reference": "urn:libre-ai:approval:type-mismatch-unknown",
+        "subjectDigest": "a645abe8984a5b481cb1206521e37e512d7352032ebfddcd6a10ab62ec3a5c9e",
+        "actorKind": "human",
+        "approverId": "usr_policyapprover001"
+      },
+      "proposedBy": "svc_policyagent00001"
+    },
+    "snapshot": {
+      "schemaVersion": "libre-ai.model-snapshot.v2",
+      "id": "urn:libre-ai:snapshot:type-mismatch-unknown",
+      "tenantId": "ten_1234567890abcdef",
+      "modelId": "mdl_8dea9e6cd4c4f366",
+      "capturedAt": "2026-07-16T00:00:00Z",
+      "facts": [
+        {
+          "name": "model.score",
+          "value": "8",
+          "source": {
+            "uri": "https://example.org/evidence/a",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "da8ac9dabbb35f85e44158459da0e1c262013c3c46e03459d914de34fc87de9f"
+    },
+    "need": {
+      "schemaVersion": "libre-ai.policy-need.v2",
+      "id": "urn:libre-ai:need:type-mismatch-unknown",
+      "tenantId": "ten_1234567890abcdef",
+      "facts": [
+        {
+          "name": "need.task",
+          "value": "summary"
+        }
+      ],
+      "digest": "95177ad632d30dbdd8c4444638183719b940e043f183974e799f8882815c76cf"
+    },
+    "evaluatedAt": "2026-07-17T00:00:00Z"
+  },
+  "expected": {
+    "outcome": "accept",
+    "evaluation": {
+      "schemaVersion": "libre-ai.policy-evaluation.v2",
+      "id": "urn:libre-ai:evaluation:fae802a0d15c34eaa826ff92ef689595dea3fef59ca0c65b3929b688c6830e62",
+      "tenantId": "ten_1234567890abcdef",
+      "policyId": "urn:libre-ai:policy:type-mismatch-unknown",
+      "policyDigest": "a645abe8984a5b481cb1206521e37e512d7352032ebfddcd6a10ab62ec3a5c9e",
+      "snapshotId": "urn:libre-ai:snapshot:type-mismatch-unknown",
+      "snapshotDigest": "da8ac9dabbb35f85e44158459da0e1c262013c3c46e03459d914de34fc87de9f",
+      "needDigest": "95177ad632d30dbdd8c4444638183719b940e043f183974e799f8882815c76cf",
+      "engineVersion": "3.0.0",
+      "verdict": "indeterminate",
+      "ruleResults": [
+        {
+          "ruleId": "numeric_score",
+          "status": "unknown",
+          "reasonCode": "policy.fact_type_mismatch"
+        }
+      ],
+      "evaluatedAt": "2026-07-17T00:00:00Z",
+      "digest": "fae802a0d15c34eaa826ff92ef689595dea3fef59ca0c65b3929b688c6830e62"
+    },
+    "canonicalOutput": "{\"digest\":\"fae802a0d15c34eaa826ff92ef689595dea3fef59ca0c65b3929b688c6830e62\",\"engineVersion\":\"3.0.0\",\"evaluatedAt\":\"2026-07-17T00:00:00Z\",\"id\":\"urn:libre-ai:evaluation:fae802a0d15c34eaa826ff92ef689595dea3fef59ca0c65b3929b688c6830e62\",\"needDigest\":\"95177ad632d30dbdd8c4444638183719b940e043f183974e799f8882815c76cf\",\"policyDigest\":\"a645abe8984a5b481cb1206521e37e512d7352032ebfddcd6a10ab62ec3a5c9e\",\"policyId\":\"urn:libre-ai:policy:type-mismatch-unknown\",\"ruleResults\":[{\"reasonCode\":\"policy.fact_type_mismatch\",\"ruleId\":\"numeric_score\",\"status\":\"unknown\"}],\"schemaVersion\":\"libre-ai.policy-evaluation.v2\",\"snapshotDigest\":\"da8ac9dabbb35f85e44158459da0e1c262013c3c46e03459d914de34fc87de9f\",\"snapshotId\":\"urn:libre-ai:snapshot:type-mismatch-unknown\",\"tenantId\":\"ten_1234567890abcdef\",\"verdict\":\"indeterminate\"}"
+  }
+}
