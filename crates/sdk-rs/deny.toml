@@ -1,8 +1,16 @@
 [graph]
 all-features = true
 
+# waiver-review-anchor: 2026-11-24
 [advisories]
 yanked = "deny"
+# Explicit scope: the tool default moves from `all` to `workspace` in
+# cargo-deny 0.22.0, which would silently stop reporting unmaintained
+# transitive dependencies.
+unmaintained = "all"
+ignore = [
+  "RUSTSEC-2026-0543", # chrono is unmaintained, all versions affected and no patched version; direct dependency of libre-ai-contract-types (crates/sdk-rs), no maintained drop-in; expires=2027-02-24; ref=https://rustsec.org/advisories/RUSTSEC-2026-0543
+]
 
 [licenses]
 confidence-threshold = 0.8
