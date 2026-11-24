@@ -71,8 +71,12 @@ quoted ones, and that the v2 file it derives from has the pinned SHA-256:
   decoder defect of their class added each, except the `invalid-number` carrier, which also
   repeats a member name, passed in a named argument. A permissive decoder reads a
   schema-valid argument from a carrier, so a component built on it does not return
-  `input-invalid`: it evaluates the argument, or refuses it at a later validation step
-  (`digest-mismatch` on the carriers whose defect sits in a `licence` string). Also a v3
+  `input-invalid`: it evaluates the argument, or refuses it at a later validation step.
+  Which of the two depends on what the decoder makes of the defect: on the carriers whose
+  defect sits in a `licence` string, a decoder that keeps the lone surrogate or replaces the
+  invalid octet reads a policy whose digest is not `policy.digest`, so the later step can be
+  `digest-mismatch`, while one that drops the invalid octet reads the exact golden policy,
+  which evaluates. Also a v3
   memory qualification file of refused 8 MiB inputs of adversarial shape. A component is
   judged on WIT variants and budgets.
 - C4, depth: the top-level value has depth 0, a value deeper than 64 is `max-depth` (the
