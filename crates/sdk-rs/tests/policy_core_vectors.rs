@@ -594,14 +594,13 @@ fn policy_core_v3_raw_inputs_follow_the_grammar_first_classes() {
         "libre-ai.policy-core-raw-input-vectors.v2"
     );
     let maximum_depth = policy_core_budget_depth();
-    let golden: Value = serde_json::from_str(include_str!(
-        "../../../contracts/fixtures/policy-core-v3/golden.json"
-    ))
-    .expect("policy-core-v3 golden");
+    let golden_text = include_str!("../../../contracts/fixtures/policy-core-v3/golden.json");
+    let golden: Value = serde_json::from_str(golden_text).expect("policy-core-v3 golden");
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../contracts/fixtures/policy-core-v3/raw-inputs");
     let mut ids = HashSet::new();
     let mut defects = HashSet::new();
+    let mut compared_as_octets = 0;
     // Carrier vectors: the class each serde_json reading lets through as the exact golden
     // input, so that a component built on it would evaluate instead of refusing.
     let mut defeat_from_slice = HashSet::new();
@@ -638,6 +637,27 @@ fn policy_core_v3_raw_inputs_follow_the_grammar_first_classes() {
         );
         let expected = &golden_case[argument];
         assert!(expected.is_object(), "{id}: argument {argument}");
+        // Compared as octets, so that a reader keeping the last duplicate cannot hide an added
+        // member: the carrier is its golden argument plus one inserted run, which adds a member
+        // only for the two classes whose defect is one (SEMANTICS section 10).
+        let reference = compact_golden_argument(
+            golden_text,
+            case["goldenCase"].as_str().expect("golden case id"),
+            argument,
+        );
+        assert_eq!(
+            serde_json::from_slice::<Value>(&reference).ok().as_ref(),
+            Some(expected),
+            "{id}: compact golden argument"
+        );
+        let inserted = inserted_run(&reference, &bytes)
+            .unwrap_or_else(|| panic!("{id}: not its golden argument plus one inserted run"));
+        assert!(
+            ["duplicate-member", "invalid-number"].contains(&defect)
+                || !inserted.iter().any(|octet| b"\"{}[]:,".contains(octet)),
+            "{id}: its inserted octets can add a member"
+        );
+        compared_as_octets += 1;
         if serde_json::from_slice::<Value>(&bytes).ok().as_ref() == Some(expected) {
             defeat_from_slice.insert(defect);
         }
@@ -681,11 +701,101 @@ fn policy_core_v3_raw_inputs_follow_the_grammar_first_classes() {
         ])
     );
     assert!(!accepted.is_empty());
+    assert_eq!(compared_as_octets, 6, "carriers compared as octets");
     println!(
-        "policy-core-v3 raw inputs (Rust): {} refused, {} accepted",
+        "policy-core-v3 raw inputs (Rust): {} refused ({} carriers compared as octets), {} accepted",
         refused.len(),
+        compared_as_octets,
         accepted.len()
     );
+}
+
+/// `text` without the whitespace RFC 8259 allows between tokens: the compact serialization,
+/// in the member order of the source.
+fn compact_json(text: &str) -> Vec<u8> {
+    let mut compact = Vec::with_capacity(text.len());
+    let (mut in_string, mut escaped) = (false, false);
+    for &octet in text.as_bytes() {
+        if in_string {
+            compact.push(octet);
+            if escaped {
+                escaped = false;
+            } else if octet == b'\\' {
+                escaped = true;
+            } else if octet == b'"' {
+                in_string = false;
+            }
+        } else if !b" \t\n\r".contains(&octet) {
+            in_string = octet == b'"';
+            compact.push(octet);
+        }
+    }
+    compact
+}
+
+/// The index just past the object or array that opens at `start` of compact JSON.
+fn container_end(compact: &[u8], start: usize) -> usize {
+    let (mut depth, mut in_string, mut escaped) = (0usize, false, false);
+    for (index, &octet) in compact.iter().enumerate().skip(start) {
+        if in_string {
+            if escaped {
+                escaped = false;
+            } else if octet == b'\\' {
+                escaped = true;
+            } else if octet == b'"' {
+                in_string = false;
+            }
+            continue;
+        }
+        match octet {
+            b'"' => in_string = true,
+            b'{' | b'[' => depth += 1,
+            b'}' | b']' => {
+                depth -= 1;
+                if depth == 0 {
+                    return index + 1;
+                }
+            }
+            _ => {}
+        }
+    }
+    panic!("unterminated container at {start}");
+}
+
+/// The compact octets of `argument` of golden case `case_id`, in the member order of the
+/// golden file, as the carriers are built. The caller checks them against the parsed value.
+fn compact_golden_argument(golden_text: &str, case_id: &str, argument: &str) -> Vec<u8> {
+    let compact = compact_json(golden_text);
+    let find = |needle: &[u8], from: usize| {
+        compact[from..]
+            .windows(needle.len())
+            .position(|window| window == needle)
+            .map(|offset| from + offset)
+    };
+    let case = find(format!("\"id\":\"{case_id}\"").as_bytes(), 0).expect("golden case id");
+    let key = format!("\"{argument}\":");
+    let start = find(key.as_bytes(), case).expect("golden argument") + key.len();
+    compact[start..container_end(&compact, start)].to_vec()
+}
+
+/// The octets `bytes` inserts into `reference` at one position, if `bytes` is `reference`
+/// with one non-empty run of octets inserted and nothing else changed.
+fn inserted_run<'a>(reference: &[u8], bytes: &'a [u8]) -> Option<&'a [u8]> {
+    if bytes.len() <= reference.len() {
+        return None;
+    }
+    let prefix = reference
+        .iter()
+        .zip(bytes)
+        .take_while(|(left, right)| left == right)
+        .count();
+    let suffix = reference[prefix..]
+        .iter()
+        .rev()
+        .zip(bytes.iter().rev())
+        .take_while(|(left, right)| left == right)
+        .count();
+    (prefix + suffix == reference.len()).then(|| &bytes[prefix..bytes.len() - suffix])
 }
 
 /// serde_json refuses a document nested past its recursion limit before the seed sees the

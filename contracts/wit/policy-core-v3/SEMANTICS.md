@@ -356,20 +356,22 @@ ordered trace.
 
 A refused raw input that names an `argument` and a `goldenCase` is a carrier: it is passed
 to `evaluate` as that argument, with the other arguments and `evaluated-at` of that golden
-case. It is the golden argument with one decoder defect added. A decoder that lets that
-defect through reads a schema-valid argument from it, so a component built on that decoder
-does not return `input-invalid`: it evaluates the argument, or refuses it at a later
-validation step. The `invalid-number` carrier also repeats a member name: no number that
-the schemas admit is non-finite, so its non-finite number is the value of a member that the
-golden member repeats after it. That carrier therefore tests its class only on a decoder
-that keeps the last of two members with the same name.
+case. It is the golden argument with one decoder defect of its class added, except the
+`invalid-number` carrier, which also repeats a member name: no number that the schemas
+admit is non-finite, so its non-finite number is the value of a member that the golden
+member repeats after it, and that carrier tests its class only on a decoder that keeps the
+last of two members with the same name. A decoder that lets the defects of a carrier
+through reads a schema-valid argument from it, so a component built on that decoder does
+not return `input-invalid`: it evaluates the argument, or refuses it at a later validation
+step.
 
-A refused raw input that names no argument is passed in turn as each of `policy`, `snapshot`
-and `need`, with the other arguments and `evaluated-at` of any golden case, and is refused
-each time. A memory qualification input names an argument and no golden case. It is passed
-as that argument, with the other arguments and `evaluated-at` of the first golden case, in
-the order of `golden.json`, that expects an evaluation, so that it is the only argument
-with a defect; it is refused, and the component stays within every budget.
+A refused raw input that names no argument, and a memory qualification input, which names
+an argument and no golden case, take the other arguments and `evaluated-at` of the first
+golden case, in the order of `golden.json`, that expects an evaluation, so that the input
+is the only argument with a defect. A refused raw input that names no argument is passed in
+turn as each of `policy`, `snapshot` and `need`, and is refused each time. A memory
+qualification input is passed as the argument it names; it is refused, and the component
+stays within every budget.
 
 A component conforms only if it returns the expected result of every golden vector,
 returns the expected WIT variant for every refused raw input and every memory
@@ -463,10 +465,12 @@ The golden file and the raw-input manifest of policy-core-v3 replace those of
 policy-core-v2; the operator corpus and the resource budgets are kept, and a memory
 qualification file is added. A component is judged on WIT variants and budgets, never on
 the oracle class. Section 10 states the argument each raw input is passed as, and the golden
-case that lends the other arguments to a memory qualification input: carrier vectors,
-schema-valid once read by a decoder that lets their defect through, are the only refused
-inputs that a component with a permissive decoder can fail; policy-core-v2 had none, and
-every one of its raw inputs was refused by schema validation alone.
+case that lends the other arguments to a raw input that names none and to a memory
+qualification input: the first one that expects an evaluation, which the runner vectors
+already used for the former. Carrier vectors, schema-valid once read by a decoder that lets
+their defects through, are the only refused inputs that a component with a permissive
+decoder can fail; policy-core-v2 had none, and every one of its raw inputs was refused by
+schema validation alone.
 
 Why only the `invalid-number` carrier repeats a member: at the architecture review of
 `475c8b4`, the `unpaired-surrogate` and `invalid-number` carriers both hid their defect in
@@ -487,8 +491,8 @@ Replaced policy-core-v2 blocks:
 Added blocks:
 
 > 48ef5648c0459ef8da3ceaddc4bc495a62b734939fa08425078c71ecb770ce22 - `contracts/fixtures/policy-core-v2/operators.json` is the atomic operator/type
-> 7e636b362e5781143eae2d659af709e8da4b628c17c46b9b06800f412d0b0c30 A refused raw input that names an `argument` and a `goldenCase` is a carrier: it is passed
-> 0b47cb56d3de8064cdac6ffadfa8309bccc8ed1ee843362420059b8e95a9d87d A refused raw input that names no argument is passed in turn as each of `policy`, `snapshot`
+> 249a2ab4c16c373034e7849dce658197a0c97cc54ae09ff81f30a2f36794f758 A refused raw input that names an `argument` and a `goldenCase` is a carrier: it is passed
+> 1020d31b36d8b8ff0d859d87c4d6f213a589e6fe0434636b182deddf62871214 A refused raw input that names no argument, and a memory qualification input, which names
 > 5bf154ac21cfa1e3220604292d35053e6f1313924bb59b0dc0e127bbb0e1f9f7 A component conforms only if it returns the expected result of every golden vector,
 
 ### C4. Nesting depth and equal positions

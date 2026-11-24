@@ -122,6 +122,28 @@ describe("policy-core-v3 nesting depth (section 2, depth paragraph)", () => {
   }
 });
 
+// Octets without which no member can be added: the quotation mark and the RFC 8259
+// structural characters.
+const STRUCTURAL_OCTETS: ReadonlySet<number> = new Set([...'"{}[]:,'].map((c) => c.charCodeAt(0)));
+
+/**
+ * The octets `bytes` inserts into `reference` at one position, if `bytes` is `reference` with
+ * one non-empty run of octets inserted and nothing else changed; otherwise null.
+ */
+function insertedRun(reference: Uint8Array, bytes: Uint8Array): Uint8Array | null {
+  if (bytes.length <= reference.length) return null;
+  let prefix = 0;
+  while (prefix < reference.length && reference[prefix] === bytes[prefix]) prefix += 1;
+  let suffix = 0;
+  while (
+    suffix < reference.length - prefix &&
+    reference[reference.length - 1 - suffix] === bytes[bytes.length - 1 - suffix]
+  )
+    suffix += 1;
+  if (prefix + suffix !== reference.length) return null;
+  return bytes.slice(prefix, bytes.length - suffix);
+}
+
 /** The schema validator of each JSON argument of `evaluate` (SEMANTICS section 2). */
 async function argumentValidators(): Promise<
   Record<"policy" | "snapshot" | "need", ValidateFunction>
@@ -168,11 +190,8 @@ describe("policy-core-v3 raw-input vectors", () => {
     ).json()) as JsonRecord;
     const { cases: golden } = await goldenCases(POLICY_CORE_V3_GOLDEN_PATH);
     const validators = await argumentValidators();
-    // The bom, duplicate-member and invalid-number carriers hide their defect entirely; the
-    // unpaired-surrogate and invalid-utf8 ones carry it in the free licence string of the first
-    // rule source, the only change from the golden policy (manifest notes).
-    const exactGolden = ["bom", "duplicate-member", "invalid-number"];
-    const licenceOnly = ["invalid-utf8", "unpaired-surrogate"];
+    // Which octets each carrier adds to its golden argument is checked by the byte test below;
+    // here only the property section 10 states: the permissive reading is schema-valid.
     const defeated: string[] = [];
     for (const entry of manifest.cases as JsonRecord[]) {
       if (entry.argument === undefined) continue;
@@ -195,17 +214,6 @@ describe("policy-core-v3 raw-input vectors", () => {
         valid: true,
         errors: null,
       });
-      const expected = goldenCase[argument] as JsonRecord;
-      if (exactGolden.includes(defect)) expect(decoded).toEqual(expected);
-      else if (licenceOnly.includes(defect)) {
-        expect(decoded).not.toEqual(expected);
-        const repaired = structuredClone(decoded) as { rules: { source: JsonRecord }[] };
-        const goldenRules = expected.rules as { source: JsonRecord }[];
-        (repaired.rules[0] as { source: JsonRecord }).source.licence = (
-          goldenRules[0] as { source: JsonRecord }
-        ).source.licence;
-        expect(repaired as unknown).toEqual(expected);
-      } else throw new Error(`${String(entry.id)}: carrier class ${defect} has no expectation`);
       defeated.push(defect);
     }
     expect(defeated.sort()).toEqual([
@@ -215,6 +223,42 @@ describe("policy-core-v3 raw-input vectors", () => {
       "invalid-utf8",
       "unpaired-surrogate",
     ]);
+  });
+
+  test("every carrier is its golden argument plus one run of inserted octets", async () => {
+    // SEMANTICS section 10: a carrier is the golden argument with one decoder defect of its
+    // class added; only the duplicate-member and invalid-number carriers add a member. Compared
+    // as octets, so that a decoder keeping the last duplicate cannot hide an added member.
+    const manifest = (await Bun.file(
+      join(POLICY_CORE_V3_RAW_INPUT_ROOT, "manifest.json"),
+    ).json()) as JsonRecord;
+    const { cases: golden } = await goldenCases(POLICY_CORE_V3_GOLDEN_PATH);
+    const membersAdded = new Set(["duplicate-member", "invalid-number"]);
+    const findings: string[] = [];
+    let carriers = 0;
+    for (const entry of manifest.cases as JsonRecord[]) {
+      if (entry.argument === undefined) continue;
+      carriers += 1;
+      const goldenCase = golden.find((candidate) => candidate.id === entry.goldenCase);
+      if (goldenCase === undefined) throw new Error(`${String(entry.id)}: golden case missing`);
+      // The carriers are built from the compact serialization of the golden argument, in the
+      // member order of golden.json.
+      const reference = encoder.encode(JSON.stringify(goldenCase[entry.argument as string]));
+      const bytes = await Bun.file(
+        join(POLICY_CORE_V3_RAW_INPUT_ROOT, entry.file as string),
+      ).bytes();
+      const inserted = insertedRun(reference, bytes);
+      if (inserted === null) {
+        findings.push(`${String(entry.id)}: not its golden argument plus one inserted run`);
+        continue;
+      }
+      const structural = inserted.some((octet) => STRUCTURAL_OCTETS.has(octet));
+      if (structural && !membersAdded.has(entry.defect as string))
+        findings.push(`${String(entry.id)}: its inserted octets can add a member`);
+    }
+    console.log(`policy-core-v3 carriers compared as octets: ${carriers}`);
+    expect(carriers).toBe(6);
+    expect(findings).toEqual([]);
   });
 
   test("the depth vectors fail an oracle that counts the top-level value as depth 1", async () => {

@@ -68,9 +68,13 @@ quoted ones, and that the v2 file it derives from has the pinned SHA-256:
   v2 one (same cases, engine `3.0.0`, recomputed `id` and `digest`); a v3 raw-input
   manifest carrying the nine v2 inputs byte-identical, the precedence cases, the depth
   cases, accepted inputs at the depth bound, and carrier vectors: golden inputs with one
-  decoder defect each, passed in a named argument, which a component with a permissive
-  decoder evaluates instead of refusing; a v3 memory qualification file of refused 8 MiB
-  inputs of adversarial shape. A component is judged on WIT variants and budgets.
+  decoder defect of their class added each, except the `invalid-number` carrier, which also
+  repeats a member name, passed in a named argument. A permissive decoder reads a
+  schema-valid argument from a carrier, so a component built on it does not return
+  `input-invalid`: it evaluates the argument, or refuses it at a later validation step
+  (`digest-mismatch` on the carriers whose defect sits in a `licence` string). Also a v3
+  memory qualification file of refused 8 MiB inputs of adversarial shape. A component is
+  judged on WIT variants and budgets.
 - C4, depth: the top-level value has depth 0, a value deeper than 64 is `max-depth` (the
   count the v2 budget test executes); at the same octet the earlier class of the list is
   given.
