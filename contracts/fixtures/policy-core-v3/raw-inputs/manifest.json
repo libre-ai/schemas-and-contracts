@@ -1,6 +1,6 @@
 {
   "schemaVersion": "libre-ai.policy-core-raw-input-vectors.v2",
-  "description": "Byte-exact decoder vectors of policy-core-v3 (contracts/wit/policy-core-v3/SEMANTICS.md, sections 2 and 10). cases are refused inputs: expectedErrors is the WIT variant a component returns and binds it; defect is the class the reference oracle gives and binds only that oracle. A case with argument and goldenCase is a carrier: its bytes are the argument it names of that golden case, schema-valid once decoded permissively, with one decoder defect; it is passed in that argument with the other arguments of the golden case. A case without argument is refused in each of the three JSON arguments. acceptedCases are inputs the reference oracle accepts; they fix the depth bound (the top-level value has depth 0, a value deeper than 64 is max-depth). carriedFrom names the policy-core-v2 raw-input case whose bytes are reused unchanged.",
+  "description": "Byte-exact decoder vectors of policy-core-v3 (contracts/wit/policy-core-v3/SEMANTICS.md, sections 2 and 10). cases are refused inputs: expectedErrors is the WIT variant a component returns and binds it; defect is the class the reference oracle gives and binds only that oracle. A case with argument and goldenCase is a carrier: its bytes are the argument it names of that golden case, schema-valid once decoded permissively, with one decoder defect (the invalid-number carrier also repeats a member, since no number of the schemas admits a non-finite value); it is passed in that argument with the other arguments of the golden case. A case without argument is refused in each of the three JSON arguments. acceptedCases are inputs the reference oracle accepts; they fix the depth bound (the top-level value has depth 0, a value deeper than 64 is max-depth). carriedFrom names the policy-core-v2 raw-input case whose bytes are reused unchanged.",
   "cases": [
     {
       "id": "utf8-bom",
@@ -201,12 +201,12 @@
     {
       "id": "carrier-unpaired-surrogate",
       "file": "carrier-unpaired-surrogate.bin",
-      "inputSha256": "added380cc3762e341769b723dc83b135c50831412ff28a7fed77c4f9e43d0ae",
-      "byteLength": 4767,
+      "inputSha256": "d0afc0d347909c62875c0b98568b91fb68b522bd0a8f9724c260a28f570e9242",
+      "byteLength": 4755,
       "defect": "unpaired-surrogate",
       "argument": "policy",
       "goldenCase": "all-operators-eligible",
-      "note": "The golden policy with a leading \"status\":\"\\uD800\" member; the lone surrogate comes before the duplicate name in document order. A decoder that admits lone surrogates and keeps the last duplicate reads the exact golden policy.",
+      "note": "The golden policy with the escape \\uD800 appended to the free licence string of rules[0].source (offset 461 of the compact golden policy), and no other change. A decoder that admits lone surrogates reads a schema-valid policy whose digest is not policy.digest, so a component built on it returns digest-mismatch or evaluates.",
       "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
     },
     {
@@ -217,7 +217,7 @@
       "defect": "invalid-number",
       "argument": "policy",
       "goldenCase": "all-operators-eligible",
-      "note": "The golden policy with a leading \"version\":1e400 member. A decoder that maps 1e400 to infinity and keeps the last duplicate reads the exact golden policy.",
+      "note": "The golden policy with a leading \"version\":1e400 member. A decoder that maps 1e400 to infinity and keeps the last duplicate reads the exact golden policy. The repeated member is required: no number of the policy schema admits a non-finite value, so 1e400 in place of a golden number would be refused by schema validation, whatever the decoder.",
       "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
     },
     {
@@ -240,6 +240,17 @@
       "argument": "policy",
       "goldenCase": "all-operators-eligible",
       "note": "The golden policy after a byte order mark. A decoder that drops the mark reads the exact golden policy.",
+      "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
+    },
+    {
+      "id": "carrier-invalid-utf8",
+      "file": "carrier-invalid-utf8.bin",
+      "inputSha256": "bf3ae403bdf2aca2b59ded74d9501e64bc85e7667fd72e50381eff3d279b2b1f",
+      "byteLength": 4750,
+      "defect": "invalid-utf8",
+      "argument": "policy",
+      "goldenCase": "all-operators-eligible",
+      "note": "The golden policy with the octet 0xFF appended to the free licence string of rules[0].source (offset 461 of the compact golden policy), and no other change. A decoder that drops the octet reads the exact golden policy, so a component built on it evaluates; one that replaces it with U+FFFD (a TextDecoder without fatal) reads a schema-valid policy whose digest is not policy.digest, so a component built on it returns digest-mismatch or evaluates.",
       "expectedErrors": { "policy-core-v3": { "variant": "input-invalid" } }
     }
   ],

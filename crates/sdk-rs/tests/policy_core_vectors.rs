@@ -2,7 +2,7 @@ use serde::de::{DeserializeSeed, Error as _, MapAccess, SeqAccess, Visitor};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::cmp::Ordering;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::fmt::{self, Write as _};
 use std::fs;
 
@@ -594,14 +594,13 @@ fn policy_core_v3_raw_inputs_follow_the_grammar_first_classes() {
         "libre-ai.policy-core-raw-input-vectors.v2"
     );
     let maximum_depth = policy_core_budget_depth();
-    let golden: Value = serde_json::from_str(include_str!(
-        "../../../contracts/fixtures/policy-core-v3/golden.json"
-    ))
-    .expect("policy-core-v3 golden");
+    let golden_text = include_str!("../../../contracts/fixtures/policy-core-v3/golden.json");
+    let golden: Value = serde_json::from_str(golden_text).expect("policy-core-v3 golden");
     let root = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../contracts/fixtures/policy-core-v3/raw-inputs");
     let mut ids = HashSet::new();
     let mut defects = HashSet::new();
+    let mut compared_as_octets = 0;
     // Carrier vectors: the class each serde_json reading lets through as the exact golden
     // input, so that a component built on it would evaluate instead of refusing.
     let mut defeat_from_slice = HashSet::new();
@@ -638,6 +637,34 @@ fn policy_core_v3_raw_inputs_follow_the_grammar_first_classes() {
         );
         let expected = &golden_case[argument];
         assert!(expected.is_object(), "{id}: argument {argument}");
+        // Compared as octets, so that a reader keeping the last duplicate cannot hide an added
+        // member, and checked against the grammar of its class, so that the run cannot hide a
+        // second defect of any class (SEMANTICS sections 2 and 10).
+        let reference = compact_golden_argument(
+            golden_text,
+            case["goldenCase"].as_str().expect("golden case id"),
+            argument,
+        );
+        assert_eq!(
+            serde_json::from_slice::<Value>(&reference).ok().as_ref(),
+            Some(expected),
+            "{id}: compact golden argument"
+        );
+        let readings = insertions(&reference, &bytes);
+        assert!(
+            !readings.is_empty(),
+            "{id}: not its golden argument plus one inserted run"
+        );
+        let mut index = ReferenceIndex::new(&reference);
+        assert!(
+            readings
+                .iter()
+                .any(|&(offset, run)| adds_one_defect(defect, &mut index, offset, run)),
+            "{id}: its inserted run ({} octets) is not one {defect} defect at a place where that \
+             class can stand",
+            readings[0].1.len()
+        );
+        compared_as_octets += 1;
         if serde_json::from_slice::<Value>(&bytes).ok().as_ref() == Some(expected) {
             defeat_from_slice.insert(defect);
         }
@@ -681,11 +708,342 @@ fn policy_core_v3_raw_inputs_follow_the_grammar_first_classes() {
         ])
     );
     assert!(!accepted.is_empty());
+    assert_eq!(compared_as_octets, 6, "carriers compared as octets");
     println!(
-        "policy-core-v3 raw inputs (Rust): {} refused, {} accepted",
+        "policy-core-v3 raw inputs (Rust): {} refused ({} carriers compared as octets), {} accepted",
         refused.len(),
+        compared_as_octets,
         accepted.len()
     );
+}
+
+/// `text` without the whitespace RFC 8259 allows between tokens: the compact serialization,
+/// in the member order of the source.
+fn compact_json(text: &str) -> Vec<u8> {
+    let mut compact = Vec::with_capacity(text.len());
+    let (mut in_string, mut escaped) = (false, false);
+    for &octet in text.as_bytes() {
+        if in_string {
+            compact.push(octet);
+            if escaped {
+                escaped = false;
+            } else if octet == b'\\' {
+                escaped = true;
+            } else if octet == b'"' {
+                in_string = false;
+            }
+        } else if !b" \t\n\r".contains(&octet) {
+            in_string = octet == b'"';
+            compact.push(octet);
+        }
+    }
+    compact
+}
+
+/// The index just past the object or array that opens at `start` of compact JSON.
+fn container_end(compact: &[u8], start: usize) -> usize {
+    let (mut depth, mut in_string, mut escaped) = (0usize, false, false);
+    for (index, &octet) in compact.iter().enumerate().skip(start) {
+        if in_string {
+            if escaped {
+                escaped = false;
+            } else if octet == b'\\' {
+                escaped = true;
+            } else if octet == b'"' {
+                in_string = false;
+            }
+            continue;
+        }
+        match octet {
+            b'"' => in_string = true,
+            b'{' | b'[' => depth += 1,
+            b'}' | b']' => {
+                depth -= 1;
+                if depth == 0 {
+                    return index + 1;
+                }
+            }
+            _ => {}
+        }
+    }
+    panic!("unterminated container at {start}");
+}
+
+/// The compact octets of `argument` of golden case `case_id`, in the member order of the
+/// golden file, as the carriers are built. The caller checks them against the parsed value.
+fn compact_golden_argument(golden_text: &str, case_id: &str, argument: &str) -> Vec<u8> {
+    let compact = compact_json(golden_text);
+    let find = |needle: &[u8], from: usize| {
+        compact[from..]
+            .windows(needle.len())
+            .position(|window| window == needle)
+            .map(|offset| from + offset)
+    };
+    let case = find(format!("\"id\":\"{case_id}\"").as_bytes(), 0).expect("golden case id");
+    let key = format!("\"{argument}\":");
+    let start = find(key.as_bytes(), case).expect("golden argument") + key.len();
+    compact[start..container_end(&compact, start)].to_vec()
+}
+
+/// Every reading of `bytes` as `reference` with one non-empty run of octets inserted at an
+/// offset of `reference` and nothing else changed: several when the run borders octets equal
+/// to its own; none if there is no such reading.
+fn insertions<'a>(reference: &[u8], bytes: &'a [u8]) -> Vec<(usize, &'a [u8])> {
+    let extra = bytes.len().saturating_sub(reference.len());
+    if extra == 0 {
+        return Vec::new();
+    }
+    let prefix = reference
+        .iter()
+        .zip(bytes)
+        .take_while(|(left, right)| left == right)
+        .count();
+    let suffix = reference
+        .iter()
+        .rev()
+        .zip(bytes.iter().rev())
+        .take_while(|(left, right)| left == right)
+        .count();
+    (reference.len().saturating_sub(suffix)..=prefix)
+        .map(|offset| (offset, &bytes[offset..offset + extra]))
+        .collect()
+}
+
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+enum Place {
+    /// Between two characters of a string.
+    String,
+    /// Inside an escape sequence of a string.
+    Escape,
+    /// Outside every string.
+    Outside,
+}
+
+/// One pass over the compact JSON `text`: for each offset from 0 to its length, where it falls
+/// and the start of the innermost object or array open there. Every reading of a carrier is
+/// then checked without walking the reference again.
+struct ReferenceIndex<'a> {
+    text: &'a [u8],
+    place: Vec<Place>,
+    container: Vec<Option<usize>>,
+    /// The octet range of each member of an object, by the offset of its `{`, computed once.
+    members: HashMap<usize, Vec<std::ops::Range<usize>>>,
+}
+
+impl<'a> ReferenceIndex<'a> {
+    fn new(text: &'a [u8]) -> Self {
+        let mut place = Vec::with_capacity(text.len() + 1);
+        let mut container = Vec::with_capacity(text.len() + 1);
+        let mut open = Vec::new();
+        let (mut in_string, mut escaped, mut hex_left) = (false, false, 0usize);
+        for index in 0..=text.len() {
+            place.push(match (in_string, escaped || hex_left > 0) {
+                (false, _) => Place::Outside,
+                (true, true) => Place::Escape,
+                (true, false) => Place::String,
+            });
+            container.push(open.last().copied());
+            let Some(&octet) = text.get(index) else {
+                break;
+            };
+            if in_string {
+                if hex_left > 0 {
+                    hex_left -= 1;
+                } else if escaped {
+                    escaped = false;
+                    if octet == b'u' {
+                        hex_left = 4;
+                    }
+                } else if octet == b'\\' {
+                    escaped = true;
+                } else if octet == b'"' {
+                    in_string = false;
+                }
+                continue;
+            }
+            match octet {
+                b'"' => in_string = true,
+                b'{' | b'[' => open.push(index),
+                b'}' | b']' => {
+                    open.pop();
+                }
+                _ => {}
+            }
+        }
+        Self {
+            text,
+            place,
+            container,
+            members: HashMap::new(),
+        }
+    }
+
+    /// The octets of each member of the object that opens at `start`, as `"name":value`.
+    fn members_at(&mut self, start: usize) -> Vec<&'a [u8]> {
+        let Self {
+            text,
+            place,
+            members,
+            ..
+        } = self;
+        let text: &'a [u8] = text;
+        members
+            .entry(start)
+            .or_insert_with(|| {
+                let mut ranges = Vec::new();
+                let (mut depth, mut member_start) = (0usize, start + 1);
+                for at in start + 1..text.len() {
+                    if place[at] != Place::Outside {
+                        continue;
+                    }
+                    match text[at] {
+                        b'{' | b'[' => depth += 1,
+                        b'}' | b']' if depth == 0 => {
+                            if at > member_start {
+                                ranges.push(member_start..at);
+                            }
+                            break;
+                        }
+                        b'}' | b']' => depth -= 1,
+                        b',' if depth == 0 => {
+                            ranges.push(member_start..at);
+                            member_start = at + 1;
+                        }
+                        _ => {}
+                    }
+                }
+                ranges
+            })
+            .iter()
+            .map(|range| &text[range.clone()])
+            .collect()
+    }
+}
+
+/// The `"name"` token that opens `member`, escapes included.
+fn name_token(member: &[u8]) -> Option<&[u8]> {
+    if member.first() != Some(&b'"') {
+        return None;
+    }
+    let mut at = 1;
+    while at < member.len() {
+        match member[at] {
+            b'\\' => at += 2,
+            b'"' => return Some(&member[..=at]),
+            _ => at += 1,
+        }
+    }
+    None
+}
+
+/// The member a run inserts at a member boundary of an object: `member,` right after its `{`,
+/// or, unless `leading_only`, `,member` before a `,` or its `}`. None anywhere else.
+fn inserted_member<'r>(
+    index: &ReferenceIndex,
+    offset: usize,
+    run: &'r [u8],
+    leading_only: bool,
+) -> Option<(usize, &'r [u8])> {
+    let container = index.container[offset]?;
+    if index.place[offset] != Place::Outside || index.text[container] != b'{' {
+        return None;
+    }
+    if container + 1 == offset {
+        return run.strip_suffix(b",").map(|member| (container, member));
+    }
+    if !leading_only && matches!(index.text.get(offset), Some(b',' | b'}')) {
+        return run.strip_prefix(b",").map(|member| (container, member));
+    }
+    None
+}
+
+/// `\uD800` to `\uDFFF`, and which half of a pair it is.
+fn surrogate_escape(octets: &[u8]) -> Option<bool> {
+    let [b'\\', b'u', b'd' | b'D', third, fourth, fifth] = *octets else {
+        return None;
+    };
+    if !(fourth.is_ascii_hexdigit() && fifth.is_ascii_hexdigit()) {
+        return None;
+    }
+    match third {
+        b'8' | b'9' | b'a' | b'b' | b'A' | b'B' => Some(true),
+        b'c'..=b'f' | b'C'..=b'F' => Some(false),
+        _ => None,
+    }
+}
+
+/// Whether `run` inserted at `offset` adds exactly one defect of `defect` to the reference, in
+/// the minimal form of its class, which can hide nothing else: SEMANTICS section 2 for the
+/// classes, section 10 for the carriers, never the fixtures. Any octet beyond that form makes
+/// it false.
+fn adds_one_defect(defect: &str, index: &mut ReferenceIndex, offset: usize, run: &[u8]) -> bool {
+    let text = index.text;
+    match defect {
+        "bom" => offset == 0 && run == [0xef, 0xbb, 0xbf],
+        // One octet that is never valid after an ASCII octet (a continuation octet, or F5 to
+        // FF), between two ASCII octets of a string: dropped, it gives the reference back;
+        // replaced, it gives U+FFFD; no reading turns it into a character of the JSON syntax.
+        "invalid-utf8" => {
+            matches!(run, [0x80..=0xbf | 0xf5..=0xff])
+                && index.place[offset] == Place::String
+                && offset
+                    .checked_sub(1)
+                    .and_then(|before| text.get(before))
+                    .is_some_and(u8::is_ascii)
+                && text.get(offset).is_some_and(u8::is_ascii)
+        }
+        "unpaired-surrogate" => {
+            if index.place[offset] != Place::String {
+                return false;
+            }
+            match surrogate_escape(run) {
+                Some(true) => {
+                    text.get(offset..offset + 6).and_then(surrogate_escape) != Some(false)
+                }
+                Some(false) => {
+                    text.get(offset.saturating_sub(6)..offset)
+                        .and_then(surrogate_escape)
+                        != Some(true)
+                }
+                None => false,
+            }
+        }
+        // Section 2: one JSON text followed by something other than insignificant whitespace.
+        // One printable octet that cannot start a value, so the tail holds no second JSON text.
+        "invalid-json" => {
+            offset == text.len()
+                && matches!(run, [octet @ 0x21..=0x7e]
+                    if !b"\"[{-0123456789tfn".contains(octet))
+        }
+        // A byte-exact copy of a member of the same object: a reader that keeps the first
+        // duplicate and one that keeps the last both read the golden argument.
+        "duplicate-member" => inserted_member(index, offset, run, false)
+            .is_some_and(|(container, member)| index.members_at(container).contains(&member)),
+        // Section 10: one leading member, under the name token of a member of the same object,
+        // whose value is an RFC 8259 number out of the binary64 range.
+        "invalid-number" => {
+            let Some((container, member)) = inserted_member(index, offset, run, true) else {
+                return false;
+            };
+            let Some(name) = name_token(member) else {
+                return false;
+            };
+            if member.get(name.len()) != Some(&b':') {
+                return false;
+            }
+            let value = &member[name.len() + 1..];
+            index
+                .members_at(container)
+                .iter()
+                .any(|golden| name_token(golden) == Some(name))
+                && json_number_end(value, 0) == Ok(value.len())
+                && std::str::from_utf8(value)
+                    .ok()
+                    .and_then(|number| number.parse::<f64>().ok())
+                    .is_some_and(|number| !number.is_finite())
+        }
+        _ => false,
+    }
 }
 
 /// serde_json refuses a document nested past its recursion limit before the seed sees the
@@ -746,6 +1104,64 @@ struct MemorySegment {
     count: usize,
 }
 
+/// The input a memory qualification case generates from its segments. The length is bounded
+/// by the ceiling before `repeat` allocates: an absurd count fails by name instead of
+/// allocating, or panicking on a capacity overflow.
+fn generate_memory_input(
+    segments: &[MemorySegment],
+    field: &str,
+    ceiling: u64,
+) -> Result<Vec<u8>, String> {
+    let exceeds = || format!("segments exceed the {field} ceiling of {ceiling} octets");
+    let mut length: u64 = 0;
+    for segment in segments {
+        let segment_length = u64::try_from(segment.text.len())
+            .ok()
+            .and_then(|text| text.checked_mul(u64::try_from(segment.count).ok()?))
+            .ok_or_else(exceeds)?;
+        length = length
+            .checked_add(segment_length)
+            .filter(|total| *total <= ceiling)
+            .ok_or_else(exceeds)?;
+    }
+    let mut bytes = Vec::with_capacity(usize::try_from(length).map_err(|_| exceeds())?);
+    for segment in segments {
+        bytes.extend(segment.text.repeat(segment.count).into_bytes());
+    }
+    Ok(bytes)
+}
+
+#[test]
+fn memory_qualification_generator_fails_by_name_before_allocating() {
+    let ceiling = 8_388_608;
+    let segments = |count: usize| {
+        vec![MemorySegment {
+            text: "[]".to_owned(),
+            count,
+        }]
+    };
+    let expected = Err(format!(
+        "segments exceed the policyInput ceiling of {ceiling} octets"
+    ));
+    // Lengths only: a failing comparison must not print megabytes of generated input.
+    // Without the check first, `repeat` panics on a capacity overflow for usize::MAX copies.
+    assert_eq!(
+        generate_memory_input(&segments(usize::MAX), "policyInput", ceiling)
+            .map(|bytes| bytes.len()),
+        expected
+    );
+    assert_eq!(
+        generate_memory_input(&segments(4_194_305), "policyInput", ceiling)
+            .map(|bytes| bytes.len()),
+        expected
+    );
+    assert_eq!(
+        generate_memory_input(&segments(4_194_304), "policyInput", ceiling)
+            .map(|bytes| bytes.len()),
+        Ok(8_388_608)
+    );
+}
+
 #[test]
 fn policy_core_v3_memory_qualification_inputs_are_refused_at_the_ceiling() {
     let qualification: Value = serde_json::from_str(include_str!(
@@ -763,17 +1179,15 @@ fn policy_core_v3_memory_qualification_inputs_are_refused_at_the_ceiling() {
         let id = case["id"].as_str().expect("memory case id");
         let segments: Vec<MemorySegment> =
             serde_json::from_value(case["segments"].clone()).expect("segments");
-        let mut bytes = Vec::new();
-        for segment in &segments {
-            bytes.extend(segment.text.repeat(segment.count).into_bytes());
-        }
-        let ceiling = match case["argument"].as_str().expect("argument") {
-            "policy" => budgets["byteLimits"]["policyInput"].as_u64(),
-            "snapshot" => budgets["byteLimits"]["snapshotInput"].as_u64(),
-            "need" => budgets["byteLimits"]["needInput"].as_u64(),
+        let field = match case["argument"].as_str().expect("argument") {
+            "policy" => "policyInput",
+            "snapshot" => "snapshotInput",
+            "need" => "needInput",
             other => panic!("{id}: unknown argument {other}"),
-        }
-        .expect("byte ceiling");
+        };
+        let ceiling = budgets["byteLimits"][field].as_u64().expect("byte ceiling");
+        let bytes = generate_memory_input(&segments, field, ceiling)
+            .unwrap_or_else(|error| panic!("{id}: {error}"));
         assert_eq!(bytes.len() as u64, ceiling, "{id}: at the ceiling");
         assert_eq!(
             sha256_hex(&bytes),

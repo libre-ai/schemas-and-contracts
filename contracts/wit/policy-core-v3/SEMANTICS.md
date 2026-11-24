@@ -356,11 +356,22 @@ ordered trace.
 
 A refused raw input that names an `argument` and a `goldenCase` is a carrier: it is passed
 to `evaluate` as that argument, with the other arguments and `evaluated-at` of that golden
-case. Apart from its one decoder defect it is the golden argument itself, so a component
-whose decoder lets that defect through evaluates it instead of refusing it. A refused raw
-input that names no argument is passed in turn as each of `policy`, `snapshot` and `need`,
-with the other arguments and `evaluated-at` of any golden case, and is refused each time. A
-memory qualification input is passed as the argument it names, in the same way.
+case. It is the golden argument with one decoder defect of its class added, except the
+`invalid-number` carrier, which also repeats a member name: no number that the schemas
+admit is non-finite, so its non-finite number is the value of a member that the golden
+member repeats after it, and that carrier tests its class only on a decoder that keeps the
+last of two members with the same name. A decoder that lets the defects of a carrier
+through reads a schema-valid argument from it, so a component built on that decoder does
+not return `input-invalid`: it evaluates the argument, or refuses it at a later validation
+step.
+
+A refused raw input that names no argument, and a memory qualification input, which names
+an argument and no golden case, take the other arguments and `evaluated-at` of the first
+golden case, in the order of `golden.json`, that expects an evaluation, so that the input
+is the only argument with a defect. A refused raw input that names no argument is passed in
+turn as each of `policy`, `snapshot` and `need`, and is refused each time. A memory
+qualification input is passed as the argument it names; it is refused, and the component
+stays within every budget.
 
 A component conforms only if it returns the expected result of every golden vector,
 returns the expected WIT variant for every refused raw input and every memory
@@ -376,8 +387,10 @@ whose SHA-256 is
 below. Every block of a numbered section of that file that no change names is kept here
 verbatim. `tools/quality/policy-core-v3.test.ts` checks it: the policy-core-v2 blocks
 missing from this text and the blocks this text adds are exactly the ones whose first line
-is quoted below, and the sections that differ are exactly the ones named. The check reads
-the policy-core-v2 file; the normative text above does not depend on it.
+is quoted below, and the sections that differ are exactly the ones named. Each added block
+is quoted after the SHA-256 of its UTF-8 text, from its first to its last non-blank
+character, so that a change inside its body also fails the check, which names the block.
+The check reads the policy-core-v2 file; the normative text above does not depend on it.
 
 ### C1. Version
 
@@ -400,10 +413,10 @@ Replaced policy-core-v2 blocks:
 
 Added blocks:
 
-> `engineVersion` MUST be an immutable SemVer constant embedded in the qualified
-> | WIT variant | Public code | Optional host label |
-> Every HTTP boundary that exposes a policy-core-v3 result exposes only a stable
-> The digest labels name payload schemas, not the world version: they are the labels written
+> 52d71aaf77fee0e7b379bf3a97c140c866d69f56d455d30b9f04e94b39d2e8c1 `engineVersion` MUST be an immutable SemVer constant embedded in the qualified
+> e3aa37bea6fb09f08d101ee3e94462627bb4853c02449df242a63929abbe301a | WIT variant | Public code | Optional host label |
+> 830281c4f99eb6bfbaac0daf8826fb572127229fd3617d92b35ce48c572f0d10 Every HTTP boundary that exposes a policy-core-v3 result exposes only a stable
+> dda80f28c686d5ecac89a1fb8912a8314d4ffbf60f63e9f215a532f336c52590 The digest labels name payload schemas, not the world version: they are the labels written
 
 ### C2. Decoder precedence and component freedom
 
@@ -430,13 +443,13 @@ Replaced policy-core-v2 block:
 
 Added blocks:
 
-> The decoder MUST reject, with `policy.input_invalid` (validation step 2), every input that
-> - `bom`: the input starts with the octets `EF BB BF`;
-> Every JSON number is interpreted as an IEEE-754 binary64 value and is schema-bounded to the
-> A component MAY detect these defects in any order and MAY stop at the first defect it
-> The class of a refused input is a conformance diagnostic of the reference oracle
-> 1. `bom`, then `invalid-utf8`;
-> A component MUST stay within the peak component linear memory budget
+> 33bee2e084b45f8f1bcfb95eff9183b44a5d4c6bff1cf2fbaffb9a79502b4b4b The decoder MUST reject, with `policy.input_invalid` (validation step 2), every input that
+> cce036a66cd782618d315517907af379ec570b25f657bffc88f9d334d6950e0a - `bom`: the input starts with the octets `EF BB BF`;
+> 74a0709bf8a31470cfcb2f1961be4ff2e46d9c89cb698505ca4055226c4f6fdd Every JSON number is interpreted as an IEEE-754 binary64 value and is schema-bounded to the
+> efd28ba51eaa278b694e33e57500f5623b5ab023f5a8058feb06fa8661918475 A component MAY detect these defects in any order and MAY stop at the first defect it
+> 8e4f7c92f92273250a3639069a32b0ee9f6f06f19c537ebea2d114b3425555a9 The class of a refused input is a conformance diagnostic of the reference oracle
+> 0913ff7ddb7129468a9a7178e0d8c12164a894ee162a55bc891dcbe200a7020c 1. `bom`, then `invalid-utf8`;
+> c8f485149761cc049e2139beee8143d5cf0e614a00c371b0ee293e2b7fdc00e4 A component MUST stay within the peak component linear memory budget
 
 The candidate `canonicalize` semantics of `signalement-policy-receipt-v1` (its
 `canonicalize` section, step 3) gives "the first defect met" left to right among its own
@@ -451,10 +464,24 @@ Sections: 10.
 The golden file and the raw-input manifest of policy-core-v3 replace those of
 policy-core-v2; the operator corpus and the resource budgets are kept, and a memory
 qualification file is added. A component is judged on WIT variants and budgets, never on
-the oracle class. Section 10 states the argument each raw input is passed as: carrier
-vectors, schema-valid once their single defect is ignored, are the only refused inputs that
-a component with a permissive decoder can fail; policy-core-v2 had none, and every one of
-its raw inputs was refused by schema validation alone.
+the oracle class. Section 10 states the argument each raw input is passed as, and the golden
+case that lends the other arguments to a raw input that names none and to a memory
+qualification input: the first one that expects an evaluation, which the runner vectors
+already used for the former. Carrier vectors, schema-valid once read by a decoder that lets
+their defects through, are the only refused inputs that a component with a permissive
+decoder can fail; policy-core-v2 had none, and every one of its raw inputs was refused by
+schema validation alone.
+
+Why only the `invalid-number` carrier repeats a member: at the architecture review of
+`475c8b4`, the `unpaired-surrogate` and `invalid-number` carriers both hid their defect in
+a leading member repeated by the golden one, so a decoder that refuses duplicates refused
+them whatever it did with their class. Measured on 2026-11-24 with the policy schema and
+`JSON.parse`: a non-finite `version`, rule `value` or `maxSourceAgeDays` fails schema
+validation, so `1e400` can only stand in a repeated member; a lone surrogate or U+FFFD
+appended to the free `licence` string of a rule source passes it and changes the policy
+digest. The `unpaired-surrogate` carrier now holds `\uD800` in that string without a
+repeated member, and an `invalid-utf8` carrier holds the octet `FF` there, the octet that a
+UTF-8 decoder without fatal errors replaces with U+FFFD (security review of `475c8b4`).
 
 Replaced policy-core-v2 blocks:
 
@@ -463,9 +490,10 @@ Replaced policy-core-v2 blocks:
 
 Added blocks:
 
-> - `contracts/fixtures/policy-core-v2/operators.json` is the atomic operator/type
-> A refused raw input that names an `argument` and a `goldenCase` is a carrier: it is passed
-> A component conforms only if it returns the expected result of every golden vector,
+> 48ef5648c0459ef8da3ceaddc4bc495a62b734939fa08425078c71ecb770ce22 - `contracts/fixtures/policy-core-v2/operators.json` is the atomic operator/type
+> 249a2ab4c16c373034e7849dce658197a0c97cc54ae09ff81f30a2f36794f758 A refused raw input that names an `argument` and a `goldenCase` is a carrier: it is passed
+> 1020d31b36d8b8ff0d859d87c4d6f213a589e6fe0434636b182deddf62871214 A refused raw input that names no argument, and a memory qualification input, which names
+> 5bf154ac21cfa1e3220604292d35053e6f1313924bb59b0dc0e127bbb0e1f9f7 A component conforms only if it returns the expected result of every golden vector,
 
 ### C4. Nesting depth and equal positions
 
@@ -480,7 +508,7 @@ class of the list is given. Raw-input vectors fix both sides of the bound.
 
 Added block:
 
-> The top-level value has depth 0. An element of an array and the value of an object member
+> 7eb5225a282c304c62a2ed8f773cb522037d34aa71b302e3f30dc9c499b53f87 The top-level value has depth 0. An element of an array and the value of an object member
 
 Two other readers of this repository count differently, and neither qualifies
 policy-core-v3: `crates/sdk-rs/src/strict_json.rs` gives the top-level value depth 1 with a

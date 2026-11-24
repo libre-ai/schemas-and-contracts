@@ -84,9 +84,11 @@ export interface V3RawInputResult {
 
 const ARGUMENTS = ["policy", "snapshot", "need"] as const;
 // A carrier is schema-valid once decoded permissively, so it can fail a component whose
-// decoder lets that class through; one per class a common permissive decoder admits.
+// decoder lets that class through; one per class a common permissive decoder admits
+// (`invalid-utf8`: a UTF-8 decoder without fatal errors, which replaces the octet).
 const CARRIER_DEFECTS: readonly RawDefect[] = [
   "bom",
+  "invalid-utf8",
   "invalid-json",
   "duplicate-member",
   "unpaired-surrogate",
@@ -327,8 +329,14 @@ export async function verifyPolicyCoreV3MemoryQualification(
       failures.push(`${label}: invalid argument or segments`);
       continue;
     }
+    const ceiling = limits[field];
+    if (typeof ceiling !== "number" || !Number.isSafeInteger(ceiling) || ceiling < 1) {
+      failures.push(`${label}: no positive ${field} ceiling in the budgets`);
+      continue;
+    }
     const hash = createHash("sha256");
     let length = 0;
+    let overflow = false;
     for (const segment of entry.segments as unknown[]) {
       if (!isRecord(segment) || typeof segment.text !== "string") {
         failures.push(`${label}: invalid segment`);
@@ -339,12 +347,21 @@ export async function verifyPolicyCoreV3MemoryQualification(
         failures.push(`${label}: invalid segment count`);
         continue;
       }
+      // The length is bounded before `repeat` allocates: an absurd count fails by name instead
+      // of allocating up to the engine's string limit.
+      const text = new TextEncoder().encode(segment.text);
+      if (text.length * count > ceiling - length) {
+        failures.push(`${label}: segments exceed the ${field} ceiling of ${ceiling} octets`);
+        overflow = true;
+        break;
+      }
       const chunk = new TextEncoder().encode(segment.text.repeat(count));
       hash.update(chunk);
       length += chunk.length;
     }
     result.inspected += 1;
-    if (length !== limits[field]) failures.push(`${label}: not at the ${field} ceiling`);
+    if (overflow) continue;
+    if (length !== ceiling) failures.push(`${label}: not at the ${field} ceiling`);
     if (hash.digest("hex") !== entry.inputSha256) failures.push(`${label}: input SHA-256 mismatch`);
     if (entry.defect !== null && !V3_DEFECTS.includes(entry.defect as RawDefect))
       failures.push(`${label}: unknown defect`);
