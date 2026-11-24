@@ -17,8 +17,8 @@ they disagree with this page, this page states the current catalog.
 | Status | Entries |
 | --- | ---: |
 | locked | 116 |
-| candidate | 24 |
-| total | 140 |
+| candidate | 25 |
+| total | 141 |
 
 ## Counts by family
 
@@ -29,7 +29,7 @@ they disagree with this page, this page states the current catalog.
 | data-policy | 4 | 3 | 1 |
 | json-schema | 106 | 84 | 22 |
 | openapi | 13 | 13 | 0 |
-| wit | 10 | 9 | 1 |
+| wit | 11 | 9 | 2 |
 
 ## Contracts by family
 
@@ -188,7 +188,7 @@ they disagree with this page, this page states the current catalog.
 | `specifications-api-v2` | locked | none | `contracts/openapi/specifications.v2.yaml` |
 | `website-api-v1` | locked | none | `contracts/openapi/website.v1.yaml` |
 
-### wit (10)
+### wit (11)
 
 | Contract | Status | Review | Path |
 | --- | --- | --- | --- |
@@ -198,6 +198,7 @@ they disagree with this page, this page states the current catalog.
 | `notebook-core-v2` | locked | none | `contracts/wit/notebook-core-v2/world.wit` |
 | `policy-core-v1` | locked | none | `contracts/wit/policy-core-v1/world.wit` |
 | `policy-core-v2` | locked | none | `contracts/wit/policy-core-v2/world.wit` |
+| `policy-core-v3` | candidate | pending-independent-agent-review | `contracts/wit/policy-core-v3/world.wit` |
 | `practice-scoring-v1` | locked | none | `contracts/wit/practice-scoring-v1/world.wit` |
 | `radar-engine-v1` | locked | none | `contracts/wit/radar-engine-v1/world.wit` |
 | `radar-engine-v2` | locked | none | `contracts/wit/radar-engine-v2/world.wit` |

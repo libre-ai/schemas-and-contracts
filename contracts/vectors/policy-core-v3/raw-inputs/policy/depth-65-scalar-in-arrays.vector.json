@@ -1,0 +1,70 @@
+{
+  "id": "policy-core-v3/raw-inputs/policy/depth-65-scalar-in-arrays",
+  "criteria": ["contracts/wit/policy-core-v3/SEMANTICS.md"],
+  "kind": "policy-core-v3.evaluate",
+  "description": "policy-core-v3 raw input depth-65-scalar-in-arrays (contracts/fixtures/policy-core-v3/raw-inputs/depth-65-scalar-in-arrays.bin) as policy, with the other arguments of golden case all-operators-eligible",
+  "dependsOn": ["policy-core-v3/golden/all-operators-eligible"],
+  "data": [],
+  "input": {
+    "snapshot": {
+      "schemaVersion": "libre-ai.model-snapshot.v2",
+      "id": "urn:libre-ai:snapshot:all-operators-eligible",
+      "tenantId": "ten_1234567890abcdef",
+      "modelId": "mdl_83518dfdb0f34791",
+      "capturedAt": "2026-07-16T00:00:00Z",
+      "facts": [
+        {
+          "name": "model.score",
+          "value": 8,
+          "source": {
+            "uri": "https://example.org/evidence/b",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "licence": "CC-BY-4.0"
+          }
+        },
+        {
+          "name": "model.open",
+          "value": true,
+          "source": {
+            "uri": "https://example.org/evidence/c",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "licence": "CC-BY-4.0"
+          }
+        },
+        {
+          "name": "model.licence",
+          "value": "MIT",
+          "source": {
+            "uri": "https://example.org/evidence/a",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "fbe6d3b87d7657686e6dd2363f58b6394470361415aafe892aff355f0220f150"
+    },
+    "need": {
+      "schemaVersion": "libre-ai.policy-need.v2",
+      "id": "urn:libre-ai:need:all-operators-eligible",
+      "tenantId": "ten_1234567890abcdef",
+      "facts": [
+        {
+          "name": "need.task",
+          "value": "summary"
+        }
+      ],
+      "digest": "05e56f3638834c368aca91b8e8b5cdb0269eb1f04da952cd2c635d35485efb8b"
+    },
+    "evaluatedAt": "2026-07-17T00:00:00Z"
+  },
+  "inputBytes": {
+    "policy": "W1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1swXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV0="
+  },
+  "expected": {
+    "outcome": "reject",
+    "code": "input-invalid"
+  }
+}

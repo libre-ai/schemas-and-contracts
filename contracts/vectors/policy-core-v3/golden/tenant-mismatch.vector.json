@@ -1,0 +1,80 @@
+{
+  "id": "policy-core-v3/golden/tenant-mismatch",
+  "criteria": ["contracts/wit/policy-core-v3/SEMANTICS.md"],
+  "kind": "policy-core-v3.evaluate",
+  "description": "policy-core-v3 golden case tenant-mismatch (contracts/fixtures/policy-core-v3/golden.json)",
+  "dependsOn": [],
+  "data": [],
+  "input": {
+    "policy": {
+      "schemaVersion": "libre-ai.policy-definition.v2",
+      "id": "urn:libre-ai:policy:tenant-mismatch",
+      "tenantId": "ten_1234567890abcdef",
+      "version": 1,
+      "status": "approved",
+      "rules": [
+        {
+          "id": "licence",
+          "fact": "model.licence",
+          "operator": "equals",
+          "value": "MIT",
+          "unknown": "indeterminate",
+          "source": {
+            "uri": "https://example.org/policy/method",
+            "retrievedAt": "2026-01-01T00:00:00Z",
+            "digest": "1111111111111111111111111111111111111111111111111111111111111111",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "4cb6875aaf75c457adcfedb61fb9991f625079a9d0e84420793b623cc68720ea",
+      "approvedAt": "2026-01-02T00:00:00Z",
+      "approval": {
+        "role": "policy-approver",
+        "approvedAt": "2026-01-02T00:00:00Z",
+        "reference": "urn:libre-ai:approval:tenant-mismatch",
+        "subjectDigest": "4cb6875aaf75c457adcfedb61fb9991f625079a9d0e84420793b623cc68720ea",
+        "actorKind": "human",
+        "approverId": "usr_policyapprover001"
+      },
+      "proposedBy": "svc_policyagent00001"
+    },
+    "snapshot": {
+      "schemaVersion": "libre-ai.model-snapshot.v2",
+      "id": "urn:libre-ai:snapshot:tenant-mismatch",
+      "tenantId": "ten_fedcba0987654321",
+      "modelId": "mdl_ae02450dcaeb597f",
+      "capturedAt": "2026-07-16T00:00:00Z",
+      "facts": [
+        {
+          "name": "model.licence",
+          "value": "MIT",
+          "source": {
+            "uri": "https://example.org/evidence/a",
+            "retrievedAt": "2026-07-16T00:00:00Z",
+            "digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "licence": "CC-BY-4.0"
+          }
+        }
+      ],
+      "digest": "477e5b7f83be2e90492a1206546df98604d246f61d2a783511dc715337666943"
+    },
+    "need": {
+      "schemaVersion": "libre-ai.policy-need.v2",
+      "id": "urn:libre-ai:need:tenant-mismatch",
+      "tenantId": "ten_1234567890abcdef",
+      "facts": [
+        {
+          "name": "need.task",
+          "value": "summary"
+        }
+      ],
+      "digest": "8b5c6791b36a52f3713f6f370ca3cefe180988ad053d33d115787a892ea483b3"
+    },
+    "evaluatedAt": "2026-07-17T00:00:00Z"
+  },
+  "expected": {
+    "outcome": "reject",
+    "code": "tenant-mismatch"
+  }
+}

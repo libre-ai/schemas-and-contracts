@@ -416,6 +416,35 @@
           "dossier": "docs/reviews/rule-common-v1-review.md"
         }
       }
+    },
+    {
+      "decision": "docs/adr/2026-11-23-policy-core-v3.md",
+      "ownerArbitration": "2026-11-23",
+      "entry": {
+        "id": "policy-core-v3",
+        "kind": "wit",
+        "path": "contracts/wit/policy-core-v3/world.wit",
+        "owners": ["model-policy", "specialized-rust"],
+        "consumers": ["model-policy"],
+        "compatibility": "major-versioned",
+        "classification": "tenant-private",
+        "status": "candidate",
+        "review": {
+          "state": "pending-independent-agent-review",
+          "reviewerKind": "agent",
+          "separation": "role-scoped-review-pass",
+          "required": ["architecture", "security", "privacy"],
+          "dossier": "docs/reviews/policy-core-v3-review.md"
+        },
+        "profiles": ["contracts/wit/policy-core-v3/SEMANTICS.md"],
+        "vectors": [
+          "contracts/fixtures/policy-core-v2/operators.json",
+          "contracts/fixtures/policy-core-v3/golden.json",
+          "contracts/fixtures/policy-core-v2/resource-budgets.v1.json",
+          "contracts/fixtures/policy-core-v3/raw-inputs/manifest.json",
+          "contracts/fixtures/policy-core-v3/memory-qualification.v1.json"
+        ]
+      }
     }
   ]
 }

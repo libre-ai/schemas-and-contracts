@@ -40,8 +40,27 @@ export const VECTOR_DIRECTORY = join(VECTOR_ROOT, VECTOR_PREFIX);
 const VECTOR_SUFFIX = ".vector.json";
 
 export const VECTOR_KIND = "policy-core-v2.evaluate";
-const SCHEMA_VERSION = "libre-ai.policy-core-golden-vectors.v2";
 const CANONICALIZATION = "RFC 8785";
+
+/** What tells one golden document of a policy-core major from another, for the projection. */
+export interface GoldenProfile {
+  /** `schemaVersion` the document must declare. */
+  schemaVersion: string;
+  /** Vector id prefix, relative to the runner root. */
+  vectorPrefix: string;
+  kind: string;
+  /** World name and repository-relative source path, quoted in each description. */
+  world: string;
+  source: string;
+}
+
+export const POLICY_CORE_V2_GOLDEN: GoldenProfile = {
+  schemaVersion: "libre-ai.policy-core-golden-vectors.v2",
+  vectorPrefix: VECTOR_PREFIX,
+  kind: VECTOR_KIND,
+  world: "policy-core-v2",
+  source: "contracts/fixtures/policy-core-v2/golden.json",
+};
 const DOCUMENT_MEMBERS = [
   "canonicalization",
   "cases",
@@ -52,7 +71,8 @@ const DOCUMENT_MEMBERS = [
 ];
 const CASE_MEMBERS = new Set(["id", "policy", "snapshot", "need", "evaluatedAt"]);
 const EXPECTATION_MEMBERS = new Set(["expectedEvaluation", "expectedError"]);
-const ERROR_CODES = new Set([
+/** The WIT `error-code` variants, the same in the policy-core-v2 and policy-core-v3 worlds. */
+export const ERROR_CODES: ReadonlySet<string> = new Set([
   "input-invalid",
   "evaluated-at-invalid",
   "rule-id-duplicate",
@@ -60,7 +80,7 @@ const ERROR_CODES = new Set([
   "digest-mismatch",
   "tenant-mismatch",
 ]);
-const CASE_ID = /^[a-z0-9][a-z0-9-]*$/;
+export const CASE_ID = /^[a-z0-9][a-z0-9-]*$/;
 
 export interface Vector {
   id: string;
@@ -87,12 +107,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 /** The vectors of one golden document, or an Error naming the first refusal. */
-export function projectGolden(document: unknown): Projection {
+export function projectGolden(
+  document: unknown,
+  profile: GoldenProfile = POLICY_CORE_V2_GOLDEN,
+): Projection {
   if (!isRecord(document)) throw new Error("golden document is not an object");
   const members = Object.keys(document).sort();
   if (members.join(",") !== DOCUMENT_MEMBERS.join(","))
     throw new Error(`golden document members differ: ${members.join(",")}`);
-  if (document.schemaVersion !== SCHEMA_VERSION)
+  if (document.schemaVersion !== profile.schemaVersion)
     throw new Error("golden document has another schemaVersion");
   if (document.canonicalization !== CANONICALIZATION)
     throw new Error("golden document declares another canonicalization");
@@ -150,10 +173,10 @@ export function projectGolden(document: unknown): Projection {
     if (projection.vectors.has(name)) throw new Error(`${id}: two cases share this id`);
     projection.caseIds.push(id);
     projection.vectors.set(name, {
-      id: `${VECTOR_PREFIX}/${id}`,
+      id: `${profile.vectorPrefix}/${id}`,
       criteria: [semantics],
-      kind: VECTOR_KIND,
-      description: `policy-core-v2 golden case ${id} (contracts/fixtures/policy-core-v2/golden.json)`,
+      kind: profile.kind,
+      description: `${profile.world} golden case ${id} (${profile.source})`,
       dependsOn: [],
       data: [],
       input: {

@@ -5,7 +5,10 @@
 //   only the files the vector names in `data` (paths relative to the vector's directory); the
 //   vector file and its expectation are never copied;
 // - environment: PATH alone;
-// - stdin: `{"kind": string, "input": unknown, "dir": string}`, `dir` being that directory;
+// - stdin: `{"kind": string, "input": unknown, "dir": string}`, `dir` being that directory; a
+//   vector with byte members adds them, as written in the vector (canonical base64), between
+//   `input` and `dir`: `{"kind", "input", "inputBytes": {name: base64}, "dir"}`. A vector
+//   without byte members gets the request above unchanged, member for member;
 // - stdout: one strict JSON object, at most 1 MiB, `{"outcome": "accept" | "reject" |
 //   "unsupported", "code"?: string, "errors"?: [{"keyword": string, "instancePath": string}],
 //   ...members proper to the kind}`;
@@ -102,7 +105,9 @@ async function launch(
   kind: string,
   input: unknown,
   timeoutMs: number,
+  inputBytes: Readonly<Record<string, string>> | null,
 ): Promise<CaseOutcome> {
+  const request = inputBytes === null ? { kind, input, dir } : { kind, input, inputBytes, dir };
   const child = Bun.spawn(["sh", "-c", command], {
     cwd: dir,
     env: { PATH: process.env.PATH ?? "" },
@@ -129,9 +134,7 @@ async function launch(
       // Neither call is awaited: a child that never reads its stdin must not hold the runner.
       // Both can reject later (EPIPE once the child closed its stdin, seen on Linux), and an
       // unhandled rejection would end the runner: the exit code and the output decide instead.
-      void Promise.resolve(child.stdin.write(JSON.stringify({ kind, input, dir }))).catch(
-        () => undefined,
-      );
+      void Promise.resolve(child.stdin.write(JSON.stringify(request))).catch(() => undefined);
       void Promise.resolve(child.stdin.end()).catch(() => undefined);
     } catch {
       // The child closed its stdin or already exited; its exit code and output decide.
@@ -202,18 +205,22 @@ async function caseIn(
   input: unknown,
   data: readonly string[],
   timeoutMs: number,
+  inputBytes: Readonly<Record<string, string>> | null,
 ): Promise<CaseOutcome> {
   try {
     if (!(await copyData(vectorDir, data, dir)))
       return { kind: "blocked", cause: "unreadable data" };
-    return await launch(command, dir, kind, input, timeoutMs);
+    return await launch(command, dir, kind, input, timeoutMs, inputBytes);
   } catch {
     // Spawning failed (no shell, no pipe): the case is not judged, the run goes on.
     return { kind: "blocked", cause: "implementation not launched" };
   }
 }
 
-/** Never throws: every defect of the case, its removal included, is a named `blocked`. */
+/**
+ * Never throws: every defect of the case, its removal included, is a named `blocked`.
+ * `inputBytes` is forwarded as given; the vector loader has checked its spelling.
+ */
 export async function runCase(
   command: string,
   vectorDir: string,
@@ -221,6 +228,7 @@ export async function runCase(
   input: unknown,
   data: readonly string[],
   timeoutMs: number,
+  inputBytes: Readonly<Record<string, string>> | null = null,
 ): Promise<CaseOutcome> {
   const defect = await dataDefect(vectorDir, data);
   if (defect !== null) return { kind: "blocked", cause: defect };
@@ -234,7 +242,7 @@ export async function runCase(
   try {
     // Resolved, so that `dir` on stdin is the very path the child sees as its working directory.
     const dir = await realpath(created);
-    outcome = await caseIn(dir, command, vectorDir, kind, input, data, timeoutMs);
+    outcome = await caseIn(dir, command, vectorDir, kind, input, data, timeoutMs, inputBytes);
   } catch {
     outcome = { kind: "blocked", cause: "private directory not created" };
   }

@@ -2,7 +2,17 @@
 // directory: this repository never drives an SDK or a product through it (AGENTS.md).
 
 import { afterAll, beforeAll, describe, expect, test } from "bun:test";
-import { chmod, mkdir, mkdtemp, readFile, rm, stat, symlink, writeFile } from "node:fs/promises";
+import {
+  chmod,
+  mkdir,
+  mkdtemp,
+  readdir,
+  readFile,
+  rm,
+  stat,
+  symlink,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import {
@@ -327,6 +337,72 @@ describe("classification", () => {
     expect(outcome.detail("a-slow")).toBe("timeout: exceeded 300 ms");
     expect(outcome.state("b-quick")).toBe("pass");
     expect(outcome.code).toBe(2);
+  });
+});
+
+describe("byte inputs", () => {
+  // Octets no JSON text can carry as such: a byte order mark, invalid UTF-8, NUL, and every
+  // padding length of RFC 4648 (3, 2 and 1 trailing octets).
+  const octets = Uint8Array.of(0xef, 0xbb, 0xbf, 0x7b, 0xff, 0xfe, 0x00, 0x22, 0x7d);
+  const encoded = Buffer.from(octets).toString("base64");
+
+  test("byte members reach the implementation on stdin as written, beside the JSON input", async () => {
+    const root = await tree([
+      vector("bytes", {
+        input: { evaluatedAt: "2026-01-01T00:00:00Z", snapshot: { a: 1 } },
+        inputBytes: { policy: encoded, one: "AQ==", two: "AQI=", empty: "" },
+      }),
+      vector("plain"),
+    ]);
+    const witness = join(scratch, `stdin-${trees}`);
+    await mkdir(witness);
+    // One file per launch, named by the shell's process id.
+    const outcome = await run(root, `cat > '${witness}'/$$; ${ACCEPT}`);
+    expect(outcome.results.map((result) => result.state)).toEqual(["pass", "pass"]);
+    const requests: Members[] = [];
+    for (const name of (await readdir(witness)).sort())
+      requests.push(JSON.parse(await readFile(join(witness, name), "utf8")) as Members);
+    const withBytes = requests.find((request) => request.kind === "kind-bytes");
+    const plain = requests.find((request) => request.kind === "kind-plain");
+    if (withBytes === undefined || plain === undefined) throw new Error("a request is missing");
+    expect(Object.keys(withBytes)).toEqual(["kind", "input", "inputBytes", "dir"]);
+    expect(withBytes.input).toEqual({ evaluatedAt: "2026-01-01T00:00:00Z", snapshot: { a: 1 } });
+    expect(withBytes.inputBytes).toEqual({ policy: encoded, one: "AQ==", two: "AQI=", empty: "" });
+    const policy = (withBytes.inputBytes as Record<string, string>).policy ?? "";
+    expect(new Uint8Array(Buffer.from(policy, "base64"))).toEqual(octets);
+    // A vector without byte members keeps the request of the JSON-only format, member for member.
+    expect(Object.keys(plain)).toEqual(["kind", "input", "dir"]);
+  });
+
+  test("a byte member that is not canonical base64 blocks the vector before launch", async () => {
+    const root = await tree([
+      vector("not-object", { inputBytes: [encoded] }),
+      vector("empty", { inputBytes: {} }),
+      vector("number", { inputBytes: { policy: 1 } }),
+      vector("unpadded", { inputBytes: { policy: "AQ" } }),
+      vector("trailing-bits", { inputBytes: { policy: "AR==" } }),
+      vector("whitespace", { inputBytes: { policy: "AQ==\n" } }),
+      vector("url-alphabet", { inputBytes: { policy: "-_8=" } }),
+      vector("scalar-input", { input: 1, inputBytes: { policy: "AQ==" } }),
+      vector("both", { input: { policy: {} }, inputBytes: { policy: "AQ==" } }),
+      vector("canonical", { input: { need: {} }, inputBytes: { policy: "/+8=" } }),
+    ]);
+    const witness = join(root, "witness.txt");
+    const outcome = await run(root, `cat >> '${witness}'; ${ACCEPT}`);
+    const notCanonical = "invalid vector: inputBytes member is not canonical base64";
+    expect(outcome.detail("not-object")).toBe("invalid vector: inputBytes is not an object");
+    expect(outcome.detail("empty")).toBe("invalid vector: inputBytes is empty");
+    for (const id of ["number", "unpadded", "trailing-bits", "whitespace", "url-alphabet"])
+      expect(outcome.detail(id)).toBe(notCanonical);
+    expect(outcome.detail("scalar-input")).toBe("invalid vector: inputBytes needs an object input");
+    expect(outcome.detail("both")).toBe("invalid vector: inputBytes names a member of input");
+    expect(outcome.state("canonical")).toBe("pass");
+    const blocked = outcome.results.filter((result) => result.state === "blocked");
+    expect(blocked.length).toBe(9);
+    // Only the canonical vector reached the implementation.
+    const launched = await readFile(witness, "utf8");
+    expect(launched).toContain("kind-canonical");
+    expect(launched.match(/"kind":/g)?.length).toBe(1);
   });
 });
 
